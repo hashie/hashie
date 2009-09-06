@@ -1,6 +1,7 @@
-= hashie
+= Hashie
 
-Description goes here.
+Hashie is a growing collection of tools that extend Hashes and make
+them more useful.
 
 == Note on Patches/Pull Requests
  
