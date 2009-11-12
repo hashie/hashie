@@ -56,7 +56,7 @@ module Hashie
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
     def [](property_name)
-      super || self.class.defaults[property_name.to_sym]
+      super(property_name.to_sym) || self.class.defaults[property_name.to_sym]
     end
     
     # Set a value on the Dash in a Hash-like way. Only works

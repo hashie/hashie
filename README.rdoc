@@ -50,13 +50,14 @@ can set defaults for each property.
       property :email
       property :occupation, :default => 'Rubyist'
     end
-  
+
     p = Person.new
     p.name # => nil
-    p.occupation # => 'Rubyist'
     p.email = 'abc@def.com'
-    p.email # => 'abc@def.com'
-    p['awesome'] # => NoMethodError
+    p.occupation   # => 'Rubyist'
+    p.email        # => 'abc@def.com'
+    p[:awesome]    # => NoMethodError
+    p[:occupation] # => 'Rubyist'
   
 
 == Note on Patches/Pull Requests
