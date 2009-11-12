@@ -58,6 +58,10 @@ can set defaults for each property.
     p.email        # => 'abc@def.com'
     p[:awesome]    # => NoMethodError
     p[:occupation] # => 'Rubyist'
+    
+    p = Person.new(:name => "Bob")
+    p.name       # => 'Bob'
+    p.occupation # => 'Rubyist'
   
 
 == Note on Patches/Pull Requests
