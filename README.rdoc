@@ -3,17 +3,74 @@
 Hashie is a growing collection of tools that extend Hashes and make
 them more useful.
 
+== Installation
+
+Hashie is a gem and is available on Gemcutter. If you don't have Gemcutter,
+install it:
+
+    gem install gemcutter
+    gem tumble
+    
+Then you can install Hashie:
+
+    gem install hashie
+
+== Mash
+
+Mash is an extended Hash that gives simple pseudo-object functionality
+that can be built from hashes and easily extended. It is designed to
+be used in RESTful API libraries to provide easy object-like access 
+to JSON and XML parsed hashes.
+
+=== Example:
+  
+    mash = Hashie::Mash.new
+    mash.name? # => false
+    mash.name # => nil
+    mash.name = "My Mash"
+    mash.name # => "My Mash"
+    mash.name? # => true
+    mash.inspect # => <Hashie::Mash name="My Mash">
+  
+    mash = Mash.new
+    # use bang methods for multi-level assignment
+    mash.author!.name = "Michael Bleigh"
+    mash.author # => <Hashie::Mash name="Michael Bleigh">
+  
+== Dash
+
+Dash is an extended Hash that has a discrete set of defined properties
+and only those properties may be set on the hash. Additionally, you
+can set defaults for each property.
+
+=== Example:
+
+    class Person < Hashie::Dash
+      property :name
+      property :email
+      property :occupation, :default => 'Rubyist'
+    end
+  
+    p = Person.new
+    p.name # => nil
+    p.occupation # => 'Rubyist'
+    p.email = 'abc@def.com'
+    p.email # => 'abc@def.com'
+    p['awesome'] # => NoMethodError
+  
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but
-   bump version in a commit by itself I can ignore when I pull)
+* Add tests for it. This is important so I don't break it in a future version unintentionally.
+* Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
+
+== Authors
+
+* Michael Bleigh
 
 == Copyright
 
-Copyright (c) 2009 Michael Bleigh. See LICENSE for details.
+Copyright (c) 2009 Intridea, Inc (http://intridea.com/). See LICENSE for details.
