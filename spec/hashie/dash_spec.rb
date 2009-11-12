@@ -45,6 +45,16 @@ describe Hashie::Dash do
     end
   end
   
+  describe ' initializing with a Hash' do
+    it 'should not be able to initialize non-existent properties' do
+      lambda{DashTest.new(:bork => 'abc')}.should raise_error(NoMethodError)
+    end
+    
+    it 'should set properties that it is able to' do
+      DashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
+    end
+  end
+  
   describe ' defaults' do
     before do
       @dash = DashTest.new

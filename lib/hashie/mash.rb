@@ -41,6 +41,9 @@ module Hashie
   #   mash.author # => <Mash name="Michael Bleigh">
   #
   class Mash < Hashie::Hash
+    include Hashie::PrettyInspect
+    alias_method :to_s, :inspect
+    
     # If you pass in an existing hash, it will
     # convert it to a Mash including recursively
     # descending into arrays and hashes, converting
@@ -108,19 +111,6 @@ module Hashie
     def key?(key)
       picky_key?(convert_key(key))
     end
-    
-    alias_method :regular_inspect, :inspect  
-    # Prints out a pretty object-like string of the
-    # defined attributes.
-    def inspect
-      ret = "<#{self.class.to_s}"
-      keys.sort.each do |key|
-        ret << " #{key}=#{self[key].inspect}"
-      end
-      ret << ">"
-      ret
-    end
-    alias_method :to_s, :inspect
     
     # Performs a deep_update on a duplicate of the
     # current mash.

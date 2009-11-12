@@ -1,6 +1,7 @@
 require 'hashie/hash'
 
 module Hashie
+  include Hashie::PrettyInspect
   # A Dash is a 'defined' or 'discrete' Hash, that is, a Hash
   # that has a set of defined keys that are accessible (with
   # optional defaults) and only those keys may be set or read.
@@ -12,6 +13,9 @@ module Hashie
   # It is preferrable to a Struct because of the in-class
   # API for defining properties as well as per-property defaults.
   class Dash < Hashie::Hash
+    include Hashie::PrettyInspect
+    alias_method :to_s, :inspect
+    
     # Defines a property on the Dash. Options are
     # as follows:
     # 
@@ -27,11 +31,11 @@ module Hashie
       
       class_eval <<-RUBY
         def #{property_name}
-          self['#{property_name}']
+          self[:#{property_name}]
         end
         
         def #{property_name}=(val)
-          self['#{property_name}'] = val
+          self[:#{property_name}] = val
         end
       RUBY
     end
@@ -53,19 +57,32 @@ module Hashie
       @defaults
     end
     
+    # You may initialize a Dash with an attributes hash
+    # just like you would many other kinds of data objects.
+    def initialize(attributes = {})
+      self.class.properties.each do |prop|
+        puts "#{prop}="
+        self.send("#{prop}=", self.class.defaults[prop.to_sym])
+      end
+      
+      attributes.each_pair do |att, value|
+        self.send("#{att}=", value)
+      end
+    end
+    
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
     def [](property_name)
-      super(property_name.to_sym) || self.class.defaults[property_name.to_sym]
+      super(property_name.to_sym)
     end
     
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      if self.class.property?(property)
+      if self.class.property?(property.to_sym)
         super
       else
-        raise NoMethodError, 'You may only set pre-defined properties.'
+        raise NoMethodError, "The property '#{property}' is not defined for this Dash."
       end
     end
   end
