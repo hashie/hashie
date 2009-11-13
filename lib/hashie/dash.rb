@@ -7,7 +7,7 @@ module Hashie
   # optional defaults) and only those keys may be set or read.
   #
   # Dashes are useful when you need to create a very simple
-  # lightweight data object that needs even fewer options and 
+  # lightweight data object that needs even fewer options and
   # resources than something like a DataMapper resource.
   #
   # It is preferrable to a Struct because of the in-class
@@ -15,67 +15,66 @@ module Hashie
   class Dash < Hashie::Hash
     include Hashie::PrettyInspect
     alias_method :to_s, :inspect
-    
+
     # Defines a property on the Dash. Options are
     # as follows:
-    # 
-    # * <tt>:default</tt> - Specify a default value for this property, 
+    #
+    # * <tt>:default</tt> - Specify a default value for this property,
     #   to be returned before a value is set on the property in a new
     #   Dash.
     #
     def self.property(property_name, options = {})
       property_name = property_name.to_sym
-      
+
       (@properties ||= []) << property_name
       (@defaults ||= {})[property_name] = options.delete(:default)
-      
+
       class_eval <<-RUBY
         def #{property_name}
           self[:#{property_name}]
         end
-        
+
         def #{property_name}=(val)
           self[:#{property_name}] = val
         end
       RUBY
     end
-    
+
     # Get a String array of the currently defined
     # properties on this Dash.
     def self.properties
       @properties.collect{|p| p.to_s}
     end
-    
+
     # Check to see if the specified property has already been
     # defined.
     def self.property?(prop)
       properties.include?(prop.to_s)
     end
-    
+
     # The default values that have been set for this Dash
     def self.defaults
       @defaults
     end
-    
+
     # You may initialize a Dash with an attributes hash
     # just like you would many other kinds of data objects.
     def initialize(attributes = {})
       self.class.properties.each do |prop|
-        puts "#{prop}="
         self.send("#{prop}=", self.class.defaults[prop.to_sym])
       end
-      
+
       attributes.each_pair do |att, value|
         self.send("#{att}=", value)
       end
     end
-    
+
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
     def [](property_name)
       super(property_name.to_sym)
     end
-    
+
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
