@@ -12,7 +12,9 @@ module Hashie
     # to their string representations.
     def hashie_stringify_keys!
       self.keys.each do |k|
-        self[k.to_s] = self.delete(k)
+        unless String === k
+          self[k.to_s] = self.delete(k)
+        end
       end
       self
     end

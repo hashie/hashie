@@ -102,34 +102,12 @@ module Hashie
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash)
       other_hash.each_pair do |k,v|
-        ck = convert_key(k)
-        if Mash === v && Hash === other_hash
-          regular_writer(ck, v.deep_merge(other_hash[k]))
-        else
-          regular_writer(ck, convert_value(other_hash[k], true))
-        end
+        regular_writer(convert_key(k), convert_value(other_hash[k], true))
       end
       self
     end
     alias_method :deep_merge!, :deep_update
-
-    # ==== Parameters
-    # other_hash<Hash>::
-    # A hash to update values in the mash with. Keys will be
-    # stringified and Hashes will be converted to Mashes.
-    #
-    # ==== Returns
-    # Mash:: The updated mash.
-    def update(other_hash)
-      other_hash.each_pair do |key, value|
-        if respond_to?(convert_key(key) + "=")
-          self.send(convert_key(key) + "=", convert_value(value))
-        else
-          regular_writer(convert_key(key), convert_value(value))
-        end
-      end
-      self
-    end
+    alias_method :update, :deep_update
     alias_method :merge!, :update
 
     # Converts a mash back to a hash (with stringified keys)
