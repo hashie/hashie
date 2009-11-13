@@ -78,8 +78,9 @@ module Hashie
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
-      self[key] ||= Hashie::Mash.new
-      self[key]
+      ck = convert_key(key)
+      regular_writer(ck, Hashie::Mash.new) unless key?(ck)
+      regular_reader(ck)
     end
 
     alias_method :regular_dup, :dup
