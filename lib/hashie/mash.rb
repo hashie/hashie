@@ -50,30 +50,13 @@ module Hashie
     # them as well.
     def initialize(source_hash = nil, default = nil, &blk)
       deep_update(source_hash) if source_hash
-      super default if default
-      super &blk if blk
+      default ? super(default) : super(&blk)
     end
 
     class << self; alias [] new; end
 
     def id #:nodoc:
-      self["id"] ? self["id"] : super
-    end
-
-    # Borrowed from Merb's Mash object.
-    #
-    # ==== Parameters
-    # key<Object>:: The default value for the mash. Defaults to nil.
-    #
-    # ==== Alternatives
-    # If key is a Symbol and it is a key in the mash, then the default value will
-    # be set to the value matching the key.
-    def default(key = nil)
-      if key.is_a?(Symbol) && key?(key.to_s)
-        self[key]
-      else
-        key ? super : super()
-      end
+      key?("id") ? self["id"] : super
     end
 
     alias_method :regular_reader, :[]
@@ -82,22 +65,20 @@ module Hashie
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def [](key)
-      key = convert_key(key)
-      regular_reader(key)
+      regular_reader(convert_key(key))
     end
 
     # Sets an attribute in the Mash. Key will be converted to
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def []=(key,value) #:nodoc:
-      key = convert_key(key)
-      regular_writer(key, convert_value(value))
+      regular_writer(convert_key(key), convert_value(value))
     end
 
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
-      self[key] = Hashie::Mash.new unless key?(key)
+      self[key] ||= Hashie::Mash.new
       self[key]
     end
 
@@ -107,9 +88,8 @@ module Hashie
       Mash.new(self, self.default)
     end
 
-    alias_method :picky_key?, :key?
     def key?(key)
-      picky_key?(convert_key(key))
+      super(convert_key(key))
     end
 
     # Performs a deep_update on a duplicate of the
@@ -121,18 +101,14 @@ module Hashie
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash)
-      other_hash = Hashie::Hash[other_hash].stringify_keys!
-
       other_hash.each_pair do |k,v|
-        k = convert_key(k)
-        self[k] = Hashie::Mash.new(self[k]).to_mash if self[k].is_a?(Hash) unless self[k].is_a?(Hashie::Mash)
-        if self[k].is_a?(Hashie::Mash) && other_hash[k].is_a?(Hash)
-          self[k] = self[k].deep_merge(other_hash[k])
+        ck = convert_key(k)
+        if Mash === v && Hash === other_hash
+          regular_writer(ck, v.deep_merge(other_hash[k]))
         else
-          self[k] = convert_value(other_hash[k],true)
+          regular_writer(ck, convert_value(other_hash[k], true))
         end
       end
-
       self
     end
     alias_method :deep_merge!, :deep_update
@@ -175,23 +151,6 @@ module Hashie
        default(method_name)
      end
    end
-
-
-#    def method_missing(method_name, *args) #:nodoc:
-#      if (match = method_name.to_s.match(/(.*)=$/)) && args.size == 1
-#        self[match[1]] = args.first
-#      elsif (match = method_name.to_s.match(/(.*)\?$/)) && args.size == 0
-#        key?(match[1])
-#      elsif (match = method_name.to_s.match(/(.*)!$/)) && args.size == 0
-#        initializing_reader(match[1])
-#      elsif key?(method_name)
-#        self[method_name]
-#      elsif match = method_name.to_s.match(/^([a-z][a-z0-9A-Z_]+)$/)
-#        default(method_name)
-#      else
-#        super
-#      end
-#    end
 
     protected
 

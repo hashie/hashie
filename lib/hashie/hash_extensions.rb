@@ -7,7 +7,7 @@ module Hashie
         base.send :alias_method, hashie_method, "hashie_#{hashie_method}" unless base.instance_methods.include?(hashie_method)
       end
     end
-    
+
     # Destructively convert all of the keys of a Hash
     # to their string representations.
     def hashie_stringify_keys!
@@ -16,25 +16,25 @@ module Hashie
       end
       self
     end
-  
+
     # Convert all of the keys of a Hash
     # to their string representations.
     def hashie_stringify_keys
       self.dup.stringify_keys!
     end
-    
+
     # Convert this hash into a Mash
     def to_mash
       Hashie::Mash.new(self)
     end
   end
-  
+
   module PrettyInspect
     def self.included(base)
       base.send :alias_method, :hash_inspect, :inspect
       base.send :alias_method, :inspect, :hashie_inspect
     end
-    
+
     def hashie_inspect
       ret = "<##{self.class.to_s}"
       keys.sort.each do |key|
