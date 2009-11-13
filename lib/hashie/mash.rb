@@ -7,14 +7,14 @@ module Hashie
   #
   # A Mash will look at the methods you pass it and perform operations
   # based on the following rules:
-  # 
+  #
   # * No punctuation: Returns the value of the hash for that key, or nil if none exists.
   # * Assignment (<tt>=</tt>): Sets the attribute of the given method name.
   # * Existence (<tt>?</tt>): Returns true or false depending on whether that key has been set.
   # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it as "touch" for mashes.
   #
   # == Basic Example
-  #    
+  #
   #   mash = Mash.new
   #   mash.name? # => false
   #   mash.name = "Bob"
@@ -22,7 +22,7 @@ module Hashie
   #   mash.name? # => true
   #
   # == Hash Conversion  Example
-  #   
+  #
   #   hash = {:a => {:b => 23, :d => {:e => "abc"}}, :f => [{:g => 44, :h => 29}, 12]}
   #   mash = Mash.new(hash)
   #   mash.a.b # => 23
@@ -35,7 +35,7 @@ module Hashie
   #   mash = Mash.new
   #   mash.author # => nil
   #   mash.author! # => <Mash>
-  #   
+  #
   #   mash = Mash.new
   #   mash.author!.name = "Michael Bleigh"
   #   mash.author # => <Mash name="Michael Bleigh">
@@ -43,7 +43,7 @@ module Hashie
   class Mash < Hashie::Hash
     include Hashie::PrettyInspect
     alias_method :to_s, :inspect
-    
+
     # If you pass in an existing hash, it will
     # convert it to a Mash including recursively
     # descending into arrays and hashes, converting
@@ -53,13 +53,13 @@ module Hashie
       super default if default
       super &blk if blk
     end
-    
+
     class << self; alias [] new; end
 
     def id #:nodoc:
       self["id"] ? self["id"] : super
     end
-    
+
     # Borrowed from Merb's Mash object.
     #
     # ==== Parameters
@@ -68,24 +68,24 @@ module Hashie
     # ==== Alternatives
     # If key is a Symbol and it is a key in the mash, then the default value will
     # be set to the value matching the key.
-    def default(key = nil) 
-      if key.is_a?(Symbol) && key?(key.to_s) 
-        self[key] 
-      else 
+    def default(key = nil)
+      if key.is_a?(Symbol) && key?(key.to_s)
+        self[key]
+      else
         key ? super : super()
-      end 
+      end
     end
-    
+
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
-    
+
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def [](key)
       key = convert_key(key)
       regular_reader(key)
     end
-    
+
     # Sets an attribute in the Mash. Key will be converted to
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
@@ -93,36 +93,36 @@ module Hashie
       key = convert_key(key)
       regular_writer(key, convert_value(value))
     end
-    
+
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
       self[key] = Hashie::Mash.new unless key?(key)
       self[key]
     end
-    
-    alias_method :regular_dup, :dup  
+
+    alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup
       Mash.new(self, self.default)
     end
-    
+
     alias_method :picky_key?, :key?
     def key?(key)
       picky_key?(convert_key(key))
     end
-    
+
     # Performs a deep_update on a duplicate of the
     # current mash.
     def deep_merge(other_hash)
       dup.deep_merge!(other_hash)
     end
-    
+
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash)
       other_hash = Hashie::Hash[other_hash].stringify_keys!
-      
+
       other_hash.each_pair do |k,v|
         k = convert_key(k)
         self[k] = Hashie::Mash.new(self[k]).to_mash if self[k].is_a?(Hash) unless self[k].is_a?(Hashie::Mash)
@@ -132,11 +132,11 @@ module Hashie
           self[k] = convert_value(other_hash[k],true)
         end
       end
-      
+
       self
     end
     alias_method :deep_merge!, :deep_update
-    
+
     # ==== Parameters
     # other_hash<Hash>::
     # A hash to update values in the mash with. Keys will be
@@ -155,34 +155,50 @@ module Hashie
       self
     end
     alias_method :merge!, :update
-    
+
     # Converts a mash back to a hash (with stringified keys)
     def to_hash
       Hash.new(default).merge(self)
     end
-    
-    def method_missing(method_name, *args) #:nodoc:
-      if (match = method_name.to_s.match(/(.*)=$/)) && args.size == 1
-        self[match[1]] = args.first
-      elsif (match = method_name.to_s.match(/(.*)\?$/)) && args.size == 0
-        key?(match[1])
-      elsif (match = method_name.to_s.match(/(.*)!$/)) && args.size == 0
-        initializing_reader(match[1])
-      elsif key?(method_name)
-        self[method_name]
-      elsif match = method_name.to_s.match(/^([a-z][a-z0-9A-Z_]+)$/)
-        default(method_name)
-      else
-        super
-      end
-    end
-    
+
+   def method_missing(method_name, *args)
+     return self[method_name] if key?(method_name)
+     match = method_name.to_s.match(/(.*?)([?=!]?)$/)
+     case match[2]
+     when "="
+       self[match[1]] = args.first
+     when "?"
+       key?(match[1])
+     when "!"
+       initializing_reader(match[1])
+     else
+       default(method_name)
+     end
+   end
+
+
+#    def method_missing(method_name, *args) #:nodoc:
+#      if (match = method_name.to_s.match(/(.*)=$/)) && args.size == 1
+#        self[match[1]] = args.first
+#      elsif (match = method_name.to_s.match(/(.*)\?$/)) && args.size == 0
+#        key?(match[1])
+#      elsif (match = method_name.to_s.match(/(.*)!$/)) && args.size == 0
+#        initializing_reader(match[1])
+#      elsif key?(method_name)
+#        self[method_name]
+#      elsif match = method_name.to_s.match(/^([a-z][a-z0-9A-Z_]+)$/)
+#        default(method_name)
+#      else
+#        super
+#      end
+#    end
+
     protected
-    
+
     def convert_key(key) #:nodoc:
       key.to_s
     end
-    
+
     def convert_value(val, duping=false) #:nodoc:
       case val
         when ::Hash
