@@ -39,7 +39,7 @@ module Hashie
 
     def hashie_inspect
       ret = "<##{self.class.to_s}"
-      keys.sort.each do |key|
+      stringify_keys.keys.sort.each do |key|
         ret << " #{key}=#{self[key].inspect}"
       end
       ret << ">"

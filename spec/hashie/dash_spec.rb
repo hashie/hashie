@@ -11,6 +11,12 @@ describe Hashie::Dash do
     (Hashie::Dash < Hash).should be_true
   end
   
+  it '#inspect should be ok!' do
+    dash = DashTest.new
+    dash.email = "abd@abc.com"
+    dash.inspect.should == "<#DashTest count=0 email=\"abd@abc.com\" first_name=nil>"
+  end
+   
   describe ' creating properties' do
     it 'should add the property to the list' do
       DashTest.property :not_an_att
