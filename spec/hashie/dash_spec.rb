@@ -32,6 +32,12 @@ describe Hashie::Dash do
     end
   end
   
+  describe 'reading properties' do
+    it 'should raise an error when reading a non-existent property' do 
+      lambda{@dash['abc']}.should raise_error(NoMethodError)
+    end
+  end
+  
   describe ' writing to properties' do
     before do
       @dash = DashTest.new

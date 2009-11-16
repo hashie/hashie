@@ -71,18 +71,24 @@ module Hashie
 
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
-    def [](property_name)
-      super(property_name.to_sym)
+    def [](property)
+      super(property.to_sym) if property_exists? property
     end
 
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      if self.class.property?(property.to_sym)
-        super
-      else
-        raise NoMethodError, "The property '#{property}' is not defined for this Dash."
-      end
+      super if property_exists? property
     end
+    
+    private 
+      # Raises an NoMethodError if the property doesn't exist
+      #
+      def property_exists?(property)
+        unless self.class.property?(property.to_sym)
+          raise NoMethodError, "The property '#{property}' is not defined for this Dash."
+        end
+        true
+      end
   end
 end
