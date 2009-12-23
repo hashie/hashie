@@ -141,7 +141,7 @@ module Hashie
       case val
         when ::Hash
           val = val.dup if duping
-          Hashie::Mash.new(val)
+          self.class.new(val)
         when Array
           val.collect{ |e| convert_value(e) }
         else

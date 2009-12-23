@@ -74,6 +74,15 @@ describe Hashie::Mash do
     @mash.details.address.state.should == 'TX'
   end
   
+  it "should not convert the type of Hashie::Mashes childs to Hashie::Mash" do
+    class MyMash < Hashie::Mash
+    end
+    
+    record = MyMash.new
+    record.son = MyMash.new
+    record.son.class.should == MyMash
+  end
+  
   context "#initialize" do
     it "should convert an existing hash to a Hashie::Mash" do
       converted = Hashie::Mash.new({:abc => 123, :name => "Bob"})
