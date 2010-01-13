@@ -6,6 +6,9 @@ class DashTest < Hashie::Dash
   property :count, :default => 0
 end
 
+class Subclassed < DashTest
+end
+
 describe Hashie::Dash do
   it 'should be a subclass of Hashie::Hash' do
     (Hashie::Dash < Hash).should be_true
@@ -76,5 +79,15 @@ describe Hashie::Dash do
       DashTest.property :defaulted, :default => 'abc'
       DashTest.new.defaulted.should == 'abc'
     end
+  end
+end
+
+describe Subclassed do
+  it "should inherit all properties from DashTest" do
+    Subclassed.properties.size.should == 5
+  end
+  
+  it "should init without raising" do
+    lambda { Subclassed.new }.should_not raise_error
   end
 end
