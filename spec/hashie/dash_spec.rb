@@ -87,6 +87,10 @@ describe Subclassed do
     Subclassed.properties.size.should == 5
   end
   
+  it "should inherit all defaults from DashTest" do
+    Subclassed.defaults.size.should == 5
+  end
+  
   it "should init without raising" do
     lambda { Subclassed.new }.should_not raise_error
   end
