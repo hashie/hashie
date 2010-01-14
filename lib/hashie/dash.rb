@@ -26,8 +26,8 @@ module Hashie
     def self.property(property_name, options = {})
       property_name = property_name.to_sym
 
-      (@@properties ||= []) << property_name
-      (@@defaults ||= {})[property_name] = options.delete(:default)
+      (@properties ||= []) << property_name
+      (@defaults ||= {})[property_name] = options.delete(:default)
 
       class_eval <<-RUBY
         def #{property_name}
@@ -43,7 +43,14 @@ module Hashie
     # Get a String array of the currently defined
     # properties on this Dash.
     def self.properties
-      @@properties.collect{|p| p.to_s}
+      properties = []
+      ancestors.each do |elder| 
+        if elder.instance_variable_defined?("@properties")
+          properties << elder.instance_variable_get("@properties")
+        end
+      end
+
+      properties.flatten.map{|p| p.to_s}
     end
 
     # Check to see if the specified property has already been
@@ -54,7 +61,14 @@ module Hashie
 
     # The default values that have been set for this Dash
     def self.defaults
-      @@defaults
+      properties = {}
+      ancestors.each do |elder|
+        if elder.instance_variable_defined?("@defaults")
+          properties.merge! elder.instance_variable_get("@defaults")
+        end
+      end
+      
+      properties
     end
 
     # You may initialize a Dash with an attributes hash

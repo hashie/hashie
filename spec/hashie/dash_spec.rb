@@ -7,6 +7,7 @@ class DashTest < Hashie::Dash
 end
 
 class Subclassed < DashTest
+  property :last_name
 end
 
 describe Hashie::Dash do
@@ -84,14 +85,19 @@ end
 
 describe Subclassed do
   it "should inherit all properties from DashTest" do
-    Subclassed.properties.size.should == 5
+    Subclassed.properties.size.should == 6
   end
   
   it "should inherit all defaults from DashTest" do
-    Subclassed.defaults.size.should == 5
+    Subclassed.defaults.size.should == 6
   end
   
   it "should init without raising" do
     lambda { Subclassed.new }.should_not raise_error
+    lambda { Subclassed.new(:first_name => 'Michael') }.should_not raise_error
+  end
+  
+  it "should share defaults from DashTest" do
+    Subclassed.new.count.should == 0
   end
 end
