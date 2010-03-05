@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hashie}
-  s.version = "0.1.8"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Bleigh"]
-  s.date = %q{2010-01-14}
+  s.date = %q{2010-03-05}
   s.description = %q{Hashie is a small collection of tools that make hashes more powerful. Currently includes Mash (Mocking Hash) and Dash (Discrete Hash).}
   s.email = %q{michael@intridea.com}
   s.extra_rdoc_files = [
@@ -25,10 +25,12 @@ Gem::Specification.new do |s|
      "VERSION",
      "hashie.gemspec",
      "lib/hashie.rb",
+     "lib/hashie/clash.rb",
      "lib/hashie/dash.rb",
      "lib/hashie/hash.rb",
      "lib/hashie/hash_extensions.rb",
      "lib/hashie/mash.rb",
+     "spec/hashie/clash_spec.rb",
      "spec/hashie/dash_spec.rb",
      "spec/hashie/hash_spec.rb",
      "spec/hashie/mash_spec.rb",
@@ -38,10 +40,11 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/intridea/hashie}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Your friendly neighborhood hash toolkit.}
   s.test_files = [
-    "spec/hashie/dash_spec.rb",
+    "spec/hashie/clash_spec.rb",
+     "spec/hashie/dash_spec.rb",
      "spec/hashie/hash_spec.rb",
      "spec/hashie/mash_spec.rb",
      "spec/spec_helper.rb"
