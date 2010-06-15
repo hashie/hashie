@@ -1,0 +1,25 @@
+--- 
+dependencies: 
+  rake: 
+    group: 
+    - :development
+    version: ">= 0"
+  rspec: 
+    group: 
+    - :test
+    version: ">= 0"
+  json: 
+    group: 
+    - :development
+    version: ">= 0"
+specs: 
+- rake: 
+    version: 0.8.7
+- json: 
+    version: 1.4.3
+- rspec: 
+    version: 1.3.0
+hash: d9c314ac1790a9ac25dfdaf7574b86d62b88f1d5
+sources: 
+- Rubygems: 
+    uri: http://gemcutter.org
