@@ -4,5 +4,19 @@ module Hashie
   # not be available in all libraries.
   class Hash < Hash
     include Hashie::HashExtensions
+
+    # Converts a mash back to a hash (with stringified keys)
+    def to_hash
+      out = {}
+      keys.each do |k|
+        out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+      end
+      out
+    end
+
+    # The C geneartor for the json gem doesn't like mashies
+    def to_json
+      to_hash.to_json
+    end
   end
 end

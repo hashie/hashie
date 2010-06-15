@@ -111,12 +111,8 @@ module Hashie
     alias_method :update, :deep_update
     alias_method :merge!, :update
 
-    # Converts a mash back to a hash (with stringified keys)
-    def to_hash
-      Hash.new(default).merge(self)
-    end
 
-   def method_missing(method_name, *args)
+   def method_missing(method_name, *args, &blk)
      return self[method_name] if key?(method_name)
      match = method_name.to_s.match(/(.*?)([?=!]?)$/)
      case match[2]
@@ -127,7 +123,7 @@ module Hashie
      when "!"
        initializing_reader(match[1])
      else
-       default(method_name)
+       default(method_name, *args, &blk)
      end
    end
 
