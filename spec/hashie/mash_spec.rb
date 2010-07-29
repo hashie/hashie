@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe Hashie::Mash do
   before(:each) do
@@ -81,6 +81,16 @@ describe Hashie::Mash do
     record = MyMash.new
     record.son = MyMash.new
     record.son.class.should == MyMash
+  end
+  
+  describe '#respond_to?' do
+    it 'should respond to a normal method' do
+      Hashie::Mash.new.should be_respond_to(:key?)
+    end
+    
+    it 'should respond to a set key' do
+      Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
+    end
   end
 
   context "#initialize" do

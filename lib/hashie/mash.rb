@@ -111,7 +111,13 @@ module Hashie
     alias_method :update, :deep_update
     alias_method :merge!, :update
 
-
+   # Will return true if the Mash has had a key
+   # set in addition to normal respond_to? functionality.
+   def respond_to?(method_name)
+     return true if key?(method_name)
+     super
+   end
+   
    def method_missing(method_name, *args, &blk)
      return self[method_name] if key?(method_name)
      match = method_name.to_s.match(/(.*?)([?=!]?)$/)

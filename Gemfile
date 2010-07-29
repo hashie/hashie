@@ -1,9 +1,10 @@
 # A sample Gemfile
-source :gemcutter
+source 'http://rubygems.org'
 
 group :development do
   gem 'rake'
   gem 'json'
+  gem 'jeweler'
 end
 
 group :test do
