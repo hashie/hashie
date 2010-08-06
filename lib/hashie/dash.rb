@@ -44,7 +44,7 @@ module Hashie
     # properties on this Dash.
     def self.properties
       properties = []
-      ancestors.each do |elder| 
+      ancestors.each do |elder|
         if elder.instance_variable_defined?("@properties")
           properties << elder.instance_variable_get("@properties")
         end
@@ -67,7 +67,7 @@ module Hashie
           properties.merge! elder.instance_variable_get("@defaults")
         end
       end
-      
+
       properties
     end
 
@@ -94,8 +94,8 @@ module Hashie
     def []=(property, value)
       super if property_exists? property
     end
-    
-    private 
+
+    private
       # Raises an NoMethodError if the property doesn't exist
       #
       def property_exists?(property)
