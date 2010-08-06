@@ -70,6 +70,13 @@ describe Hashie::Dash do
       DashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
     end
   end
+
+  describe 'initializing with a nil' do
+    it 'accepts nil' do
+      lambda { DashTest.new(nil) }.should_not raise_error
+    end
+  end
+
   describe ' defaults' do
     before do
       @dash = DashTest.new

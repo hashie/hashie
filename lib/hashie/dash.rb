@@ -80,7 +80,7 @@ module Hashie
 
       attributes.each_pair do |att, value|
         self.send("#{att}=", value)
-      end
+      end if attributes
     end
 
     # Retrieve a value from the Dash (will return the
