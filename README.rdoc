@@ -61,6 +61,20 @@ can set defaults for each property.
     p.name       # => 'Bob'
     p.occupation # => 'Rubyist'
     
+== Trash
+
+A Trash is a Dash that allows you to translate keys on initialization.
+It is used like so:
+
+    class Person < Hashie::Trash
+      property :first_name, :from => :firstName
+    end
+    
+This will automatically translate the <tt>firstName</tt> key to <tt>first_name</tt>
+when it is initialized using a hash such as through:
+  
+    Person.new(:firstName => 'Bob')
+    
 == Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct
