@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hashie}
-  s.version = "0.2.2"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Bleigh"]
-  s.date = %q{2010-07-28}
+  s.date = %q{2010-08-10}
   s.description = %q{Hashie is a small collection of tools that make hashes more powerful. Currently includes Mash (Mocking Hash) and Dash (Discrete Hash).}
   s.email = %q{michael@intridea.com}
   s.extra_rdoc_files = [
@@ -32,10 +32,12 @@ Gem::Specification.new do |s|
      "lib/hashie/hash.rb",
      "lib/hashie/hash_extensions.rb",
      "lib/hashie/mash.rb",
+     "lib/hashie/trash.rb",
      "spec/hashie/clash_spec.rb",
      "spec/hashie/dash_spec.rb",
      "spec/hashie/hash_spec.rb",
      "spec/hashie/mash_spec.rb",
+     "spec/hashie/trash_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
@@ -49,6 +51,7 @@ Gem::Specification.new do |s|
      "spec/hashie/dash_spec.rb",
      "spec/hashie/hash_spec.rb",
      "spec/hashie/mash_spec.rb",
+     "spec/hashie/trash_spec.rb",
      "spec/spec_helper.rb"
   ]
 
