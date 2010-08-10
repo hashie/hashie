@@ -125,7 +125,7 @@ module Hashie
      when "="
        self[match[1]] = args.first
      when "?"
-       key?(match[1])
+       !!self[match[1]]
      when "!"
        initializing_reader(match[1])
      else

@@ -24,6 +24,13 @@ describe Hashie::Mash do
     @mash.test = "abc"
     @mash.test?.should be_true
   end
+  
+  it "should return false on a ? method if a value has been set to nil or false" do
+    @mash.test = nil
+    @mash.should_not be_test
+    @mash.test = false
+    @mash.should_not be_test
+  end
 
   it "should make all [] and []= into strings for consistency" do
     @mash["abc"] = 123

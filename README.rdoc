@@ -30,6 +30,10 @@ to JSON and XML parsed hashes.
     # use bang methods for multi-level assignment
     mash.author!.name = "Michael Bleigh"
     mash.author # => <Hashie::Mash name="Michael Bleigh">
+
+<b>Note:</b> The <tt>?</tt> method will return false if a key has been set 
+to false or nil. In order to check if a key has been set at all, use the
+<tt>mash.key?('some_key')</tt> method instead.
   
 == Dash
 
