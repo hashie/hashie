@@ -96,14 +96,20 @@ module Hashie
     # Performs a deep_update on a duplicate of the
     # current mash.
     def deep_merge(other_hash)
-      dup.deep_merge!(other_hash)
+      dup.deep_update(other_hash)
     end
+    alias_method :merge, :deep_merge
 
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash)
       other_hash.each_pair do |k,v|
-        regular_writer(convert_key(k), convert_value(other_hash[k], true))
+        key = convert_key(k)
+        if regular_reader(key).is_a?(Mash) and v.is_a?(::Hash)
+          regular_reader(key).deep_update(v)
+        else
+          regular_writer(key, convert_value(v, true))
+        end
       end
       self
     end

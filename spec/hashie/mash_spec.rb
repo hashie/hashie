@@ -67,12 +67,42 @@ describe Hashie::Mash do
     @mash.author.website.should == Hashie::Mash.new(:url => "http://www.mbleigh.com/")
   end
 
-  it "#deep_update should recursively Hashie::Mash Hashie::Mashes and hashes together" do
-    @mash.first_name = "Michael"
-    @mash.last_name = "Bleigh"
-    @mash.details = Hashie::Hash[:email => "michael@asf.com"].to_mash
-    @mash.deep_update({:details => {:email => "michael@intridea.com"}})
-    @mash.details.email.should == "michael@intridea.com"
+  context "#deep_update" do
+    before do
+      @mash.first_name = "Michael"
+      @mash.last_name = "Bleigh"
+      @mash.details!.email = "michael@asf.com"
+      @mash.details.address = "Nowhere road"
+    end
+    
+    it "should recursively Hashie::Mash Hashie::Mashes and hashes together" do
+      @mash.deep_update(:details => {:email => "michael@intridea.com", :city => "Imagineton"})
+      @mash.first_name.should == "Michael"
+      @mash.details.email.should == "michael@intridea.com"
+      @mash.details.address.should == "Nowhere road"
+      @mash.details.city.should == "Imagineton"
+    end
+  
+    it "should make #update deep by default" do
+      @mash.update(:details => {:address => "Fake street"}).should eql(@mash)
+      @mash.details.address.should == "Fake street"
+      @mash.details.email.should == "michael@asf.com"
+    end
+    
+    it "should clone before a #deep_merge" do
+      duped = @mash.deep_merge(:details => {:address => "Fake street"})
+      duped.should_not eql(@mash)
+      duped.details.address.should == "Fake street"
+      @mash.details.address.should == "Nowhere road"
+      duped.details.email.should == "michael@asf.com"
+    end
+    
+    it "regular #merge should be deep" do
+      duped = @mash.merge(:details => {:email => "michael@intridea.com"})
+      duped.should_not eql(@mash)
+      duped.details.email.should == "michael@intridea.com"
+      duped.details.address.should == "Nowhere road"
+    end
   end
 
   it "should convert hash assignments into Hashie::Mashes" do
