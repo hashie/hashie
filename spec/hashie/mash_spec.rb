@@ -90,6 +90,16 @@ describe Hashie::Mash do
     record.son.class.should == MyMash
   end
   
+  it "should not change the class of Mashes when converted" do
+    class SubMash < Hashie::Mash
+    end
+    
+    record = Hashie::Mash.new
+    son = SubMash.new
+    record['submash'] = son
+    record['submash'].should be_kind_of(SubMash)
+  end
+  
   describe '#respond_to?' do
     it 'should respond to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)

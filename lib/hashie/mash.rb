@@ -86,7 +86,7 @@ module Hashie
     alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup
-      Mash.new(self, self.default)
+      self.class.new(self, self.default)
     end
 
     def key?(key)
@@ -141,6 +141,8 @@ module Hashie
 
     def convert_value(val, duping=false) #:nodoc:
       case val
+        when ::Hashie::Mash
+          val.dup
         when ::Hash
           val = val.dup if duping
           self.class.new(val)

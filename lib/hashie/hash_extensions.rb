@@ -27,7 +27,7 @@ module Hashie
 
     # Convert this hash into a Mash
     def to_mash
-      Hashie::Mash.new(self)
+      ::Hashie::Mash.new(self)
     end
   end
 
