@@ -1,7 +1,7 @@
 require 'hashie/hash'
+require 'set'
 
 module Hashie
-  include Hashie::PrettyInspect
   # A Dash is a 'defined' or 'discrete' Hash, that is, a Hash
   # that has a set of defined keys that are accessible (with
   # optional defaults) and only those keys may be set or read.
@@ -26,56 +26,54 @@ module Hashie
     def self.property(property_name, options = {})
       property_name = property_name.to_sym
 
-      (@properties ||= []) << property_name
-      (@defaults ||= {})[property_name] = options.delete(:default)
+      self.properties << property_name
 
-      class_eval <<-RUBY
-        def #{property_name}
-          self[:#{property_name}]
-        end
-
-        def #{property_name}=(val)
-          self[:#{property_name}] = val
-        end
-      RUBY
-    end
-
-    # Get a String array of the currently defined
-    # properties on this Dash.
-    def self.properties
-      properties = []
-      ancestors.each do |elder|
-        if elder.instance_variable_defined?("@properties")
-          properties << elder.instance_variable_get("@properties")
-        end
+      if options[:default] or self.defaults[property_name]
+        self.defaults[property_name] = options[:default] 
       end
 
-      properties.flatten.map{|p| p.to_s}
+      unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
+        class_eval <<-ACCESSORS
+          def #{property_name}
+            _regular_reader(#{property_name.to_s.inspect})
+          end
+
+          def #{property_name}=(value)
+            _regular_writer(#{property_name.to_s.inspect}, value)
+          end
+        ACCESSORS
+      end
+
+      if defined? @subclasses
+        @subclasses.each { |klass| klass.property(property_name, options) }
+      end
+    end
+
+    class << self
+      attr_reader :properties, :defaults
+    end
+    instance_variable_set('@properties', Set.new)
+    instance_variable_set('@defaults', {})
+
+    def self.inherited(klass)
+      (@subclasses ||= Set.new) << klass
+      klass.instance_variable_set('@properties', self.properties.dup)
+      klass.instance_variable_set('@defaults', self.defaults.dup)
     end
 
     # Check to see if the specified property has already been
     # defined.
-    def self.property?(prop)
-      properties.include?(prop.to_s)
-    end
-
-    # The default values that have been set for this Dash
-    def self.defaults
-      properties = {}
-      ancestors.each do |elder|
-        if elder.instance_variable_defined?("@defaults")
-          properties.merge! elder.instance_variable_get("@defaults")
-        end
-      end
-
-      properties
+    def self.property?(name)
+      properties.include? name.to_sym
     end
 
     # You may initialize a Dash with an attributes hash
     # just like you would many other kinds of data objects.
-    def initialize(attributes = {})
-      self.class.properties.each do |prop|
-        self.send("#{prop}=", self.class.defaults[prop.to_sym])
+    def initialize(attributes = {}, &block)
+      super(&block)
+
+      self.class.defaults.each_pair do |prop, value|
+        self.send("#{prop}=", value)
       end
 
       attributes.each_pair do |att, value|
@@ -83,26 +81,30 @@ module Hashie
       end if attributes
     end
 
+    alias_method :_regular_reader, :[]
+    alias_method :_regular_writer, :[]=
+    private :_regular_reader, :_regular_writer
+
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
     def [](property)
-      super(property.to_sym) if property_exists? property
+      assert_property_exists! property
+      super(property.to_s)
     end
 
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      super if property_exists? property
+      assert_property_exists! property
+      super(property.to_s, value)
     end
 
     private
-      # Raises an NoMethodError if the property doesn't exist
-      #
-      def property_exists?(property)
-        unless self.class.property?(property.to_sym)
+
+      def assert_property_exists!(property)
+        unless self.class.property?(property)
           raise NoMethodError, "The property '#{property}' is not defined for this Dash."
         end
-        true
       end
   end
 end
