@@ -67,41 +67,66 @@ describe Hashie::Mash do
     @mash.author.website.should == Hashie::Mash.new(:url => "http://www.mbleigh.com/")
   end
 
-  context "#deep_update" do
-    before do
-      @mash.first_name = "Michael"
-      @mash.last_name = "Bleigh"
-      @mash.details!.email = "michael@asf.com"
-      @mash.details.address = "Nowhere road"
-    end
-    
-    it "should recursively Hashie::Mash Hashie::Mashes and hashes together" do
-      @mash.deep_update(:details => {:email => "michael@intridea.com", :city => "Imagineton"})
-      @mash.first_name.should == "Michael"
-      @mash.details.email.should == "michael@intridea.com"
-      @mash.details.address.should == "Nowhere road"
-      @mash.details.city.should == "Imagineton"
-    end
+  context "updating" do
+    subject {
+      described_class.new :first_name => "Michael", :last_name => "Bleigh",
+        :details => {:email => "michael@asf.com", :address => "Nowhere road"}
+    }
+
+    describe "#deep_update" do
+      it "should recursively Hashie::Mash Hashie::Mashes and hashes together" do
+        subject.deep_update(:details => {:email => "michael@intridea.com", :city => "Imagineton"})
+        subject.first_name.should == "Michael"
+        subject.details.email.should == "michael@intridea.com"
+        subject.details.address.should == "Nowhere road"
+        subject.details.city.should == "Imagineton"
+      end
   
-    it "should make #update deep by default" do
-      @mash.update(:details => {:address => "Fake street"}).should eql(@mash)
-      @mash.details.address.should == "Fake street"
-      @mash.details.email.should == "michael@asf.com"
-    end
+      it "should make #update deep by default" do
+        subject.update(:details => {:address => "Fake street"}).should eql(subject)
+        subject.details.address.should == "Fake street"
+        subject.details.email.should == "michael@asf.com"
+      end
     
-    it "should clone before a #deep_merge" do
-      duped = @mash.deep_merge(:details => {:address => "Fake street"})
-      duped.should_not eql(@mash)
-      duped.details.address.should == "Fake street"
-      @mash.details.address.should == "Nowhere road"
-      duped.details.email.should == "michael@asf.com"
-    end
+      it "should clone before a #deep_merge" do
+        duped = subject.deep_merge(:details => {:address => "Fake street"})
+        duped.should_not eql(subject)
+        duped.details.address.should == "Fake street"
+        subject.details.address.should == "Nowhere road"
+        duped.details.email.should == "michael@asf.com"
+      end
     
-    it "regular #merge should be deep" do
-      duped = @mash.merge(:details => {:email => "michael@intridea.com"})
-      duped.should_not eql(@mash)
-      duped.details.email.should == "michael@intridea.com"
-      duped.details.address.should == "Nowhere road"
+      it "regular #merge should be deep" do
+        duped = subject.merge(:details => {:email => "michael@intridea.com"})
+        duped.should_not eql(subject)
+        duped.details.email.should == "michael@intridea.com"
+        duped.details.address.should == "Nowhere road"
+      end
+    end
+
+    describe "shallow update" do
+      it "should shallowly Hashie::Mash Hashie::Mashes and hashes together" do
+        subject.shallow_update(:details => {
+          :email => "michael@intridea.com", :city => "Imagineton"
+        }).should eql(subject)
+        
+        subject.first_name.should == "Michael"
+        subject.details.email.should == "michael@intridea.com"
+        subject.details.address.should be_nil
+        subject.details.city.should == "Imagineton"
+      end
+  
+      it "should clone before a #regular_merge" do
+        duped = subject.shallow_merge(:details => {:address => "Fake street"})
+        duped.should_not eql(subject)
+      end
+    
+      it "regular merge should be shallow" do
+        duped = subject.shallow_merge(:details => {:address => "Fake street"})
+        duped.details.address.should == "Fake street"
+        subject.details.address.should == "Nowhere road"
+        duped.details.email.should be_nil
+      end
     end
   end
 

@@ -119,6 +119,20 @@ module Hashie
     alias_method :update, :deep_update
     alias_method :merge!, :update
 
+    # Performs a shallow_update on a duplicate of the current mash
+    def shallow_merge(other_hash)
+      dup.shallow_update(other_hash)
+    end
+
+    # Merges (non-recursively) the hash from the argument,
+    # changing the receiving hash
+    def shallow_update(other_hash)
+      other_hash.each_pair do |k,v|
+        regular_writer(convert_key(k), convert_value(v, true))
+      end
+      self
+    end
+
    # Will return true if the Mash has had a key
    # set in addition to normal respond_to? functionality.
    def respond_to?(method_name)
