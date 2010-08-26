@@ -9,8 +9,7 @@ describe Hashie::Trash do
 
   describe 'translating properties' do
     it 'adds the property to the list' do
-      TrashTest.property :not_an_att, :from => :notAnAtt
-      TrashTest.properties.should include('not_an_att')
+      TrashTest.properties.should include(:first_name)
     end
 
     it 'creates a method for reading the property' do
