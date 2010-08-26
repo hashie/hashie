@@ -1,3 +1,5 @@
+require 'hashie/hash'
+
 module Hashie
   # Mash allows you to create pseudo-objects that have method-like
   # accessors for hash keys. This is useful for such implementations
