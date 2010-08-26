@@ -79,7 +79,7 @@ module Hashie
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
       ck = convert_key(key)
-      regular_writer(ck, Hashie::Mash.new) unless key?(ck)
+      regular_writer(ck, self.class.new) unless key?(ck)
       regular_reader(ck)
     end
 
@@ -141,7 +141,7 @@ module Hashie
 
     def convert_value(val, duping=false) #:nodoc:
       case val
-        when ::Hashie::Mash
+        when self.class
           val.dup
         when ::Hash
           val = val.dup if duping
