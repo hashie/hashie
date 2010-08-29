@@ -56,6 +56,7 @@ module Hashie
     instance_variable_set('@defaults', {})
 
     def self.inherited(klass)
+      super
       (@subclasses ||= Set.new) << klass
       klass.instance_variable_set('@properties', self.properties.dup)
       klass.instance_variable_set('@defaults', self.defaults.dup)

@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+Hashie::Hash.class_eval do
+  def self.inherited(klass)
+    klass.instance_variable_set('@inheritance_test', true)
+  end
+end
+
 class DashTest < Hashie::Dash
   property :first_name
   property :email
@@ -141,6 +147,10 @@ describe Subclassed do
   
   it 'has one additional property' do
     described_class.property?(:last_name).should be_true
+  end
+  
+  it "didn't override superclass inheritance logic" do
+    described_class.instance_variable_get('@inheritance_test').should be_true
   end
   
 end
