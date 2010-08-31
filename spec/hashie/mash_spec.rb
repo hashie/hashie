@@ -155,6 +155,30 @@ describe Hashie::Mash do
     record['submash'].should be_kind_of(SubMash)
   end
   
+  it "should respect the class when passed a bang method for a non-existent key" do
+    record = Hashie::Mash.new
+    record.non_existent!.should be_kind_of(Hashie::Mash)
+    
+    class SubMash < Hashie::Mash
+    end
+    
+    son = SubMash.new
+    son.non_existent!.should be_kind_of(SubMash)
+  end
+  
+  it "should respect the class when converting the value" do
+    record = Hashie::Mash.new
+    record.details = Hashie::Mash.new({:email => "randy@asf.com"})
+    record.details.should be_kind_of(Hashie::Mash)
+    
+    class SubMash < Hashie::Mash
+    end
+    
+    son = SubMash.new
+    son.details = Hashie::Mash.new({:email => "randyjr@asf.com"})
+    son.details.should be_kind_of(SubMash)
+  end
+  
   describe '#respond_to?' do
     it 'should respond to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)
