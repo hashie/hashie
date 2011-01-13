@@ -78,7 +78,7 @@ module Hashie
       end
 
       attributes.each_pair do |att, value|
-        self.send("#{att}=", value)
+        self[att] = value
       end if attributes
     end
 
