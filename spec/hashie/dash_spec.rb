@@ -134,6 +134,12 @@ describe Hashie::Dash, 'inheritance' do
     @bottom.properties.to_a.should == [:echo]
     @bottom.new.echo.should be_nil
   end
+
+  it 'should allow nil defaults' do
+    @bottom.property :echo, :default => nil
+    @bottom.new.should have_key('echo')
+  end
+
 end
 
 describe Subclassed do

@@ -74,7 +74,7 @@ module Hashie
       super(&block)
 
       self.class.defaults.each_pair do |prop, value|
-        self.send("#{prop}=", value)
+        self[prop] = value
       end
 
       attributes.each_pair do |att, value|
