@@ -28,8 +28,10 @@ module Hashie
 
       self.properties << property_name
 
-      if options[:default] or self.defaults[property_name]
+      if options.has_key?(:default)
         self.defaults[property_name] = options[:default] 
+      elsif self.defaults.has_key?(property_name)
+        self.defaults.delete property_name
       end
 
       unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
