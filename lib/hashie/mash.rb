@@ -85,6 +85,10 @@ module Hashie
       regular_reader(ck)
     end
 
+    def delete(key)
+      super(convert_key(key))
+    end
+
     alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup

@@ -128,6 +128,20 @@ describe Hashie::Mash do
         duped.details.email.should be_nil
       end
     end
+
+    describe 'delete' do
+      it 'should delete with String key' do
+        subject.delete('details')
+        subject.details.should be_nil
+        subject.should_not be_respond_to :details
+      end
+
+      it 'should delete with Symbol key' do
+        subject.delete(:details)
+        subject.details.should be_nil
+        subject.should_not be_respond_to :details
+      end
+    end
   end
 
   it "should convert hash assignments into Hashie::Mashes" do
