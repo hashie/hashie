@@ -67,7 +67,9 @@ module Hashie
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def [](key)
-      regular_reader(convert_key(key))
+      value = regular_reader(convert_key(key))
+      yield value if block_given?
+      value
     end
 
     # Sets an attribute in the Mash. Key will be converted to
@@ -145,7 +147,7 @@ module Hashie
    end
    
    def method_missing(method_name, *args, &blk)
-     return self[method_name] if key?(method_name)
+     return self.[](method_name, &blk) if key?(method_name)
      match = method_name.to_s.match(/(.*?)([?=!]?)$/)
      case match[2]
      when "="

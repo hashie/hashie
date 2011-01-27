@@ -36,12 +36,12 @@ module Hashie
 
       unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
         class_eval <<-ACCESSORS
-          def #{property_name}
-            _regular_reader(#{property_name.to_s.inspect})
+          def #{property_name}(&block)
+            self.[](#{property_name.to_s.inspect}, &block)
           end
 
           def #{property_name}=(value)
-            _regular_writer(#{property_name.to_s.inspect}, value)
+            self.[]=(#{property_name.to_s.inspect}, value)
           end
         ACCESSORS
       end
@@ -92,7 +92,9 @@ module Hashie
     # property's default value if it hasn't been set).
     def [](property)
       assert_property_exists! property
-      super(property.to_s)
+      value = super(property.to_s)
+      yield value if block_given?
+      value
     end
 
     # Set a value on the Dash in a Hash-like way. Only works

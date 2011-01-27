@@ -54,6 +54,26 @@ describe DashTest do
       subject.first_name.should == 'Franklin'
     end
   end
+  
+  context 'reading from properties' do
+    it 'fails reading from a non-existent property using []' do
+      lambda { subject['nonexistent'] }.should raise_error(NoMethodError)
+    end
+    
+    it "should be able to retrieve properties through blocks" do
+      subject["first_name"] = "Aiden"
+      value = nil
+      subject.[]("first_name") { |v| value = v }
+      value.should == "Aiden"
+    end
+    
+    it "should be able to retrieve properties through blocks with method calls" do
+      subject["first_name"] = "Frodo"
+      value = nil
+      subject.first_name { |v| value = v }
+      value.should == "Frodo"
+    end
+  end
 
   describe '.new' do
     it 'fails with non-existent properties' do

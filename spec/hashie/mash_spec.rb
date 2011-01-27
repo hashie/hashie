@@ -18,6 +18,20 @@ describe Hashie::Mash do
     @mash["test"] = "abc"
     @mash.test.should == "abc"
   end
+  
+  it "should be able to retrieve set values through blocks" do
+    @mash["test"] = "abc"
+    value = nil
+    @mash.[]("test") { |v| value = v }
+    value.should == "abc"
+  end
+  
+  it "should be able to retrieve set values through blocks with method calls" do
+    @mash["test"] = "abc"
+    value = nil
+    @mash.test { |v| value = v }
+    value.should == "abc"
+  end
 
   it "should test for already set values when passed a ? method" do
     @mash.test?.should be_false
