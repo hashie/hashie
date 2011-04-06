@@ -61,6 +61,10 @@ module Hashie
       key?("id") ? self["id"] : super
     end
 
+    def type #:nodoc:
+      key?("type") ? self["type"] : super
+    end
+    
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
 
