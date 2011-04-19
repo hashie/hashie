@@ -5,3 +5,5 @@ rdoc
 pkg
 *.gem
 .bundle
+.buildpath
+.project

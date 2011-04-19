@@ -57,8 +57,8 @@ describe Hashie::Mash do
     @mash.to_s.should == @mash.inspect
   end
 
-  it "should return nil instead of raising an error for attribute-esque method calls" do
-    @mash.abc.should be_nil
+  it "should raise an error for uninitialized attribute-esque method calls" do
+    lambda { @mash.abc}.should raise_error(NoMethodError)
   end
 
   it "should return a Hashie::Mash when passed a bang method to a non-existenct key" do
@@ -126,7 +126,6 @@ describe Hashie::Mash do
         
         subject.first_name.should == "Michael"
         subject.details.email.should == "michael@intridea.com"
-        subject.details.address.should be_nil
         subject.details.city.should == "Imagineton"
       end
   
@@ -139,20 +138,19 @@ describe Hashie::Mash do
         duped = subject.shallow_merge(:details => {:address => "Fake street"})
         duped.details.address.should == "Fake street"
         subject.details.address.should == "Nowhere road"
-        duped.details.email.should be_nil
       end
     end
 
     describe 'delete' do
       it 'should delete with String key' do
         subject.delete('details')
-        subject.details.should be_nil
+        lambda { subject.details}.should raise_error(NoMethodError)
         subject.should_not be_respond_to :details
       end
 
       it 'should delete with Symbol key' do
         subject.delete(:details)
-        subject.details.should be_nil
+        lambda { subject.details}.should raise_error(NoMethodError)
         subject.should_not be_respond_to :details
       end
     end
