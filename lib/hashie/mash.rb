@@ -157,7 +157,7 @@ module Hashie
      when "!"
        initializing_reader(match[1])
      else
-       default(method_name, *args, &blk)
+       raise NoMethodError
      end
    end
 
