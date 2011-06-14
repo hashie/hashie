@@ -62,7 +62,7 @@ module Hashie
     end
 
     def type #:nodoc:
-      key?("type") ? self["type"] : super
+      key?("type") ? self["type"] : Hashie::Mash
     end
     
     alias_method :regular_reader, :[]
