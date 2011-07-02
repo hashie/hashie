@@ -6,7 +6,7 @@ module Hashie
   # an attempt is made to create a Lash with out it, an error
   # will be raised.
   #
-  # Dashes are useful when you need to create a very simple
+  # Lashes are useful when you need to create a very simple
   # lightweight data object that needs even fewer options and
   # resources than something like a DataMapper resource, and
   # certain attributes are required.
