@@ -1,32 +1,33 @@
+PATH
+  remote: .
+  specs:
+    hashie (1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.1.2)
-    gemcutter (0.6.1)
-    git (1.2.5)
-    jeweler (1.4.0)
-      gemcutter (>= 0.1.0)
-      git (>= 1.2.5)
-      rubyforge (>= 2.0.0)
-    json (1.4.3)
-    json_pure (1.4.3)
-    rake (0.8.7)
-    rspec (2.4.0)
-      rspec-core (~> 2.4.0)
-      rspec-expectations (~> 2.4.0)
-      rspec-mocks (~> 2.4.0)
-    rspec-core (2.4.0)
-    rspec-expectations (2.4.0)
+    guard (0.5.1)
+      thor (~> 0.14.6)
+    guard-rspec (0.4.0)
+      guard (>= 0.4.0)
+    rake (0.9.2)
+    rspec (2.6.0)
+      rspec-core (~> 2.6.0)
+      rspec-expectations (~> 2.6.0)
+      rspec-mocks (~> 2.6.0)
+    rspec-core (2.6.4)
+    rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
-    rspec-mocks (2.4.0)
-    rubyforge (2.0.4)
-      json_pure (>= 1.1.7)
+    rspec-mocks (2.6.0)
+    thor (0.14.6)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  jeweler
-  json
-  rake
-  rspec (~> 2.0)
+  guard
+  guard-rspec
+  hashie!
+  rake (~> 0.9.2)
+  rspec (~> 2.5)
