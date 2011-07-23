@@ -39,27 +39,27 @@ to false or nil. In order to check if a key has been set at all, use the
 
 Dash is an extended Hash that has a discrete set of defined properties
 and only those properties may be set on the hash. Additionally, you
-can set defaults for each property.
+can set defaults for each property. You can also flag a property as
+required. Required properties will raise an execption if unset.
 
 === Example:
 
     class Person < Hashie::Dash
-      property :name
+      property :name, :required => true
       property :email
       property :occupation, :default => 'Rubyist'
     end
 
-    p = Person.new
-    p.name # => nil
+    p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
+
+    p = Person.new(:name => "Bob")
+    p.name # => 'Bob'
+    p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
     p.email = 'abc@def.com'
     p.occupation   # => 'Rubyist'
     p.email        # => 'abc@def.com'
     p[:awesome]    # => NoMethodError
     p[:occupation] # => 'Rubyist'
-
-    p = Person.new(:name => "Bob")
-    p.name       # => 'Bob'
-    p.occupation # => 'Rubyist'
 
 == Trash
 
@@ -102,32 +102,6 @@ provide.
     c.where(:abc => 'def').where(:hgi => 123)
     c # => {:where => {:abc => 'def', :hgi => 123}}
 
-== Lash
-
-Lash is an extended Dash that allows properties to be set
-as required. These required properties will cause new Lash
-instances to "lash out" by raising an error when passed a
-nil value.
-
-=== Example:
-
-    class Person < Hashie::Dash
-      property :name, :required => true
-      property :email
-      property :occupation, :default => 'Rubyist'
-    end
-
-    p = Person.new # => ArgumentError: The property 'name' is required for this Lash.
-
-    p = Person.new(:name => 'Bob')
-    p.name # => 'Bob'
-    p.email = 'abc@def.com'
-    p.occupation   # => 'Rubyist'
-    p.email        # => 'abc@def.com'
-    p[:awesome]    # => NoMethodError
-    p[:occupation] # => 'Rubyist'
-
-    p.name = nil # => ArgumentError: The property 'name' is required for this Lash.
 
 == Note on Patches/Pull Requests
 

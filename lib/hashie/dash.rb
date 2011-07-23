@@ -23,13 +23,17 @@ module Hashie
     #   to be returned before a value is set on the property in a new
     #   Dash.
     #
+    # * <tt>:required</tt> - Specify the value as required for this
+    #   property, to raise an error if a value is unset in a new or
+    #   existing Dash.
+    #
     def self.property(property_name, options = {})
       property_name = property_name.to_sym
 
       self.properties << property_name
 
       if options.has_key?(:default)
-        self.defaults[property_name] = options[:default] 
+        self.defaults[property_name] = options[:default]
       elsif self.defaults.has_key?(property_name)
         self.defaults.delete property_name
       end
@@ -49,25 +53,35 @@ module Hashie
       if defined? @subclasses
         @subclasses.each { |klass| klass.property(property_name, options) }
       end
+      required_properties << property_name if options.delete(:required)
     end
 
     class << self
       attr_reader :properties, :defaults
+      attr_reader :required_properties
     end
     instance_variable_set('@properties', Set.new)
     instance_variable_set('@defaults', {})
+    instance_variable_set('@required_properties', Set.new)
 
     def self.inherited(klass)
       super
       (@subclasses ||= Set.new) << klass
       klass.instance_variable_set('@properties', self.properties.dup)
       klass.instance_variable_set('@defaults', self.defaults.dup)
+      klass.instance_variable_set('@required_properties', self.required_properties.dup)
     end
 
     # Check to see if the specified property has already been
     # defined.
     def self.property?(name)
       properties.include? name.to_sym
+    end
+
+    # Check to see if the specified property is
+    # required.
+    def self.required?(name)
+      required_properties.include? name.to_sym
     end
 
     # You may initialize a Dash with an attributes hash
@@ -82,6 +96,7 @@ module Hashie
       attributes.each_pair do |att, value|
         self[att] = value
       end if attributes
+      assert_required_properties_set!
     end
 
     alias_method :_regular_reader, :[]
@@ -100,6 +115,7 @@ module Hashie
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
+      assert_property_required! property, value
       assert_property_exists! property
       super(property.to_s, value)
     end
@@ -111,5 +127,24 @@ module Hashie
           raise NoMethodError, "The property '#{property}' is not defined for this Dash."
         end
       end
+
+      def assert_required_properties_set!
+        self.class.required_properties.each do |required_property|
+          assert_property_set!(required_property)
+        end
+      end
+
+      def assert_property_set!(property)
+        if send(property).nil?
+          raise ArgumentError, "The property '#{property}' is required for this Dash."
+        end
+      end
+
+      def assert_property_required!(property, value)
+        if self.class.required?(property) && value.nil?
+          raise ArgumentError, "The property '#{property}' is required for this Dash."
+        end
+      end
+
   end
 end
