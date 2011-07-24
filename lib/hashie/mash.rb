@@ -64,7 +64,7 @@ module Hashie
     def type #:nodoc:
       key?("type") ? self["type"] : super
     end
-    
+
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
 
@@ -145,11 +145,11 @@ module Hashie
 
    # Will return true if the Mash has had a key
    # set in addition to normal respond_to? functionality.
-   def respond_to?(method_name)
+   def respond_to?(method_name, include_private=false)
      return true if key?(method_name)
      super
    end
-   
+
    def method_missing(method_name, *args, &blk)
      return self.[](method_name, &blk) if key?(method_name)
      match = method_name.to_s.match(/(.*?)([?=!]?)$/)

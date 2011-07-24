@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'delegate'
 
 describe Hashie::Mash do
   before(:each) do
@@ -18,14 +19,14 @@ describe Hashie::Mash do
     @mash["test"] = "abc"
     @mash.test.should == "abc"
   end
-  
+
   it "should be able to retrieve set values through blocks" do
     @mash["test"] = "abc"
     value = nil
     @mash.[]("test") { |v| value = v }
     value.should == "abc"
   end
-  
+
   it "should be able to retrieve set values through blocks with method calls" do
     @mash["test"] = "abc"
     value = nil
@@ -38,7 +39,7 @@ describe Hashie::Mash do
     @mash.test = "abc"
     @mash.test?.should be_true
   end
-  
+
   it "should return false on a ? method if a value has been set to nil or false" do
     @mash.test = nil
     @mash.should_not be_test
@@ -84,12 +85,12 @@ describe Hashie::Mash do
   # it "should call super if type is not a key" do
   #   @mash.type.should == Hashie::Mash
   # end
-  
-  it "should return the value if type is a key" do    
+
+  it "should return the value if type is a key" do
     @mash.type = "Steve"
     @mash.type.should == "Steve"
   end
-  
+
   context "updating" do
     subject {
       described_class.new :first_name => "Michael", :last_name => "Bleigh",
@@ -104,13 +105,13 @@ describe Hashie::Mash do
         subject.details.address.should == "Nowhere road"
         subject.details.city.should == "Imagineton"
       end
-  
+
       it "should make #update deep by default" do
         subject.update(:details => {:address => "Fake street"}).should eql(subject)
         subject.details.address.should == "Fake street"
         subject.details.email.should == "michael@asf.com"
       end
-    
+
       it "should clone before a #deep_merge" do
         duped = subject.deep_merge(:details => {:address => "Fake street"})
         duped.should_not eql(subject)
@@ -118,7 +119,7 @@ describe Hashie::Mash do
         subject.details.address.should == "Nowhere road"
         duped.details.email.should == "michael@asf.com"
       end
-    
+
       it "regular #merge should be deep" do
         duped = subject.merge(:details => {:email => "michael@intridea.com"})
         duped.should_not eql(subject)
@@ -132,18 +133,18 @@ describe Hashie::Mash do
         subject.shallow_update(:details => {
           :email => "michael@intridea.com", :city => "Imagineton"
         }).should eql(subject)
-        
+
         subject.first_name.should == "Michael"
         subject.details.email.should == "michael@intridea.com"
         subject.details.address.should be_nil
         subject.details.city.should == "Imagineton"
       end
-  
+
       it "should clone before a #regular_merge" do
         duped = subject.shallow_merge(:details => {:address => "Fake street"})
         duped.should_not eql(subject)
       end
-    
+
       it "regular merge should be shallow" do
         duped = subject.shallow_merge(:details => {:address => "Fake street"})
         duped.details.address.should == "Fake street"
@@ -181,48 +182,58 @@ describe Hashie::Mash do
     record.son = MyMash.new
     record.son.class.should == MyMash
   end
-  
+
   it "should not change the class of Mashes when converted" do
     class SubMash < Hashie::Mash
     end
-    
+
     record = Hashie::Mash.new
     son = SubMash.new
     record['submash'] = son
     record['submash'].should be_kind_of(SubMash)
   end
-  
+
   it "should respect the class when passed a bang method for a non-existent key" do
     record = Hashie::Mash.new
     record.non_existent!.should be_kind_of(Hashie::Mash)
-    
+
     class SubMash < Hashie::Mash
     end
-    
+
     son = SubMash.new
     son.non_existent!.should be_kind_of(SubMash)
   end
-  
+
   it "should respect the class when converting the value" do
     record = Hashie::Mash.new
     record.details = Hashie::Mash.new({:email => "randy@asf.com"})
     record.details.should be_kind_of(Hashie::Mash)
-    
+
     class SubMash < Hashie::Mash
     end
-    
+
     son = SubMash.new
     son.details = Hashie::Mash.new({:email => "randyjr@asf.com"})
     son.details.should be_kind_of(SubMash)
   end
-  
+
   describe '#respond_to?' do
     it 'should respond to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)
     end
-    
+
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
+    end
+
+    it "should delegate properly using delegate library" do
+      class MashDelegate < DelegateClass(Hashie::Mash)
+      end
+
+      delegate = MashDelegate.new(Hashie::Mash.new(:foo => 100))
+      delegate.foo.should == 100
+      delegate.should respond_to(:foo)
+      expect { delegate.bar }.to raise_error(NoMethodError)
     end
   end
 
