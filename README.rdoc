@@ -4,7 +4,7 @@ Hashie is a growing collection of tools that extend Hashes and make
 them more useful.
 
 == Installation
-    
+
 Hashie is available as a RubyGem:
 
     gem install hashie
@@ -13,11 +13,11 @@ Hashie is available as a RubyGem:
 
 Mash is an extended Hash that gives simple pseudo-object functionality
 that can be built from hashes and easily extended. It is designed to
-be used in RESTful API libraries to provide easy object-like access 
+be used in RESTful API libraries to provide easy object-like access
 to JSON and XML parsed hashes.
 
 === Example:
-  
+
     mash = Hashie::Mash.new
     mash.name? # => false
     mash.name # => nil
@@ -25,42 +25,42 @@ to JSON and XML parsed hashes.
     mash.name # => "My Mash"
     mash.name? # => true
     mash.inspect # => <Hashie::Mash name="My Mash">
-  
+
     mash = Mash.new
     # use bang methods for multi-level assignment
     mash.author!.name = "Michael Bleigh"
     mash.author # => <Hashie::Mash name="Michael Bleigh">
 
-<b>Note:</b> The <tt>?</tt> method will return false if a key has been set 
+<b>Note:</b> The <tt>?</tt> method will return false if a key has been set
 to false or nil. In order to check if a key has been set at all, use the
 <tt>mash.key?('some_key')</tt> method instead.
-  
+
 == Dash
 
 Dash is an extended Hash that has a discrete set of defined properties
 and only those properties may be set on the hash. Additionally, you
-can set defaults for each property.
+can set defaults for each property. You can also flag a property as
+required. Required properties will raise an execption if unset.
 
 === Example:
 
     class Person < Hashie::Dash
-      property :name
+      property :name, :required => true
       property :email
       property :occupation, :default => 'Rubyist'
     end
 
-    p = Person.new
-    p.name # => nil
+    p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
+
+    p = Person.new(:name => "Bob")
+    p.name # => 'Bob'
+    p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
     p.email = 'abc@def.com'
     p.occupation   # => 'Rubyist'
     p.email        # => 'abc@def.com'
     p[:awesome]    # => NoMethodError
     p[:occupation] # => 'Rubyist'
-    
-    p = Person.new(:name => "Bob")
-    p.name       # => 'Bob'
-    p.occupation # => 'Rubyist'
-    
+
 == Trash
 
 A Trash is a Dash that allows you to translate keys on initialization.
@@ -69,12 +69,12 @@ It is used like so:
     class Person < Hashie::Trash
       property :first_name, :from => :firstName
     end
-    
+
 This will automatically translate the <tt>firstName</tt> key to <tt>first_name</tt>
 when it is initialized using a hash such as through:
-  
+
     Person.new(:firstName => 'Bob')
-    
+
 == Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct
@@ -102,8 +102,9 @@ provide.
     c.where(:abc => 'def').where(:hgi => 123)
     c # => {:where => {:abc => 'def', :hgi => 123}}
 
+
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a future version unintentionally.
