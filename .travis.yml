@@ -4,3 +4,4 @@ rvm:
   - rbx
   - ree
   - ruby-head
+  - jruby

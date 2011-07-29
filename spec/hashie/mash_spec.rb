@@ -225,18 +225,6 @@ describe Hashie::Mash do
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
     end
-
-    unless defined?(JRUBY_VERSION)
-      it "should delegate properly using delegate library" do
-        class MashDelegate < DelegateClass(Hashie::Mash)
-        end
-
-        delegate = MashDelegate.new(Hashie::Mash.new(:foo => 100))
-        delegate.foo.should == 100
-        delegate.should respond_to(:foo)
-        expect { delegate.bar }.to raise_error(NoMethodError)
-      end
-    end
   end
 
   context "#initialize" do
