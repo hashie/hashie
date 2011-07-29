@@ -5,3 +5,4 @@ rdoc
 pkg
 *.gem
 .bundle
+.rvmrc
