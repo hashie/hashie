@@ -23,6 +23,7 @@ GEM
     thor (0.14.6)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES

@@ -226,14 +226,16 @@ describe Hashie::Mash do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
     end
 
-    it "should delegate properly using delegate library" do
-      class MashDelegate < DelegateClass(Hashie::Mash)
-      end
+    unless defined?(JRUBY_VERSION)
+      it "should delegate properly using delegate library" do
+        class MashDelegate < DelegateClass(Hashie::Mash)
+        end
 
-      delegate = MashDelegate.new(Hashie::Mash.new(:foo => 100))
-      delegate.foo.should == 100
-      delegate.should respond_to(:foo)
-      expect { delegate.bar }.to raise_error(NoMethodError)
+        delegate = MashDelegate.new(Hashie::Mash.new(:foo => 100))
+        delegate.foo.should == 100
+        delegate.should respond_to(:foo)
+        expect { delegate.bar }.to raise_error(NoMethodError)
+      end
     end
   end
 
@@ -274,16 +276,6 @@ describe Hashie::Mash do
       initial.default.should be_nil
       initial.test.should == []
       initial.test?.should be_true
-    end
-
-    describe "to_json" do
-
-      it "should render to_json" do
-        @mash.foo = :bar
-        @mash.bar = {"homer" => "simpson"}
-        expected = {"foo" => "bar", "bar" => {"homer" => "simpson"}}
-        JSON.parse(@mash.to_json).should == expected
-      end
     end
   end
 end
