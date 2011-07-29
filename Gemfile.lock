@@ -7,6 +7,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.1.2)
+    growl (1.0.3)
     guard (0.5.1)
       thor (~> 0.14.6)
     guard-rspec (0.4.0)
@@ -27,6 +28,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  growl
   guard
   guard-rspec
   hashie!

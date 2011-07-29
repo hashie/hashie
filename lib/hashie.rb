@@ -1,9 +1,13 @@
 module Hashie
+  autoload :Clash,          'hashie/clash'
+  autoload :Dash,           'hashie/dash'
+  autoload :Hash,           'hashie/hash'
   autoload :HashExtensions, 'hashie/hash_extensions'
-  autoload :PrettyInspect, 'hashie/hash_extensions'
-  autoload :Hash, 'hashie/hash'
-  autoload :Trash, 'hashie/trash'
-  autoload :Mash, 'hashie/mash'
-  autoload :Dash, 'hashie/dash'
-  autoload :Clash, 'hashie/clash'
+  autoload :Mash,           'hashie/mash'
+  autoload :PrettyInspect,  'hashie/hash_extensions'
+  autoload :Trash,          'hashie/trash'
+
+  module Extensions
+    autoload :Coercion, 'hashie/extensions/coercion'
+  end
 end
