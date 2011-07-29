@@ -8,6 +8,9 @@ module Hashie
   autoload :Trash,          'hashie/trash'
 
   module Extensions
-    autoload :Coercion, 'hashie/extensions/coercion'
+    autoload :Coercion,      'hashie/extensions/coercion'
+    autoload :KeyConversion, 'hashie/extensions/key_conversion'
+    autoload :StringifyKeys, 'hashie/extensions/key_conversion'
+    autoload :SymbolizeKeys, 'hashie/extensions/key_conversion'
   end
 end
