@@ -65,6 +65,9 @@ counterparts. You can also include just stringify or just symbolize with
 
 ### MergeInitializer
 
+The MergeInitializer extension simply makes it possible to initialize a
+Hash subclass with another Hash, giving you a quick short-hand.
+
 ### MethodAccess
 
 The MethodAccess extension allows you to quickly build method-based
@@ -81,16 +84,23 @@ included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
     h.abc  # => 'def'
     h.abc? # => true
 
+### IndifferentAccess
+
+This extension can be mixed in to instantly give you indifferent access
+to your Hash subclass. This works just like the params hash in Rails and
+other frameworks where whether you provide symbols or strings to access
+keys, you will get the same results.
+
+A unique feature of Hashie's IndifferentAccess mixin is that it will
+inject itself recursively into subhashes *without* reinitializing the
+hash in question. This means you can safely merge together indifferent
+and non-indifferent hashes arbitrarily deeply without worrying about
+whether you'll be able to `hash[:other][:another]` properly.
+
 ### DeepMerge (Unimplemented)
 
 This extension *will* allow you to easily include a recursive merging
 system to any Hash descendant.
-
-### IndifferentAccess (Unimplemented)
-
-This extension *will* allow you to easily give a hash rules for
-normalizing keys, for instance to allow symbol or string keys both to
-reach the intended value.
 
 ## Mash
 
