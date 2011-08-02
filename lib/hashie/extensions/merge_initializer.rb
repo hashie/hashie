@@ -16,7 +16,7 @@ module Hashie
     #
     module MergeInitializer
       def initialize(hash = {}, default = nil, &block)
-        super(default, &block)
+        default ? super(default) : super(&block)
         update(hash)
       end
     end

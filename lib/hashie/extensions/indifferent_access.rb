@@ -38,7 +38,7 @@ module Hashie
       # a hash without modifying the actual class. This is what
       # allows IndifferentAccess to spread to sub-hashes.
       def self.inject!(hash)
-        hash.singleton_class.send :include, Hashie::Extensions::IndifferentAccess
+        (class << hash; self; end).send :include, Hashie::Extensions::IndifferentAccess
         hash.convert!
       end
 
@@ -103,7 +103,7 @@ module Hashie
       def hash_with_indifference?(other)
         other.is_a?(::Hash) &&
         other.respond_to?(:indifferent_access?) &&
-        other.indifference_access?
+        other.indifferent_access?
       end
     end
   end
