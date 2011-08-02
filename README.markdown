@@ -1,22 +1,100 @@
-= Hashie
+**Note:** This documentation is for the unreleased version 2.0 of
+Hashie. See the [1-1-stable branch](https://github.com/intridea/hashie/tree/1-1-stable) for documentation of the released version.
+
+# Hashie
 
 Hashie is a growing collection of tools that extend Hashes and make
 them more useful.
 
-== Installation
+## Installation
 
 Hashie is available as a RubyGem:
 
     gem install hashie
 
-== Mash
+## Hash Extensions
+
+New to version 2.0 of Hashie, the library has been broken up into a
+number of atomically includeable Hash extension modules as described
+below. This provides maximum flexibility for users to mix and match
+functionality while maintaining feature parity with earlier versions of
+Hashie.
+
+### Hashie::Extensions::Coercion
+
+Coercions allow you to set up "coercion rules" based either on the key
+or the value type to massage data as it's being inserted into the Hash.
+Key coercions might be used, for example, in lightweight data modeling
+applications such as an API client:
+
+    class Tweet < Hash
+      include Hashie::Extensions::Coercion
+      coerce_key :user, User
+    end
+    
+    user_hash = {:name => "Bob"}
+    Tweet.new(:user => user_hash)
+    # => automatically calls User.coerce(user_hash) or
+    #    User.new(user_hash) if that isn't present.
+
+Value coercions, on the other hand, will coerce values based on the type
+of the value being inserted. This is useful if you are trying to build a
+Hash-like class that is self-propagating.
+
+    class SpecialHash < Hash
+      include Hashie::Extensions::Coercion
+      coerce_value Hash, SpecialHash
+      
+      def initialize(hash = {})
+        super
+        hash.each_pair do |k,v|
+          self[k] = v
+        end
+      end
+    end
+
+### Hashie::Extensions::KeyConversion
+
+The KeyConversion extension gives you the convenience methods of
+`symbolize_keys` and `stringify_keys` along with their bang
+counterparts. You can also include just stringify or just symbolize with
+`Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
+
+### Hashie::Extensions::MethodAccess
+
+The MethodAccess extension allows you to quickly build method-based
+reading, writing, and querying into your Hash descendant. It can also be
+included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
+`Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`
+
+    class MyHash < Hash
+      include Hashie::Extensions::MethodAccess
+    end
+    
+    h = MyHash.new
+    h.abc = 'def'
+    h.abc  # => 'def'
+    h.abc? # => true
+
+### Hashie::Extensions::DeepMerge (Unimplemented)
+
+This extension *will* allow you to easily include a recursive merging
+system to any Hash descendant.
+
+### Hashie::Extensions::IndifferentAccess (Unimplemented)
+
+This extension *will* allow you to easily give a hash rules for
+normalizing keys, for instance to allow symbol or string keys both to
+reach the intended value.
+
+## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality
 that can be built from hashes and easily extended. It is designed to
 be used in RESTful API libraries to provide easy object-like access
 to JSON and XML parsed hashes.
 
-=== Example:
+### Example:
 
     mash = Hashie::Mash.new
     mash.name? # => false
@@ -31,18 +109,18 @@ to JSON and XML parsed hashes.
     mash.author!.name = "Michael Bleigh"
     mash.author # => <Hashie::Mash name="Michael Bleigh">
 
-<b>Note:</b> The <tt>?</tt> method will return false if a key has been set
+**Note:** The `?` method will return false if a key has been set
 to false or nil. In order to check if a key has been set at all, use the
-<tt>mash.key?('some_key')</tt> method instead.
+`mash.key?('some_key')` method instead.
 
-== Dash
+## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties
 and only those properties may be set on the hash. Additionally, you
 can set defaults for each property. You can also flag a property as
 required. Required properties will raise an execption if unset.
 
-=== Example:
+### Example:
 
     class Person < Hashie::Dash
       property :name, :required => true
@@ -61,7 +139,7 @@ required. Required properties will raise an execption if unset.
     p[:awesome]    # => NoMethodError
     p[:occupation] # => 'Rubyist'
 
-== Trash
+## Trash
 
 A Trash is a Dash that allows you to translate keys on initialization.
 It is used like so:
@@ -75,7 +153,7 @@ when it is initialized using a hash such as through:
 
     Person.new(:firstName => 'Bob')
 
-== Clash
+## Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct
 complex hashes using method notation chaining. This will allow you
@@ -85,7 +163,7 @@ Essentially, a Clash is a generalized way to provide much of the same
 kind of "chainability" that libraries like Arel or Rails 2.x's named_scopes
 provide.
 
-=== Example
+### Example
 
     c = Hashie::Clash.new
     c.where(:abc => 'def').order(:created_at)
@@ -103,7 +181,7 @@ provide.
     c # => {:where => {:abc => 'def', :hgi => 123}}
 
 
-== Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -111,10 +189,10 @@ provide.
 * Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Authors
+## Authors
 
 * Michael Bleigh
 
-== Copyright
+## Copyright
 
-Copyright (c) 2009 Intridea, Inc (http://intridea.com/). See LICENSE for details.
+Copyright (c) 2009-2011 Intridea, Inc. (http://intridea.com/). See LICENSE for details.
