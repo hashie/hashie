@@ -12,6 +12,7 @@ module Hashie
     autoload :DeepMerge,         'hashie/extensions/deep_merge'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
     autoload :IndifferentAccess, 'hashie/extensions/indifferent_access'
+    autoload :MergeInitializer,  'hashie/extensions/merge_initializer'
     autoload :MethodAccess,      'hashie/extensions/method_access'
     autoload :MethodQuery,       'hashie/extensions/method_access'
     autoload :MethodReader,      'hashie/extensions/method_access'

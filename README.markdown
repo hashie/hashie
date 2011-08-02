@@ -20,7 +20,10 @@ below. This provides maximum flexibility for users to mix and match
 functionality while maintaining feature parity with earlier versions of
 Hashie.
 
-### Hashie::Extensions::Coercion
+Any of the extensions listed below can be mixed into a class by
+`include`-ing `Hashie::Extensions::ExtensionName`.
+
+### Coercion
 
 Coercions allow you to set up "coercion rules" based either on the key
 or the value type to massage data as it's being inserted into the Hash.
@@ -53,14 +56,16 @@ Hash-like class that is self-propagating.
       end
     end
 
-### Hashie::Extensions::KeyConversion
+### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of
 `symbolize_keys` and `stringify_keys` along with their bang
 counterparts. You can also include just stringify or just symbolize with
 `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
 
-### Hashie::Extensions::MethodAccess
+### MergeInitializer
+
+### MethodAccess
 
 The MethodAccess extension allows you to quickly build method-based
 reading, writing, and querying into your Hash descendant. It can also be
@@ -76,12 +81,12 @@ included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
     h.abc  # => 'def'
     h.abc? # => true
 
-### Hashie::Extensions::DeepMerge (Unimplemented)
+### DeepMerge (Unimplemented)
 
 This extension *will* allow you to easily include a recursive merging
 system to any Hash descendant.
 
-### Hashie::Extensions::IndifferentAccess (Unimplemented)
+### IndifferentAccess (Unimplemented)
 
 This extension *will* allow you to easily give a hash rules for
 normalizing keys, for instance to allow symbol or string keys both to
