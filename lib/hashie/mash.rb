@@ -104,6 +104,9 @@ module Hashie
     def key?(key)
       super(convert_key(key))
     end
+    alias_method :has_key?, :key?
+    alias_method :include?, :key?
+    alias_method :member?, :key?
 
     # Performs a deep_update on a duplicate of the
     # current mash.
