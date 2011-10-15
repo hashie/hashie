@@ -55,7 +55,13 @@ module Hashie
       default ? super(default) : super(&blk)
     end
 
-    class << self; alias [] new; end
+    class << self
+      alias [] new
+
+      def subkey_class
+        self
+      end
+    end
 
     def id #:nodoc:
       key?("id") ? self["id"] : super
@@ -177,7 +183,7 @@ module Hashie
           val.dup
         when ::Hash
           val = val.dup if duping
-          self.class.new(val)
+          self.class.subkey_class.new.merge(val)
         when Array
           val.collect{ |e| convert_value(e) }
         else

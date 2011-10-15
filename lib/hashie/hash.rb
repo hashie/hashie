@@ -7,11 +7,12 @@ module Hashie
   class Hash < Hash
     include Hashie::HashExtensions
 
-    # Converts a mash back to a hash (with stringified keys)
-    def to_hash
+    # Converts a mash back to a hash.
+    def to_hash(options = {})
       out = {}
       keys.each do |k|
-        out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+        key = options[:symbolize_keys] ? k.to_sym : k.to_s
+        out[key] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
       end
       out
     end

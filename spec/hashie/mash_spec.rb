@@ -265,5 +265,17 @@ describe Hashie::Mash do
       initial.test.should == []
       initial.test?.should be_true
     end
+
+    describe '.subkey_class' do
+      it 'should be able to define a subkey class different from itself' do
+        class CustomSubkeyHash < Hashie::Mash
+          def self.subkey_class; Hashie::Mash end
+        end
+
+        subhash = CustomSubkeyHash.new(:subhash => {:abc => :def})[:subhash]
+        subhash.should_not be_kind_of(CustomSubkeyHash)
+        subhash.should be_kind_of(Hashie::Mash)
+      end
+    end
   end
 end
