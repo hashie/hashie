@@ -28,12 +28,12 @@ describe DashTest do
 
   it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
 
-  its(:to_s) { should == '<#DashTest count=0 email="bob@example.com" first_name="Bob">' }
+  its(:to_s) { should == '#<DashTest count=0 email="bob@example.com" first_name="Bob">' }
 
   it 'lists all set properties in inspect' do
     subject.first_name = 'Bob'
     subject.email = 'bob@example.com'
-    subject.inspect.should == '<#DashTest count=0 email="bob@example.com" first_name="Bob">'
+    subject.inspect.should == '#<DashTest count=0 email="bob@example.com" first_name="Bob">'
   end
 
   its(:count) { should be_zero }
