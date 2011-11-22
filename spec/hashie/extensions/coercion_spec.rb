@@ -17,7 +17,10 @@ describe Hashie::Extensions::Coercion do
   end
 
   before(:each) do
-    class ExampleCoercableHash < Hash; include Hashie::Extensions::Coercion end
+    class ExampleCoercableHash < Hash
+      include Hashie::Extensions::Coercion
+      include Hashie::Extensions::MergeInitializer
+    end
   end
   subject { ExampleCoercableHash }
   let(:instance){ subject.new }
@@ -38,6 +41,13 @@ describe Hashie::Extensions::Coercion do
       instance[:foo] = "bar"
       instance[:foo].value.should == "String"
       instance[:foo].should_not be_coerced
+    end
+
+    it "should coerce when the merge initializer is used" do
+      subject.coerce_key :foo, Coercable
+      instance = subject.new(:foo => "bar")
+
+      instance[:foo].should be_coerced
     end
   end
 
