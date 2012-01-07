@@ -1,7 +1,7 @@
 **Note:** This documentation is for the unreleased version 2.0 of
 Hashie. See the [1-1-stable branch](https://github.com/intridea/hashie/tree/1-1-stable) for documentation of the released version.
 
-# Hashie
+# Hashie [![Build Status](https://secure.travis-ci.org/intridea/hashie.png)](http://travis-ci.org/intridea/hashie) [![Dependency Status](https://gemnasium.com/intridea/hashie.png)](https://gemnasium.com/intridea/hashie)
 
 Hashie is a growing collection of tools that extend Hashes and make
 them more useful.
