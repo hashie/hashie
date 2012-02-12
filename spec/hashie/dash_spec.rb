@@ -26,6 +26,10 @@ class DashDefaultTest < Hashie::Dash
   property :aliases, :default => ["Snake"]
 end
 
+class DeferredTest < Hashie::Dash
+  property :created_at, :default => Proc.new { Time.now }
+end
+
 describe DashTest do
 
   subject { DashTest.new(:first_name => 'Bob', :email => 'bob@example.com') }
@@ -97,6 +101,17 @@ describe DashTest do
       value = nil
       subject.first_name { |v| value = v }
       value.should == "Frodo"
+    end
+  end
+
+  context 'reading from deferred properties' do
+    it 'should evaluate proc after initial read' do
+      DeferredTest.new['created_at'].should be_instance_of(Time)
+    end
+
+    it "should not evalute proc after subsequent reads" do
+      deferred = DeferredTest.new
+      deferred['created_at'].object_id.should == deferred['created_at'].object_id
     end
   end
 

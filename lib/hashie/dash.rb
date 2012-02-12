@@ -110,8 +110,13 @@ module Hashie
     def [](property)
       assert_property_exists! property
       value = super(property.to_s)
-      yield value if block_given?
-      value
+      # If the value is a lambda, proc, or whatever answers to call, eval the thing!
+      if value.is_a? Proc
+        self[property] = value.call # Set the result of the call as a value
+      else
+        yield value if block_given?
+        value
+      end
     end
 
     # Set a value on the Dash in a Hash-like way. Only works
