@@ -133,7 +133,7 @@ to false or nil. In order to check if a key has been set at all, use the
 Dash is an extended Hash that has a discrete set of defined properties
 and only those properties may be set on the hash. Additionally, you
 can set defaults for each property. You can also flag a property as
-required. Required properties will raise an execption if unset.
+required. Required properties will raise an exception if unset.
 
 ### Example:
 
