@@ -265,5 +265,13 @@ describe Hashie::Mash do
       initial.test.should == []
       initial.test?.should be_true
     end
+
+    it "should convert Hashie::Mashes within Arrays back to Hashes" do
+      initial_hash = {"a" => [{"b" => 12, "c" =>["d" => 50, "e" => 51]}, 23]}
+      converted = Hashie::Mash.new(initial_hash)
+      converted.to_hash["a"].first.is_a?(Hashie::Mash).should be_false
+      converted.to_hash["a"].first.is_a?(Hash).should be_true
+      converted.to_hash["a"].first["c"].first.is_a?(Hashie::Mash).should be_false
+    end
   end
 end
