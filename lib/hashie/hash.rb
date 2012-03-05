@@ -11,7 +11,14 @@ module Hashie
     def to_hash
       out = {}
       keys.each do |k|
-        out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+        if self[k].is_a?(Array)
+          out[k] ||= []
+          self[k].each do |array_object|
+            out[k] << (Hashie::Hash === array_object ? array_object.to_hash : array_object)
+          end
+        else
+          out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+        end
       end
       out
     end
