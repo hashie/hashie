@@ -93,9 +93,7 @@ module Hashie
         self[prop] = value
       end
 
-      attributes.each_pair do |att, value|
-        self[att] = value
-      end if attributes
+      initialize_attributes(attributes)
       assert_required_properties_set!
     end
 
@@ -121,6 +119,12 @@ module Hashie
     end
 
     private
+
+      def initialize_attributes(attributes)
+        attributes.each_pair do |att, value|
+          self[att] = value
+        end if attributes
+      end
 
       def assert_property_exists!(property)
         unless self.class.property?(property)
