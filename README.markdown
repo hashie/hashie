@@ -34,7 +34,7 @@ applications such as an API client:
       include Hashie::Extensions::Coercion
       coerce_key :user, User
     end
-    
+
     user_hash = {:name => "Bob"}
     Tweet.new(:user => user_hash)
     # => automatically calls User.coerce(user_hash) or
@@ -47,7 +47,7 @@ Hash-like class that is self-propagating.
     class SpecialHash < Hash
       include Hashie::Extensions::Coercion
       coerce_value Hash, SpecialHash
-      
+
       def initialize(hash = {})
         super
         hash.each_pair do |k,v|
@@ -78,7 +78,7 @@ included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
     class MyHash < Hash
       include Hashie::Extensions::MethodAccess
     end
-    
+
     h = MyHash.new
     h.abc = 'def'
     h.abc  # => 'def'
@@ -97,10 +97,23 @@ hash in question. This means you can safely merge together indifferent
 and non-indifferent hashes arbitrarily deeply without worrying about
 whether you'll be able to `hash[:other][:another]` properly.
 
-### DeepMerge (Unimplemented)
+### DeepMerge
 
-This extension *will* allow you to easily include a recursive merging
-system to any Hash descendant.
+This extension allow you to easily include a recursive merging
+system to any Hash descendant:
+
+    class MyHash < Hash
+      include Hashie::Extensions::DeepMerge
+    end
+
+    h1 = MyHash.new
+    h2 = MyHash.new
+
+    h1 = {:x => {:y => [4,5,6]}, :z => [7,8,9]}
+    h2 = {:x => {:y => [7,8,9]}, :z => "xyz"}
+
+    h1.deep_merge(h2) #=> { :x => {:y => [7, 8, 9]}, :z => "xyz" }
+    h2.deep_merge(h1) #=> { :x => {:y => [4, 5, 6]}, :z => [7, 8, 9] }
 
 ## Mash
 
