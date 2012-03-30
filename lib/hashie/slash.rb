@@ -6,19 +6,17 @@ module Hashie
       merge! hash
     end
 
-    def walk( hsh, &block )
-      hsh.each do |k, v|
-        # next unless
-        block.call v.class, k, v
-      end
-    end
-
     def eql?( other )
       # succeed fast if we're actually equal
       return true if super
 
-      walk other do |type, key, value|
-        case type
+      walk other do |key, value|
+        # we must have every key from the other hash,
+        # not the other way around
+        return false if not has_key? key
+
+        # decide how to determine "equality" based on the key's class
+        case value
         when Array
           self[ key ].sort == value.sort
         when Hash
@@ -26,6 +24,14 @@ module Hashie
         else
           self[ key ] == value
         end
+      end
+    end
+
+    protected
+
+    def walk( hsh, &block )
+      hsh.reduce true do |memo, (k, v)|
+        block.call( k, v ) and memo
       end
     end
   end
