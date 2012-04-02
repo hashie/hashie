@@ -9,29 +9,26 @@ module Hashie
     def eql?( other )
       # succeed fast if we're actually equal
       return true if super
-
-      walk other do |key, value|
-        # we must have every key from the other hash,
-        # not the other way around
-        return false if not has_key? key
-
-        # decide how to determine "equality" based on the key's class
-        case value
-        when Array
-          self[ key ].sort == value.sort
-        when Hash
-          walk value
-        else
-          self[ key ] == value
-        end
-      end
+      # otherwise, do a deep, lenient comparison
+      compare self, other
     end
 
     protected
 
-    def walk( hsh, &block )
-      hsh.reduce true do |memo, (k, v)|
-        block.call( k, v ) and memo
+    def compare( original, other )
+      case other
+      when Array
+        original.reduce true do |memo, a|
+          memo and other.reduce false do |memo, b|
+            memo or compare a, b
+          end
+        end
+      when ::Hash
+        original.reduce true do |memo, (k, v)|
+          memo and compare v, other[ k ]
+        end
+      else
+        original.eql? other
       end
     end
   end

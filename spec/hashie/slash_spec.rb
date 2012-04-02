@@ -38,17 +38,17 @@ describe Hashie::Slash do
     end
   end
 
-  describe 'missing keys' do
+  describe 'extra keys' do
     let( :hash ){ { :foo => 'bar', :baz => 'woo' } }
     subject { Hashie::Slash.new hash }
 
-    it { should_not eql( { :foo => 'bar', :baz => 'woo', :abc => '123' } ) }
+    it { should eql( { :foo => 'bar', :baz => 'woo', :abc => '123' } ) }
   end
 
-  describe 'extra keys' do
+  describe 'missing keys' do
     let( :hash ){ { :foo => 'bar', :baz => 'woo', :abc => '123' } }
     subject { Hashie::Slash.new hash }
 
-    it { should eql( { :foo => 'bar', :baz => 'woo' } ) }
+    it { should_not eql( { :foo => 'bar', :baz => 'woo' } ) }
   end
 end
