@@ -5,7 +5,6 @@ module Hashie
   autoload :HashExtensions, 'hashie/hash_extensions'
   autoload :Mash,           'hashie/mash'
   autoload :PrettyInspect,  'hashie/hash_extensions'
-  autoload :Slash,          'hashie/slash'
   autoload :Trash,          'hashie/trash'
 
   module Extensions
