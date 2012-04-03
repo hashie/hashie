@@ -16,19 +16,21 @@ module Hashie
     protected
 
     def compare( original, other )
-      case other
+      return false if not original.is_a?( other.class )
+
+      case original
       when Array
-        original.reduce true do |memo, a|
-          memo and other.reduce false do |memo, b|
-            memo or compare a, b
+        original.reduce( true ) do |memo, a|
+          memo && other.reduce( false ) do |memo, b|
+            memo || compare( a, b )
           end
         end
       when ::Hash
-        original.reduce true do |memo, (k, v)|
-          memo and compare v, other[ k ]
+        original.reduce( true ) do |memo, (k, v)|
+          memo && compare( v, other[ k ] )
         end
       else
-        original.eql? other
+        original == other
       end
     end
   end

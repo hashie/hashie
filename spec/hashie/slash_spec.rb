@@ -36,6 +36,13 @@ describe Hashie::Slash do
       it { should eql( { :foo => [ 1, 2, 3 ] } ) }
       it { should eql( { :foo => [ 3, 2, 1 ] } ) }
     end
+
+    describe 'of nested arrays' do
+      let( :hash ){ { :foo => [ { :bar => [ 1, 2, 3 ] }, { :baz => [ 1, 2, 3 ] } ] } }
+      subject { Hashie::Slash.new hash }
+
+      it { should eql( { :foo => [ { :baz => [ 3, 2, 1 ] }, { :bar => [ 2, 1, 3 ] } ] } ) }
+    end
   end
 
   describe 'extra keys' do
