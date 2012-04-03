@@ -29,13 +29,13 @@ module Hashie
     #   h.eql? {:baz => [1, 2, 3]}                # => false
     #
     module LenientEquality
-      def self.included( base )
+      def self.included(base)
         base.class_eval do
 
           # To be lenient, we override the #eql? method,
           # first checking if we're truly equal, but
           # falling back to our lenient comparison.
-          def eql?( other )
+          def eql?(other)
             # succeed fast if we're actually equal
             return true if super
             # otherwise, do a deep, lenient comparison
@@ -44,19 +44,19 @@ module Hashie
 
           protected
 
-          def lenient_compare( original, other )
-            return false if not original.is_a?( other.class )
+          def lenient_compare(original, other)
+            return false if not original.is_a?(other.class)
 
             case original
             when Array
-              original.reduce( true ) do |memo, a|
-                memo && other.reduce( false ) do |memo, b|
-                  memo || lenient_compare( a, b )
+              original.reduce(true) do |memo, a|
+                memo && other.reduce(false) do |memo, b|
+                  memo || lenient_compare(a, b)
                 end
               end
             when ::Hash
-              original.reduce( true ) do |memo, (k, v)|
-                memo && lenient_compare( v, other[ k ] )
+              original.reduce(true) do |memo, (k, v)|
+                memo && lenient_compare(v, other[k])
               end
             else
               original == other
@@ -64,7 +64,6 @@ module Hashie
           end
         end
       end
-
     end
   end
 end
