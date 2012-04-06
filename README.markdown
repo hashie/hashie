@@ -34,7 +34,7 @@ applications such as an API client:
       include Hashie::Extensions::Coercion
       coerce_key :user, User
     end
-    
+
     user_hash = {:name => "Bob"}
     Tweet.new(:user => user_hash)
     # => automatically calls User.coerce(user_hash) or
@@ -47,7 +47,7 @@ Hash-like class that is self-propagating.
     class SpecialHash < Hash
       include Hashie::Extensions::Coercion
       coerce_value Hash, SpecialHash
-      
+
       def initialize(hash = {})
         super
         hash.each_pair do |k,v|
@@ -78,7 +78,7 @@ included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
     class MyHash < Hash
       include Hashie::Extensions::MethodAccess
     end
-    
+
     h = MyHash.new
     h.abc = 'def'
     h.abc  # => 'def'
@@ -101,6 +101,17 @@ whether you'll be able to `hash[:other][:another]` properly.
 
 This extension *will* allow you to easily include a recursive merging
 system to any Hash descendant.
+
+### LenientEquality
+
+The LenientEquality extension alters the behavior of your hash's
+`eql?` method to allow more lenient matching of hashes. A lenient
+hash will `eql?` another hash if it is any subset of that other
+hash.
+
+Also, when testing for equality, lenient hashes treat all sub-hashes
+and arrays as order-unimportant. All lenient equality behavior applies
+to any structure within your hash, as deeply nested as they may be.
 
 ## Mash
 
