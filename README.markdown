@@ -124,6 +124,11 @@ to JSON and XML parsed hashes.
     mash.author!.name = "Michael Bleigh"
     mash.author # => <Hashie::Mash name="Michael Bleigh">
 
+    mash = Mash.new
+    # use under-bang methods for multi-level testing
+    mash.author_.name? # => false
+    mash.inspect # => <Hashie::Mash>
+
 **Note:** The `?` method will return false if a key has been set
 to false or nil. In order to check if a key has been set at all, use the
 `mash.key?('some_key')` method instead.
