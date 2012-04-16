@@ -14,16 +14,25 @@ module Hashie
     # * <tt>:default</tt> - Specify a default value for this property, to be
     # returned before a value is set on the property in a new Dash.
     # * <tt>:from</tt> - Specify the original key name that will be write only.
+    # * <tt>:with</tt> - Specify a lambda to be used to convert value.
     def self.property(property_name, options = {})
       super
 
       if options[:from]
         translations << options[:from].to_sym
-        class_eval <<-RUBY
-          def #{options[:from]}=(val)
-            self[:#{property_name}] = val
+        if options[:with].respond_to? :call
+          class_eval do
+            define_method "#{options[:from]}=" do |val|
+              self[property_name.to_sym] = options[:with].call(val)
+            end
           end
-        RUBY
+        else
+          class_eval <<-RUBY
+            def #{options[:from]}=(val)
+              self[:#{property_name}] = val
+            end
+          RUBY
+        end
       end
     end
 
