@@ -19,6 +19,9 @@ module Hashie
       super
 
       if options[:from]
+        if property_name.to_sym == options[:from].to_sym
+          raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
+        end
         translations << options[:from].to_sym
         if options[:with].respond_to? :call
           class_eval do

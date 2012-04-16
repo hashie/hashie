@@ -93,4 +93,12 @@ describe Hashie::Trash do
       lambda_trash.first_name.should == 'Michael'
     end
   end
+
+  it "should raise an error when :from have the same value as property" do
+    expect {
+      class WrongTrash < Hashie::Trash
+        property :first_name, :from => :first_name
+      end
+    }.to raise_error(ArgumentError)
+  end
 end
