@@ -15,6 +15,8 @@ module Hashie
     # returned before a value is set on the property in a new Dash.
     # * <tt>:from</tt> - Specify the original key name that will be write only.
     # * <tt>:with</tt> - Specify a lambda to be used to convert value.
+    # * <tt>:transform_with</tt> - Specify a lambda to be used to convert value
+    # without using the :from option. It transform the property itself.
     def self.property(property_name, options = {})
       super
 
@@ -36,6 +38,8 @@ module Hashie
             end
           RUBY
         end
+      elsif options[:transform_with].respond_to? :call
+        transforms[property_name.to_sym] = options[:transform_with]
       end
     end
 
@@ -44,6 +48,8 @@ module Hashie
     def []=(property, value)
       if self.class.translations.include? property.to_sym
         send("#{property}=", value)
+      elsif self.class.transforms.key? property.to_sym
+        super property, self.class.transforms[property.to_sym].call(value)
       elsif property_exists? property
         super
       end
@@ -53,6 +59,10 @@ module Hashie
 
     def self.translations
       @translations ||= []
+    end
+
+    def self.transforms
+      @transforms ||= {}
     end
 
     # Raises an NoMethodError if the property doesn't exist
