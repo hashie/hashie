@@ -71,6 +71,15 @@ describe Hashie::Mash do
     @mash.name!.should == "Bob"
   end
 
+  it "should return a Hashie::Mash when passed an under bang method to a non-existenct key" do
+    @mash.abc_.is_a?(Hashie::Mash).should be_true
+  end
+
+  it "should return the existing value when passed an under bang method for an existing key" do
+    @mash.name = "Bob"
+    @mash.name_.should == "Bob"
+  end
+
   it "#initializing_reader should return a Hashie::Mash when passed a non-existent key" do
     @mash.initializing_reader(:abc).is_a?(Hashie::Mash).should be_true
   end
@@ -81,6 +90,13 @@ describe Hashie::Mash do
     @mash.author!.website!.url = "http://www.mbleigh.com/"
     @mash.author.website.should == Hashie::Mash.new(:url => "http://www.mbleigh.com/")
   end
+
+  it "should allow for multi-level under bang testing" do
+    @mash.author_.website_.url.should be_nil
+    @mash.author_.website_.url?.should == false
+    @mash.author.should be_nil
+  end
+
 
   # it "should call super if type is not a key" do
   #   @mash.type.should == Hashie::Mash
@@ -203,6 +219,18 @@ describe Hashie::Mash do
     son = SubMash.new
     son.non_existent!.should be_kind_of(SubMash)
   end
+
+  it "should respect the class when passed an under bang method for a non-existent key" do
+    record = Hashie::Mash.new
+    record.non_existent_.should be_kind_of(Hashie::Mash)
+
+    class SubMash < Hashie::Mash
+    end
+
+    son = SubMash.new
+    son.non_existent_.should be_kind_of(SubMash)
+  end
+
 
   it "should respect the class when converting the value" do
     record = Hashie::Mash.new
