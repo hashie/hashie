@@ -14,6 +14,7 @@ module Hashie
   # * Assignment (<tt>=</tt>): Sets the attribute of the given method name.
   # * Existence (<tt>?</tt>): Returns true or false depending on whether that key has been set.
   # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it as "touch" for mashes.
+  # * Under Bang (<tt>_</tt>): Like Bang, but returns a new Mash rather than creating a key.  Used to test existance in deep Mashes.
   #
   # == Basic Example
   #
@@ -41,6 +42,17 @@ module Hashie
   #   mash = Mash.new
   #   mash.author!.name = "Michael Bleigh"
   #   mash.author # => <Mash name="Michael Bleigh">
+  #
+  # == Under Bang Example
+  #
+  #   mash = Mash.new
+  #   mash.author # => nil
+  #   mash.author_ # => <Mash>
+  #   mash.author_.name # => nil
+  #
+  #   mash = Mash.new
+  #   mash.author_.name = "Michael Bleigh"  (assigned to temp object)
+  #   mash.author # => <Mash>
   #
   class Mash < Hashie::Hash
     include Hashie::PrettyInspect
@@ -89,6 +101,17 @@ module Hashie
       ck = convert_key(key)
       regular_writer(ck, self.class.new) unless key?(ck)
       regular_reader(ck)
+    end
+
+    # This is the under bang method reader, it will return a temporary new Mash
+    # if there isn't a value already assigned to the key requested.
+    def underbang_reader(key)
+      ck = convert_key(key)
+      if key?(ck)
+        regular_reader(ck)
+      else
+        self.class.new
+      end
     end
 
     def delete(key)
@@ -155,7 +178,7 @@ module Hashie
 
    def method_missing(method_name, *args, &blk)
      return self.[](method_name, &blk) if key?(method_name)
-     match = method_name.to_s.match(/(.*?)([?=!]?)$/)
+     match = method_name.to_s.match(/(.*?)([?=!_]?)$/)
      case match[2]
      when "="
        self[match[1]] = args.first
@@ -163,6 +186,8 @@ module Hashie
        !!self[match[1]]
      when "!"
        initializing_reader(match[1])
+     when "_"
+       underbang_reader(match[1])
      else
        default(method_name, *args, &blk)
      end
