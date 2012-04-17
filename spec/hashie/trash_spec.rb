@@ -67,4 +67,73 @@ describe Hashie::Trash do
       TrashTest.new(:firstName => 'Michael').first_name.should == 'Michael'
     end
   end
+
+  describe 'translating properties using a proc' do
+    class TrashLambdaTest < Hashie::Trash
+      property :first_name, :from => :firstName, :with => lambda { |value| value.reverse }
+    end
+
+    let(:lambda_trash) { TrashLambdaTest.new }
+
+    it 'should translate the value given on initialization with the given lambda' do
+      TrashLambdaTest.new(:firstName => 'Michael').first_name.should == 'Michael'.reverse
+    end
+
+    it 'should not translate the value if given with the right property' do
+      TrashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
+    end
+
+    it 'should translate the value given as property with the given lambda' do
+      lambda_trash.firstName = 'Michael'
+      lambda_trash.first_name.should == 'Michael'.reverse
+    end
+
+    it 'should not translate the value given as right property' do
+      lambda_trash.first_name = 'Michael'
+      lambda_trash.first_name.should == 'Michael'
+    end
+  end
+
+  describe 'translating properties without from option using a proc' do
+
+    class TrashLambdaTest2 < Hashie::Trash
+      property :first_name, :transform_with => lambda { |value| value.reverse }
+    end
+
+    let(:lambda_trash) { TrashLambdaTest2.new }
+
+    it 'should translate the value given as property with the given lambda' do
+      lambda_trash.first_name = 'Michael'
+      lambda_trash.first_name.should == 'Michael'.reverse
+    end
+
+    it 'should transform the value when given in constructor' do
+      TrashLambdaTest2.new(:first_name => 'Michael').first_name.should == 'Michael'.reverse
+    end
+
+    context "when :from option is given" do
+      class TrashLambdaTest3 < Hashie::Trash
+        property :first_name, :from => :firstName, :transform_with => lambda { |value| value.reverse }
+      end
+
+      it 'should not override the :from option in the constructor' do
+        TrashLambdaTest3.new(:first_name => 'Michael').first_name.should == 'Michael'
+      end
+
+      it 'should not override the :from option when given as property' do
+        t = TrashLambdaTest3.new
+        t.first_name = 'Michael'
+        t.first_name.should == 'Michael'
+      end
+
+    end
+  end
+
+  it "should raise an error when :from have the same value as property" do
+    expect {
+      class WrongTrash < Hashie::Trash
+        property :first_name, :from => :first_name
+      end
+    }.to raise_error(ArgumentError)
+  end
 end
