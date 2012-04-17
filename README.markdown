@@ -168,6 +168,20 @@ when it is initialized using a hash such as through:
 
     Person.new(:firstName => 'Bob')
 
+Trash also supports translations using lambda, this could be useful when dealing with
+external API's. You can use it in this way:
+
+    class Result < Hashie::Trash
+      property :id, :transform_with => lambda { |v| v.to_i }
+      property :created_at, :from => :creation_date, :with => lambda { |v| Time.parse(v) }
+    end
+
+this will produce the following
+
+    result = Result.new(:id => '123', :creation_date => '2012-03-30 17:23:28')
+    result.id.class         # => Fixnum
+    result.created_at.class # => Time
+
 ## Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct
