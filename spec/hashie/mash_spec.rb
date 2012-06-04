@@ -236,13 +236,17 @@ describe Hashie::Mash do
     record = Hashie::Mash.new
     record.details = Hashie::Mash.new({:email => "randy@asf.com"})
     record.details.should be_kind_of(Hashie::Mash)
+  end
+
+  it "should respect another subclass when converting the value" do
+    record = Hashie::Mash.new
 
     class SubMash < Hashie::Mash
     end
 
-    son = SubMash.new
-    son.details = Hashie::Mash.new({:email => "randyjr@asf.com"})
-    son.details.should be_kind_of(SubMash)
+    son = SubMash.new({:email => "foo@bar.com"})
+    record.details = son
+    record.details.should be_kind_of(SubMash)
   end
 
   describe '#respond_to?' do
