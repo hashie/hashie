@@ -38,10 +38,18 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe '#key?' do
+    let(:h) { subject.new(:foo => 'bar') }
+
     it 'should find it indifferently' do
-      h = subject.new(:foo => 'bar')
       h.should be_key(:foo)
       h.should be_key('foo')
+    end
+
+    %w(include? member? has_key?).each do |key_alias|
+      it "should be aliased as #{key_alias}" do
+        h.send(key_alias.to_sym, :foo).should be(true)
+        h.send(key_alias.to_sym, 'foo').should be(true)
+      end
     end
   end
 
