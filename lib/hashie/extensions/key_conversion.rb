@@ -30,7 +30,7 @@ module Hashie
       #   test.symbolize_keys!
       #   test # => {:abc => 'def'}
       def symbolize_keys!
-        self.keys.each do |k|
+        keys.each do |k|
           symbolize_keys_recursively!(self[k])
           self[k.to_sym] = self.delete(k)
         end
@@ -43,7 +43,8 @@ module Hashie
         dup.symbolize_keys!
       end
 
-    protected
+      protected
+
       # Stringify all keys recursively within nested
       # hashes and arrays.
       def stringify_keys_recursively!(object)
