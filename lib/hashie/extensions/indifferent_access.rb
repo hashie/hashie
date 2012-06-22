@@ -31,6 +31,10 @@ module Hashie
             alias_method "regular_#{m}", m
             alias_method m, "indifferent_#{m}"
           end
+
+          %w(include? member? has_key?).each do |key_alias|
+            alias_method key_alias, :indifferent_key?
+          end
         end
       end
 
