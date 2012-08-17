@@ -14,10 +14,10 @@ module Hashie
         if self[k].is_a?(Array)
           out[k] ||= []
           self[k].each do |array_object|
-            out[k] << (Hashie::Hash === array_object ? array_object.to_hash : array_object)
+            out[k] << (array_object.is_a?(Hashie::Hash) ? array_object.to_hash : array_object)
           end
         else
-          out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+          out[k] = self[k].is_a?(Hashie::Hash) ? self[k].to_hash : self[k]
         end
       end
       out
