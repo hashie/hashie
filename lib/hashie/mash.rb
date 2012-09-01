@@ -70,11 +70,11 @@ module Hashie
     class << self; alias [] new; end
 
     def id #:nodoc:
-      key?("id") ? self["id"] : super
+      self["id"]
     end
 
     def type #:nodoc:
-      key?("type") ? self["type"] : super
+      self["type"]
     end
 
     alias_method :regular_reader, :[]
