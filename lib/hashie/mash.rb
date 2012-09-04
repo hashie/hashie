@@ -77,6 +77,10 @@ module Hashie
       self["type"]
     end
 
+    def object_id #:nodoc:
+      self["object_id"]
+    end
+
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
 
