@@ -97,10 +97,18 @@ describe Hashie::Mash do
     @mash.author.should be_nil
   end
 
+  it "should not call super if id is not a key" do
+    @mash.id.should == nil
+  end
 
-  # it "should call super if type is not a key" do
-  #   @mash.type.should == Hashie::Mash
-  # end
+  it "should return the value if id is a key" do
+    @mash.id = "Steve"
+    @mash.id.should == "Steve"
+  end
+
+  it "should not call super if type is not a key" do
+    @mash.type.should == nil
+  end
 
   it "should return the value if type is a key" do
     @mash.type = "Steve"
