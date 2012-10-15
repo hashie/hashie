@@ -20,6 +20,25 @@ module Hashie
       def stringify_keys
         dup.stringify_keys!
       end
+
+      protected
+
+      # Stringify all keys recursively within nested
+      # hashes and arrays.
+      def stringify_keys_recursively!(object)
+        if self.class === object
+          object.stringify_keys!
+        elsif ::Array === object
+          object.each do |i|
+            stringify_keys_recursively!(i)
+          end
+          object
+        elsif object.respond_to?(:stringify_keys!)
+          object.stringify_keys!
+        else
+          object
+        end
+      end
     end
 
     module SymbolizeKeys
@@ -44,23 +63,6 @@ module Hashie
       end
 
       protected
-
-      # Stringify all keys recursively within nested
-      # hashes and arrays.
-      def stringify_keys_recursively!(object)
-        if self.class === object
-          object.stringify_keys!
-        elsif ::Array === object
-          object.each do |i|
-            stringify_keys_recursively!(i)
-          end
-          object
-        elsif object.respond_to?(:stringify_keys!)
-          object.stringify_keys!
-        else
-          object
-        end
-      end
 
       # Symbolize all keys recursively within nested
       # hashes and arrays.
