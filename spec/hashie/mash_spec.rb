@@ -97,10 +97,28 @@ describe Hashie::Mash do
     @mash.author.should be_nil
   end
 
+  it "should not call super if object_id is not a key" do
+    @mash.object_id.should == nil
+  end
 
-  # it "should call super if type is not a key" do
-  #   @mash.type.should == Hashie::Mash
-  # end
+  it "should return the value if object_id is a key" do
+    @mash.object_id = "Steve"
+    @mash.object_id.should == "Steve"
+  end
+
+
+  it "should not call super if id is not a key" do
+    @mash.id.should == nil
+  end
+
+  it "should return the value if id is a key" do
+    @mash.id = "Steve"
+    @mash.id.should == "Steve"
+  end
+
+  it "should not call super if type is not a key" do
+    @mash.type.should == nil
+  end
 
   it "should return the value if type is a key" do
     @mash.type = "Steve"
@@ -283,11 +301,11 @@ describe Hashie::Mash do
       initial = Hashie::Mash.new(:name => 'randy', :address => {:state => 'TX'})
       copy = Hashie::Mash.new(initial)
       initial.name.should == copy.name
-      initial.object_id.should_not == copy.object_id
+      initial.__id__.should_not == copy.__id__
       copy.address.state.should == 'TX'
       copy.address.state = 'MI'
       initial.address.state.should == 'TX'
-      copy.address.object_id.should_not == initial.address.object_id
+      copy.address.__id__.should_not == initial.address.__id__
     end
 
     it "should accept a default block" do
