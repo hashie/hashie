@@ -90,7 +90,15 @@ module Hashie
       super(&block)
 
       self.class.defaults.each_pair do |prop, value|
-        self[prop] = value
+        self[prop] = if value.is_a?(Numeric)
+          value
+        else
+          begin
+            value.dup
+          rescue TypeError
+            value
+          end
+        end
       end
 
       initialize_attributes(attributes)

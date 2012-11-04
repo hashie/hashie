@@ -22,6 +22,10 @@ class Subclassed < DashTest
   property :last_name, :required => true
 end
 
+class DashDefaultTest < Hashie::Dash
+  property :aliases, :default => ["Snake"]
+end
+
 describe DashTest do
 
   subject { DashTest.new(:first_name => 'Bob', :email => 'bob@example.com') }
@@ -120,6 +124,12 @@ describe DashTest do
       expect { DashTest.new }.to raise_error(ArgumentError)
     end
 
+    it "does not overwrite default values" do
+      obj1 = DashDefaultTest.new
+      obj1.aliases << "El Rey"
+      obj2 = DashDefaultTest.new
+      obj2.aliases.should_not include "El Rey"
+    end
   end
 
   describe 'properties' do
