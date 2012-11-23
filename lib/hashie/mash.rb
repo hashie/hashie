@@ -118,6 +118,10 @@ module Hashie
       end
     end
 
+    def fetch(key, default_value = nil)
+      self[key] || block_given? && yield(key) || default_value || super(key)
+    end
+
     def delete(key)
       super(convert_key(key))
     end
