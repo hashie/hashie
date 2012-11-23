@@ -106,7 +106,6 @@ describe Hashie::Mash do
     @mash.object_id.should == "Steve"
   end
 
-
   it "should not call super if id is not a key" do
     @mash.id.should == nil
   end
@@ -249,7 +248,6 @@ describe Hashie::Mash do
     son.non_existent_.should be_kind_of(SubMash)
   end
 
-
   it "should respect the class when converting the value" do
     record = Hashie::Mash.new
     record.details = Hashie::Mash.new({:email => "randy@asf.com"})
@@ -267,7 +265,7 @@ describe Hashie::Mash do
     record.details.should be_kind_of(SubMash)
   end
 
-  describe '#respond_to?' do
+  describe "#respond_to?" do
     it 'should respond to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)
     end
