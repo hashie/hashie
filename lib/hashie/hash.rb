@@ -5,7 +5,7 @@ module Hashie
   # functions baked in such as stringify_keys that may
   # not be available in all libraries.
   class Hash < ::Hash
-    include Hashie::HashExtensions
+    include HashExtensions
 
     # Converts a mash back to a hash (with stringified keys)
     def to_hash
@@ -14,10 +14,10 @@ module Hashie
         if self[k].is_a?(Array)
           out[k] ||= []
           self[k].each do |array_object|
-            out[k] << (Hashie::Hash === array_object ? array_object.to_hash : array_object)
+            out[k] << (Hash === array_object ? array_object.to_hash : array_object)
           end
         else
-          out[k] = Hashie::Hash === self[k] ? self[k].to_hash : self[k]
+          out[k] = Hash === self[k] ? self[k].to_hash : self[k]
         end
       end
       out

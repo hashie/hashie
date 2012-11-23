@@ -54,7 +54,7 @@ module Hashie
   #   mash.author_.name = "Michael Bleigh"  (assigned to temp object)
   #   mash.author # => <Mash>
   #
-  class Mash < Hashie::Hash
+  class Mash < Hash
     include Hashie::PrettyInspect
     alias_method :to_s, :inspect
 
