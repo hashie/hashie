@@ -33,8 +33,8 @@ module Hashie
 
         # NOTE: may overwrite existing method multiple times
         define_method "#{options[:from]}=" do |val|
-          self.class.translations[options[:from]].each do |property_name, with|
-            self[property_name] = with.respond_to?(:call) ? with.call(val) : val
+          self.class.translations[options[:from]].each do |translation_name, with|
+            self[translation_name] = with.respond_to?(:call) ? with.call(val) : val
           end
         end
       else
@@ -57,6 +57,10 @@ module Hashie
     end
 
     private
+
+    def self.properties
+      @properties ||= {}
+    end
 
     def self.translations
       @translations ||= {} # NOTE: Hash.new { {} } ? to provide lazy value initialization for new keys
