@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.name          = "hashie"
   gem.require_paths = ['lib']
   gem.version       = Hashie::VERSION
+  gem.license       = "MIT"
 
   gem.add_development_dependency 'rake', '~> 0.9.2'
   gem.add_development_dependency 'rspec', '~> 2.5'
