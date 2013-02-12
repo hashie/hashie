@@ -341,7 +341,8 @@ describe Hashie::Mash do
     
     context "when key does not exist" do
       it "should raise KeyError" do
-        expect { mash.fetch(:two) }.to raise_error(KeyError)
+        error = RUBY_VERSION =~ /1.8/ ? IndexError : KeyError
+        expect { mash.fetch(:two) }.to raise_error(error)
       end
       
       context "with default value given" do
