@@ -90,14 +90,10 @@ module Hashie
       super(&block)
 
       self.class.defaults.each_pair do |prop, value|
-        self[prop] = if value.is_a?(Numeric)
+        self[prop] = begin
+          value.dup
+        rescue TypeError
           value
-        else
-          begin
-            value.dup
-          rescue TypeError
-            value
-          end
         end
       end
 
