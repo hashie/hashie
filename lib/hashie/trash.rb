@@ -76,11 +76,12 @@ module Hashie
 
     private
 
+    # Deletes any keys that have a translation
     def initialize_attributes(attributes)
       return unless attributes
-      attributes_copy=attributes.dup.delete_if do |k,v|
+      attributes_copy = attributes.dup.delete_if do |k,v|
         if self.class.translations.include?(k.to_sym)
-          self[k]=v
+          self[k] = v
           true
         end
       end
