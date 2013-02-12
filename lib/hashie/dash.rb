@@ -90,7 +90,11 @@ module Hashie
       super(&block)
 
       self.class.defaults.each_pair do |prop, value|
-        self[prop] = value
+        self[prop] = begin
+          value.dup
+        rescue TypeError
+          value
+        end
       end
 
       initialize_attributes(attributes)
