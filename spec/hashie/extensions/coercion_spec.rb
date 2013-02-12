@@ -35,6 +35,15 @@ describe Hashie::Extensions::Coercion do
       instance[:foo].should be_coerced
     end
 
+    it "should support an array of keys" do
+      subject.coerce_keys :foo, :bar, Coercable
+
+      instance[:foo] = "bar"
+      instance[:bar] = "bax"
+      instance[:foo].should be_coerced
+      instance[:bar].should be_coerced
+    end
+
     it 'should just call #new if no coerce method is available' do
       subject.coerce_key :foo, Initializable
 

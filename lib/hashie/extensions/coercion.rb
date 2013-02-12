@@ -29,17 +29,21 @@ module Hashie
         # and then by calling Class.new with the value as an argument
         # in either case.
         #
-        # @param [Object] key the key you would like to be coerced.
-        # @param [Class] into the class into which you want the key coerced.
+        # @param [Object] key the key or array of keys you would like to be coerced.
+        # @param [Class] into the class into which you want the key(s) coerced.
         #
         # @example Coerce a "user" subhash into a User object
         #   class Tweet < Hash
         #     include Hashie::Extensions::Coercion
         #     coerce_key :user, User
         #   end
-        def coerce_key(key, into)
-          (@key_coercions ||= {})[key] = into
+        def coerce_key(*attrs)
+          @key_coercions ||= {}
+          into = attrs.pop
+          attrs.each { |key| @key_coercions[key] = into }
         end
+
+        alias :coerce_keys :coerce_key
 
         # Returns a hash of any existing key coercions.
         def key_coercions
