@@ -201,7 +201,7 @@ provide.
 
     c = Hashie::Clash.new
     c.where(:abc => 'def').order(:created_at)
-    c # => {:where => {:abc => 'def}, :order => :created_at}
+    c # => {:where => {:abc => 'def'}, :order => :created_at}
 
     # You can also use bang notation to chain into sub-hashes,
     # jumping back up the chain with _end!
