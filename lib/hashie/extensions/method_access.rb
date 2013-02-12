@@ -27,7 +27,7 @@ module Hashie
     #
     #   user.not_declared # => NoMethodError
     module MethodReader
-      def respond_to?(name)
+      def respond_to?(name, include_private = false)
         return true if key?(name.to_s) || key?(name.to_sym)
         super
       end
@@ -57,7 +57,7 @@ module Hashie
     #   h['awesome'] # => 'sauce'
     #
     module MethodWriter
-      def respond_to?(name)
+      def respond_to?(name, include_private = false)
         return true if name.to_s =~ /=$/
         super
       end
@@ -96,7 +96,7 @@ module Hashie
     #   h.def? # => false
     #   h.hji? # => NoMethodError
     module MethodQuery
-      def respond_to?(name)
+      def respond_to?(name, include_private = false)
         return true if name.to_s =~ /(.*)\?$/ && (key?($1) || key?($1.to_sym))
         super
       end
