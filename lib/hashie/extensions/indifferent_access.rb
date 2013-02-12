@@ -42,7 +42,7 @@ module Hashie
       # a hash without modifying the actual class. This is what
       # allows IndifferentAccess to spread to sub-hashes.
       def self.inject!(hash)
-        (class << hash; self; end).send :include, Hashie::Extensions::IndifferentAccess
+        (class << hash; self; end).send :include, IndifferentAccess
         hash.convert!
       end
 
@@ -68,7 +68,7 @@ module Hashie
 
       def convert_value(value)
         if hash_lacking_indifference?(value)
-          Hashie::Extensions::IndifferentAccess.inject(value.dup)
+          IndifferentAccess.inject(value.dup)
         elsif value.is_a?(::Array)
           value.dup.replace(value.map { |e| convert_value(e) })
         else
