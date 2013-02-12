@@ -12,8 +12,8 @@ module Hashie
   #
   # It is preferrable to a Struct because of the in-class
   # API for defining properties as well as per-property defaults.
-  class Dash < Hashie::Hash
-    include Hashie::PrettyInspect
+  class Dash < Hash
+    include PrettyInspect
     alias_method :to_s, :inspect
 
     # Defines a property on the Dash. Options are

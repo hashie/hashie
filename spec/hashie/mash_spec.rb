@@ -106,7 +106,6 @@ describe Hashie::Mash do
     @mash.object_id.should == "Steve"
   end
 
-
   it "should not call super if id is not a key" do
     @mash.id.should == nil
   end
@@ -249,7 +248,6 @@ describe Hashie::Mash do
     son.non_existent_.should be_kind_of(SubMash)
   end
 
-
   it "should respect the class when converting the value" do
     record = Hashie::Mash.new
     record.details = Hashie::Mash.new({:email => "randy@asf.com"})
@@ -267,7 +265,7 @@ describe Hashie::Mash do
     record.details.should be_kind_of(SubMash)
   end
 
-  describe '#respond_to?' do
+  describe "#respond_to?" do
     it 'should respond to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)
     end
@@ -322,6 +320,51 @@ describe Hashie::Mash do
       converted.to_hash["a"].first.is_a?(Hashie::Mash).should be_false
       converted.to_hash["a"].first.is_a?(Hash).should be_true
       converted.to_hash["a"].first["c"].first.is_a?(Hashie::Mash).should be_false
+    end
+  end
+  
+  describe "#fetch" do
+    let(:key) { :one }
+    let(:value) { 1 }
+    let(:hash) { {key => value} }
+    let(:mash) { Hashie::Mash.new(hash) }
+    
+    context "when key exists" do
+      it "returns the value" do
+        mash.fetch(key).should eql(value)
+      end
+      
+      context "when key has other than original but acceptable type" do
+        let(:acceptable_key) { key.to_s }
+        
+        it "returns the value" do
+          mash.fetch(acceptable_key).should eql(value)
+        end
+      end
+    end
+    
+    context "when key does not exist" do
+      let(:other_key) { :two }
+      
+      it "should raise KeyError" do
+        expect { mash.fetch(other_key) }.to raise_error(KeyError)
+      end
+      
+      context "with default value given" do
+        let(:default_value) { 8 }
+        
+        it "returns default value" do
+          mash.fetch(other_key, default_value).should eql(default_value)
+        end
+      end
+      
+      context "with block given" do
+        let(:block_value) { Proc.new {|i| "Default value is: #{i}"} }
+        
+        it "returns default value" do
+          (mash.fetch(other_key, &block_value)).should eql(block_value.call(other_key))
+        end
+      end
     end
   end
 end

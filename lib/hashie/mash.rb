@@ -54,7 +54,7 @@ module Hashie
   #   mash.author_.name = "Michael Bleigh"  (assigned to temp object)
   #   mash.author # => <Mash>
   #
-  class Mash < Hashie::Hash
+  class Mash < Hash
     include Hashie::PrettyInspect
     alias_method :to_s, :inspect
 
@@ -116,6 +116,10 @@ module Hashie
       else
         self.class.new
       end
+    end
+
+    def fetch(key, default_value = nil)
+      self[key] || block_given? && yield(key) || default_value || super(key)
     end
 
     def delete(key)

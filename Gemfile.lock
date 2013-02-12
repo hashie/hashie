@@ -26,6 +26,7 @@ GEM
 PLATFORMS
   java
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   growl

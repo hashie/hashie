@@ -7,7 +7,7 @@ module Hashie
   # Trashes are useful when you need to read data from another application,
   # such as a Java api, where the keys are named differently from how we would
   # in Ruby.
-  class Trash < Hashie::Dash
+  class Trash < Dash
 
     # Defines a property on the Trash. Options are as follows:
     #
