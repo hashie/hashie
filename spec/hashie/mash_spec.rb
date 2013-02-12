@@ -324,45 +324,37 @@ describe Hashie::Mash do
   end
   
   describe "#fetch" do
-    let(:key) { :one }
-    let(:value) { 1 }
-    let(:hash) { {key => value} }
+    let(:hash) { {:one => 1} }
     let(:mash) { Hashie::Mash.new(hash) }
     
     context "when key exists" do
       it "returns the value" do
-        mash.fetch(key).should eql(value)
+        mash.fetch(:one).should eql(1)
       end
       
       context "when key has other than original but acceptable type" do
-        let(:acceptable_key) { key.to_s }
-        
         it "returns the value" do
-          mash.fetch(acceptable_key).should eql(value)
+          mash.fetch('one').should eql(1)
         end
       end
     end
     
     context "when key does not exist" do
-      let(:other_key) { :two }
-      
       it "should raise KeyError" do
-        expect { mash.fetch(other_key) }.to raise_error(KeyError)
+        expect { mash.fetch(:two) }.to raise_error(KeyError)
       end
       
       context "with default value given" do
-        let(:default_value) { 8 }
-        
         it "returns default value" do
-          mash.fetch(other_key, default_value).should eql(default_value)
+          mash.fetch(:two, 8).should eql(8)
         end
       end
       
       context "with block given" do
-        let(:block_value) { Proc.new {|i| "Default value is: #{i}"} }
-        
         it "returns default value" do
-          (mash.fetch(other_key, &block_value)).should eql(block_value.call(other_key))
+          mash.fetch(:two) {|key|
+            "block default value"
+          }.should eql("block default value")
         end
       end
     end
