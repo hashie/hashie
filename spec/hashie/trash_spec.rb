@@ -63,6 +63,12 @@ describe Hashie::Trash do
       TrashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
     end
 
+    context "with both the translated property and the property" do
+      it 'sets the desired properties' do
+        TrashTest.new(:first_name => 'Michael', :firstName=>'Maeve').first_name.should == 'Michael'
+      end
+    end
+
     it 'sets the translated properties' do
       TrashTest.new(:firstName => 'Michael').first_name.should == 'Michael'
     end

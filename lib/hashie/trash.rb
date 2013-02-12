@@ -73,5 +73,18 @@ module Hashie
       end
       true
     end
+
+    private
+
+    def initialize_attributes(attributes)
+      return unless attributes
+      attributes_copy=attributes.dup.delete_if do |k,v|
+        if self.class.translations.include?(k.to_sym)
+          self[k]=v
+          true
+        end
+      end
+      super attributes_copy
+    end
   end
 end
