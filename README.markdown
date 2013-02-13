@@ -146,6 +146,10 @@ to JSON and XML parsed hashes.
 to false or nil. In order to check if a key has been set at all, use the
 `mash.key?('some_key')` method instead.
 
+**Note:** Do not use the following keys: `type`, `object_id`, and `id`. These
+are Ruby [Object](http://ruby-doc.org/core-1.9.3/Object.html) methods.
+Overriding them means you're going to have a Bad Time™.
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties
