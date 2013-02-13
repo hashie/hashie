@@ -159,6 +159,12 @@ describe Hashie::Mash do
         duped.details.email.should == "michael@intridea.com"
         duped.details.address.should == "Nowhere road"
       end
+
+      # http://www.ruby-doc.org/core-1.9.3/Hash.html#method-i-update
+      it "accepts a block" do
+        duped = subject.merge(:details => {:address => "Pasadena CA"}) {|key, oldv, newv| [oldv, newv].join(', ')}
+        duped.details.address.should == 'Nowhere road, Pasadena CA'
+      end
     end
 
     describe "shallow update" do
