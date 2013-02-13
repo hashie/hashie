@@ -97,33 +97,6 @@ describe Hashie::Mash do
     @mash.author.should be_nil
   end
 
-  it "should not call super if object_id is not a key" do
-    @mash.object_id.should == nil
-  end
-
-  it "should return the value if object_id is a key" do
-    @mash.object_id = "Steve"
-    @mash.object_id.should == "Steve"
-  end
-
-  it "should not call super if id is not a key" do
-    @mash.id.should == nil
-  end
-
-  it "should return the value if id is a key" do
-    @mash.id = "Steve"
-    @mash.id.should == "Steve"
-  end
-
-  it "should not call super if type is not a key" do
-    @mash.type.should == nil
-  end
-
-  it "should return the value if type is a key" do
-    @mash.type = "Steve"
-    @mash.type.should == "Steve"
-  end
-
   context "updating" do
     subject {
       described_class.new :first_name => "Michael", :last_name => "Bleigh",
