@@ -17,7 +17,7 @@ module Hashie
             out[k] << (::Hash === array_object ? array_object.to_hash : array_object)
           end
         else
-          out[k] = || ::Hash === self[k] ? self[k].to_hash : self[k]
+          out[k] = ::Hash === self[k] ? self[k].to_hash : self[k]
         end
       end
       out
