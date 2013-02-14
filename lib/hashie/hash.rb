@@ -8,19 +8,23 @@ module Hashie
     include HashExtensions
 
     # Converts a mash back to a hash (with stringified keys)
-    def to_hash
+    def self.to_hash(hash)
       out = {}
-      keys.each do |k|
-        if self[k].is_a?(Array)
+      hash.keys.each do |k|
+        if hash[k].is_a?(Array)
           out[k] ||= []
-          self[k].each do |array_object|
-            out[k] << (::Hash === array_object ? array_object.to_hash : array_object)
+          hash[k].each do |array_object|
+            out[k] << (::Hash === array_object ? to_hash(array_object) : array_object)
           end
         else
-          out[k] = ::Hash === self[k] ? self[k].to_hash : self[k]
+          out[k] = ::Hash === hash[k] ? to_hash(hash[k]) : hash[k]
         end
       end
       out
+    end
+
+    def to_hash
+      self.class.to_hash(self)
     end
 
     # The C geneartor for the json gem doesn't like mashies
