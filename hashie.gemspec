@@ -1,8 +1,8 @@
 require File.expand_path('../lib/hashie/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Michael Bleigh"]
-  gem.email         = ["michael@intridea.com"]
+  gem.authors       = ["Michael Bleigh", "Jerry Cheung"]
+  gem.email         = ["michael@intridea.com", "jollyjerry@gmail.com"]
   gem.description   = %q{Hashie is a small collection of tools that make hashes more powerful. Currently includes Mash (Mocking Hash) and Dash (Discrete Hash).}
   gem.summary       = %q{Your friendly neighborhood hash toolkit.}
   gem.homepage      = 'https://github.com/intridea/hashie'
