@@ -97,15 +97,6 @@ describe Hashie::Mash do
     @mash.author.should be_nil
   end
 
-  it "should not call super if object_id is not a key" do
-    @mash.object_id.should == nil
-  end
-
-  it "should return the value if object_id is a key" do
-    @mash.object_id = "Steve"
-    @mash.object_id.should == "Steve"
-  end
-
   it "should not call super if id is not a key" do
     @mash.id.should == nil
   end
