@@ -187,13 +187,13 @@ describe Hashie::Mash do
       it 'should delete with String key' do
         subject.delete('details')
         subject.details.should be_nil
-        subject.should_not be_respond_to :details
+        subject.key?(:details).should be_false
       end
 
       it 'should delete with Symbol key' do
         subject.delete(:details)
         subject.details.should be_nil
-        subject.should_not be_respond_to :details
+        subject.key?(:details).should be_false
       end
     end
   end
@@ -269,6 +269,10 @@ describe Hashie::Mash do
 
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
+    end
+
+    it 'should respond to a non set key' do
+      Hashie::Mash.new.should be_respond_to(:abc)
     end
   end
 
