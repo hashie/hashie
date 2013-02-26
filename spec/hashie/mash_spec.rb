@@ -317,37 +317,38 @@ describe Hashie::Mash do
       converted.to_hash["a"].first.is_a?(Hashie::Mash).should be_false
       converted.to_hash["a"].first.is_a?(Hash).should be_true
       converted.to_hash["a"].first["c"].first.is_a?(Hashie::Mash).should be_false
+      converted.to_hash({:symbolize_keys => true}).keys[0].should == :a
     end
   end
-  
+
   describe "#fetch" do
     let(:hash) { {:one => 1} }
     let(:mash) { Hashie::Mash.new(hash) }
-    
+
     context "when key exists" do
       it "returns the value" do
         mash.fetch(:one).should eql(1)
       end
-      
+
       context "when key has other than original but acceptable type" do
         it "returns the value" do
           mash.fetch('one').should eql(1)
         end
       end
     end
-    
+
     context "when key does not exist" do
       it "should raise KeyError" do
         error = RUBY_VERSION =~ /1.8/ ? IndexError : KeyError
         expect { mash.fetch(:two) }.to raise_error(error)
       end
-      
+
       context "with default value given" do
         it "returns default value" do
           mash.fetch(:two, 8).should eql(8)
         end
       end
-      
+
       context "with block given" do
         it "returns default value" do
           mash.fetch(:two) {|key|
