@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.1
+
+* remove Mash#object_id override matschaffer #81
+* gem cleanup: remove VERSION, Gemfile.lock jch, mbleigh
+
 ## 2.0.0
 
 * update gemspec with license info jordimassaguerpla #72
