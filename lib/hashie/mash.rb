@@ -175,6 +175,11 @@ module Hashie
       self
     end
 
+    def replace(other_hash)
+      (keys - other_hash.keys).each { |key| delete(key) }
+      other_hash.each { |key, value| self[key] = value }
+    end
+
    # Will return true if the Mash has had a key
    # set in addition to normal respond_to? functionality.
    def respond_to?(method_name, include_private=false)

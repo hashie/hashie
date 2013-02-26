@@ -183,6 +183,29 @@ describe Hashie::Mash do
       end
     end
 
+    describe '#replace' do
+      before do
+        subject.replace(:middle_name => "Cain",
+          :details => {:city => "Imagination"})
+      end
+
+      it 'sets all specified keys to their corresponding values' do
+        subject.middle_name?.should be_true
+        subject.details?.should be_true
+        subject.middle_name.should == "Cain"
+        subject.details.city?.should be_true
+        subject.details.city.should == "Imagination"
+      end
+
+      it 'leaves only specified keys' do
+        subject.keys.should == ['middle_name', 'details']
+        subject.first_name?.should be_false
+        subject.first_name.should be_nil
+        subject.last_name?.should be_false
+        subject.last_name.should be_nil
+      end
+    end
+
     describe 'delete' do
       it 'should delete with String key' do
         subject.delete('details')
