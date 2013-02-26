@@ -127,6 +127,12 @@ module Hashie
       super(property.to_s, value)
     end
 
+    def replace(other_hash)
+      other_hash = other_hash.merge(self.class.defaults)
+      (keys - other_hash.keys).each { |key| delete(key) }
+      other_hash.each { |key, value| self[key] = value }
+    end
+
     private
 
       def initialize_attributes(attributes)

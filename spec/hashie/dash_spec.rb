@@ -170,6 +170,20 @@ describe DashTest do
       described_class.defaults.should == { :count => 0 }
     end
   end
+
+  describe '#replace' do
+    before { subject.replace(:first_name => "Cain") }
+
+    it 'sets all specified keys to their corresponding values' do
+      subject.first_name.should == "Cain"
+    end
+
+    it 'leaves only specified keys and keys with default values' do
+      subject.keys.should == ['first_name', 'count']
+      subject.email.should be_nil
+      subject.count.should == 0
+    end
+  end
 end
 
 describe Hashie::Dash, 'inheritance' do
