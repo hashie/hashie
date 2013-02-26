@@ -318,6 +318,14 @@ describe Hashie::Mash do
       converted.to_hash["a"].first.is_a?(Hash).should be_true
       converted.to_hash["a"].first["c"].first.is_a?(Hashie::Mash).should be_false
     end
+    
+    it "should convert Hashie::Mashes within Hashes back to Hashes" do
+      nested_mash = Hashie::Mash.new
+      initial_hash = {"a" => [{"b" => 22, "c" =>[{"d" => 60, "e" => 61, "nested" => nested_mash}]}, 33]}
+      converted = Hashie::Mash.new(initial_hash)
+      converted.to_hash["a"].first.is_a?(Hash).should be_true
+      converted.to_hash["a"].first["c"].first["nested"].is_a?(Hashie::Mash).should be_false
+    end
   end
   
   describe "#fetch" do
