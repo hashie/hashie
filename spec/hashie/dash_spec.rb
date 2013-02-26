@@ -179,9 +179,17 @@ describe DashTest do
     end
 
     it 'leaves only specified keys and keys with default values' do
-      subject.keys.should == ['first_name', 'count']
+      subject.keys.sort.should == ['count', 'first_name']
       subject.email.should be_nil
       subject.count.should == 0
+    end
+
+    context 'when replacing keys with default values' do
+      before { subject.replace(:count => 3) }
+
+      it 'sets all specified keys to their corresponding values' do
+        subject.count.should == 3
+      end
     end
   end
 end
