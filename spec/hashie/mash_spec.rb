@@ -200,9 +200,9 @@ describe Hashie::Mash do
       it 'leaves only specified keys' do
         subject.keys.sort.should == ['details', 'middle_name']
         subject.first_name?.should be_false
-        subject.first_name.should be_nil
+        subject.should_not respond_to(:first_name)
         subject.last_name?.should be_false
-        subject.last_name.should be_nil
+        subject.should_not respond_to(:last_name)
       end
     end
 
