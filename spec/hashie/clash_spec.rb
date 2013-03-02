@@ -42,8 +42,7 @@ describe Hashie::Clash do
 
   it 'should be able to replace all of its own keys with #replace' do
     @c.foo(:bar).hello(:world)
-    @c.replace(:baz => 123, :hgi => 123)
-    @c.keys.sort.should == [:baz, :hgi]
+    @c.replace(:baz => 123, :hgi => 123).should == {:baz => 123, :hgi => 123}
     @c.should == {:baz => 123, :hgi => 123}
     @c[:foo].should be_nil
     @c[:hello].should be_nil
