@@ -58,15 +58,45 @@ describe Hashie::Extensions::Coercion do
 
       instance[:foo].should be_coerced
     end
+
+    context 'when #replace is used' do
+      before { subject.coerce_key :foo, :bar, Coercable }
+
+      let(:instance) do
+        subject.new(:foo => "bar").
+          replace(:foo => "foz", :bar => "baz", :hi => "bye")
+      end
+
+      it "should coerce relevant keys" do
+        instance[:foo].should be_coerced
+        instance[:bar].should be_coerced
+        instance[:hi].should_not respond_to(:coerced?)
+      end
+
+      it "should set correct values" do
+        instance[:hi].should == "bye"
+      end
+    end
   end
 
   describe '.coerce_value' do
     context 'with :strict => true' do
       it 'should coerce any value of the exact right class' do
         subject.coerce_value String, Coercable
-        
+
         instance[:foo] = "bar"
         instance[:bar] = "bax"
+        instance[:hi]  = :bye
+        instance[:foo].should be_coerced
+        instance[:bar].should be_coerced
+        instance[:hi].should_not respond_to(:coerced?)
+      end
+
+      it 'should coerce values from a #replace call' do
+        subject.coerce_value String, Coercable
+
+        instance[:foo] = :bar
+        instance.replace(:foo => "bar", :bar => "bax")
         instance[:foo].should be_coerced
         instance[:bar].should be_coerced
       end

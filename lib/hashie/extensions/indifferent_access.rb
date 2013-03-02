@@ -27,7 +27,7 @@ module Hashie
         base.class_eval do
           alias_method :regular_writer, :[]=
           alias_method :[]=, :indifferent_writer
-          %w(default update fetch delete key? values_at).each do |m|
+          %w(default update replace fetch delete key? values_at).each do |m|
             alias_method "regular_#{m}", m
             alias_method m, "indifferent_#{m}"
           end
@@ -95,7 +95,13 @@ module Hashie
       def indifferent_values_at(*indices); indices.map{|i| self[i] }                             end
 
       def indifferent_access?; true end
-      
+
+      def indifferent_replace(other_hash)
+        (keys - other_hash.keys).each { |key| delete(key) }
+        other_hash.each { |key, value| self[key] = value }
+        self
+      end
+
       protected
 
       def hash_lacking_indifference?(other)

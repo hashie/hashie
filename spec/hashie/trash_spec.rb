@@ -52,6 +52,16 @@ describe Hashie::Trash do
       trash.firstName = 'Franklin'
       trash.first_name.should == 'Franklin'
     end
+
+    it 'writes to a translated property using #replace' do
+      trash.replace(:firstName => 'Franklin')
+      trash.first_name.should == 'Franklin'
+    end
+
+    it 'writes to a non-translated property using #replace' do
+      trash.replace(:first_name => 'Franklin')
+      trash.first_name.should == 'Franklin'
+    end
   end
 
   describe ' initializing with a Hash' do
