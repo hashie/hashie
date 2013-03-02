@@ -178,6 +178,7 @@ module Hashie
     def replace(other_hash)
       (keys - other_hash.keys).each { |key| delete(key) }
       other_hash.each { |key, value| self[key] = value }
+      self
     end
 
    # Will return true if the Mash has had a key

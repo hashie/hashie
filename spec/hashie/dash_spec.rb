@@ -174,6 +174,11 @@ describe DashTest do
   describe '#replace' do
     before { subject.replace(:first_name => "Cain") }
 
+    it 'return self' do
+      subject.replace(:email => "bar").to_hash.
+        should == {"email" => "bar", "count" => 0}
+    end
+
     it 'sets all specified keys to their corresponding values' do
       subject.first_name.should == "Cain"
     end

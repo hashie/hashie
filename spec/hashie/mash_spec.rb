@@ -189,6 +189,10 @@ describe Hashie::Mash do
           :details => {:city => "Imagination"})
       end
 
+      it 'return self' do
+        subject.replace(:foo => "bar").to_hash.should == {"foo" => "bar"}
+      end
+
       it 'sets all specified keys to their corresponding values' do
         subject.middle_name?.should be_true
         subject.details?.should be_true
