@@ -39,4 +39,13 @@ describe Hashie::Clash do
     @c.where(:abc => 'def').where(:hgi => 123)
     @c.should == {:where => {:abc => 'def', :hgi => 123}}
   end
+
+  it 'should be able to replace all of its own keys with #replace' do
+    @c.foo(:bar).hello(:world)
+    @c.replace(:baz => 123, :hgi => 123)
+    @c.keys.sort.should == [:baz, :hgi]
+    @c.should == {:baz => 123, :hgi => 123}
+    @c[:foo].should be_nil
+    @c[:hello].should be_nil
+  end
 end
