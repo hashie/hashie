@@ -27,6 +27,24 @@ describe Hashie::Trash do
     it 'does not create a method for reading the translated property' do
       trash.should_not respond_to(:firstName)
     end
+
+    context "multiple arguments" do
+      class MultipleArgumentsTest < Hashie::Trash
+        property :first_name, :from => :firstName
+        property :last_name,  :from => :firstName
+      end
+
+      let(:trash) { MultipleArgumentsTest.new(:firstName => 'Michael') }
+
+      it 'translates all properties' do
+        trash.keys.should =~ %w{first_name last_name}
+      end
+
+      it 'assigns all values' do
+        trash.first_name.should == 'Michael'
+        trash.last_name.should  == 'Michael'
+      end
+    end
   end
 
   describe 'writing to properties' do
@@ -132,6 +150,24 @@ describe Hashie::Trash do
         t.first_name.should == 'Michael'
       end
 
+    end
+
+    context 'multiple properties' do
+      class MultiplePropertiesProcTest < Hashie::Trash
+        property :first_name, :from => :firstName, :with => lambda { |value| value.reverse }
+        property :last_name,  :from => :firstName, :with => lambda { |value| value.upcase }
+      end
+
+      let(:trash) { MultiplePropertiesProcTest.new(:firstName => 'Michael') }
+
+      it 'translates all properties' do
+        trash.keys.should =~ %w{first_name last_name}
+      end
+
+      it 'assigns all values' do
+        trash.first_name.should == 'leahciM'
+        trash.last_name.should  == 'MICHAEL'
+      end
     end
   end
 
