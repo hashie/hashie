@@ -71,4 +71,29 @@ describe Hashie::Extensions::IndifferentAccess do
       Hash.new.should_not be_respond_to(:indifferent_access?)
     end
   end
+
+  describe '#replace' do
+    subject do
+      IndifferentHash.new(:foo => 'bar').replace(:bar => 'baz', :hi => 'bye')
+    end
+
+    it 'returns self' do
+      subject.should be_a(IndifferentHash)
+    end
+
+    it 'should remove old keys' do
+      [:foo, 'foo'].each do |k|
+        subject[k].should be_nil
+        subject.key?(k).should be_false
+      end
+    end
+
+    it 'creates new keys with indifferent access' do
+      [:bar, 'bar', :hi, 'hi'].each { |k| subject.key?(k).should be_true }
+      subject[:bar].should  == 'baz'
+      subject['bar'].should == 'baz'
+      subject[:hi].should   == 'bye'
+      subject['hi'].should  == 'bye'
+    end
+  end
 end
