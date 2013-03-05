@@ -58,6 +58,10 @@ module Hashie
 
     private
 
+    def self.properties
+      @properties ||= []
+    end
+
     def self.translations
       @translations ||= {} # NOTE: Hash.new { {} } ? to provide lazy value initialization for new keys
     end
