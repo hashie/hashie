@@ -181,29 +181,29 @@ module Hashie
       self
     end
 
-   # Will return true if the Mash has had a key
-   # set in addition to normal respond_to? functionality.
-   def respond_to?(method_name, include_private=false)
-     return true if key?(method_name)
-     super
-   end
+    # Will return true if the Mash has had a key
+    # set in addition to normal respond_to? functionality.
+    def respond_to?(method_name, include_private=false)
+      return true if key?(method_name) || method_name.to_s.slice(/[=?!_]\Z/)
+      super
+    end
 
-   def method_missing(method_name, *args, &blk)
-     return self.[](method_name, &blk) if key?(method_name)
-     match = method_name.to_s.match(/(.*?)([?=!_]?)$/)
-     case match[2]
-     when "="
-       self[match[1]] = args.first
-     when "?"
-       !!self[match[1]]
-     when "!"
-       initializing_reader(match[1])
-     when "_"
-       underbang_reader(match[1])
-     else
-       default(method_name, *args, &blk)
-     end
-   end
+    def method_missing(method_name, *args, &blk)
+      return self.[](method_name, &blk) if key?(method_name)
+      match = method_name.to_s.match(/(.*?)([?=!_]?)$/)
+      case match[2]
+      when "="
+        self[match[1]] = args.first
+      when "?"
+        !!self[match[1]]
+      when "!"
+        initializing_reader(match[1])
+      when "_"
+        underbang_reader(match[1])
+      else
+        default(method_name, *args, &blk)
+      end
+    end
 
     protected
 

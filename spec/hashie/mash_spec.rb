@@ -297,6 +297,22 @@ describe Hashie::Mash do
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
     end
+    
+    it 'should respond to a set key with a suffix' do
+      %w(= ? ! _).each do |suffix|
+        Hashie::Mash.new(:abc => 'def').should be_respond_to(:"abc#{suffix}")
+      end
+    end
+    
+    it 'should respond to an unknown key with a suffix' do
+      %w(= ? ! _).each do |suffix|
+        Hashie::Mash.new(:abc => 'def').should be_respond_to(:"xyz#{suffix}")
+      end
+    end
+    
+    it "should not respond to an unknown key without a suffix" do
+      Hashie::Mash.new(:abc => 'def').should_not be_respond_to(:xyz)
+    end
   end
 
   context "#initialize" do
