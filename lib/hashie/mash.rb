@@ -184,7 +184,7 @@ module Hashie
     # Will return true if the Mash has had a key
     # set in addition to normal respond_to? functionality.
     def respond_to?(method_name, include_private=false)
-      return true if key?(method_name) || key?(method_name.to_s.sub(/[=?!_]\Z/, ''))
+      return true if key?(method_name) || method_name.to_s.slice(/[=?!_]\Z/)
       super
     end
 
