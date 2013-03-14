@@ -297,6 +297,12 @@ describe Hashie::Mash do
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
     end
+    
+    it 'should respond to a suffixed key' do
+      %w(= ? ! _).each do |suffix|
+        Hashie::Mash.new(:abc => 'def').should be_respond_to(:"abc#{suffix}")
+      end
+    end
   end
 
   context "#initialize" do
