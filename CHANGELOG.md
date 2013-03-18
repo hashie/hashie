@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.3
+
+* Hashie::Mash.new(abc: true).respond_to?(:abc?) works 7even #88
+* Fix #replace jimeh #68
+
 ## 2.0.2
 
 * adding symbolize_keys back to to_hash cromulus #85
