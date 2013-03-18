@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.2
+
+* adding symbolize_keys back to to_hash cromulus #85
+
 ## 2.0.1
 
 * remove Mash#object_id override matschaffer #81
