@@ -233,4 +233,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Copyright
 
-Copyright (c) 2009-2011 Intridea, Inc. (http://intridea.com/). See LICENSE for details.
+Copyright (c) 2009-2013 Intridea, Inc. (http://intridea.com/). See LICENSE for details.
