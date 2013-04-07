@@ -1,6 +1,3 @@
-**Note:** This documentation is for the unreleased version 2.0 of
-Hashie. See the [1-1-stable branch](https://github.com/intridea/hashie/tree/1-1-stable) for documentation of the released version.
-
 # Hashie [![Build Status](https://secure.travis-ci.org/intridea/hashie.png)](http://travis-ci.org/intridea/hashie) [![Dependency Status](https://gemnasium.com/intridea/hashie.png)](https://gemnasium.com/intridea/hashie)
 
 Hashie is a growing collection of tools that extend Hashes and make
@@ -14,11 +11,10 @@ Hashie is available as a RubyGem:
 
 ## Hash Extensions
 
-New to version 2.0 of Hashie, the library has been broken up into a
-number of atomically includeable Hash extension modules as described
-below. This provides maximum flexibility for users to mix and match
-functionality while maintaining feature parity with earlier versions of
-Hashie.
+The library is broken up into a number of atomically includeable Hash
+extension modules as described below. This provides maximum flexibility
+for users to mix and match functionality while maintaining feature parity
+with earlier versions of Hashie.
 
 Any of the extensions listed below can be mixed into a class by
 `include`-ing `Hashie::Extensions::ExtensionName`.
