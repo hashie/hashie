@@ -1,10 +1,12 @@
 module Hashie
+<<<<<<< HEAD
   autoload :Clash,              'hashie/clash'
   autoload :Dash,               'hashie/dash'
   autoload :Hash,               'hashie/hash'
   autoload :Mash,               'hashie/mash'
   autoload :Trash,              'hashie/trash'
   autoload :Rash,               'hashie/rash'
+  autoload :Sash,		'hashie/sash'
 
   module Extensions
     autoload :Coercion,          'hashie/extensions/coercion'

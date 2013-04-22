@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Bini::Sash do
+describe Hashie::Sash do
 	before (:all) do
 		FileUtils.mkdir_p 'tmp'
 	end
 
 	before (:each) do
 		@filename = "tmp/sash_savefile.yaml"
-		@s = Bini::Sash.new options:{file:@filename}
+		@s = Hashie::Sash.new options:{file:@filename}
 		@s[:before_each] = true
 	end
 
@@ -16,7 +16,7 @@ describe Bini::Sash do
 	end
 
 	it "Can pass overrides via overrides:{}" do
-		@s2 = Bini::Sash.new(overrides:{foo: :bar})
+		@s2 = Hashie::Sash.new(overrides:{foo: :bar})
 		@s2.should  include(:foo)
 	end
 
@@ -37,7 +37,7 @@ describe Bini::Sash do
 		it "can save" do
 			@s['foo'] = :bar
 			@s.save
-			@s2 = Bini::Sash.new options:{file:@filename}
+			@s2 = Hashie::Sash.new options:{file:@filename}
 			@s2.load
 			@s2['foo'].should eq :bar
 		end
@@ -54,9 +54,9 @@ describe Bini::Sash do
 
 
 		it "can auto save" do
-			@s = Bini::Sash.new options:{file:@filename, auto_save:true}
+			@s = Hashie::Sash.new options:{file:@filename, auto_save:true}
 			@s[:auto_save] = true
-			@s2 = Bini::Sash.new options:{file:@filename}
+			@s2 = Hashie::Sash.new options:{file:@filename}
 			@s2.load
 			@s2[:auto_save].should be true
 		end
@@ -64,7 +64,7 @@ describe Bini::Sash do
 		it "can auto load" do
 			@s[:auto_load] = true
 			@s.save
-			@s2 = Bini::Sash.new options:{file:@filename, auto_load:true}
+			@s2 = Hashie::Sash.new options:{file:@filename, auto_load:true}
 			@s2[:auto_load].should be true
 		end
 
