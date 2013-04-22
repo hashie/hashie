@@ -223,6 +223,50 @@ provide.
     c.where(:abc => 'def').where(:hgi => 123)
     c # => {:where => {:abc => 'def', :hgi => 123}}
 
+## Sash
+
+Sash is a savable hash.  It saves the key/value pairs from the hash into a
+YAML file that can be loaded later.  It manages permissions (optionally), can
+create a backup/save file, automatically save on changes, as well as
+automatically load on startup. It can be configured before use, as well as
+reconfigured during use.
+
+### Configuration
+
+Configuration can be either at initialization or after.  The one drawback is
+you cannot (currently) feed it a new hash to set the initial values.
+
+The five main settings are:
+
+* file:     Filename to save the hash to.
+* backup:   Boolean, whether to produce a backup or not.
+* mode:     FixNum: mode to store it as: 0600, 0755, 0644 and so on.
+* autosave: Boolean: Automatically save on changes.
+* autoload: Boolean: Automatically load on init.
+
+The values for these do not get stored in the YAML file.  Only the k/v pairs you
+set do.
+
+### Examples
+
+Configuration:
+
+    s = Bini::Sash.new options => {:file => 'filename', :auto_save => true}
+
+Or after creation:
+
+    s.auto_save = true
+    s.auto_load = false
+    s.backup = true
+
+If backup or mode are set, they will update at the next time you save.
+
+During creation you can also pass in a hash to get merged in via the overrides
+param.
+
+    s = Bini::Sash.new options => {:file => 'filename', :auto_save => true},
+        overrides => {foo => 'bar', one => 'two'}
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
