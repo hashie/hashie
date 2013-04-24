@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.4
+
+* make #fetch method consistent with normal Hash markiz #94
+* various doc tweaks craiglittle #90
+
 ## 2.0.3
 
 * Hashie::Mash.new(abc: true).respond_to?(:abc?) works 7even #88
