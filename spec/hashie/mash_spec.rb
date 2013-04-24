@@ -297,19 +297,19 @@ describe Hashie::Mash do
     it 'should respond to a set key' do
       Hashie::Mash.new(:abc => 'def').should be_respond_to(:abc)
     end
-    
+
     it 'should respond to a set key with a suffix' do
       %w(= ? ! _).each do |suffix|
         Hashie::Mash.new(:abc => 'def').should be_respond_to(:"abc#{suffix}")
       end
     end
-    
+
     it 'should respond to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
         Hashie::Mash.new(:abc => 'def').should be_respond_to(:"xyz#{suffix}")
       end
     end
-    
+
     it "should not respond to an unknown key without a suffix" do
       Hashie::Mash.new(:abc => 'def').should_not be_respond_to(:xyz)
     end
@@ -365,12 +365,16 @@ describe Hashie::Mash do
   end
 
   describe "#fetch" do
-    let(:hash) { {:one => 1} }
+    let(:hash) { {:one => 1, :other => false} }
     let(:mash) { Hashie::Mash.new(hash) }
 
     context "when key exists" do
       it "returns the value" do
         mash.fetch(:one).should eql(1)
+      end
+
+      it "returns the value even if the value is falsy" do
+        mash.fetch(:other).should eql(false)
       end
 
       context "when key has other than original but acceptable type" do
@@ -389,6 +393,10 @@ describe Hashie::Mash do
       context "with default value given" do
         it "returns default value" do
           mash.fetch(:two, 8).should eql(8)
+        end
+
+        it "returns default value even if it is falsy" do
+          mash.fetch(:two, false).should eql(false)
         end
       end
 
