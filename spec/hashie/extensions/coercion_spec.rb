@@ -77,6 +77,38 @@ describe Hashie::Extensions::Coercion do
         instance[:hi].should == "bye"
       end
     end
+
+    context "when used with a Mash" do
+      class UserMash < Hashie::Mash
+      end
+      class TweetMash < Hashie::Mash
+        include Hashie::Extensions::Coercion
+        coerce_key :user, UserMash
+      end
+
+      it "should coerce with instance initialization" do
+        tweet = TweetMash.new(:user => {:email => 'foo@bar.com'})
+        tweet[:user].should be_a(UserMash)
+      end
+
+      it "should coerce when setting with attribute style" do
+        tweet = TweetMash.new
+        tweet.user = {:email => 'foo@bar.com'}
+        tweet[:user].should be_a(UserMash)
+      end
+
+      it "should coerce when setting with string index" do
+        tweet = TweetMash.new
+        tweet['user'] = {:email => 'foo@bar.com'}
+        tweet[:user].should be_a(UserMash)
+      end
+
+      it "should coerce when setting with symbol index" do
+        tweet = TweetMash.new
+        tweet[:user] = {:email => 'foo@bar.com'}
+        tweet[:user].should be_a(UserMash)
+      end
+    end
   end
 
   describe '.coerce_value' do
