@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.5
+
+* make coercion work better with non-symbol keys in mash wapcaplet #96
+
 ## 2.0.4
 
 * make #fetch method consistent with normal Hash markiz #94
