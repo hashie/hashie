@@ -21,6 +21,10 @@ module Hashie
           super(key, value)
         end
 
+        def custom_writer(key, value)
+          self[key] = value
+        end
+
         def replace(other_hash)
           (keys - other_hash.keys).each { |key| delete(key) }
           other_hash.each { |key, value| self[key] = value }
@@ -31,7 +35,7 @@ module Hashie
       module ClassMethods
         # Set up a coercion rule such that any time the specified
         # key is set it will be coerced into the specified class.
-        # Coercion will occur by first attempting to call Class.coerce 
+        # Coercion will occur by first attempting to call Class.coerce
         # and then by calling Class.new with the value as an argument
         # in either case.
         #
@@ -59,7 +63,7 @@ module Hashie
         # Returns the specific key coercion for the specified key,
         # if one exists.
         def key_coercion(key)
-          key_coercions[key]
+          key_coercions[key.to_sym]
         end
 
         # Set up a coercion rule such that any time a value of the
@@ -94,7 +98,7 @@ module Hashie
             end
           end
         end
-        
+
         # Return all value coercions that have the :strict rule as true.
         def strict_value_coercions; @strict_value_coercions || {} end
         # Return all value coercions that have the :strict rule as false.
@@ -103,7 +107,7 @@ module Hashie
         # Fetch the value coercion, if any, for the specified object.
         def value_coercion(value)
           from = value.class
-          strict_value_coercions[from] || lenient_value_coercions[from] 
+          strict_value_coercions[from] || lenient_value_coercions[from]
         end
       end
     end

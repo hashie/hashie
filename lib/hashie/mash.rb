@@ -82,7 +82,7 @@ module Hashie
 
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
-    def [](key)
+    def custom_reader(key)
       value = regular_reader(convert_key(key))
       yield value if block_given?
       value
@@ -91,9 +91,12 @@ module Hashie
     # Sets an attribute in the Mash. Key will be converted to
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
-    def []=(key,value) #:nodoc:
+    def custom_writer(key,value) #:nodoc:
       regular_writer(convert_key(key), convert_value(value))
     end
+
+    alias_method :[], :custom_reader
+    alias_method :[]=, :custom_writer
 
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
@@ -148,11 +151,11 @@ module Hashie
       other_hash.each_pair do |k,v|
         key = convert_key(k)
         if regular_reader(key).is_a?(Mash) and v.is_a?(::Hash)
-          regular_reader(key).deep_update(v, &blk)
+          custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
           value = blk.call(key, self[k], value) if blk
-          regular_writer(key, value)
+          custom_writer(key, value)
         end
       end
       self
