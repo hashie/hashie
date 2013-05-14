@@ -241,8 +241,8 @@ The five main settings are:
 * file:     Filename to save the hash to.
 * backup:   Boolean, whether to produce a backup or not.
 * mode:     FixNum: mode to store it as: 0600, 0755, 0644 and so on.
-* autosave: Boolean: Automatically save on changes.
-* autoload: Boolean: Automatically load on init.
+* auto_save: Boolean: Automatically save on changes.
+* auto_load: Boolean: Automatically load on init.
 
 The values for these do not get stored in the YAML file.  Only the k/v pairs you
 set do.
