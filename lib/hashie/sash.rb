@@ -15,9 +15,11 @@ module Hashie
     # overrides:{Hash.new}
     # options: Sash options.
     def initialize(params = {})
-      # if we get any params not listed above, throw an exception.
+      # Throw an exception if we get anything more then the two named hash keys.
+      # This is to prevent usage errors (you can't initialize a sash quite like
+      # a hash since it takes options or overrides.)
       p = params.select { |k,v| k != :options && k != :overrides}
-      raise ArgumentError, "Extra values passed in: #{p}" if p.count > 0
+      raise ArgumentError, "Extra values passed in: #{p}." if p.count > 0
 
       # set our options to our attributes.
       params[:options].each { |k,v| instance_variable_set "@" + k.to_s,v} if params[:options]
