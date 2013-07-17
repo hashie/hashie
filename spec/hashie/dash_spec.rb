@@ -18,6 +18,10 @@ class DashNoRequiredTest < Hashie::Dash
   property :count, :default => 0
 end
 
+class PropertyBangTest < Hashie::Dash
+  property :important!
+end
+
 class Subclassed < DashTest
   property :last_name, :required => true
 end
@@ -168,6 +172,10 @@ describe DashTest do
 
     it 'lists declared defaults' do
       described_class.defaults.should == { :count => 0 }
+    end
+
+    it 'allows properties that end in bang' do
+      PropertyBangTest.property?(:important!).should be_true
     end
   end
 

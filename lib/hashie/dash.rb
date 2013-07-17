@@ -39,15 +39,9 @@ module Hashie
       end
 
       unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
-        class_eval <<-ACCESSORS
-          def #{property_name}(&block)
-            self.[](#{property_name.to_s.inspect}, &block)
-          end
-
-          def #{property_name}=(value)
-            self.[]=(#{property_name.to_s.inspect}, value)
-          end
-        ACCESSORS
+        define_method(property_name) { |&block| self.[](property_name.to_s, &block) }
+        property_assignment = property_name.to_s.concat("=").to_sym
+        define_method(property_assignment) { |value| self.[]=(property_name.to_s, value) }
       end
 
       if defined? @subclasses
