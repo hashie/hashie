@@ -200,7 +200,8 @@ module Hashie
 
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
-      match = method_name.to_s.match(/(.*?)([?=!_]?)$/)
+      suffixes_regex = ALLOWED_SUFFIXES.join
+      match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
       case match[2]
       when "="
         self[match[1]] = args.first
