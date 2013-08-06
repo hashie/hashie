@@ -62,6 +62,17 @@ describe Hashie::Mash do
     @mash.abc.should be_nil
   end
 
+  it "should return the default value if set like Hash" do
+    @mash.default = 123
+    @mash.abc.should == 123
+  end
+
+  it "should gracefully handle being accessed with arguments" do
+    @mash.abc("foobar").should == nil
+    @mash.abc = 123
+    @mash.abc("foobar").should == 123
+  end
+
   it "should return a Hashie::Mash when passed a bang method to a non-existenct key" do
     @mash.abc!.is_a?(Hashie::Mash).should be_true
   end
