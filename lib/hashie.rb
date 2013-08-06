@@ -1,4 +1,5 @@
 module Hashie
+  autoload :Blash,          'hashie/blash'
   autoload :Clash,          'hashie/clash'
   autoload :Dash,           'hashie/dash'
   autoload :Hash,           'hashie/hash'
