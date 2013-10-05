@@ -222,6 +222,35 @@ provide.
     c = Hashie::Clash.new
     c.where(:abc => 'def').where(:hgi => 123)
     c # => {:where => {:abc => 'def', :hgi => 123}}
+    
+## MethodHash 
+
+MethodHash is a convenience class that will always allow you to access values of the hash via methods.
+Any hashes that are nested or included in arrays will act as if they included Hashie::Extensions::MethodAccess
+MethodHash will also honor default blocks passed to it (the same as ::Hash).
+
+### Examples of Automatic Method Access
+
+```ruby
+  # All hashes will be accessible via method calls even those nested or within arrays.
+  hash = Hashie::MethodHash.new(:name => 'John Smith', :address => {:state => 'CA', :zip => '90210'}, :contacts => [{:name => 'Jane Smith', :phone => '1234567890'}, {:name => 'Jonny Smith'}])
+  hash.name # => 'John Smith'
+  hash.address.state # => 'CA'
+  hash.contacts.last.name # => 'Jonny Smith'
+```
+
+### Examples of Default Block
+
+```ruby
+  # With a default block, unrecognized keys will call the block
+  favorites = Hashie::MethodHash.new(:food => 'Pizza', :drink => 'Coffee') { 'Not Available' }
+  favorites.food # => 'Pizza'
+  favorites.color # => 'Not Available'
+
+  # Without a default block, unrecognized keys will raise
+  favorites = Hashie::MethodHash.new(:food => 'Pizza', :drink => 'Coffee')
+  favoties.color # => undefined method `color' for {}:Hashie::MethodHash
+```
 
 ## Contributing
 
