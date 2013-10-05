@@ -6,6 +6,7 @@ module Hashie
   autoload :Mash,           'hashie/mash'
   autoload :PrettyInspect,  'hashie/hash_extensions'
   autoload :Trash,          'hashie/trash'
+  autoload :MethodHash,     'hashie/method_hash'
 
   module Extensions
     autoload :Coercion,          'hashie/extensions/coercion'
