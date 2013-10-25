@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+
+* fix excessive value conversions causing poor performance of deep merge in mash davemitchell, dblock #107
+
 ## 2.0.5
 
 * make coercion work better with non-symbol keys in mash wapcaplet #96
