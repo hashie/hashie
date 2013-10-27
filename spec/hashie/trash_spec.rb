@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Hashie::Trash do
   class TrashTest < Hashie::Trash
     property :first_name, :from => :firstName
+    property :last_name, :from => 'person@lastName'
   end
 
   let(:trash) { TrashTest.new }
@@ -71,6 +72,10 @@ describe Hashie::Trash do
 
     it 'sets the desired properties' do
       TrashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
+    end
+
+    it 'sets properties with special characters' do
+      TrashTest.new('person@lastName' => 'Scott').last_name.should == 'Scott'
     end
 
     context "with both the translated property and the property" do

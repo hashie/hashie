@@ -32,11 +32,11 @@ module Hashie
             end
           end
         else
-          class_eval <<-RUBY
-            def #{options[:from]}=(val)
-              self[:#{property_name}] = val
+          class_eval do
+            define_method "#{options[:from]}=" do |val|
+              self[property_name.to_sym] = val
             end
-          RUBY
+          end
         end
       elsif options[:transform_with].respond_to? :call
         transforms[property_name.to_sym] = options[:transform_with]
