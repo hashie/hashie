@@ -15,11 +15,11 @@ module Hashie
           k = options[:symbolize_keys] ? k.to_sym : k.to_s
           out[k] ||= []
           self[k].each do |array_object|
-            out[k] << (Hash === array_object ? array_object.to_hash : array_object)
+            out[k] << (Hash === array_object ? array_object.to_hash(options) : array_object)
           end
         else
           k = options[:symbolize_keys] ? k.to_sym : k.to_s
-          out[k] = Hash === self[k] ? self[k].to_hash : self[k]
+          out[k] = Hash === self[k] ? self[k].to_hash(options) : self[k]
         end
       end
       out

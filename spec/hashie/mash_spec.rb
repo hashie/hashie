@@ -360,7 +360,6 @@ describe Hashie::Mash do
       converted.to_hash["a"].first.is_a?(Hashie::Mash).should be_false
       converted.to_hash["a"].first.is_a?(Hash).should be_true
       converted.to_hash["a"].first["c"].first.is_a?(Hashie::Mash).should be_false
-      converted.to_hash({:symbolize_keys => true}).keys[0].should == :a
     end
   end
 
@@ -407,6 +406,34 @@ describe Hashie::Mash do
           }.should eql("block default value")
         end
       end
+    end
+  end
+
+  describe "#to_hash" do
+    let(:hash) { { "outer" => { "inner" => 42 }, "testing" => [1, 2, 3] } }
+    let(:mash) { Hashie::Mash.new(hash) }
+
+    it "returns a standard Hash" do
+      mash.to_hash.should be_a(::Hash)
+    end
+
+    it "includes all keys" do
+      mash.to_hash.keys.should eql(%w(outer testing))
+    end
+
+    it "converts keys to symbols when symbolize_keys option is true" do
+      mash.to_hash(:symbolize_keys => true).keys.should include(:outer)
+      mash.to_hash(:symbolize_keys => true).keys.should_not include("outer")
+    end
+
+    it "leaves keys as strings when symbolize_keys option is false" do
+      mash.to_hash(:symbolize_keys => false).keys.should include("outer")
+      mash.to_hash(:symbolize_keys => false).keys.should_not include(:outer)
+    end
+
+    it "symbolizes keys recursively" do
+      mash.to_hash(:symbolize_keys => true)[:outer].keys.should include(:inner)
+      mash.to_hash(:symbolize_keys => true)[:outer].keys.should_not include("inner")
     end
   end
 end
