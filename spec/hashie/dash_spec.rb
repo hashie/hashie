@@ -176,6 +176,35 @@ describe DashTest do
     end
   end
 
+  describe '#merge!' do
+    it 'modifies the existing instance of the Dash' do
+      original_dash = subject.merge!(:first_name => 'Robert')
+      subject.object_id.should == original_dash.object_id
+    end
+
+    it 'merges the given hash' do
+      subject.merge!(:first_name => 'Robert', :email => 'robert@example.com')
+      subject.first_name.should == 'Robert'
+      subject.email.should == 'robert@example.com'
+    end
+
+    it 'fails with non-existent properties' do
+      expect { subject.merge!(:middle_name => 'James') }.to raise_error(NoMethodError)
+    end
+
+    it 'errors out when attempting to set a required property to nil' do
+      expect { subject.merge!(:first_name => nil) }.to raise_error(ArgumentError)
+    end
+
+    context "given a block" do
+      it "sets merged key's values to the block's return value" do
+        subject.merge!(:first_name => 'Jim') do |key, oldval, newval|
+          "#{key}: #{newval} #{oldval}"
+        end.first_name.should == 'first_name: Jim Bob'
+      end
+    end
+  end
+
   describe 'properties' do
     it 'lists defined properties' do
       described_class.properties.should == Set.new([:first_name, :email, :count])
