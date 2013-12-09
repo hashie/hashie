@@ -313,6 +313,12 @@ describe Hashie::Mash do
     it "should not respond to an unknown key without a suffix" do
       Hashie::Mash.new(:abc => 'def').should_not be_respond_to(:xyz)
     end
+
+    it "should not respond to methods from skipped_methods list" do
+      Hashie::Mash::SKIPPED_METHODS.each do |method|
+        Hashie::Mash.new.should_not be_respond_to(method)
+      end
+    end
   end
 
   context "#initialize" do
