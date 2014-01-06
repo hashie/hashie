@@ -24,7 +24,7 @@ module Hashie
         if property_name.to_sym == options[:from].to_sym
           raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
-        translations << options[:from].to_sym
+        translations[options[:from].to_sym] = property_name.to_sym
         if options[:with].respond_to? :call
           class_eval do
             define_method "#{options[:from]}=" do |val|
@@ -58,7 +58,7 @@ module Hashie
     private
 
     def self.translations
-      @translations ||= []
+      @translations ||= {}
     end
 
     def self.transforms
