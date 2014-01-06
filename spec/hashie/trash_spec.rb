@@ -27,6 +27,10 @@ describe Hashie::Trash do
     it 'does not create a method for reading the translated property' do
       trash.should_not respond_to(:firstName)
     end
+
+    it 'maintains translations hash mapping from the original to the translated name' do
+      TrashTest.translations[:firstName].should eq :first_name
+    end
   end
 
   describe 'writing to properties' do
