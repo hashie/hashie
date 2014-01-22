@@ -31,7 +31,9 @@ module Hashie
     module IgnoreUndeclared
       def initialize_attributes(attributes)
         attributes.each_pair do |att, value|
-          self[att] = value if self.class.property?(att)
+          if self.class.property?(att) || (self.class.respond_to?(:translations) && self.class.translations.include?(att.to_sym))
+            self[att] = value
+          end
         end if attributes
       end
     end
