@@ -19,5 +19,6 @@ module Hashie
     autoload :MethodWriter,      'hashie/extensions/method_access'
     autoload :StringifyKeys,     'hashie/extensions/key_conversion'
     autoload :SymbolizeKeys,     'hashie/extensions/key_conversion'
+    autoload :DeepFetch,         'hashie/extensions/deep_fetch'
   end
 end

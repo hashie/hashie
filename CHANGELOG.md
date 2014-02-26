@@ -1,5 +1,6 @@
 ## Next Release
 
+* [#134](https://github.com/intridea/hashie/pull/134): Add deep_fetch extension for nested access - [@tylerdooling](https://github.com/tylerdooling).
 * Removed support for Ruby 1.8.7 - [@dblock](https://github.com/dblock).
 * Ruby style now enforced with Rubocop - [@dblock](https://github.com/dblock).
 * [#107](https://github.com/intridea/hashie/pull/107): Fixed excessive value conversions causing poor performance of deep merge in Hashie::Mash - [@davemitchell](https://github.com/dblock), [@dblock](https://github.com/dblock).
