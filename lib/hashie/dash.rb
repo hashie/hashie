@@ -121,6 +121,21 @@ module Hashie
       super(property.to_s, value)
     end
 
+    def merge(other_hash)
+      new_dash = self.dup
+      other_hash.each do |k,v|
+        new_dash[k] = block_given? ? yield(k, self[k], v) : v
+      end
+      new_dash
+    end
+
+    def merge!(other_hash)
+      other_hash.each do |k,v|
+        self[k] = block_given? ? yield(k, self[k], v) : v
+      end
+      self
+    end
+
     def replace(other_hash)
       other_hash = self.class.defaults.merge(other_hash)
       (keys - other_hash.keys).each { |key| delete(key) }
