@@ -313,9 +313,9 @@ describe Hashie::Mash do
       end
     end
 
-    it 'should respond to an unknown key with a suffix' do
+    it 'should not respond to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
-        Hashie::Mash.new(:abc => 'def').should be_respond_to(:"xyz#{suffix}")
+        Hashie::Mash.new(:abc => 'def').should_not be_respond_to(:"xyz#{suffix}")
       end
     end
 
