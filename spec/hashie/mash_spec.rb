@@ -130,6 +130,15 @@ describe Hashie::Mash do
         subject.details.city.should == "Imagineton"
       end
 
+      it "should convert values only once" do
+        class ConvertedMash < Hashie::Mash
+        end
+
+        rhs = ConvertedMash.new({:email => "foo@bar.com"})
+        subject.should_receive(:convert_value).exactly(1).times
+        subject.deep_update(rhs)
+      end
+
       it "should make #update deep by default" do
         subject.update(:details => {:address => "Fake street"}).should eql(subject)
         subject.details.address.should == "Fake street"
