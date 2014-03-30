@@ -13,6 +13,16 @@ describe Hashie::Extensions::IndifferentAccess do
     h['abc'].should == 123
   end
 
+
+  describe '#store' do
+    it 'should indifferently save values' do
+      h = subject.new
+      h.store(:abc, 123)
+      h[:abc].should == 123
+      h['abc'].should == 123
+    end
+  end
+
   describe '#values_at' do
     it 'should indifferently find values' do
       h = subject.new(:foo => 'bar', 'baz' => 'qux')
