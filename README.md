@@ -7,7 +7,9 @@ them more useful.
 
 Hashie is available as a RubyGem:
 
-    gem install hashie
+```bash
+$ gem install hashie
+```
 
 ## Hash Extensions
 
@@ -26,31 +28,35 @@ or the value type to massage data as it's being inserted into the Hash.
 Key coercions might be used, for example, in lightweight data modeling
 applications such as an API client:
 
-    class Tweet < Hash
-      include Hashie::Extensions::Coercion
-      coerce_key :user, User
-    end
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :user, User
+end
 
-    user_hash = {:name => "Bob"}
-    Tweet.new(:user => user_hash)
-    # => automatically calls User.coerce(user_hash) or
-    #    User.new(user_hash) if that isn't present.
+user_hash = {:name => "Bob"}
+Tweet.new(:user => user_hash)
+# => automatically calls User.coerce(user_hash) or
+#    User.new(user_hash) if that isn't present.
+```
 
 Value coercions, on the other hand, will coerce values based on the type
 of the value being inserted. This is useful if you are trying to build a
 Hash-like class that is self-propagating.
 
-    class SpecialHash < Hash
-      include Hashie::Extensions::Coercion
-      coerce_value Hash, SpecialHash
+```ruby
+class SpecialHash < Hash
+  include Hashie::Extensions::Coercion
+  coerce_value Hash, SpecialHash
 
-      def initialize(hash = {})
-        super
-        hash.each_pair do |k,v|
-          self[k] = v
-        end
-      end
+  def initialize(hash = {})
+    super
+    hash.each_pair do |k,v|
+      self[k] = v
     end
+  end
+end
+```
 
 ### KeyConversion
 
@@ -71,14 +77,16 @@ reading, writing, and querying into your Hash descendant. It can also be
 included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
 `Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`
 
-    class MyHash < Hash
-      include Hashie::Extensions::MethodAccess
-    end
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::MethodAccess
+end
 
-    h = MyHash.new
-    h.abc = 'def'
-    h.abc  # => 'def'
-    h.abc? # => true
+h = MyHash.new
+h.abc = 'def'
+h.abc  # => 'def'
+h.abc? # => true
+```
 
 ### IndifferentAccess
 
@@ -98,18 +106,20 @@ whether you'll be able to `hash[:other][:another]` properly.
 This extension allow you to easily include a recursive merging
 system to any Hash descendant:
 
-    class MyHash < Hash
-      include Hashie::Extensions::DeepMerge
-    end
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::DeepMerge
+end
 
-    h1 = MyHash.new
-    h2 = MyHash.new
+h1 = MyHash.new
+h2 = MyHash.new
 
-    h1 = {:x => {:y => [4,5,6]}, :z => [7,8,9]}
-    h2 = {:x => {:y => [7,8,9]}, :z => "xyz"}
+h1 = {:x => {:y => [4,5,6]}, :z => [7,8,9]}
+h2 = {:x => {:y => [7,8,9]}, :z => "xyz"}
 
-    h1.deep_merge(h2) #=> { :x => {:y => [7, 8, 9]}, :z => "xyz" }
-    h2.deep_merge(h1) #=> { :x => {:y => [4, 5, 6]}, :z => [7, 8, 9] }
+h1.deep_merge(h2) #=> { :x => {:y => [7, 8, 9]}, :z => "xyz" }
+h2.deep_merge(h1) #=> { :x => {:y => [4, 5, 6]}, :z => [7, 8, 9] }
+```
 
 ## Mash
 
@@ -120,23 +130,25 @@ to JSON and XML parsed hashes.
 
 ### Example:
 
-    mash = Hashie::Mash.new
-    mash.name? # => false
-    mash.name # => nil
-    mash.name = "My Mash"
-    mash.name # => "My Mash"
-    mash.name? # => true
-    mash.inspect # => <Hashie::Mash name="My Mash">
+```ruby
+mash = Hashie::Mash.new
+mash.name? # => false
+mash.name # => nil
+mash.name = "My Mash"
+mash.name # => "My Mash"
+mash.name? # => true
+mash.inspect # => <Hashie::Mash name="My Mash">
 
-    mash = Mash.new
-    # use bang methods for multi-level assignment
-    mash.author!.name = "Michael Bleigh"
-    mash.author # => <Hashie::Mash name="Michael Bleigh">
+mash = Mash.new
+# use bang methods for multi-level assignment
+mash.author!.name = "Michael Bleigh"
+mash.author # => <Hashie::Mash name="Michael Bleigh">
 
-    mash = Mash.new
-    # use under-bang methods for multi-level testing
-    mash.author_.name? # => false
-    mash.inspect # => <Hashie::Mash>
+mash = Mash.new
+# use under-bang methods for multi-level testing
+mash.author_.name? # => false
+mash.inspect # => <Hashie::Mash>
+```
 
 **Note:** The `?` method will return false if a key has been set
 to false or nil. In order to check if a key has been set at all, use the
@@ -151,50 +163,60 @@ required. Required properties will raise an exception if unset.
 
 ### Example:
 
-    class Person < Hashie::Dash
-      property :name, :required => true
-      property :email
-      property :occupation, :default => 'Rubyist'
-    end
+```ruby
+class Person < Hashie::Dash
+  property :name, :required => true
+  property :email
+  property :occupation, :default => 'Rubyist'
+end
 
-    p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
+p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
 
-    p = Person.new(:name => "Bob")
-    p.name # => 'Bob'
-    p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
-    p.email = 'abc@def.com'
-    p.occupation   # => 'Rubyist'
-    p.email        # => 'abc@def.com'
-    p[:awesome]    # => NoMethodError
-    p[:occupation] # => 'Rubyist'
+p = Person.new(:name => "Bob")
+p.name # => 'Bob'
+p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
+p.email = 'abc@def.com'
+p.occupation   # => 'Rubyist'
+p.email        # => 'abc@def.com'
+p[:awesome]    # => NoMethodError
+p[:occupation] # => 'Rubyist'
+```
 
 ## Trash
 
 A Trash is a Dash that allows you to translate keys on initialization.
 It is used like so:
 
-    class Person < Hashie::Trash
-      property :first_name, :from => :firstName
-    end
+```ruby
+class Person < Hashie::Trash
+  property :first_name, :from => :firstName
+end
+```
 
 This will automatically translate the <tt>firstName</tt> key to <tt>first_name</tt>
 when it is initialized using a hash such as through:
 
-    Person.new(:firstName => 'Bob')
+```ruby
+Person.new(:firstName => 'Bob')
+```
 
 Trash also supports translations using lambda, this could be useful when dealing with
 external API's. You can use it in this way:
 
-    class Result < Hashie::Trash
-      property :id, :transform_with => lambda { |v| v.to_i }
-      property :created_at, :from => :creation_date, :with => lambda { |v| Time.parse(v) }
-    end
+```ruby
+class Result < Hashie::Trash
+  property :id, :transform_with => lambda { |v| v.to_i }
+  property :created_at, :from => :creation_date, :with => lambda { |v| Time.parse(v) }
+end
+```
 
 this will produce the following
 
-    result = Result.new(:id => '123', :creation_date => '2012-03-30 17:23:28')
-    result.id.class         # => Fixnum
-    result.created_at.class # => Time
+```ruby
+result = Result.new(:id => '123', :creation_date => '2012-03-30 17:23:28')
+result.id.class         # => Fixnum
+result.created_at.class # => Time
+```
 
 ## Clash
 
@@ -208,20 +230,22 @@ provide.
 
 ### Example
 
-    c = Hashie::Clash.new
-    c.where(:abc => 'def').order(:created_at)
-    c # => {:where => {:abc => 'def'}, :order => :created_at}
+```ruby
+c = Hashie::Clash.new
+c.where(:abc => 'def').order(:created_at)
+c # => {:where => {:abc => 'def'}, :order => :created_at}
 
-    # You can also use bang notation to chain into sub-hashes,
-    # jumping back up the chain with _end!
-    c = Hashie::Clash.new
-    c.where!.abc('def').ghi(123)._end!.order(:created_at)
-    c # => {:where => {:abc => 'def', :ghi => 123}, :order => :created_at}
+# You can also use bang notation to chain into sub-hashes,
+# jumping back up the chain with _end!
+c = Hashie::Clash.new
+c.where!.abc('def').ghi(123)._end!.order(:created_at)
+c # => {:where => {:abc => 'def', :ghi => 123}, :order => :created_at}
 
-    # Multiple hashes are merged automatically
-    c = Hashie::Clash.new
-    c.where(:abc => 'def').where(:hgi => 123)
-    c # => {:where => {:abc => 'def', :hgi => 123}}
+# Multiple hashes are merged automatically
+c = Hashie::Clash.new
+c.where(:abc => 'def').where(:hgi => 123)
+c # => {:where => {:abc => 'def', :hgi => 123}}
+```
 
 ## Contributing
 
