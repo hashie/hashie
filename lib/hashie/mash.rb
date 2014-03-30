@@ -212,7 +212,7 @@ module Hashie
       when "_"
         underbang_reader(match[1])
       else
-        default(method_name, *args, &blk)
+        default(method_name)
       end
     end
 
