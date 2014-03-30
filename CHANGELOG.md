@@ -1,7 +1,8 @@
 ## Next Release
 
 * Removed support for Ruby 1.8.7 - [@dblock](https://github.com/dblock).
-* [#107](https://github.com/intridea/hashie/pull/107) - Fixed excessive value conversions causing poor performance of deep merge in Hashie::Mash - [@davemitchell](https://github.com/dblock), [@dblock](https://github.com/dblock).
+* [#107](https://github.com/intridea/hashie/pull/107): Fixed excessive value conversions causing poor performance of deep merge in Hashie::Mash - [@davemitchell](https://github.com/dblock), [@dblock](https://github.com/dblock).
+* [#69](https://github.com/intridea/hashie/issues/69): Fixed assigning multiple properties in Hashie::Trash - [@einzige](https://github.com/einzige).
 
 ## 2.0.5
 
