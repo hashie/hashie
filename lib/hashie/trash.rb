@@ -20,33 +20,34 @@ module Hashie
     def self.property(property_name, options = {})
       super
 
+      options[:from] = options[:from].to_sym if options[:from]
+      property_name = property_name.to_sym
+
       if options[:from]
-        if property_name.to_sym == options[:from].to_sym
+        if property_name == options[:from]
           raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
-        translations << options[:from].to_sym
-        if options[:with].respond_to? :call
-          class_eval do
-            define_method "#{options[:from]}=" do |val|
-              self[property_name.to_sym] = options[:with].call(val)
-            end
+
+        translations[options[:from]] ||= {}
+        translations[options[:from]][property_name] = options[:with] || options[:transform_with] # Issue #58
+
+        # NOTE: may overwrite existing method multiple times
+        define_method "#{options[:from]}=" do |val|
+          self.class.translations[options[:from]].each do |property_name, with|
+            self[property_name] = with.respond_to?(:call) ? with.call(val) : val
           end
-        else
-          class_eval <<-RUBY
-            def #{options[:from]}=(val)
-              self[:#{property_name}] = val
-            end
-          RUBY
         end
-      elsif options[:transform_with].respond_to? :call
-        transforms[property_name.to_sym] = options[:transform_with]
+      else
+        if options[:transform_with].respond_to? :call
+          transforms[property_name.to_sym] = options[:transform_with]
+        end
       end
     end
 
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      if self.class.translations.include? property.to_sym
+      if self.class.translations.key? property.to_sym
         send("#{property}=", value)
       elsif self.class.transforms.key? property.to_sym
         super property, self.class.transforms[property.to_sym].call(value)
@@ -57,8 +58,12 @@ module Hashie
 
     private
 
+    def self.properties
+      @properties ||= []
+    end
+
     def self.translations
-      @translations ||= []
+      @translations ||= {} # NOTE: Hash.new { {} } ? to provide lazy value initialization for new keys
     end
 
     def self.transforms
