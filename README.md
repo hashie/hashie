@@ -227,10 +227,8 @@ provide.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Authors
-
-* Michael Bleigh
-
 ## Copyright
 
-Copyright (c) 2009-2013 Intridea, Inc. (http://intridea.com/). See LICENSE for details.
+Copyright (c) 2009-2014 Intridea, Inc. (http://intridea.com/) and [contributors](https://github.com/intridea/hashie/graphs/contributors).
+
+MIT License. See [LICENSE](LICENSE) for details.
