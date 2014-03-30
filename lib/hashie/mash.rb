@@ -55,6 +55,7 @@ module Hashie
   #   mash.author # => <Mash>
   #
   class Mash < Hash
+    ALLOWED_SUFFIXES = %w(? ! = _)
     include Hashie::PrettyInspect
     alias_method :to_s, :inspect
 
@@ -187,13 +188,20 @@ module Hashie
     # Will return true if the Mash has had a key
     # set in addition to normal respond_to? functionality.
     def respond_to?(method_name, include_private=false)
-      return true if key?(method_name) || method_name.to_s.slice(/[=?!_]\Z/)
+      return true if key?(method_name) || prefix_method?(method_name)
       super
+    end
+
+
+    def prefix_method?(method_name)
+      method_name = method_name.to_s
+      method_name.end_with?(*ALLOWED_SUFFIXES) && key?(method_name.chop)
     end
 
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
-      match = method_name.to_s.match(/(.*?)([?=!_]?)$/)
+      suffixes_regex = ALLOWED_SUFFIXES.join
+      match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
       case match[2]
       when "="
         self[match[1]] = args.first
