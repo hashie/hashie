@@ -91,8 +91,8 @@ module Hashie
     # Sets an attribute in the Mash. Key will be converted to
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
-    def custom_writer(key,value) #:nodoc:
-      regular_writer(convert_key(key), convert_value(value))
+    def custom_writer(key,value,convert=true) #:nodoc:
+      regular_writer(convert_key(key), convert ? convert_value(value) : value)
     end
 
     alias_method :[], :custom_reader
@@ -154,8 +154,8 @@ module Hashie
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
-          value = blk.call(key, self[k], value) if blk
-          custom_writer(key, value)
+          value = convert_value(blk.call(key, self[k], value), true) if blk
+          custom_writer(key, value, false)
         end
       end
       self

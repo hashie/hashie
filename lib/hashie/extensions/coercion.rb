@@ -21,7 +21,7 @@ module Hashie
           super(key, value)
         end
 
-        def custom_writer(key, value)
+        def custom_writer(key, value, convert=true)
           self[key] = value
         end
 
