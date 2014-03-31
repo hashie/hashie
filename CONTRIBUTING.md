@@ -1,27 +1,118 @@
-## Note on Patches/Pull Requests
+Contributing to Hashie
+======================
 
-Thanks for taking the time to contribute back! To make it easier for us to
-review your changes, try to follow these guidelines:
+Hashie is work of [many contributors](https://github.com/intridea/hashie/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/intridea/hashie/pulls), [propose features and discuss issues](https://github.com/intridea/hashie/issues).
 
-* Keep changesets small and on topic. Itching to refactor or clean something
-  up? Do it in a separate branch.
-* Stay consistent with existing code conventions.
-* Break changes into smaller logical commits.
+#### Fork the Project
 
-To propose a change:
+Fork the [project on Github](https://github.com/intridea/hashie) and check out your copy.
 
-* [Fork the project.](https://help.github.com/articles/fork-a-repo)
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a future version unintentionally.
-* Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* [Send me a pull request](https://help.github.com/articles/using-pull-requests). Bonus points for topic branches.
-* [Check that your pull request passes the build](https://travis-ci.org/intridea/hashie/pull_requests).
+```
+git clone https://github.com/contributor/hashie.git
+cd hashie
+git remote add upstream https://github.com/intridea/hashie.git
+```
 
-## Bug triage
+#### Create a Topic Branch
 
-Have a problem? File an [issue here](https://github.com/intridea/hashie/issues).
+Make sure your fork is up-to-date and create a topic branch for your feature or bug fix.
 
-To make bug squashing easier, include the following in your issue:
+```
+git checkout master
+git pull upstream master
+git checkout -b my-feature-branch
+```
 
-* What version of hashie are you using?
-* Is it still a problem in master?
+#### Bundle Install and Test
+
+Ensure that you can build the project and run tests.
+
+```
+bundle install
+bundle exec rake
+```
+
+#### Write Tests
+
+Try to write a test that reproduces the problem you're trying to fix or describes a feature that you want to build. Add to [spec/hashie](spec/hashie).
+
+We definitely appreciate pull requests that highlight or reproduce a problem, even without a fix.
+
+#### Write Code
+
+Implement your feature or bug fix.
+
+Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop), run `bundle exec rubocop` and fix any style issues highlighted.
+
+Make sure that `bundle exec rake` completes without errors.
+
+#### Write Documentation
+
+Document any external behavior in the [README](README.md).
+
+#### Update Changelog
+
+Add a line to [CHANGELOG](CHANGELOG.md) under *Next Release*. Make it look like every other line, including your name and link to your Github account.
+
+#### Commit Changes
+
+Make sure git knows your name and email address:
+
+```
+git config --global user.name "Your Name"
+git config --global user.email "contributor@example.com"
+```
+
+Writing good commit logs is important. A commit log should describe what changed and why.
+
+```
+git add ...
+git commit
+```
+
+#### Push
+
+```
+git push origin my-feature-branch
+```
+
+#### Make a Pull Request
+
+Go to https://github.com/contributor/hashie and select your feature branch. Click the 'Pull Request' button and fill out the form. Pull requests are usually reviewed within a few days.
+
+#### Rebase
+
+If you've been working on a change for a while, rebase with upstream/master.
+
+```
+git fetch upstream
+git rebase upstream/master
+git push origin my-feature-branch -f
+```
+
+#### Update CHANGELOG Again
+
+Update the [CHANGELOG](CHANGELOG.md) with the pull request number. A typical entry looks as follows.
+
+```
+* [#123](https://github.com/intridea/hashie/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
+```
+
+Amend your previous commit and force push the changes.
+
+```
+git commit --amend
+git push origin my-feature-branch -f
+```
+
+#### Check on Your Pull Request
+
+Go back to your pull request after a few minutes and see whether it passed muster with Travis-CI. Everything should look green, otherwise fix issues and amend your commit as described above.
+
+#### Be Patient
+
+It's likely that your change will not be merged and that the nitpicky maintainers will ask you to do more, or fix seemingly benign problems. Hang on there!
+
+#### Thank You
+
+Please do know that we really appreciate and value your time and work. We love you, really.
