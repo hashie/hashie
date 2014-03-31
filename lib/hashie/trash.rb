@@ -8,7 +8,6 @@ module Hashie
   # such as a Java api, where the keys are named differently from how we would
   # in Ruby.
   class Trash < Dash
-
     # Defines a property on the Trash. Options are as follows:
     #
     # * <tt>:default</tt> - Specify a default value for this property, to be
@@ -25,7 +24,7 @@ module Hashie
 
       if options[:from]
         if property_name == options[:from]
-          raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
+          fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
 
         translations[options[:from]] ||= {}
@@ -33,8 +32,8 @@ module Hashie
 
         # NOTE: may overwrite existing method multiple times
         define_method "#{options[:from]}=" do |val|
-          self.class.translations[options[:from]].each do |property_name, with|
-            self[property_name] = with.respond_to?(:call) ? with.call(val) : val
+          self.class.translations[options[:from]].each do |name, with|
+            self[name] = with.respond_to?(:call) ? with.call(val) : val
           end
         end
       else
@@ -74,7 +73,7 @@ module Hashie
     #
     def property_exists?(property)
       unless self.class.property?(property.to_sym)
-        raise NoMethodError, "The property '#{property}' is not defined for this Trash."
+        fail NoMethodError, "The property '#{property}' is not defined for this Trash."
       end
       true
     end
@@ -84,7 +83,7 @@ module Hashie
     # Deletes any keys that have a translation
     def initialize_attributes(attributes)
       return unless attributes
-      attributes_copy = attributes.dup.delete_if do |k,v|
+      attributes_copy = attributes.dup.delete_if do |k, v|
         if self.class.translations.include?(k.to_sym)
           self[k] = v
           true

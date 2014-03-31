@@ -5,8 +5,8 @@ module Hashie
     # to access your hash's keys. It will recognize keys
     # either as strings or symbols.
     #
-    # Note that while nil keys will be returned as nil, 
-    # undefined keys will raise NoMethodErrors. Also note that 
+    # Note that while nil keys will be returned as nil,
+    # undefined keys will raise NoMethodErrors. Also note that
     # #respond_to? has been patched to appropriately recognize
     # key methods.
     #
@@ -18,9 +18,9 @@ module Hashie
     #   user = User.new
     #   user['first_name'] = 'Michael'
     #   user.first_name # => 'Michael'
-    #   
+    #
     #   user[:last_name] = 'Bleigh'
-    #   user.last_name # => 'Bleigh'    
+    #   user.last_name # => 'Bleigh'
     #
     #   user[:birthday] = nil
     #   user.birthday # => nil
@@ -31,7 +31,7 @@ module Hashie
         return true if key?(name.to_s) || key?(name.to_sym)
         super
       end
-      
+
       def method_missing(name, *args)
         return self[name.to_s] if key?(name.to_s)
         return self[name.to_sym] if key?(name.to_sym)
@@ -64,7 +64,7 @@ module Hashie
 
       def method_missing(name, *args)
         if args.size == 1 && name.to_s =~ /(.*)=$/
-          return self[convert_key($1)] = args.first
+          return self[convert_key(Regexp.last_match[1])] = args.first
         end
 
         super
@@ -97,13 +97,13 @@ module Hashie
     #   h.hji? # => NoMethodError
     module MethodQuery
       def respond_to?(name, include_private = false)
-        return true if name.to_s =~ /(.*)\?$/ && (key?($1) || key?($1.to_sym))
+        return true if name.to_s =~ /(.*)\?$/ && (key?(Regexp.last_match[1]) || key?(Regexp.last_match[1].to_sym))
         super
       end
 
       def method_missing(name, *args)
-        if args.empty? && name.to_s =~ /(.*)\?$/ && (key?($1) || key?($1.to_sym))
-          return self[$1] || self[$1.to_sym]
+        if args.empty? && name.to_s =~ /(.*)\?$/ && (key?(Regexp.last_match[1]) || key?(Regexp.last_match[1].to_sym))
+          return self[Regexp.last_match[1]] || self[Regexp.last_match[1].to_sym]
         end
 
         super

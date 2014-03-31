@@ -10,7 +10,7 @@ module Hashie
       def stringify_keys!
         keys.each do |k|
           stringify_keys_recursively!(self[k])
-          self[k.to_s] = self.delete(k)
+          self[k.to_s] = delete(k)
         end
         self
       end
@@ -51,7 +51,7 @@ module Hashie
       def symbolize_keys!
         keys.each do |k|
           symbolize_keys_recursively!(self[k])
-          self[k.to_sym] = self.delete(k)
+          self[k.to_sym] = delete(k)
         end
         self
       end
@@ -81,7 +81,7 @@ module Hashie
         end
       end
     end
-    
+
     module KeyConversion
       def self.included(base)
         base.send :include, SymbolizeKeys

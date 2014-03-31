@@ -5,36 +5,35 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::MergeInitializer
     include Hashie::Extensions::IndifferentAccess
   end
-  subject{ IndifferentHash }
+  subject { IndifferentHash }
 
   it 'should be able to access via string or symbol' do
-    h = subject.new(:abc => 123)
-    h[:abc].should == 123
-    h['abc'].should == 123
+    h = subject.new(abc: 123)
+    h[:abc].should eq 123
+    h['abc'].should eq 123
   end
-
 
   describe '#store' do
     it 'should indifferently save values' do
       h = subject.new
       h.store(:abc, 123)
-      h[:abc].should == 123
-      h['abc'].should == 123
+      h[:abc].should eq 123
+      h['abc'].should eq 123
     end
   end
 
   describe '#values_at' do
     it 'should indifferently find values' do
       h = subject.new(:foo => 'bar', 'baz' => 'qux')
-      h.values_at('foo', :baz).should == %w(bar qux)
+      h.values_at('foo', :baz).should eq %w(bar qux)
     end
   end
 
   describe '#fetch' do
     it 'should work like normal fetch, but indifferent' do
-      h = subject.new(:foo => 'bar')
-      h.fetch(:foo).should == h.fetch('foo')
-      h.fetch(:foo).should == 'bar'
+      h = subject.new(foo: 'bar')
+      h.fetch(:foo).should eq h.fetch('foo')
+      h.fetch(:foo).should eq 'bar'
     end
   end
 
@@ -48,7 +47,7 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe '#key?' do
-    let(:h) { subject.new(:foo => 'bar') }
+    let(:h) { subject.new(foo: 'bar') }
 
     it 'should find it indifferently' do
       h.should be_key(:foo)
@@ -64,27 +63,27 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe '#update' do
-    subject{ IndifferentHash.new(:foo => 'bar') }
+    subject { IndifferentHash.new(foo: 'bar') }
     it 'should allow keys to be indifferent still' do
-      subject.update(:baz => 'qux')
-      subject['foo'].should == 'bar'
-      subject['baz'].should == 'qux'
+      subject.update(baz: 'qux')
+      subject['foo'].should eq 'bar'
+      subject['baz'].should eq 'qux'
     end
 
     it 'should recursively inject indifference into sub-hashes' do
-      subject.update(:baz => {:qux => 'abc'})
-      subject['baz']['qux'].should == 'abc'
+      subject.update(baz: { qux: 'abc' })
+      subject['baz']['qux'].should eq 'abc'
     end
 
     it 'should not change the ancestors of the injected object class' do
-      subject.update(:baz => {:qux => 'abc'})
+      subject.update(baz: { qux: 'abc' })
       Hash.new.should_not be_respond_to(:indifferent_access?)
     end
   end
 
   describe '#replace' do
     subject do
-      IndifferentHash.new(:foo => 'bar').replace(:bar => 'baz', :hi => 'bye')
+      IndifferentHash.new(foo: 'bar').replace(bar: 'baz', hi: 'bye')
     end
 
     it 'returns self' do
@@ -100,10 +99,10 @@ describe Hashie::Extensions::IndifferentAccess do
 
     it 'creates new keys with indifferent access' do
       [:bar, 'bar', :hi, 'hi'].each { |k| subject.key?(k).should be_true }
-      subject[:bar].should  == 'baz'
-      subject['bar'].should == 'baz'
-      subject[:hi].should   == 'bye'
-      subject['hi'].should  == 'bye'
+      subject[:bar].should eq 'baz'
+      subject['bar'].should eq 'baz'
+      subject[:hi].should eq 'bye'
+      subject['hi'].should eq 'bye'
     end
   end
 end

@@ -21,7 +21,7 @@ module Hashie
           super(key, value)
         end
 
-        def custom_writer(key, value, convert=true)
+        def custom_writer(key, value, convert = true)
           self[key] = value
         end
 
@@ -53,7 +53,7 @@ module Hashie
           attrs.each { |key| @key_coercions[key] = into }
         end
 
-        alias :coerce_keys :coerce_key
+        alias_method :coerce_keys, :coerce_key
 
         # Returns a hash of any existing key coercions.
         def key_coercions
@@ -87,7 +87,7 @@ module Hashie
         #     end
         #   end
         def coerce_value(from, into, options = {})
-          options = {:strict => true}.merge(options)
+          options = { strict: true }.merge(options)
 
           if options[:strict]
             (@strict_value_coercions ||= {})[from] = into
@@ -100,9 +100,13 @@ module Hashie
         end
 
         # Return all value coercions that have the :strict rule as true.
-        def strict_value_coercions; @strict_value_coercions || {} end
+        def strict_value_coercions
+          @strict_value_coercions || {}
+        end
         # Return all value coercions that have the :strict rule as false.
-        def lenient_value_coercions; @value_coercions || {} end
+        def lenient_value_coercions
+          @value_coercions || {}
+        end
 
         # Fetch the value coercion, if any, for the specified object.
         def value_coercion(value)

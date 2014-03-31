@@ -8,7 +8,7 @@ module Hashie
     include HashExtensions
 
     # Converts a mash back to a hash (with stringified or symbolized keys)
-    def to_hash(options={})
+    def to_hash(options = {})
       out = {}
       keys.each do |k|
         assignment_key = k.to_s

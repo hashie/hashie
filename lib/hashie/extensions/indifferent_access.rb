@@ -62,7 +62,7 @@ module Hashie
       # is injecting itself into member hashes.
       def convert!
         keys.each do |k|
-          regular_writer convert_key(k), convert_value(self.regular_delete(k))
+          regular_writer convert_key(k), convert_value(regular_delete(k))
         end
         self
       end
@@ -76,7 +76,7 @@ module Hashie
           value
         end
       end
-      
+
       def indifferent_default(key = nil)
         return self[convert_key(key)] if key?(key)
         regular_default(key)
@@ -84,18 +84,34 @@ module Hashie
 
       def indifferent_update(other_hash)
         return regular_update(other_hash) if hash_with_indifference?(other_hash)
-        other_hash.each_pair do |k,v|
+        other_hash.each_pair do |k, v|
           self[k] = v
         end
       end
-      
-      def indifferent_writer(key, value);  regular_writer convert_key(key), convert_value(value) end
-      def indifferent_fetch(key, *args);   regular_fetch  convert_key(key), *args                end
-      def indifferent_delete(key);         regular_delete convert_key(key)                       end
-      def indifferent_key?(key);           regular_key?   convert_key(key)                       end
-      def indifferent_values_at(*indices); indices.map{|i| self[i] }                             end
 
-      def indifferent_access?; true end
+      def indifferent_writer(key, value)
+        regular_writer convert_key(key), convert_value(value)
+      end
+
+      def indifferent_fetch(key, *args)
+        regular_fetch  convert_key(key), *args
+      end
+
+      def indifferent_delete(key)
+        regular_delete convert_key(key)
+      end
+
+      def indifferent_key?(key)
+        regular_key?   convert_key(key)
+      end
+
+      def indifferent_values_at(*indices)
+        indices.map { |i| self[i] }
+      end
+
+      def indifferent_access?
+        true
+      end
 
       def indifferent_replace(other_hash)
         (keys - other_hash.keys).each { |key| delete(key) }

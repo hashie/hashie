@@ -2,12 +2,16 @@ require 'spec_helper'
 
 describe Hashie::Extensions::Coercion do
   class Initializable
+    attr_reader :coerced, :value
+
     def initialize(obj, coerced = false)
       @coerced = coerced
       @value = obj.class.to_s
     end
-    def coerced?; @coerced end
-    attr_reader :value
+
+    def coerced?
+      !!@coerced
+    end
   end
 
   class Coercable < Initializable
@@ -22,8 +26,10 @@ describe Hashie::Extensions::Coercion do
       include Hashie::Extensions::MergeInitializer
     end
   end
+
   subject { ExampleCoercableHash }
-  let(:instance){ subject.new }
+
+  let(:instance) { subject.new }
 
   describe '.coerce_key' do
     it { subject.should be_respond_to(:coerce_key) }
@@ -31,15 +37,15 @@ describe Hashie::Extensions::Coercion do
     it 'should run through coerce on a specified key' do
       subject.coerce_key :foo, Coercable
 
-      instance[:foo] = "bar"
+      instance[:foo] = 'bar'
       instance[:foo].should be_coerced
     end
 
-    it "should support an array of keys" do
+    it 'should support an array of keys' do
       subject.coerce_keys :foo, :bar, Coercable
 
-      instance[:foo] = "bar"
-      instance[:bar] = "bax"
+      instance[:foo] = 'bar'
+      instance[:bar] = 'bax'
       instance[:foo].should be_coerced
       instance[:bar].should be_coerced
     end
@@ -47,14 +53,14 @@ describe Hashie::Extensions::Coercion do
     it 'should just call #new if no coerce method is available' do
       subject.coerce_key :foo, Initializable
 
-      instance[:foo] = "bar"
-      instance[:foo].value.should == "String"
+      instance[:foo] = 'bar'
+      instance[:foo].value.should eq 'String'
       instance[:foo].should_not be_coerced
     end
 
-    it "should coerce when the merge initializer is used" do
+    it 'should coerce when the merge initializer is used' do
       subject.coerce_key :foo, Coercable
-      instance = subject.new(:foo => "bar")
+      instance = subject.new(foo: 'bar')
 
       instance[:foo].should be_coerced
     end
@@ -63,22 +69,21 @@ describe Hashie::Extensions::Coercion do
       before { subject.coerce_key :foo, :bar, Coercable }
 
       let(:instance) do
-        subject.new(:foo => "bar").
-          replace(:foo => "foz", :bar => "baz", :hi => "bye")
+        subject.new(foo: 'bar').replace(foo: 'foz', bar: 'baz', hi: 'bye')
       end
 
-      it "should coerce relevant keys" do
+      it 'should coerce relevant keys' do
         instance[:foo].should be_coerced
         instance[:bar].should be_coerced
         instance[:hi].should_not respond_to(:coerced?)
       end
 
-      it "should set correct values" do
-        instance[:hi].should == "bye"
+      it 'should set correct values' do
+        instance[:hi].should eq 'bye'
       end
     end
 
-    context "when used with a Mash" do
+    context 'when used with a Mash' do
       class UserMash < Hashie::Mash
       end
       class TweetMash < Hashie::Mash
@@ -86,26 +91,26 @@ describe Hashie::Extensions::Coercion do
         coerce_key :user, UserMash
       end
 
-      it "should coerce with instance initialization" do
-        tweet = TweetMash.new(:user => {:email => 'foo@bar.com'})
+      it 'should coerce with instance initialization' do
+        tweet = TweetMash.new(user: { email: 'foo@bar.com' })
         tweet[:user].should be_a(UserMash)
       end
 
-      it "should coerce when setting with attribute style" do
+      it 'should coerce when setting with attribute style' do
         tweet = TweetMash.new
-        tweet.user = {:email => 'foo@bar.com'}
+        tweet.user = { email: 'foo@bar.com' }
         tweet[:user].should be_a(UserMash)
       end
 
-      it "should coerce when setting with string index" do
+      it 'should coerce when setting with string index' do
         tweet = TweetMash.new
-        tweet['user'] = {:email => 'foo@bar.com'}
+        tweet['user'] = { email: 'foo@bar.com' }
         tweet[:user].should be_a(UserMash)
       end
 
-      it "should coerce when setting with symbol index" do
+      it 'should coerce when setting with symbol index' do
         tweet = TweetMash.new
-        tweet[:user] = {:email => 'foo@bar.com'}
+        tweet[:user] = { email: 'foo@bar.com' }
         tweet[:user].should be_a(UserMash)
       end
     end
@@ -116,8 +121,8 @@ describe Hashie::Extensions::Coercion do
       it 'should coerce any value of the exact right class' do
         subject.coerce_value String, Coercable
 
-        instance[:foo] = "bar"
-        instance[:bar] = "bax"
+        instance[:foo] = 'bar'
+        instance[:bar] = 'bax'
         instance[:hi]  = :bye
         instance[:foo].should be_coerced
         instance[:bar].should be_coerced
@@ -128,7 +133,7 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_value String, Coercable
 
         instance[:foo] = :bar
-        instance.replace(:foo => "bar", :bar => "bax")
+        instance.replace(foo: 'bar', bar: 'bax')
         instance[:foo].should be_coerced
         instance[:bar].should be_coerced
       end
@@ -137,7 +142,7 @@ describe Hashie::Extensions::Coercion do
         klass = Class.new(String)
         subject.coerce_value klass, Coercable
 
-        instance[:foo] = "bar"
+        instance[:foo] = 'bar'
         instance[:foo].should_not be_kind_of(Coercable)
         instance[:foo] = klass.new
         instance[:foo].should be_kind_of(Coercable)

@@ -6,3 +6,5 @@ platforms :rbx do
 end
 
 gemspec
+
+gem 'rubocop', '~> 0.19.1'

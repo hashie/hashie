@@ -11,10 +11,8 @@ module Hashie
     # Destructively convert all of the keys of a Hash
     # to their string representations.
     def hashie_stringify_keys!
-      self.keys.each do |k|
-        unless String === k
-          self[k.to_s] = self.delete(k)
-        end
+      keys.each do |k|
+        self[k.to_s] = delete(k) unless String === k
       end
       self
     end
@@ -22,7 +20,7 @@ module Hashie
     # Convert all of the keys of a Hash
     # to their string representations.
     def hashie_stringify_keys
-      self.dup.stringify_keys!
+      dup.stringify_keys!
     end
 
     # Convert this hash into a Mash
@@ -38,11 +36,11 @@ module Hashie
     end
 
     def hashie_inspect
-      ret = "#<#{self.class.to_s}"
+      ret = "#<#{self.class}"
       stringify_keys.keys.sort.each do |key|
         ret << " #{key}=#{self[key].inspect}"
       end
-      ret << ">"
+      ret << '>'
       ret
     end
   end

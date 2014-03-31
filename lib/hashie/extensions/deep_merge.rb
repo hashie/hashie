@@ -3,7 +3,7 @@ module Hashie
     module DeepMerge
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
       def deep_merge(other_hash)
-        self.dup.deep_merge!(other_hash)
+        dup.deep_merge!(other_hash)
       end
 
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
@@ -18,7 +18,7 @@ module Hashie
       def _recursive_merge(hash, other_hash)
         if other_hash.is_a?(::Hash) && hash.is_a?(::Hash)
           other_hash.each do |k, v|
-            hash[k] = hash.has_key?(k) ? _recursive_merge(hash[k], v) : v
+            hash[k] = hash.key?(k) ? _recursive_merge(hash[k], v) : v
           end
           hash
         else

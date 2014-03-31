@@ -30,17 +30,17 @@ module Hashie
     def self.property(property_name, options = {})
       property_name = property_name.to_sym
 
-      self.properties << property_name
+      properties << property_name
 
-      if options.has_key?(:default)
-        self.defaults[property_name] = options[:default]
-      elsif self.defaults.has_key?(property_name)
-        self.defaults.delete property_name
+      if options.key?(:default)
+        defaults[property_name] = options[:default]
+      elsif defaults.key?(property_name)
+        defaults.delete property_name
       end
 
       unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
         define_method(property_name) { |&block| self.[](property_name.to_s, &block) }
-        property_assignment = property_name.to_s.concat("=").to_sym
+        property_assignment = property_name.to_s.concat('=').to_sym
         define_method(property_assignment) { |value| self.[]=(property_name.to_s, value) }
       end
 
@@ -61,9 +61,9 @@ module Hashie
     def self.inherited(klass)
       super
       (@subclasses ||= Set.new) << klass
-      klass.instance_variable_set('@properties', self.properties.dup)
-      klass.instance_variable_set('@defaults', self.defaults.dup)
-      klass.instance_variable_set('@required_properties', self.required_properties.dup)
+      klass.instance_variable_set('@properties', properties.dup)
+      klass.instance_variable_set('@defaults', defaults.dup)
+      klass.instance_variable_set('@required_properties', required_properties.dup)
     end
 
     # Check to see if the specified property has already been
@@ -122,15 +122,15 @@ module Hashie
     end
 
     def merge(other_hash)
-      new_dash = self.dup
-      other_hash.each do |k,v|
+      new_dash = dup
+      other_hash.each do |k, v|
         new_dash[k] = block_given? ? yield(k, self[k], v) : v
       end
       new_dash
     end
 
     def merge!(other_hash)
-      other_hash.each do |k,v|
+      other_hash.each do |k, v|
         self[k] = block_given? ? yield(k, self[k], v) : v
       end
       self
@@ -145,35 +145,34 @@ module Hashie
 
     private
 
-      def initialize_attributes(attributes)
-        attributes.each_pair do |att, value|
-          self[att] = value
-        end if attributes
-      end
+    def initialize_attributes(attributes)
+      attributes.each_pair do |att, value|
+        self[att] = value
+      end if attributes
+    end
 
-      def assert_property_exists!(property)
-        unless self.class.property?(property)
-          raise NoMethodError, "The property '#{property}' is not defined for this Dash."
-        end
+    def assert_property_exists!(property)
+      unless self.class.property?(property)
+        fail NoMethodError, "The property '#{property}' is not defined for this Dash."
       end
+    end
 
-      def assert_required_properties_set!
-        self.class.required_properties.each do |required_property|
-          assert_property_set!(required_property)
-        end
+    def assert_required_properties_set!
+      self.class.required_properties.each do |required_property|
+        assert_property_set!(required_property)
       end
+    end
 
-      def assert_property_set!(property)
-        if send(property).nil?
-          raise ArgumentError, "The property '#{property}' is required for this Dash."
-        end
+    def assert_property_set!(property)
+      if send(property).nil?
+        fail ArgumentError, "The property '#{property}' is required for this Dash."
       end
+    end
 
-      def assert_property_required!(property, value)
-        if self.class.required?(property) && value.nil?
-          raise ArgumentError, "The property '#{property}' is required for this Dash."
-        end
+    def assert_property_required!(property, value)
+      if self.class.required?(property) && value.nil?
+        fail ArgumentError, "The property '#{property}' is required for this Dash."
       end
-
+    end
   end
 end

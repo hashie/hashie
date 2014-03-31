@@ -28,6 +28,8 @@ module Hashie
       end
 
       module ClassMethods
+        attr_reader :permitted_keys
+
         def key(key, options = {})
           (@permitted_keys ||= []) << key
 
@@ -36,10 +38,6 @@ module Hashie
           end
 
           permitted_keys
-        end
-
-        def permitted_keys
-          @permitted_keys
         end
       end
     end

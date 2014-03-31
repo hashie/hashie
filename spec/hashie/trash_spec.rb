@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Hashie::Trash do
   class TrashTest < Hashie::Trash
-    property :first_name, :from => :firstName
+    property :first_name, from: :firstName
   end
 
   let(:trash) { TrashTest.new }
@@ -32,124 +32,124 @@ describe Hashie::Trash do
   describe 'writing to properties' do
 
     it 'does not write to a non-existent property using []=' do
-      lambda{trash['abc'] = 123}.should raise_error(NoMethodError)
+      lambda { trash['abc'] = 123 }.should raise_error(NoMethodError)
     end
 
     it 'writes to an existing property using []=' do
-      lambda{trash['first_name'] = 'Bob'}.should_not raise_error
+      lambda { trash['first_name'] = 'Bob' }.should_not raise_error
     end
 
     it 'writes to a translated property using []=' do
-      lambda{trash['firstName'] = 'Bob'}.should_not raise_error
+      lambda { trash['firstName'] = 'Bob' }.should_not raise_error
     end
 
     it 'reads/writes to an existing property using a method call' do
       trash.first_name = 'Franklin'
-      trash.first_name.should == 'Franklin'
+      trash.first_name.should eq 'Franklin'
     end
 
     it 'writes to an translated property using a method call' do
       trash.firstName = 'Franklin'
-      trash.first_name.should == 'Franklin'
+      trash.first_name.should eq 'Franklin'
     end
 
     it 'writes to a translated property using #replace' do
-      trash.replace(:firstName => 'Franklin')
-      trash.first_name.should == 'Franklin'
+      trash.replace(firstName: 'Franklin')
+      trash.first_name.should eq 'Franklin'
     end
 
     it 'writes to a non-translated property using #replace' do
-      trash.replace(:first_name => 'Franklin')
-      trash.first_name.should == 'Franklin'
+      trash.replace(first_name: 'Franklin')
+      trash.first_name.should eq 'Franklin'
     end
   end
 
   describe ' initializing with a Hash' do
     it 'does not initialize non-existent properties' do
-      lambda{TrashTest.new(:bork => 'abc')}.should raise_error(NoMethodError)
+      lambda { TrashTest.new(bork: 'abc') }.should raise_error(NoMethodError)
     end
 
     it 'sets the desired properties' do
-      TrashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
+      TrashTest.new(first_name: 'Michael').first_name.should eq 'Michael'
     end
 
-    context "with both the translated property and the property" do
+    context 'with both the translated property and the property' do
       it 'sets the desired properties' do
-        TrashTest.new(:first_name => 'Michael', :firstName=>'Maeve').first_name.should == 'Michael'
+        TrashTest.new(first_name: 'Michael', firstName: 'Maeve').first_name.should eq 'Michael'
       end
     end
 
     it 'sets the translated properties' do
-      TrashTest.new(:firstName => 'Michael').first_name.should == 'Michael'
+      TrashTest.new(firstName: 'Michael').first_name.should eq 'Michael'
     end
   end
 
   describe 'translating properties using a proc' do
     class TrashLambdaTest < Hashie::Trash
-      property :first_name, :from => :firstName, :with => lambda { |value| value.reverse }
+      property :first_name, from: :firstName, with: lambda { |value| value.reverse }
     end
 
     let(:lambda_trash) { TrashLambdaTest.new }
 
     it 'should translate the value given on initialization with the given lambda' do
-      TrashLambdaTest.new(:firstName => 'Michael').first_name.should == 'Michael'.reverse
+      TrashLambdaTest.new(firstName: 'Michael').first_name.should eq 'Michael'.reverse
     end
 
     it 'should not translate the value if given with the right property' do
-      TrashTest.new(:first_name => 'Michael').first_name.should == 'Michael'
+      TrashTest.new(first_name: 'Michael').first_name.should eq 'Michael'
     end
 
     it 'should translate the value given as property with the given lambda' do
       lambda_trash.firstName = 'Michael'
-      lambda_trash.first_name.should == 'Michael'.reverse
+      lambda_trash.first_name.should eq 'Michael'.reverse
     end
 
     it 'should not translate the value given as right property' do
       lambda_trash.first_name = 'Michael'
-      lambda_trash.first_name.should == 'Michael'
+      lambda_trash.first_name.should eq 'Michael'
     end
   end
 
   describe 'translating properties without from option using a proc' do
 
     class TrashLambdaTest2 < Hashie::Trash
-      property :first_name, :transform_with => lambda { |value| value.reverse }
+      property :first_name, transform_with: lambda { |value| value.reverse }
     end
 
     let(:lambda_trash) { TrashLambdaTest2.new }
 
     it 'should translate the value given as property with the given lambda' do
       lambda_trash.first_name = 'Michael'
-      lambda_trash.first_name.should == 'Michael'.reverse
+      lambda_trash.first_name.should eq 'Michael'.reverse
     end
 
     it 'should transform the value when given in constructor' do
-      TrashLambdaTest2.new(:first_name => 'Michael').first_name.should == 'Michael'.reverse
+      TrashLambdaTest2.new(first_name: 'Michael').first_name.should eq 'Michael'.reverse
     end
 
-    context "when :from option is given" do
+    context 'when :from option is given' do
       class TrashLambdaTest3 < Hashie::Trash
-        property :first_name, :from => :firstName, :transform_with => lambda { |value| value.reverse }
+        property :first_name, from: :firstName, transform_with: lambda { |value| value.reverse }
       end
 
       it 'should not override the :from option in the constructor' do
-        TrashLambdaTest3.new(:first_name => 'Michael').first_name.should == 'Michael'
+        TrashLambdaTest3.new(first_name: 'Michael').first_name.should eq 'Michael'
       end
 
       it 'should not override the :from option when given as property' do
         t = TrashLambdaTest3.new
         t.first_name = 'Michael'
-        t.first_name.should == 'Michael'
+        t.first_name.should eq 'Michael'
       end
 
     end
   end
 
-  it "should raise an error when :from have the same value as property" do
-    expect {
+  it 'should raise an error when :from have the same value as property' do
+    expect do
       class WrongTrash < Hashie::Trash
-        property :first_name, :from => :first_name
+        property :first_name, from: :first_name
       end
-    }.to raise_error(ArgumentError)
+    end.to raise_error(ArgumentError)
   end
 end

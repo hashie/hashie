@@ -68,14 +68,14 @@ module Hashie
       default ? super(default) : super(&blk)
     end
 
-    class << self; alias [] new; end
+    class << self; alias_method :[], :new; end
 
     def id #:nodoc:
-      self["id"]
+      self['id']
     end
 
     def type #:nodoc:
-      self["type"]
+      self['type']
     end
 
     alias_method :regular_reader, :[]
@@ -92,7 +92,7 @@ module Hashie
     # Sets an attribute in the Mash. Key will be converted to
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
-    def custom_writer(key,value,convert=true) #:nodoc:
+    def custom_writer(key, value, convert = true) #:nodoc:
       regular_writer(convert_key(key), convert ? convert_value(value) : value)
     end
 
@@ -129,7 +129,7 @@ module Hashie
     alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup
-      self.class.new(self, self.default)
+      self.class.new(self, default)
     end
 
     def key?(key)
@@ -149,9 +149,9 @@ module Hashie
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash, &blk)
-      other_hash.each_pair do |k,v|
+      other_hash.each_pair do |k, v|
         key = convert_key(k)
-        if regular_reader(key).is_a?(Mash) and v.is_a?(::Hash)
+        if regular_reader(key).is_a?(Mash) && v.is_a?(::Hash)
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
@@ -173,7 +173,7 @@ module Hashie
     # Merges (non-recursively) the hash from the argument,
     # changing the receiving hash
     def shallow_update(other_hash)
-      other_hash.each_pair do |k,v|
+      other_hash.each_pair do |k, v|
         regular_writer(convert_key(k), convert_value(v, true))
       end
       self
@@ -187,11 +187,10 @@ module Hashie
 
     # Will return true if the Mash has had a key
     # set in addition to normal respond_to? functionality.
-    def respond_to?(method_name, include_private=false)
+    def respond_to?(method_name, include_private = false)
       return true if key?(method_name) || prefix_method?(method_name)
       super
     end
-
 
     def prefix_method?(method_name)
       method_name = method_name.to_s
@@ -203,13 +202,13 @@ module Hashie
       suffixes_regex = ALLOWED_SUFFIXES.join
       match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
       case match[2]
-      when "="
+      when '='
         self[match[1]] = args.first
-      when "?"
+      when '?'
         !!self[match[1]]
-      when "!"
+      when '!'
         initializing_reader(match[1])
-      when "_"
+      when '_'
         underbang_reader(match[1])
       else
         default(method_name)
@@ -222,19 +221,19 @@ module Hashie
       key.to_s
     end
 
-    def convert_value(val, duping=false) #:nodoc:
+    def convert_value(val, duping = false) #:nodoc:
       case val
-        when self.class
-          val.dup
-        when Hash
-          duping ? val.dup : val
-        when ::Hash
-          val = val.dup if duping
-          self.class.new(val)
-        when Array
-          val.collect{ |e| convert_value(e) }
-        else
-          val
+      when self.class
+        val.dup
+      when Hash
+        duping ? val.dup : val
+      when ::Hash
+        val = val.dup if duping
+        self.class.new(val)
+      when Array
+        val.map { |e| convert_value(e) }
+      else
+        val
       end
     end
   end
