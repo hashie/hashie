@@ -15,8 +15,6 @@ Gem::Specification.new do |gem|
   gem.version       = Hashie::VERSION
   gem.license       = "MIT"
 
-  gem.add_development_dependency 'rake', '~> 0.9.2'
-  gem.add_development_dependency 'rspec', '~> 2.5'
-  gem.add_development_dependency 'growl'
-  gem.add_development_dependency 'listen'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
 end
