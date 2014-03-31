@@ -333,6 +333,10 @@ describe Hashie::Mash do
     it "should not respond to an unknown key without a suffix" do
       Hashie::Mash.new(:abc => 'def').should_not be_respond_to(:xyz)
     end
+
+    it "should not respond to permitted?" do
+      Hashie::Mash.new.should_not be_respond_to(:permitted?)
+    end
   end
 
   context "#initialize" do
