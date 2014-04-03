@@ -8,4 +8,4 @@ end
 
 gemspec
 
-gem 'rubocop', '~> 0.19.1'
+gem 'rubocop', '~> 0.20.0'
