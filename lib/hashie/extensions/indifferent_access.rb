@@ -94,7 +94,7 @@ module Hashie
       end
 
       def indifferent_fetch(key, *args)
-        regular_fetch  convert_key(key), *args
+        regular_fetch convert_key(key), *args
       end
 
       def indifferent_delete(key)
@@ -102,7 +102,7 @@ module Hashie
       end
 
       def indifferent_key?(key)
-        regular_key?   convert_key(key)
+        regular_key? convert_key(key)
       end
 
       def indifferent_values_at(*indices)
