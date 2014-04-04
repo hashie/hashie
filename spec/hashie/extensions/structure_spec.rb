@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Hashie::Extensions::Structure do
   class StructuredHash < ::Hash
     include Hashie::Extensions::Structure
-    key :first
-    key :second, default: 'foo'
+    property :first
+    property :second, default: 'foo'
   end
 
   describe '#[]=' do
@@ -128,7 +128,7 @@ describe Hashie::Extensions::Structure do
 
   describe 'inheritance' do
     class StructuredHashDescendant < StructuredHash
-      key :third, default: :bar
+      property :third, default: :bar
     end
 
     it 'keeps superclass keys' do

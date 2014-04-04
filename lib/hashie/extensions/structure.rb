@@ -12,8 +12,8 @@ module Hashie
     #     include Hashie::Extensions::MergeInitializer
     #     include Hashie::Extensions::Structure
     #
-    #     key :first
-    #     key :second, default: 'foo'
+    #     property :first
+    #     property :second, default: 'foo'
     #   end
     #
     #   h = RestrictedHash.new(first: 1)
@@ -37,10 +37,9 @@ module Hashie
           @default_values ||= {}
         end
 
-        def key(key, options = {})
+        def property(key, options = {})
           permitted_keys << key
           default_values[key] = options.delete(:default) if options[:default]
-          permitted_keys
         end
 
         def inherited(klass)
