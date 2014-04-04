@@ -18,6 +18,7 @@ module Hashie
     autoload :MethodReader,      'hashie/extensions/method_access'
     autoload :MethodWriter,      'hashie/extensions/method_access'
     autoload :StringifyKeys,     'hashie/extensions/key_conversion'
+    autoload :Structure,         'hashie/extensions/structure'
     autoload :SymbolizeKeys,     'hashie/extensions/key_conversion'
   end
 end
