@@ -121,6 +121,27 @@ h1.deep_merge(h2) #=> { x: { y: [7, 8, 9] }, z: "xyz" }
 h2.deep_merge(h1) #=> { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
 ```
 
+### Structure
+
+The Structure extension provides facilities for declaring
+properties that a Hash can have. This provides for the
+creation of structures that still behave like hashes but
+do not allow setting non-allowed keys.
+
+
+```ruby
+class RestrictedHash < Hash
+  include Hashie::Extensions::MergeInitializer
+  include Hashie::Extensions::Structure
+  key :first
+  key :second, default: 'foo'
+end
+h = RestrictedHash.new(first: 1)
+h[:first]  # => 1
+h[:second] # => 'foo'
+h[:third]  # => KeyError
+```
+
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality
