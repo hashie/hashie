@@ -66,40 +66,40 @@ module Hashie
       end
 
       def [](key)
-        assert_allowed_key!(key)
+        assert_permitted_key!(key)
         super(key)
       end
 
       def []=(key, value)
-        assert_allowed_key!(key)
+        assert_permitted_key!(key)
         super(key, value)
       end
 
       def fetch(key, *args, &block)
-        assert_allowed_key!(key)
+        assert_permitted_key!(key)
         super(key, *args, &block)
       end
 
       def merge(other, &block)
         result = super
-        result.assert_allowed_keys!
+        result.assert_permitted_keys!
         result
       end
 
       def merge!(other, &block)
         super
-        assert_allowed_keys!
+        assert_permitted_keys!
         self
       end
 
       protected
 
-      def assert_allowed_keys!
-        keys.each { |key| assert_allowed_key!(key) }
+      def assert_permitted_keys!
+        keys.each { |key| assert_permitted_key!(key) }
       end
 
-      def assert_allowed_key!(key)
-        fail KeyError, "Key #{key.inspect} is not allowed for this hash" unless self.class.permitted_keys.include?(key)
+      def assert_permitted_key!(key)
+        fail KeyError, "Key #{key.inspect} is not permitted for this hash" unless self.class.permitted_keys.include?(key)
       end
     end
   end
