@@ -16,10 +16,10 @@ module Hashie
     #     key :second, default: 'foo'
     #   end
     #
-    #   h = RestrictedHash.new(:first => 1)
+    #   h = RestrictedHash.new(first: 1)
     #   h[:first]  # => 1
     #   h[:second] # => 'foo'
-    #   h[:third]  # => ArgumentError
+    #   h[:third]  # => KeyError
     #
     module Structure
       def self.included(base)
