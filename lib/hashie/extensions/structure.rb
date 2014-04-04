@@ -83,17 +83,21 @@ module Hashie
 
       def merge(other, &block)
         result = super
-        result.keys.each { |key| assert_allowed_key!(key) }
+        result.assert_allowed_keys!
         result
       end
 
       def merge!(other, &block)
         super
-        keys.each { |key| assert_allowed_key!(key)  }
+        assert_allowed_keys!
         self
       end
 
       protected
+
+      def assert_allowed_keys!
+        keys.each { |key| assert_allowed_key!(key) }
+      end
 
       def assert_allowed_key!(key)
         fail KeyError, "Key #{key.inspect} is not allowed for this hash" unless self.class.permitted_keys.include?(key)
