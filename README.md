@@ -34,8 +34,8 @@ class Tweet < Hash
   coerce_key :user, User
 end
 
-user_hash = {:name => "Bob"}
-Tweet.new(:user => user_hash)
+user_hash = { name: "Bob" }
+Tweet.new(user: user_hash)
 # => automatically calls User.coerce(user_hash) or
 #    User.new(user_hash) if that isn't present.
 ```
@@ -114,11 +114,11 @@ end
 h1 = MyHash.new
 h2 = MyHash.new
 
-h1 = {:x => {:y => [4,5,6]}, :z => [7,8,9]}
-h2 = {:x => {:y => [7,8,9]}, :z => "xyz"}
+h1 = { x: { y: [4,5,6] }, z: [7,8,9] }
+h2 = { x: { y: [7,8,9] }, z: "xyz" }
 
-h1.deep_merge(h2) #=> { :x => {:y => [7, 8, 9]}, :z => "xyz" }
-h2.deep_merge(h1) #=> { :x => {:y => [4, 5, 6]}, :z => [7, 8, 9] }
+h1.deep_merge(h2) #=> { x: { y: [7, 8, 9] }, z: "xyz" }
+h2.deep_merge(h1) #=> { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
 ```
 
 ## Mash
@@ -165,14 +165,14 @@ required. Required properties will raise an exception if unset.
 
 ```ruby
 class Person < Hashie::Dash
-  property :name, :required => true
+  property :name, required: true
   property :email
-  property :occupation, :default => 'Rubyist'
+  property :occupation, default: 'Rubyist'
 end
 
 p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
 
-p = Person.new(:name => "Bob")
+p = Person.new(name: "Bob")
 p.name # => 'Bob'
 p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
 p.email = 'abc@def.com'
@@ -189,7 +189,7 @@ It is used like so:
 
 ```ruby
 class Person < Hashie::Trash
-  property :first_name, :from => :firstName
+  property :first_name, from: :firstName
 end
 ```
 
@@ -197,7 +197,7 @@ This will automatically translate the <tt>firstName</tt> key to <tt>first_name</
 when it is initialized using a hash such as through:
 
 ```ruby
-Person.new(:firstName => 'Bob')
+Person.new(firstName: 'Bob')
 ```
 
 Trash also supports translations using lambda, this could be useful when dealing with
@@ -205,15 +205,15 @@ external API's. You can use it in this way:
 
 ```ruby
 class Result < Hashie::Trash
-  property :id, :transform_with => lambda { |v| v.to_i }
-  property :created_at, :from => :creation_date, :with => lambda { |v| Time.parse(v) }
+  property :id, transform_with: lambda { |v| v.to_i }
+  property :created_at, from: :creation_date, with: lambda { |v| Time.parse(v) }
 end
 ```
 
 this will produce the following
 
 ```ruby
-result = Result.new(:id => '123', :creation_date => '2012-03-30 17:23:28')
+result = Result.new(id: '123', creation_date: '2012-03-30 17:23:28')
 result.id.class         # => Fixnum
 result.created_at.class # => Time
 ```
@@ -232,19 +232,19 @@ provide.
 
 ```ruby
 c = Hashie::Clash.new
-c.where(:abc => 'def').order(:created_at)
-c # => {:where => {:abc => 'def'}, :order => :created_at}
+c.where(abc: 'def').order(:created_at)
+c # => { where: { abc: 'def' }, order: :created_at }
 
 # You can also use bang notation to chain into sub-hashes,
 # jumping back up the chain with _end!
 c = Hashie::Clash.new
 c.where!.abc('def').ghi(123)._end!.order(:created_at)
-c # => {:where => {:abc => 'def', :ghi => 123}, :order => :created_at}
+c # => { where: { abc: 'def', ghi: 123 }, order: :created_at }
 
 # Multiple hashes are merged automatically
 c = Hashie::Clash.new
-c.where(:abc => 'def').where(:hgi => 123)
-c # => {:where => {:abc => 'def', :hgi => 123}}
+c.where(abc: 'def').where(hgi: 123)
+c # => { where: { abc: 'def', hgi: 123 } }
 ```
 
 ## Contributing

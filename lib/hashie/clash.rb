@@ -15,7 +15,7 @@ module Hashie
   # back out again with the _end! method. Example:
   #
   #     c = Hashie::Clash.new.conditions!.foo('bar').baz(123)._end!.order(:created_at)
-  #     c # => {:conditions => {:foo => 'bar', :baz => 123}, :order => :created_at}
+  #     c # => { conditions: { foo: 'bar', baz: 123 }, order: :created_at}
   #
   # Because the primary functionality of Clash is to build options objects,
   # all keys are converted to symbols since many libraries expect symbols explicitly
