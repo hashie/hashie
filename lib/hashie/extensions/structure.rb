@@ -13,7 +13,7 @@ module Hashie
     #     include Hashie::Extensions::Structure
     #
     #     key :first
-    #     key :second, :default => 'foo'
+    #     key :second, default: 'foo'
     #   end
     #
     #   h = RestrictedHash.new(:first => 1)
@@ -39,11 +39,7 @@ module Hashie
 
         def key(key, options = {})
           permitted_keys << key
-
-          if options[:default]
-            default_values[key] = options.delete(:default)
-          end
-
+          default_values[key] = options.delete(:default) if options[:default]
           permitted_keys
         end
 
@@ -60,7 +56,7 @@ module Hashie
         super
 
         self.class.default_values.each do |key, value|
-          unless has_key?(key)
+          unless key?(key)
             begin
               self[key] = value.dup
             rescue TypeError
@@ -87,20 +83,20 @@ module Hashie
 
       def merge(other, &block)
         result = super
-        result.keys.each {|key| assert_allowed_key!(key) }
+        result.keys.each { |key| assert_allowed_key!(key) }
         result
       end
 
       def merge!(other, &block)
         super
-        keys.each {|key| assert_allowed_key!(key)  }
+        keys.each { |key| assert_allowed_key!(key)  }
         self
       end
 
       protected
 
       def assert_allowed_key!(key)
-        raise KeyError, "Key #{key.inspect} is not allowed for this hash" unless self.class.permitted_keys.include?(key)
+        fail KeyError, "Key #{key.inspect} is not allowed for this hash" unless self.class.permitted_keys.include?(key)
       end
     end
   end
