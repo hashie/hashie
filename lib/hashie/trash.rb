@@ -52,6 +52,10 @@ module Hashie
       end
     end
 
+    def self.permitted_input_keys
+      @permitted_input_keys ||= properties.map { |property| inverse_translations.fetch property, property }
+    end
+
     private
 
     def self.properties
@@ -59,7 +63,11 @@ module Hashie
     end
 
     def self.translations
-      @translations ||= {} # NOTE: Hash.new { {} } ? to provide lazy value initialization for new keys
+      @translations ||= {}
+    end
+
+    def self.inverse_translations
+      @inverse_translations ||= Hash[translations.map(&:reverse)]
     end
 
     def self.transforms

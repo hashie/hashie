@@ -29,8 +29,25 @@ describe Hashie::Trash do
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      p TrashTest.translations
       TrashTest.translations[:firstName].should eq :first_name
+    end
+
+    it 'maintains inverse translations hash mapping from the translated to the original name' do
+      TrashTest.inverse_translations[:first_name].should eq :firstName
+    end
+  end
+
+  describe 'permitted input keys' do
+    class TrashTest < Hashie::Trash
+      property :id
+    end
+
+    it 'contain names of properties without translations' do
+      TrashTest.permitted_input_keys.should include :id
+    end
+
+    it 'contain the :from key of properties with translations' do
+      TrashTest.permitted_input_keys.should include :firstName
     end
   end
 
