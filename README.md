@@ -258,7 +258,7 @@ Essentially, a Clash is a generalized way to provide much of the same
 kind of "chainability" that libraries like Arel or Rails 2.x's named_scopes
 provide.
 
-### Example
+### Example:
 
 ```ruby
 c = Hashie::Clash.new
@@ -276,6 +276,39 @@ c = Hashie::Clash.new
 c.where(abc: 'def').where(hgi: 123)
 c # => { where: { abc: 'def', hgi: 123 } }
 ```
+
+## Rash
+
+Rash is a Hash whose keys can be Regexps or Ranges, which will map many input keys to a value.
+
+A good use case for the Rash is an URL router for a web framework, where URLs need to be mapped to actions; the Rash's keys match URL patterns, while the values call the action which handles the URL.
+
+If the Rash's value is a `proc`, the `proc` will be automatically called with the regexp's MatchData (matched groups) as a block argument.
+
+### Example:
+
+```ruby
+
+# Mapping names to appropriate greetings
+greeting = Hashie::Rash.new( /^Mr./ => "Hello sir!", /^Mrs./ => "Evening, madame." )
+greeting["Mr. Steve Austin"] #=> "Hello sir!"
+greeting["Mrs. Steve Austin"] #=> "Evening, madame."
+
+# Mapping statements to saucy retorts
+mapper = Hashie::Rash.new(
+  /I like (.+)/ => proc { |m| "Who DOESN'T like #{m[1]}?!" },
+  /Get off my (.+)!/ => proc { |m| "Forget your #{m[1]}, old man!" }
+)
+mapper["I like traffic lights"] #=> "Who DOESN'T like traffic lights?!"
+mapper["Get off my lawn!"]      #=> "Forget your lawn, old man!"
+```
+
+### Auto-optimized
+
+**Note:** The Rash is automatically optimized every 500 accesses
+(which means that it sorts the list of Regexps, putting the most frequently matched ones at the beginning).
+
+If this value is too low or too high for your needs, you can tune it by setting: `rash.optimize_every = n`.
 
 ## Contributing
 
