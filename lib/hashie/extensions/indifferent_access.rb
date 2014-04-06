@@ -36,6 +36,16 @@ module Hashie
           %w(include? member? has_key?).each do |key_alias|
             alias_method key_alias, :indifferent_key?
           end
+
+          class << self
+            def [](*)
+              super.convert!
+            end
+
+            def try_convert(*)
+              (hash = super) && self[hash]
+            end
+          end
         end
       end
 

@@ -1,108 +1,152 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
-  class IndifferentHash < Hash
+
+  class IndifferentHashWithMergeInitializer < Hash
     include Hashie::Extensions::MergeInitializer
     include Hashie::Extensions::IndifferentAccess
-  end
-  subject { IndifferentHash }
 
-  it 'should be able to access via string or symbol' do
-    h = subject.new(abc: 123)
-    h[:abc].should eq 123
-    h['abc'].should eq 123
+    class << self
+      alias_method :build, :new
+    end
   end
 
-  describe '#store' do
-    it 'should indifferently save values' do
-      h = subject.new
-      h.store(:abc, 123)
+  class IndifferentHashWithArrayInitializer < Hash
+    include Hashie::Extensions::IndifferentAccess
+
+    class << self
+      alias_method :build, :[]
+    end
+  end
+
+  class IndifferentHashWithTryConvertInitializer < Hash
+    include Hashie::Extensions::IndifferentAccess
+
+    class << self
+      alias_method :build, :try_convert
+    end
+  end
+
+  shared_examples_for 'hash with indifferent access' do
+    it 'should be able to access via string or symbol' do
+      h = subject.build(abc: 123)
       h[:abc].should eq 123
       h['abc'].should eq 123
     end
-  end
 
-  describe '#values_at' do
-    it 'should indifferently find values' do
-      h = subject.new(:foo => 'bar', 'baz' => 'qux')
-      h.values_at('foo', :baz).should eq %w(bar qux)
-    end
-  end
-
-  describe '#fetch' do
-    it 'should work like normal fetch, but indifferent' do
-      h = subject.new(foo: 'bar')
-      h.fetch(:foo).should eq h.fetch('foo')
-      h.fetch(:foo).should eq 'bar'
-    end
-  end
-
-  describe '#delete' do
-    it 'should delete indifferently' do
-      h = subject.new(:foo => 'bar', 'baz' => 'qux')
-      h.delete('foo')
-      h.delete(:baz)
-      h.should be_empty
-    end
-  end
-
-  describe '#key?' do
-    let(:h) { subject.new(foo: 'bar') }
-
-    it 'should find it indifferently' do
-      h.should be_key(:foo)
-      h.should be_key('foo')
+    describe '#values_at' do
+      it 'should indifferently find values' do
+        h = subject.build(:foo => 'bar', 'baz' => 'qux')
+        h.values_at('foo', :baz).should eq %w(bar qux)
+      end
     end
 
-    %w(include? member? has_key?).each do |key_alias|
-      it "should be aliased as #{key_alias}" do
-        h.send(key_alias.to_sym, :foo).should be(true)
-        h.send(key_alias.to_sym, 'foo').should be(true)
+    describe '#fetch' do
+      it 'should work like normal fetch, but indifferent' do
+        h = subject.build(foo: 'bar')
+        h.fetch(:foo).should eq h.fetch('foo')
+        h.fetch(:foo).should eq 'bar'
+      end
+    end
+
+    describe '#delete' do
+      it 'should delete indifferently' do
+        h = subject.build(:foo => 'bar', 'baz' => 'qux')
+        h.delete('foo')
+        h.delete(:baz)
+        h.should be_empty
+      end
+    end
+
+    describe '#key?' do
+      let(:h) { subject.build(foo: 'bar') }
+
+      it 'should find it indifferently' do
+        h.should be_key(:foo)
+        h.should be_key('foo')
+      end
+
+      %w(include? member? has_key?).each do |key_alias|
+        it "should be aliased as #{key_alias}" do
+          h.send(key_alias.to_sym, :foo).should be(true)
+          h.send(key_alias.to_sym, 'foo').should be(true)
+        end
+      end
+    end
+
+    describe '#update' do
+      let(:h) { subject.build(foo: 'bar') }
+      it 'should allow keys to be indifferent still' do
+        h.update(baz: 'qux')
+        h['foo'].should eq 'bar'
+        h['baz'].should eq 'qux'
+      end
+
+      it 'should recursively inject indifference into sub-hashes' do
+        h.update(baz: { qux: 'abc' })
+        h['baz']['qux'].should eq 'abc'
+      end
+
+      it 'should not change the ancestors of the injected object class' do
+        h.update(baz: { qux: 'abc' })
+        Hash.new.should_not be_respond_to(:indifferent_access?)
+      end
+    end
+
+    describe '#replace' do
+      let(:h) { subject.build(foo: 'bar').replace(bar: 'baz', hi: 'bye') }
+
+      it 'returns self' do
+        h.should be_a(subject)
+      end
+
+      it 'should remove old keys' do
+        [:foo, 'foo'].each do |k|
+          h[k].should be_nil
+          h.key?(k).should be_false
+        end
+      end
+
+      it 'creates new keys with indifferent access' do
+        [:bar, 'bar', :hi, 'hi'].each { |k| h.key?(k).should be_true }
+        h[:bar].should eq 'baz'
+        h['bar'].should eq 'baz'
+        h[:hi].should eq 'bye'
+        h['hi'].should eq 'bye'
+      end
+    end
+
+    describe '::try_convert' do
+      describe 'with conversion' do
+        let(:h) { subject.try_convert(foo: 'bar') }
+
+        it 'should be a subject' do
+          h.should be_a(subject)
+        end
+      end
+
+      describe 'without conversion' do
+        let(:h) { subject.try_convert('{ :foo => bar }') }
+
+        it 'should be nil' do
+          h.should be_nil
+        end
       end
     end
   end
 
-  describe '#update' do
-    subject { IndifferentHash.new(foo: 'bar') }
-    it 'should allow keys to be indifferent still' do
-      subject.update(baz: 'qux')
-      subject['foo'].should eq 'bar'
-      subject['baz'].should eq 'qux'
-    end
-
-    it 'should recursively inject indifference into sub-hashes' do
-      subject.update(baz: { qux: 'abc' })
-      subject['baz']['qux'].should eq 'abc'
-    end
-
-    it 'should not change the ancestors of the injected object class' do
-      subject.update(baz: { qux: 'abc' })
-      Hash.new.should_not be_respond_to(:indifferent_access?)
-    end
+  describe 'with merge initializer' do
+    subject { IndifferentHashWithMergeInitializer }
+    it_should_behave_like 'hash with indifferent access'
   end
 
-  describe '#replace' do
-    subject do
-      IndifferentHash.new(foo: 'bar').replace(bar: 'baz', hi: 'bye')
-    end
+  describe 'with array initializer' do
+    subject { IndifferentHashWithArrayInitializer }
+    it_should_behave_like 'hash with indifferent access'
+  end
 
-    it 'returns self' do
-      subject.should be_a(IndifferentHash)
-    end
-
-    it 'should remove old keys' do
-      [:foo, 'foo'].each do |k|
-        subject[k].should be_nil
-        subject.key?(k).should be_false
-      end
-    end
-
-    it 'creates new keys with indifferent access' do
-      [:bar, 'bar', :hi, 'hi'].each { |k| subject.key?(k).should be_true }
-      subject[:bar].should eq 'baz'
-      subject['bar'].should eq 'baz'
-      subject[:hi].should eq 'bye'
-      subject['hi'].should eq 'bye'
-    end
+  describe 'with try convert initializer' do
+    subject { IndifferentHashWithTryConvertInitializer }
+    it_should_behave_like 'hash with indifferent access'
   end
 end
