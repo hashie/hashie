@@ -101,6 +101,32 @@ hash in question. This means you can safely merge together indifferent
 and non-indifferent hashes arbitrarily deeply without worrying about
 whether you'll be able to `hash[:other][:another]` properly.
 
+### IgnoreUndeclared
+
+This extension can be mixed in to silently ignore undeclared properties on
+initialization instead of raising an error. This is useful when using a
+Trash to capture a subset of a larger hash.
+
+```ruby
+class Person < Trash
+  include Hashie::Extensions::IgnoreUndeclared
+  property :first_name
+  property :last_name
+end
+
+user_data = {
+  first_name: 'Freddy',
+  last_name: 'Nostrils',
+  email: 'freddy@example.com'
+}
+
+p = Person.new(user_data) # 'email' is silently ignored
+
+p.first_name # => 'Freddy'
+p.last_name  # => 'Nostrils'
+p.email      # => NoMethodError
+```
+
 ### DeepMerge
 
 This extension allow you to easily include a recursive merging
