@@ -1,5 +1,6 @@
 ## Next Release
 
+* [#134](https://github.com/intridea/hashie/pull/134): Add deep_fetch extension for nested access - [@tylerdooling](https://github.com/tylerdooling).
 * Removed support for Ruby 1.8.7 - [@dblock](https://github.com/dblock).
 * Ruby style now enforced with Rubocop - [@dblock](https://github.com/dblock).
 * [#136](https://github.com/intridea/hashie/issues/136): Removed Hashie::Extensions::Structure - [@markiz](https://github.com/markiz).

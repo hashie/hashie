@@ -121,6 +121,36 @@ h1.deep_merge(h2) #=> { x: { y: [7, 8, 9] }, z: "xyz" }
 h2.deep_merge(h1) #=> { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
 ```
 
+### DeepFetch
+
+This extension can be mixed in to provide for safe and concise retrieval of
+deeply nested hash values. In the event that the requested key does not exist
+a block can be provided and its value will be returned.
+
+Though this is a hash extension, it conveniently allows for arrays to be
+present in the nested structure. This feature makes the extension particularly
+useful for working with JSON API responses.
+
+```ruby
+user = {
+  name: { first: 'Bob', last: 'Boberts' },
+  groups: [
+    { name: 'Rubyists' },
+    { name: 'Open source enthusiasts' }
+  ]
+}
+user.extend Hashie::Extensions::DeepFetch
+
+user.deep_fetch :name, :first #=> 'Bob'
+user.deep_fetch :name, :middle #=> 'KeyError: Could not fetch middle'
+
+# using a default block
+user.deep_fetch :name, :middle { |key| 'default' }  #=>  'default'
+
+# a nested array
+user.deep_fetch :groups, 1, :name #=> 'Open source enthusiasts'
+```
+
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality
