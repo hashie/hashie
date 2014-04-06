@@ -1,8 +1,8 @@
 ## Next Release
 
-* Removed extra unused code - [@markiz](https://github.com/markiz).
 * Removed support for Ruby 1.8.7 - [@dblock](https://github.com/dblock).
 * Ruby style now enforced with Rubocop - [@dblock](https://github.com/dblock).
+* [#136](https://github.com/intridea/hashie/issues/136): Removed Hashie::Extensions::Structure - [@markiz](https://github.com/markiz).
 * [#107](https://github.com/intridea/hashie/pull/107): Fixed excessive value conversions, poor performance of deep merge in Hashie::Mash - [@davemitchell](https://github.com/dblock), [@dblock](https://github.com/dblock).
 * [#69](https://github.com/intridea/hashie/issues/69): Fixed assigning multiple properties in Hashie::Trash - [@einzige](https://github.com/einzige).
 * [#100](https://github.com/intridea/hashie/pull/100): IndifferentAccess#store will respect indifference - [@jrochkind](https://github.com/jrochkind).
