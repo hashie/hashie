@@ -15,30 +15,30 @@ describe Hashie::Rash do
   end
 
   it 'finds strings' do
-    subject['other'].should eq 'whee'
-    subject['well hello there'].should eq 'hello'
-    subject['the world is round'].should eq 'world'
-    subject.all('hello world').sort.should eq %w(hello world)
+    expect(subject['other']).to eq 'whee'
+    expect(subject['well hello there']).to eq 'hello'
+    expect(subject['the world is round']).to eq 'world'
+    expect(subject.all('hello world').sort).to eq %w(hello world)
   end
 
   it 'finds regexps' do
-    subject[/other/].should eq 'whee'
+    expect(subject[/other/]).to eq 'whee'
   end
 
   it 'finds other objects' do
-    subject[true].should eq false
-    subject[1].should eq 'awesome'
+    expect(subject[true]).to eq false
+    expect(subject[1]).to eq 'awesome'
   end
 
   it 'finds numbers from ranges' do
-    subject[250].should eq 'rangey'
-    subject[999].should eq 'rangey'
-    subject[1000].should eq 'rangey'
-    subject[1001].should be_nil
+    expect(subject[250]).to eq 'rangey'
+    expect(subject[999]).to eq 'rangey'
+    expect(subject[1000]).to eq 'rangey'
+    expect(subject[1001]).to be_nil
   end
 
   it 'evaluates proc values' do
-    subject['abcdef'].should eq 'bcd'
-    subject['ffffff'].should be_nil
+    expect(subject['abcdef']).to eq 'bcd'
+    expect(subject['ffffff']).to be_nil
   end
 end

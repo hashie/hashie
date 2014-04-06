@@ -32,13 +32,13 @@ describe Hashie::Extensions::Coercion do
   let(:instance) { subject.new }
 
   describe '#coerce_key' do
-    it { subject.should be_respond_to(:coerce_key) }
+    it { expect(subject).to be_respond_to(:coerce_key) }
 
     it 'runs through coerce on a specified key' do
       subject.coerce_key :foo, Coercable
 
       instance[:foo] = 'bar'
-      instance[:foo].should be_coerced
+      expect(instance[:foo]).to be_coerced
     end
 
     it 'supports an array of keys' do
@@ -46,23 +46,23 @@ describe Hashie::Extensions::Coercion do
 
       instance[:foo] = 'bar'
       instance[:bar] = 'bax'
-      instance[:foo].should be_coerced
-      instance[:bar].should be_coerced
+      expect(instance[:foo]).to be_coerced
+      expect(instance[:bar]).to be_coerced
     end
 
     it 'calls #new if no coerce method is available' do
       subject.coerce_key :foo, Initializable
 
       instance[:foo] = 'bar'
-      instance[:foo].value.should eq 'String'
-      instance[:foo].should_not be_coerced
+      expect(instance[:foo].value).to eq 'String'
+      expect(instance[:foo]).not_to be_coerced
     end
 
     it 'coerces when the merge initializer is used' do
       subject.coerce_key :foo, Coercable
       instance = subject.new(foo: 'bar')
 
-      instance[:foo].should be_coerced
+      expect(instance[:foo]).to be_coerced
     end
 
     context 'when #replace is used' do
@@ -73,13 +73,13 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'coerces relevant keys' do
-        instance[:foo].should be_coerced
-        instance[:bar].should be_coerced
-        instance[:hi].should_not respond_to(:coerced?)
+        expect(instance[:foo]).to be_coerced
+        expect(instance[:bar]).to be_coerced
+        expect(instance[:hi]).not_to respond_to(:coerced?)
       end
 
       it 'sets correct values' do
-        instance[:hi].should eq 'bye'
+        expect(instance[:hi]).to eq 'bye'
       end
     end
 
@@ -93,25 +93,25 @@ describe Hashie::Extensions::Coercion do
 
       it 'coerces with instance initialization' do
         tweet = TweetMash.new(user: { email: 'foo@bar.com' })
-        tweet[:user].should be_a(UserMash)
+        expect(tweet[:user]).to be_a(UserMash)
       end
 
       it 'coerces when setting with attribute style' do
         tweet = TweetMash.new
         tweet.user = { email: 'foo@bar.com' }
-        tweet[:user].should be_a(UserMash)
+        expect(tweet[:user]).to be_a(UserMash)
       end
 
       it 'coerces when setting with string index' do
         tweet = TweetMash.new
         tweet['user'] = { email: 'foo@bar.com' }
-        tweet[:user].should be_a(UserMash)
+        expect(tweet[:user]).to be_a(UserMash)
       end
 
       it 'coerces when setting with symbol index' do
         tweet = TweetMash.new
         tweet[:user] = { email: 'foo@bar.com' }
-        tweet[:user].should be_a(UserMash)
+        expect(tweet[:user]).to be_a(UserMash)
       end
     end
   end
@@ -124,9 +124,9 @@ describe Hashie::Extensions::Coercion do
         instance[:foo] = 'bar'
         instance[:bar] = 'bax'
         instance[:hi]  = :bye
-        instance[:foo].should be_coerced
-        instance[:bar].should be_coerced
-        instance[:hi].should_not respond_to(:coerced?)
+        expect(instance[:foo]).to be_coerced
+        expect(instance[:bar]).to be_coerced
+        expect(instance[:hi]).not_to respond_to(:coerced?)
       end
 
       it 'coerces values from a #replace call' do
@@ -134,8 +134,8 @@ describe Hashie::Extensions::Coercion do
 
         instance[:foo] = :bar
         instance.replace(foo: 'bar', bar: 'bax')
-        instance[:foo].should be_coerced
-        instance[:bar].should be_coerced
+        expect(instance[:foo]).to be_coerced
+        expect(instance[:bar]).to be_coerced
       end
 
       it 'does not coerce superclasses' do
@@ -143,9 +143,9 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_value klass, Coercable
 
         instance[:foo] = 'bar'
-        instance[:foo].should_not be_kind_of(Coercable)
+        expect(instance[:foo]).not_to be_kind_of(Coercable)
         instance[:foo] = klass.new
-        instance[:foo].should be_kind_of(Coercable)
+        expect(instance[:foo]).to be_kind_of(Coercable)
       end
     end
   end
