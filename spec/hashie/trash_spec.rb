@@ -27,6 +27,11 @@ describe Hashie::Trash do
     it 'does not create a method for reading the translated property' do
       trash.should_not respond_to(:firstName)
     end
+
+    it 'maintains translations hash mapping from the original to the translated name' do
+      p TrashTest.translations
+      TrashTest.translations[:firstName].should eq :first_name
+    end
   end
 
   describe 'writing to properties' do
@@ -110,13 +115,30 @@ describe Hashie::Trash do
     end
   end
 
-  describe 'translating properties without from option using a proc' do
+  describe 'uses with or transform_with interchangeably' do
+    class TrashLambdaTestTransformWith < Hashie::Trash
+      property :first_name, from: :firstName, transform_with: lambda { |value| value.reverse }
+    end
 
-    class TrashLambdaTest2 < Hashie::Trash
+    let(:lambda_trash) { TrashLambdaTestTransformWith.new }
+
+    it 'translates the value given as property with the given lambda' do
+      lambda_trash.firstName = 'Michael'
+      lambda_trash.first_name.should eq 'Michael'.reverse
+    end
+
+    it 'does not translate the value given as right property' do
+      lambda_trash.first_name = 'Michael'
+      lambda_trash.first_name.should eq 'Michael'
+    end
+  end
+
+  describe 'translating properties without from option using a proc' do
+    class TrashLambdaTestWithProperties < Hashie::Trash
       property :first_name, transform_with: lambda { |value| value.reverse }
     end
 
-    let(:lambda_trash) { TrashLambdaTest2.new }
+    let(:lambda_trash) { TrashLambdaTestWithProperties.new }
 
     it 'should translate the value given as property with the given lambda' do
       lambda_trash.first_name = 'Michael'
@@ -124,7 +146,7 @@ describe Hashie::Trash do
     end
 
     it 'should transform the value when given in constructor' do
-      TrashLambdaTest2.new(first_name: 'Michael').first_name.should eq 'Michael'.reverse
+      TrashLambdaTestWithProperties.new(first_name: 'Michael').first_name.should eq 'Michael'.reverse
     end
 
     context 'when :from option is given' do

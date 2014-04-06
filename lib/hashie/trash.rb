@@ -27,14 +27,11 @@ module Hashie
           fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
 
-        translations[options[:from]] ||= {}
-        translations[options[:from]][property_name] = options[:with] || options[:transform_with] # Issue #58
+        translations[options[:from].to_sym] = property_name.to_sym
 
-        # NOTE: may overwrite existing method multiple times
         define_method "#{options[:from]}=" do |val|
-          self.class.translations[options[:from]].each do |name, with|
-            self[name] = with.respond_to?(:call) ? with.call(val) : val
-          end
+          with = options[:with] || options[:transform_with]
+          self[property_name.to_sym] = with.respond_to?(:call) ? with.call(val) : val
         end
       else
         if options[:transform_with].respond_to? :call
