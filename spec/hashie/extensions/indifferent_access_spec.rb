@@ -29,22 +29,22 @@ describe Hashie::Extensions::IndifferentAccess do
   shared_examples_for 'hash with indifferent access' do
     it 'is able to access via string or symbol' do
       h = subject.build(abc: 123)
-      h[:abc].should eq 123
-      h['abc'].should eq 123
+      expect(h[:abc]).to eq 123
+      expect(h['abc']).to eq 123
     end
 
     describe '#values_at' do
       it 'indifferently finds values' do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
-        h.values_at('foo', :baz).should eq %w(bar qux)
+        expect(h.values_at('foo', :baz)).to eq %w(bar qux)
       end
     end
 
     describe '#fetch' do
       it 'works like normal fetch, but indifferent' do
         h = subject.build(foo: 'bar')
-        h.fetch(:foo).should eq h.fetch('foo')
-        h.fetch(:foo).should eq 'bar'
+        expect(h.fetch(:foo)).to eq h.fetch('foo')
+        expect(h.fetch(:foo)).to eq 'bar'
       end
     end
 
@@ -53,7 +53,7 @@ describe Hashie::Extensions::IndifferentAccess do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
         h.delete('foo')
         h.delete(:baz)
-        h.should be_empty
+        expect(h).to be_empty
       end
     end
 
@@ -61,14 +61,14 @@ describe Hashie::Extensions::IndifferentAccess do
       let(:h) { subject.build(foo: 'bar') }
 
       it 'finds it indifferently' do
-        h.should be_key(:foo)
-        h.should be_key('foo')
+        expect(h).to be_key(:foo)
+        expect(h).to be_key('foo')
       end
 
       %w(include? member? has_key?).each do |key_alias|
         it "is aliased as #{key_alias}" do
-          h.send(key_alias.to_sym, :foo).should be(true)
-          h.send(key_alias.to_sym, 'foo').should be(true)
+          expect(h.send(key_alias.to_sym, :foo)).to be(true)
+          expect(h.send(key_alias.to_sym, 'foo')).to be(true)
         end
       end
     end
@@ -78,18 +78,18 @@ describe Hashie::Extensions::IndifferentAccess do
 
       it 'allows keys to be indifferent still' do
         h.update(baz: 'qux')
-        h['foo'].should eq 'bar'
-        h['baz'].should eq 'qux'
+        expect(h['foo']).to eq 'bar'
+        expect(h['baz']).to eq 'qux'
       end
 
       it 'recursively injects indifference into sub-hashes' do
         h.update(baz: { qux: 'abc' })
-        h['baz']['qux'].should eq 'abc'
+        expect(h['baz']['qux']).to eq 'abc'
       end
 
       it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
-        Hash.new.should_not be_respond_to(:indifferent_access?)
+        expect(Hash.new).not_to be_respond_to(:indifferent_access?)
       end
     end
 
@@ -97,22 +97,22 @@ describe Hashie::Extensions::IndifferentAccess do
       let(:h) { subject.build(foo: 'bar').replace(bar: 'baz', hi: 'bye') }
 
       it 'returns self' do
-        h.should be_a(subject)
+        expect(h).to be_a(subject)
       end
 
       it 'removes old keys' do
         [:foo, 'foo'].each do |k|
-          h[k].should be_nil
-          h.key?(k).should be_false
+          expect(h[k]).to be_nil
+          expect(h.key?(k)).to be_false
         end
       end
 
       it 'creates new keys with indifferent access' do
-        [:bar, 'bar', :hi, 'hi'].each { |k| h.key?(k).should be_true }
-        h[:bar].should eq 'baz'
-        h['bar'].should eq 'baz'
-        h[:hi].should eq 'bye'
-        h['hi'].should eq 'bye'
+        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h.key?(k)).to be_true }
+        expect(h[:bar]).to eq 'baz'
+        expect(h['bar']).to eq 'baz'
+        expect(h[:hi]).to eq 'bye'
+        expect(h['hi']).to eq 'bye'
       end
     end
 
@@ -121,7 +121,7 @@ describe Hashie::Extensions::IndifferentAccess do
         let(:h) { subject.try_convert(foo: 'bar') }
 
         it 'is a subject' do
-          h.should be_a(subject)
+          expect(h).to be_a(subject)
         end
       end
 
@@ -129,7 +129,7 @@ describe Hashie::Extensions::IndifferentAccess do
         let(:h) { subject.try_convert('{ :foo => bar }') }
 
         it 'is nil' do
-          h.should be_nil
+          expect(h).to be_nil
         end
       end
     end

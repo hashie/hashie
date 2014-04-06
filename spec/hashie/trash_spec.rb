@@ -9,35 +9,35 @@ describe Hashie::Trash do
 
   describe 'translating properties' do
     it 'adds the property to the list' do
-      TrashTest.properties.should include(:first_name)
+      expect(TrashTest.properties).to include(:first_name)
     end
 
     it 'creates a method for reading the property' do
-      trash.should respond_to(:first_name)
+      expect(trash).to respond_to(:first_name)
     end
 
     it 'creates a method for writing the property' do
-      trash.should respond_to(:first_name=)
+      expect(trash).to respond_to(:first_name=)
     end
 
     it 'creates a method for writing the translated property' do
-      trash.should respond_to(:firstName=)
+      expect(trash).to respond_to(:firstName=)
     end
 
     it 'does not create a method for reading the translated property' do
-      trash.should_not respond_to(:firstName)
+      expect(trash).not_to respond_to(:firstName)
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      TrashTest.translations[:firstName].should eq :first_name
+      expect(TrashTest.translations[:firstName]).to eq :first_name
     end
 
     it 'maintains inverse translations hash mapping from the translated to the original name' do
-      TrashTest.inverse_translations[:first_name].should eq :firstName
+      expect(TrashTest.inverse_translations[:first_name]).to eq :firstName
     end
 
     it '#permitted_input_keys contain the :from key of properties with translations' do
-      TrashTest.permitted_input_keys.should include :firstName
+      expect(TrashTest.permitted_input_keys).to include :firstName
     end
   end
 
@@ -47,61 +47,61 @@ describe Hashie::Trash do
     end
 
     it '#permitted_input_keys contain names of properties without translations' do
-      TrashTestPermitted.permitted_input_keys.should include :id
+      expect(TrashTestPermitted.permitted_input_keys).to include :id
     end
   end
 
   describe 'writing to properties' do
     it 'does not write to a non-existent property using []=' do
-      lambda { trash['abc'] = 123 }.should raise_error(NoMethodError)
+      expect { trash['abc'] = 123 }.to raise_error(NoMethodError)
     end
 
     it 'writes to an existing property using []=' do
-      lambda { trash['first_name'] = 'Bob' }.should_not raise_error
+      expect { trash['first_name'] = 'Bob' }.not_to raise_error
     end
 
     it 'writes to a translated property using []=' do
-      lambda { trash['firstName'] = 'Bob' }.should_not raise_error
+      expect { trash['firstName'] = 'Bob' }.not_to raise_error
     end
 
     it 'reads/writes to an existing property using a method call' do
       trash.first_name = 'Franklin'
-      trash.first_name.should eq 'Franklin'
+      expect(trash.first_name).to eq 'Franklin'
     end
 
     it 'writes to an translated property using a method call' do
       trash.firstName = 'Franklin'
-      trash.first_name.should eq 'Franklin'
+      expect(trash.first_name).to eq 'Franklin'
     end
 
     it 'writes to a translated property using #replace' do
       trash.replace(firstName: 'Franklin')
-      trash.first_name.should eq 'Franklin'
+      expect(trash.first_name).to eq 'Franklin'
     end
 
     it 'writes to a non-translated property using #replace' do
       trash.replace(first_name: 'Franklin')
-      trash.first_name.should eq 'Franklin'
+      expect(trash.first_name).to eq 'Franklin'
     end
   end
 
   describe ' initializing with a Hash' do
     it 'does not initialize non-existent properties' do
-      lambda { TrashTest.new(bork: 'abc') }.should raise_error(NoMethodError)
+      expect { TrashTest.new(bork: 'abc') }.to raise_error(NoMethodError)
     end
 
     it 'sets the desired properties' do
-      TrashTest.new(first_name: 'Michael').first_name.should eq 'Michael'
+      expect(TrashTest.new(first_name: 'Michael').first_name).to eq 'Michael'
     end
 
     context 'with both the translated property and the property' do
       it 'sets the desired properties' do
-        TrashTest.new(first_name: 'Michael', firstName: 'Maeve').first_name.should eq 'Michael'
+        expect(TrashTest.new(first_name: 'Michael', firstName: 'Maeve').first_name).to eq 'Michael'
       end
     end
 
     it 'sets the translated properties' do
-      TrashTest.new(firstName: 'Michael').first_name.should eq 'Michael'
+      expect(TrashTest.new(firstName: 'Michael').first_name).to eq 'Michael'
     end
   end
 
@@ -113,21 +113,21 @@ describe Hashie::Trash do
     let(:lambda_trash) { TrashLambdaTest.new }
 
     it 'translates the value given on initialization with the given lambda' do
-      TrashLambdaTest.new(firstName: 'Michael').first_name.should eq 'Michael'.reverse
+      expect(TrashLambdaTest.new(firstName: 'Michael').first_name).to eq 'Michael'.reverse
     end
 
     it 'does not translate the value if given with the right property' do
-      TrashTest.new(first_name: 'Michael').first_name.should eq 'Michael'
+      expect(TrashTest.new(first_name: 'Michael').first_name).to eq 'Michael'
     end
 
     it 'translates the value given as property with the given lambda' do
       lambda_trash.firstName = 'Michael'
-      lambda_trash.first_name.should eq 'Michael'.reverse
+      expect(lambda_trash.first_name).to eq 'Michael'.reverse
     end
 
     it 'does not translate the value given as right property' do
       lambda_trash.first_name = 'Michael'
-      lambda_trash.first_name.should eq 'Michael'
+      expect(lambda_trash.first_name).to eq 'Michael'
     end
   end
 
@@ -140,12 +140,12 @@ describe Hashie::Trash do
 
     it 'translates the value given as property with the given lambda' do
       lambda_trash.firstName = 'Michael'
-      lambda_trash.first_name.should eq 'Michael'.reverse
+      expect(lambda_trash.first_name).to eq 'Michael'.reverse
     end
 
     it 'does not translate the value given as right property' do
       lambda_trash.first_name = 'Michael'
-      lambda_trash.first_name.should eq 'Michael'
+      expect(lambda_trash.first_name).to eq 'Michael'
     end
   end
 
@@ -158,11 +158,11 @@ describe Hashie::Trash do
 
     it 'translates the value given as property with the given lambda' do
       lambda_trash.first_name = 'Michael'
-      lambda_trash.first_name.should eq 'Michael'.reverse
+      expect(lambda_trash.first_name).to eq 'Michael'.reverse
     end
 
     it 'transforms the value when given in constructor' do
-      TrashLambdaTestWithProperties.new(first_name: 'Michael').first_name.should eq 'Michael'.reverse
+      expect(TrashLambdaTestWithProperties.new(first_name: 'Michael').first_name).to eq 'Michael'.reverse
     end
 
     context 'when :from option is given' do
@@ -171,13 +171,13 @@ describe Hashie::Trash do
       end
 
       it 'does not override the :from option in the constructor' do
-        TrashLambdaTest3.new(first_name: 'Michael').first_name.should eq 'Michael'
+        expect(TrashLambdaTest3.new(first_name: 'Michael').first_name).to eq 'Michael'
       end
 
       it 'does not override the :from option when given as property' do
         t = TrashLambdaTest3.new
         t.first_name = 'Michael'
-        t.first_name.should eq 'Michael'
+        expect(t.first_name).to eq 'Michael'
       end
 
     end

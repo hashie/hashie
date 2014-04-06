@@ -12,11 +12,11 @@ describe Hashie::Extensions::DeepMerge do
   let(:expected_hash) { { a: 1, a1: 1, b: 'b', c: { c1: 2, c2: 'c2', c3: { d1: 'd1', d2: 'd2' } } } }
 
   it 'deep merges two hashes' do
-    h1.deep_merge(h2).should eq expected_hash
+    expect(h1.deep_merge(h2)).to eq expected_hash
   end
 
   it 'deep merges another hash in place via bang method' do
     h1.deep_merge!(h2)
-    h1.should eq expected_hash
+    expect(h1).to eq expected_hash
   end
 end
