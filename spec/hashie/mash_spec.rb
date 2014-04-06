@@ -183,9 +183,8 @@ describe Hashie::Mash do
 
     describe 'shallow update' do
       it 'shallowly Hashie::Mash Hashie::Mashes and hashes together' do
-        expect(subject.shallow_update(details: {
-                                 email: 'michael@intridea.com', city: 'Imagineton'
-        })).to eql(subject)
+        expect(subject.shallow_update(details: {  email: 'michael@intridea.com',
+                                                  city: 'Imagineton' })).to eql(subject)
 
         expect(subject.first_name).to eq 'Michael'
         expect(subject.details.email).to eq 'michael@intridea.com'
