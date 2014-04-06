@@ -6,17 +6,18 @@ describe Hashie::Extensions::KeyConversion do
     klass.send :include, Hashie::Extensions::KeyConversion
     klass
   end
+
   let(:instance) { subject.new }
 
   describe '#stringify_keys!' do
-    it 'should convert keys to strings' do
+    it 'converts keys to strings' do
       instance[:abc] = 'abc'
       instance[123] = '123'
       instance.stringify_keys!
       (instance.keys & %w(abc 123)).size.should eq 2
     end
 
-    it 'should do deep conversion within nested hashes' do
+    it 'performs deep conversion within nested hashes' do
       instance[:ab] = subject.new
       instance[:ab][:cd] = subject.new
       instance[:ab][:cd][:ef] = 'abcdef'
@@ -24,7 +25,7 @@ describe Hashie::Extensions::KeyConversion do
       instance.should eq('ab' => { 'cd' => { 'ef' => 'abcdef' } })
     end
 
-    it 'should do deep conversion within nested arrays' do
+    it 'performs deep conversion within nested arrays' do
       instance[:ab] = []
       instance[:ab] << subject.new
       instance[:ab] << subject.new
@@ -34,19 +35,19 @@ describe Hashie::Extensions::KeyConversion do
       instance.should eq('ab' => [{ 'cd' => 'abcd' }, { 'ef' => 'abef' }])
     end
 
-    it 'should return itself' do
+    it 'returns itself' do
       instance.stringify_keys!.should eq instance
     end
   end
 
   describe '#stringify_keys' do
-    it 'should convert keys to strings' do
+    it 'converts keys to strings' do
       instance[:abc] = 'def'
       copy = instance.stringify_keys
       copy['abc'].should eq 'def'
     end
 
-    it 'should not alter the original' do
+    it 'does not alter the original' do
       instance[:abc] = 'def'
       copy = instance.stringify_keys
       instance.keys.should eq [:abc]
@@ -55,14 +56,14 @@ describe Hashie::Extensions::KeyConversion do
   end
 
   describe '#symbolize_keys!' do
-    it 'should convert keys to symbols' do
+    it 'converts keys to symbols' do
       instance['abc'] = 'abc'
       instance['def'] = 'def'
       instance.symbolize_keys!
       (instance.keys & [:abc, :def]).size.should eq 2
     end
 
-    it 'should do deep conversion within nested hashes' do
+    it 'performs deep conversion within nested hashes' do
       instance['ab'] = subject.new
       instance['ab']['cd'] = subject.new
       instance['ab']['cd']['ef'] = 'abcdef'
@@ -70,7 +71,7 @@ describe Hashie::Extensions::KeyConversion do
       instance.should eq(ab: { cd: { ef: 'abcdef' } })
     end
 
-    it 'should do deep conversion within nested arrays' do
+    it 'performs deep conversion within nested arrays' do
       instance['ab'] = []
       instance['ab'] << subject.new
       instance['ab'] << subject.new
@@ -80,19 +81,19 @@ describe Hashie::Extensions::KeyConversion do
       instance.should eq(ab: [{ cd: 'abcd' }, { ef: 'abef' }])
     end
 
-    it 'should return itself' do
+    it 'returns itself' do
       instance.symbolize_keys!.should eq instance
     end
   end
 
   describe '#symbolize_keys' do
-    it 'should convert keys to symbols' do
+    it 'converts keys to symbols' do
       instance['abc'] = 'def'
       copy = instance.symbolize_keys
       copy[:abc].should eq 'def'
     end
 
-    it 'should not alter the original' do
+    it 'does not alter the original' do
       instance['abc'] = 'def'
       copy = instance.symbolize_keys
       instance.keys.should eq ['abc']

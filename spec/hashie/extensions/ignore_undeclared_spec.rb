@@ -9,15 +9,15 @@ describe Hashie::Extensions::IgnoreUndeclared do
 
   subject { ForgivingTrash }
 
-  it 'should silently ignore undeclared properties on initialization' do
+  it 'silently ignores undeclared properties on initialization' do
     expect { subject.new(city: 'Toronto', provence: 'ON', country: 'Canada') }.to_not raise_error
   end
 
-  it 'should work with translated properties (with symbol keys)' do
+  it 'works with translated properties (with symbol keys)' do
     expect(subject.new(provence: 'Ontario').state).to eq('Ontario')
   end
 
-  it 'should work with translated properties (with string keys)' do
+  it 'works with translated properties (with string keys)' do
     expect(subject.new(provence: 'Ontario').state).to eq('Ontario')
   end
 end

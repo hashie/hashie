@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::DeepMerge do
-  class DeepMergeHash < Hash; include Hashie::Extensions::DeepMerge end
+  class DeepMergeHash < Hash
+    include Hashie::Extensions::DeepMerge
+  end
 
   subject { DeepMergeHash }
 
@@ -17,5 +19,4 @@ describe Hashie::Extensions::DeepMerge do
     h1.deep_merge!(h2)
     h1.should eq expected_hash
   end
-
 end

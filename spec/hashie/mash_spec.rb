@@ -2,138 +2,141 @@ require 'spec_helper'
 require 'delegate'
 
 describe Hashie::Mash do
-  before(:each) do
-    @mash = Hashie::Mash.new
+  subject { Hashie::Mash.new }
+
+  it 'inherits from Hash' do
+    subject.is_a?(Hash).should be_true
   end
 
-  it 'should inherit from hash' do
-    @mash.is_a?(Hash).should be_true
+  it 'sets hash values through method= calls' do
+    subject.test = 'abc'
+    subject['test'].should eq 'abc'
   end
 
-  it 'should be able to set hash values through method= calls' do
-    @mash.test = 'abc'
-    @mash['test'].should eq 'abc'
+  it 'retrieves set values through method calls' do
+    subject['test'] = 'abc'
+    subject.test.should eq 'abc'
   end
 
-  it 'should be able to retrieve set values through method calls' do
-    @mash['test'] = 'abc'
-    @mash.test.should eq 'abc'
-  end
-
-  it 'should be able to retrieve set values through blocks' do
-    @mash['test'] = 'abc'
+  it 'retrieves set values through blocks' do
+    subject['test'] = 'abc'
     value = nil
-    @mash.[]('test') { |v| value = v }
+    subject.[]('test') { |v| value = v }
     value.should eq 'abc'
   end
 
-  it 'should be able to retrieve set values through blocks with method calls' do
-    @mash['test'] = 'abc'
+  it 'retrieves set values through blocks with method calls' do
+    subject['test'] = 'abc'
     value = nil
-    @mash.test { |v| value = v }
+    subject.test { |v| value = v }
     value.should eq 'abc'
   end
 
-  it 'should test for already set values when passed a ? method' do
-    @mash.test?.should be_false
-    @mash.test = 'abc'
-    @mash.test?.should be_true
+  it 'tests for already set values when passed a ? method' do
+    subject.test?.should be_false
+    subject.test = 'abc'
+    subject.test?.should be_true
   end
 
-  it 'should return false on a ? method if a value has been set to nil or false' do
-    @mash.test = nil
-    @mash.should_not be_test
-    @mash.test = false
-    @mash.should_not be_test
+  it 'returns false on a ? method if a value has been set to nil or false' do
+    subject.test = nil
+    subject.should_not be_test
+    subject.test = false
+    subject.should_not be_test
   end
 
-  it 'should make all [] and []= into strings for consistency' do
-    @mash['abc'] = 123
-    @mash.key?('abc').should be_true
-    @mash['abc'].should eq 123
+  it 'makes all [] and []= into strings for consistency' do
+    subject['abc'] = 123
+    subject.key?('abc').should be_true
+    subject['abc'].should eq 123
   end
 
-  it 'should have a to_s that is identical to its inspect' do
-    @mash.abc = 123
-    @mash.to_s.should eq @mash.inspect
+  it 'has a to_s that is identical to its inspect' do
+    subject.abc = 123
+    subject.to_s.should eq subject.inspect
   end
 
-  it 'should return nil instead of raising an error for attribute-esque method calls' do
-    @mash.abc.should be_nil
+  it 'returns nil instead of raising an error for attribute-esque method calls' do
+    subject.abc.should be_nil
   end
 
-  it 'should return the default value if set like Hash' do
-    @mash.default = 123
-    @mash.abc.should eq 123
+  it 'returns the default value if set like Hash' do
+    subject.default = 123
+    subject.abc.should eq 123
   end
 
-  it 'should gracefully handle being accessed with arguments' do
-    @mash.abc('foobar').should eq nil
-    @mash.abc = 123
-    @mash.abc('foobar').should eq 123
+  it 'gracefully handles being accessed with arguments' do
+    subject.abc('foobar').should eq nil
+    subject.abc = 123
+    subject.abc('foobar').should eq 123
   end
 
-  it 'should return a Hashie::Mash when passed a bang method to a non-existenct key' do
-    @mash.abc!.is_a?(Hashie::Mash).should be_true
+  it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
+    subject.abc!.is_a?(Hashie::Mash).should be_true
   end
 
-  it 'should return the existing value when passed a bang method for an existing key' do
-    @mash.name = 'Bob'
-    @mash.name!.should eq 'Bob'
+  it 'returns the existing value when passed a bang method for an existing key' do
+    subject.name = 'Bob'
+    subject.name!.should eq 'Bob'
   end
 
-  it 'should return a Hashie::Mash when passed an under bang method to a non-existenct key' do
-    @mash.abc_.is_a?(Hashie::Mash).should be_true
+  it 'returns a Hashie::Mash when passed an under bang method to a non-existenct key' do
+    subject.abc_.is_a?(Hashie::Mash).should be_true
   end
 
-  it 'should return the existing value when passed an under bang method for an existing key' do
-    @mash.name = 'Bob'
-    @mash.name_.should eq 'Bob'
+  it 'returns the existing value when passed an under bang method for an existing key' do
+    subject.name = 'Bob'
+    subject.name_.should eq 'Bob'
   end
 
-  it '#initializing_reader should return a Hashie::Mash when passed a non-existent key' do
-    @mash.initializing_reader(:abc).is_a?(Hashie::Mash).should be_true
+  it '#initializing_reader returns a Hashie::Mash when passed a non-existent key' do
+    subject.initializing_reader(:abc).is_a?(Hashie::Mash).should be_true
   end
 
-  it 'should allow for multi-level assignment through bang methods' do
-    @mash.author!.name = 'Michael Bleigh'
-    @mash.author.should eq Hashie::Mash.new(name: 'Michael Bleigh')
-    @mash.author!.website!.url = 'http://www.mbleigh.com/'
-    @mash.author.website.should eq Hashie::Mash.new(url: 'http://www.mbleigh.com/')
+  it 'allows for multi-level assignment through bang methods' do
+    subject.author!.name = 'Michael Bleigh'
+    subject.author.should eq Hashie::Mash.new(name: 'Michael Bleigh')
+    subject.author!.website!.url = 'http://www.mbleigh.com/'
+    subject.author.website.should eq Hashie::Mash.new(url: 'http://www.mbleigh.com/')
   end
 
-  it 'should allow for multi-level under bang testing' do
-    @mash.author_.website_.url.should be_nil
-    @mash.author_.website_.url?.should eq false
-    @mash.author.should be_nil
+  it 'allows for multi-level under bang testing' do
+    subject.author_.website_.url.should be_nil
+    subject.author_.website_.url?.should eq false
+    subject.author.should be_nil
   end
 
-  it 'should not call super if id is not a key' do
-    @mash.id.should eq nil
+  it 'does not call super if id is not a key' do
+    subject.id.should eq nil
   end
 
-  it 'should return the value if id is a key' do
-    @mash.id = 'Steve'
-    @mash.id.should eq 'Steve'
+  it 'returns the value if id is a key' do
+    subject.id = 'Steve'
+    subject.id.should eq 'Steve'
   end
 
-  it 'should not call super if type is not a key' do
-    @mash.type.should eq nil
+  it 'does not call super if type is not a key' do
+    subject.type.should eq nil
   end
 
-  it 'should return the value if type is a key' do
-    @mash.type = 'Steve'
-    @mash.type.should eq 'Steve'
+  it 'returns the value if type is a key' do
+    subject.type = 'Steve'
+    subject.type.should eq 'Steve'
   end
 
   context 'updating' do
     subject do
-      described_class.new first_name: 'Michael', last_name: 'Bleigh',
-                          details: { email: 'michael@asf.com', address: 'Nowhere road' }
+      described_class.new(
+        first_name: 'Michael',
+        last_name: 'Bleigh',
+        details: {
+          email: 'michael@asf.com',
+          address: 'Nowhere road'
+        })
     end
 
     describe '#deep_update' do
-      it 'should recursively Hashie::Mash Hashie::Mashes and hashes together' do
+      it 'recursively Hashie::Mash Hashie::Mashes and hashes together' do
         subject.deep_update(details: { email: 'michael@intridea.com', city: 'Imagineton' })
         subject.first_name.should eq 'Michael'
         subject.details.email.should eq 'michael@intridea.com'
@@ -141,7 +144,7 @@ describe Hashie::Mash do
         subject.details.city.should eq 'Imagineton'
       end
 
-      it 'should convert values only once' do
+      it 'converts values only once' do
         class ConvertedMash < Hashie::Mash
         end
 
@@ -150,13 +153,13 @@ describe Hashie::Mash do
         subject.deep_update(rhs)
       end
 
-      it 'should make #update deep by default' do
+      it 'makes #update deep by default' do
         subject.update(details: { address: 'Fake street' }).should eql(subject)
         subject.details.address.should eq 'Fake street'
         subject.details.email.should eq 'michael@asf.com'
       end
 
-      it 'should clone before a #deep_merge' do
+      it 'clones before a #deep_merge' do
         duped = subject.deep_merge(details: { address: 'Fake street' })
         duped.should_not eql(subject)
         duped.details.address.should eq 'Fake street'
@@ -164,7 +167,7 @@ describe Hashie::Mash do
         duped.details.email.should eq 'michael@asf.com'
       end
 
-      it 'regular #merge should be deep' do
+      it 'default #merge is deep' do
         duped = subject.merge(details: { email: 'michael@intridea.com' })
         duped.should_not eql(subject)
         duped.details.email.should eq 'michael@intridea.com'
@@ -179,7 +182,7 @@ describe Hashie::Mash do
     end
 
     describe 'shallow update' do
-      it 'should shallowly Hashie::Mash Hashie::Mashes and hashes together' do
+      it 'shallowly Hashie::Mash Hashie::Mashes and hashes together' do
         subject.shallow_update(details: {
                                  email: 'michael@intridea.com', city: 'Imagineton'
         }).should eql(subject)
@@ -190,12 +193,12 @@ describe Hashie::Mash do
         subject.details.city.should eq 'Imagineton'
       end
 
-      it 'should clone before a #regular_merge' do
+      it 'clones before a #regular_merge' do
         duped = subject.shallow_merge(details: { address: 'Fake street' })
         duped.should_not eql(subject)
       end
 
-      it 'regular merge should be shallow' do
+      it 'default #merge is shallow' do
         duped = subject.shallow_merge(details: { address: 'Fake street' })
         duped.details.address.should eq 'Fake street'
         subject.details.address.should eq 'Nowhere road'
@@ -205,11 +208,13 @@ describe Hashie::Mash do
 
     describe '#replace' do
       before do
-        subject.replace(middle_name: 'Cain',
-                        details: { city: 'Imagination' })
+        subject.replace(
+          middle_name: 'Cain',
+          details: { city: 'Imagination' }
+        )
       end
 
-      it 'return self' do
+      it 'returns self' do
         subject.replace(foo: 'bar').to_hash.should eq('foo' => 'bar')
       end
 
@@ -231,13 +236,13 @@ describe Hashie::Mash do
     end
 
     describe 'delete' do
-      it 'should delete with String key' do
+      it 'deletes with String key' do
         subject.delete('details')
         subject.details.should be_nil
         subject.should_not be_respond_to :details
       end
 
-      it 'should delete with Symbol key' do
+      it 'deletes with Symbol key' do
         subject.delete(:details)
         subject.details.should be_nil
         subject.should_not be_respond_to :details
@@ -245,13 +250,13 @@ describe Hashie::Mash do
     end
   end
 
-  it 'should convert hash assignments into Hashie::Mashes' do
-    @mash.details = { email: 'randy@asf.com', address: { state: 'TX' } }
-    @mash.details.email.should eq 'randy@asf.com'
-    @mash.details.address.state.should eq 'TX'
+  it 'converts hash assignments into Hashie::Mashes' do
+    subject.details = { email: 'randy@asf.com', address: { state: 'TX' } }
+    subject.details.email.should eq 'randy@asf.com'
+    subject.details.address.state.should eq 'TX'
   end
 
-  it 'should not convert the type of Hashie::Mashes childs to Hashie::Mash' do
+  it 'does not convert the type of Hashie::Mashes childs to Hashie::Mash' do
     class MyMash < Hashie::Mash
     end
 
@@ -260,7 +265,7 @@ describe Hashie::Mash do
     record.son.class.should eq MyMash
   end
 
-  it 'should not change the class of Mashes when converted' do
+  it 'does not change the class of Mashes when converted' do
     class SubMash < Hashie::Mash
     end
 
@@ -270,7 +275,7 @@ describe Hashie::Mash do
     record['submash'].should be_kind_of(SubMash)
   end
 
-  it 'should respect the class when passed a bang method for a non-existent key' do
+  it 'respects the class when passed a bang method for a non-existent key' do
     record = Hashie::Mash.new
     record.non_existent!.should be_kind_of(Hashie::Mash)
 
@@ -281,7 +286,7 @@ describe Hashie::Mash do
     son.non_existent!.should be_kind_of(SubMash)
   end
 
-  it 'should respect the class when passed an under bang method for a non-existent key' do
+  it 'respects the class when passed an under bang method for a non-existent key' do
     record = Hashie::Mash.new
     record.non_existent_.should be_kind_of(Hashie::Mash)
 
@@ -292,13 +297,13 @@ describe Hashie::Mash do
     son.non_existent_.should be_kind_of(SubMash)
   end
 
-  it 'should respect the class when converting the value' do
+  it 'respects the class when converting the value' do
     record = Hashie::Mash.new
     record.details = Hashie::Mash.new(email: 'randy@asf.com')
     record.details.should be_kind_of(Hashie::Mash)
   end
 
-  it 'should respect another subclass when converting the value' do
+  it 'respects another subclass when converting the value' do
     record = Hashie::Mash.new
 
     class SubMash < Hashie::Mash
@@ -310,56 +315,56 @@ describe Hashie::Mash do
   end
 
   describe '#respond_to?' do
-    it 'should respond to a normal method' do
+    it 'responds to a normal method' do
       Hashie::Mash.new.should be_respond_to(:key?)
     end
 
-    it 'should respond to a set key' do
+    it 'responds to a set key' do
       Hashie::Mash.new(abc: 'def').should be_respond_to(:abc)
     end
 
-    it 'should respond to a set key with a suffix' do
+    it 'responds to a set key with a suffix' do
       %w(= ? ! _).each do |suffix|
         Hashie::Mash.new(abc: 'def').should be_respond_to(:"abc#{suffix}")
       end
     end
 
-    it 'should not respond to an unknown key with a suffix' do
+    it 'does not respond to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
         Hashie::Mash.new(abc: 'def').should_not be_respond_to(:"xyz#{suffix}")
       end
     end
 
-    it 'should not respond to an unknown key without a suffix' do
+    it 'does not respond to an unknown key without a suffix' do
       Hashie::Mash.new(abc: 'def').should_not be_respond_to(:xyz)
     end
 
-    it 'should not respond to permitted?' do
+    it 'does not respond to permitted?' do
       Hashie::Mash.new.should_not be_respond_to(:permitted?)
     end
   end
 
   context '#initialize' do
-    it 'should convert an existing hash to a Hashie::Mash' do
+    it 'converts an existing hash to a Hashie::Mash' do
       converted = Hashie::Mash.new(abc: 123, name: 'Bob')
       converted.abc.should eq 123
       converted.name.should eq 'Bob'
     end
 
-    it 'should convert hashes recursively into Hashie::Mashes' do
+    it 'converts hashes recursively into Hashie::Mashes' do
       converted = Hashie::Mash.new(a: { b: 1, c: { d: 23 } })
       converted.a.is_a?(Hashie::Mash).should be_true
       converted.a.b.should eq 1
       converted.a.c.d.should eq 23
     end
 
-    it 'should convert hashes in arrays into Hashie::Mashes' do
+    it 'converts hashes in arrays into Hashie::Mashes' do
       converted = Hashie::Mash.new(a: [{ b: 12 }, 23])
       converted.a.first.b.should eq 12
       converted.a.last.should eq 23
     end
 
-    it 'should convert an existing Hashie::Mash into a Hashie::Mash' do
+    it 'converts an existing Hashie::Mash into a Hashie::Mash' do
       initial = Hashie::Mash.new(name: 'randy', address: { state: 'TX' })
       copy = Hashie::Mash.new(initial)
       initial.name.should eq copy.name
@@ -370,7 +375,7 @@ describe Hashie::Mash do
       copy.address.__id__.should_not eq initial.address.__id__
     end
 
-    it 'should accept a default block' do
+    it 'accepts a default block' do
       initial = Hashie::Mash.new { |h, i| h[i] = [] }
       initial.default_proc.should_not be_nil
       initial.default.should be_nil
@@ -378,7 +383,7 @@ describe Hashie::Mash do
       initial.test?.should be_true
     end
 
-    it 'should convert Hashie::Mashes within Arrays back to Hashes' do
+    it 'converts Hashie::Mashes within Arrays back to Hashes' do
       initial_hash = { 'a' => [{ 'b' => 12, 'c' => ['d' => 50, 'e' => 51] }, 23] }
       converted = Hashie::Mash.new(initial_hash)
       converted.to_hash['a'].first.is_a?(Hashie::Mash).should be_false
@@ -408,7 +413,7 @@ describe Hashie::Mash do
     end
 
     context 'when key does not exist' do
-      it 'should raise KeyError' do
+      it 'raises KeyError' do
         error = RUBY_VERSION =~ /1.8/ ? IndexError : KeyError
         expect { mash.fetch(:two) }.to raise_error(error)
       end
@@ -425,7 +430,7 @@ describe Hashie::Mash do
 
       context 'with block given' do
         it 'returns default value' do
-          mash.fetch(:two) do|key|
+          mash.fetch(:two) do |key|
             'block default value'
           end.should eql('block default value')
         end

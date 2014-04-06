@@ -63,7 +63,6 @@ describe DashTest do
   end
 
   context 'writing to properties' do
-
     it 'fails writing a required property to nil' do
       lambda { subject.first_name = nil }.should raise_error(ArgumentError)
     end
@@ -93,14 +92,14 @@ describe DashTest do
       lambda { subject['nonexistent'] }.should raise_error(NoMethodError)
     end
 
-    it 'should be able to retrieve properties through blocks' do
+    it 'is able to retrieve properties through blocks' do
       subject['first_name'] = 'Aiden'
       value = nil
       subject.[]('first_name') { |v| value = v }
       value.should eq 'Aiden'
     end
 
-    it 'should be able to retrieve properties through blocks with method calls' do
+    it 'is able to retrieve properties through blocks with method calls' do
       subject['first_name'] = 'Frodo'
       value = nil
       subject.first_name { |v| value = v }
@@ -109,22 +108,22 @@ describe DashTest do
   end
 
   context 'reading from deferred properties' do
-    it 'should evaluate proc after initial read' do
+    it 'evaluates proc after initial read' do
       DeferredTest.new['created_at'].should be_instance_of(Time)
     end
 
-    it 'should not evalute proc after subsequent reads' do
+    it 'does not evalute proc after subsequent reads' do
       deferred = DeferredTest.new
       deferred['created_at'].object_id.should eq deferred['created_at'].object_id
     end
   end
 
-  describe '.new' do
+  describe '#new' do
     it 'fails with non-existent properties' do
       lambda { described_class.new(bork: '') }.should raise_error(NoMethodError)
     end
 
-    it 'should set properties that it is able to' do
+    it 'sets properties that it is able to' do
       obj = described_class.new first_name: 'Michael'
       obj.first_name.should eq 'Michael'
     end
@@ -303,7 +302,7 @@ describe Hashie::Dash, 'inheritance' do
     @bottom.new.echo.should be_nil
   end
 
-  it 'should allow nil defaults' do
+  it 'allows nil defaults' do
     @bottom.property :echo, default: nil
     @bottom.new.should have_key('echo')
   end
@@ -311,7 +310,6 @@ describe Hashie::Dash, 'inheritance' do
 end
 
 describe Subclassed do
-
   subject { Subclassed.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
 
   its(:count) { should be_zero }
@@ -328,5 +326,4 @@ describe Subclassed do
   it "didn't override superclass inheritance logic" do
     described_class.instance_variable_get('@inheritance_test').should be_true
   end
-
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
-
   class IndifferentHashWithMergeInitializer < Hash
     include Hashie::Extensions::MergeInitializer
     include Hashie::Extensions::IndifferentAccess
@@ -28,21 +27,21 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   shared_examples_for 'hash with indifferent access' do
-    it 'should be able to access via string or symbol' do
+    it 'is able to access via string or symbol' do
       h = subject.build(abc: 123)
       h[:abc].should eq 123
       h['abc'].should eq 123
     end
 
     describe '#values_at' do
-      it 'should indifferently find values' do
+      it 'indifferently finds values' do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
         h.values_at('foo', :baz).should eq %w(bar qux)
       end
     end
 
     describe '#fetch' do
-      it 'should work like normal fetch, but indifferent' do
+      it 'works like normal fetch, but indifferent' do
         h = subject.build(foo: 'bar')
         h.fetch(:foo).should eq h.fetch('foo')
         h.fetch(:foo).should eq 'bar'
@@ -50,7 +49,7 @@ describe Hashie::Extensions::IndifferentAccess do
     end
 
     describe '#delete' do
-      it 'should delete indifferently' do
+      it 'deletes indifferently' do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
         h.delete('foo')
         h.delete(:baz)
@@ -61,13 +60,13 @@ describe Hashie::Extensions::IndifferentAccess do
     describe '#key?' do
       let(:h) { subject.build(foo: 'bar') }
 
-      it 'should find it indifferently' do
+      it 'finds it indifferently' do
         h.should be_key(:foo)
         h.should be_key('foo')
       end
 
       %w(include? member? has_key?).each do |key_alias|
-        it "should be aliased as #{key_alias}" do
+        it "is aliased as #{key_alias}" do
           h.send(key_alias.to_sym, :foo).should be(true)
           h.send(key_alias.to_sym, 'foo').should be(true)
         end
@@ -76,18 +75,19 @@ describe Hashie::Extensions::IndifferentAccess do
 
     describe '#update' do
       let(:h) { subject.build(foo: 'bar') }
-      it 'should allow keys to be indifferent still' do
+
+      it 'allows keys to be indifferent still' do
         h.update(baz: 'qux')
         h['foo'].should eq 'bar'
         h['baz'].should eq 'qux'
       end
 
-      it 'should recursively inject indifference into sub-hashes' do
+      it 'recursively injects indifference into sub-hashes' do
         h.update(baz: { qux: 'abc' })
         h['baz']['qux'].should eq 'abc'
       end
 
-      it 'should not change the ancestors of the injected object class' do
+      it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
         Hash.new.should_not be_respond_to(:indifferent_access?)
       end
@@ -100,7 +100,7 @@ describe Hashie::Extensions::IndifferentAccess do
         h.should be_a(subject)
       end
 
-      it 'should remove old keys' do
+      it 'removes old keys' do
         [:foo, 'foo'].each do |k|
           h[k].should be_nil
           h.key?(k).should be_false
@@ -116,11 +116,11 @@ describe Hashie::Extensions::IndifferentAccess do
       end
     end
 
-    describe '::try_convert' do
+    describe '#try_convert' do
       describe 'with conversion' do
         let(:h) { subject.try_convert(foo: 'bar') }
 
-        it 'should be a subject' do
+        it 'is a subject' do
           h.should be_a(subject)
         end
       end
@@ -128,7 +128,7 @@ describe Hashie::Extensions::IndifferentAccess do
       describe 'without conversion' do
         let(:h) { subject.try_convert('{ :foo => bar }') }
 
-        it 'should be nil' do
+        it 'is nil' do
           h.should be_nil
         end
       end
