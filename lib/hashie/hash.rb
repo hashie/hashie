@@ -16,18 +16,28 @@ module Hashie
         if self[k].is_a?(Array)
           out[assignment_key] ||= []
           self[k].each do |array_object|
-            out[assignment_key] << (Hash === array_object ? array_object.to_hash(options) : array_object)
+            out[assignment_key] << (Hash === array_object ? flexibly_convert_to_hash(array_object, options) : array_object)
           end
         else
-          out[assignment_key] = Hash === self[k] ? self[k].to_hash(options) : self[k]
+          out[assignment_key] = Hash === self[k] ? flexibly_convert_to_hash(self[k], options) : self[k]
         end
       end
       out
     end
 
-    # The C geneartor for the json gem doesn't like mashies
+    # The C generator for the json gem doesn't like mashies
     def to_json(*args)
       to_hash.to_json(*args)
+    end
+    
+    private
+    
+    def flexibly_convert_to_hash(object, options = {})
+      if object.method(:to_hash).arity == 0
+        object.to_hash
+      else
+        object.to_hash(options)
+      end
     end
   end
 end
