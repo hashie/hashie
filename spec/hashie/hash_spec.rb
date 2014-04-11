@@ -31,16 +31,16 @@ describe Hash do
     symbolized_hash = hash.to_hash(symbolize_keys: true)
     expect(symbolized_hash).to eq(:a => 'hey', :"123" => 'bob', :array => [1, 2, 3])
   end
-  
+
   it "#to_hash should not blow up when #to_hash doesn't accept arguments" do
     class BareCustomMash < Hashie::Mash
       def to_hash
         {}
       end
     end
-  
+
     h = Hashie::Hash.new
     h[:key] = BareCustomMash.new
-    expect{ h.to_hash }.not_to raise_error
+    expect { h.to_hash }.not_to raise_error
   end
 end

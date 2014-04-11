@@ -29,9 +29,9 @@ module Hashie
     def to_json(*args)
       to_hash.to_json(*args)
     end
-    
+
     private
-    
+
     def flexibly_convert_to_hash(object, options = {})
       if object.method(:to_hash).arity == 0
         object.to_hash
