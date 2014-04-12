@@ -1,4 +1,8 @@
-## Next Release
+## 2.1.1 (4/12/2014)
+
+* [#144](https://github.com/intridea/hashie/issues/144): Fixed regression invoking `to_hash` with no parameters - [@mbleigh](https://github.com/mbleigh).
+
+## 2.1.0 (4/6/2014)
 
 * [#134](https://github.com/intridea/hashie/pull/134): Add deep_fetch extension for nested access - [@tylerdooling](https://github.com/tylerdooling).
 * Removed support for Ruby 1.8.7 - [@dblock](https://github.com/dblock).
