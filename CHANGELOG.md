@@ -1,3 +1,7 @@
+## Next
+
+* Your contribution here.
+
 ## 2.1.1 (4/12/2014)
 
 * [#144](https://github.com/intridea/hashie/issues/144): Fixed regression invoking `to_hash` with no parameters - [@mbleigh](https://github.com/mbleigh).
