@@ -328,9 +328,9 @@ describe Hashie::Mash do
       end
     end
 
-    it 'does not respond to an unknown key with a suffix' do
+    it 'responds to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
-        expect(Hashie::Mash.new(abc: 'def')).not_to be_respond_to(:"xyz#{suffix}")
+        expect(Hashie::Mash.new(abc: 'def')).to be_respond_to(:"xyz#{suffix}")
       end
     end
 
@@ -339,7 +339,12 @@ describe Hashie::Mash do
     end
 
     it 'does not respond to permitted?' do
-      expect(Hashie::Mash.new).not_to be_respond_to(:permitted?)
+      expect(Hashie::Mash.new).to be_respond_to(:permitted?)
+      klass = Class.new(Hashie::Mash) do
+        include Hashie::Extensions::Mash::ActiveModel
+      end
+      expect(klass.new).not_to be_respond_to(:permitted?)
+      expect { klass.new.permitted? }.to raise_error(ArgumentError)
     end
   end
 

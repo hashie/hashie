@@ -238,6 +238,16 @@ p[:awesome]    # => NoMethodError
 p[:occupation] # => 'Rubyist'
 ```
 
+### Mash and Rails 4 Strong Parameters
+
+Add the following initializer in config/initializers/mash.rb when using Mash with [Rails 4 Strong Parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters). This prevents Mash from responding to `:permitted?` and therefore triggering an ActiveModel `ForbiddenAttributesProtection` exception.
+
+```ruby
+class Mash
+  include Hashie::Extensions::Mash::ActiveModel
+end
+```
+
 ## Trash
 
 A Trash is a Dash that allows you to translate keys on initialization.
