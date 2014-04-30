@@ -1,11 +1,18 @@
-require 'hashie/hash_extensions'
+require 'hashie/extensions/stringify_keys'
+require 'hashie/extensions/pretty_inspect'
 
 module Hashie
   # A Hashie Hash is simply a Hash that has convenience
   # functions baked in such as stringify_keys that may
   # not be available in all libraries.
   class Hash < ::Hash
-    include HashExtensions
+    include Hashie::Extensions::PrettyInspect
+    include Hashie::Extensions::StringifyKeys
+
+    # Convert this hash into a Mash
+    def to_mash
+      ::Hashie::Mash.new(self)
+    end
 
     # Converts a mash back to a hash (with stringified or symbolized keys)
     def to_hash(options = {})

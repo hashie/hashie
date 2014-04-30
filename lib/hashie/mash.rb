@@ -55,8 +55,9 @@ module Hashie
   #   mash.author # => <Mash>
   #
   class Mash < Hash
+    include Hashie::Extensions::PrettyInspect
+
     ALLOWED_SUFFIXES = %w(? ! = _)
-    include Hashie::PrettyInspect
 
     alias_method :to_s, :inspect
 

@@ -2,6 +2,8 @@
 
 * [#146](https://github.com/intridea/hashie/issues/146): Mash#respond_to? inconsistent with #method_missing and does not respond to #permitted? - [@dblock](https://github.com/dblock).
 * [#89](https://github.com/intridea/hashie/issues/89): Added Hashie::Extensions::Mash::ActiveModel for compatibility with Rails 4.x Strong Parameters - [@dblock](https://github.com/dblock).
+* [#148](https://github.com/intridea/hashie/pull/148): Consolidated Hashie::Hash#stringify_keys implementation - [@dblock](https://github.com/dblock).
+* Your contribution here.
 
 ## 2.1.1 (4/12/2014)
 
