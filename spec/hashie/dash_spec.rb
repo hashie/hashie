@@ -245,7 +245,7 @@ describe DashTest do
     before { subject.replace(first_name: 'Cain') }
 
     it 'return self' do
-      expect(subject.replace(email: 'bar').to_hash).to eq('email' => 'bar', 'count' => 0)
+      expect(subject.replace(email: 'bar').to_hash).to eq(email: 'bar', count: 0)
     end
 
     it 'sets all specified keys to their corresponding values' do

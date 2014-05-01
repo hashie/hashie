@@ -18,8 +18,13 @@ module Hashie
     def to_hash(options = {})
       out = {}
       keys.each do |k|
-        assignment_key = k.to_s
-        assignment_key = assignment_key.to_sym if options[:symbolize_keys]
+        assignment_key = if options[:stringify_keys]
+                           k.to_s
+                         elsif options[:symbolize_keys]
+                           k.to_s.to_sym
+                         else
+                           k
+                         end
         if self[k].is_a?(Array)
           out[assignment_key] ||= []
           self[k].each do |array_object|
