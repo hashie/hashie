@@ -19,23 +19,22 @@ module Hashie
     def self.property(property_name, options = {})
       super
 
-      options[:from] = options[:from].to_sym if options[:from]
-      property_name = property_name.to_sym
+      options[:from] = options[:from] if options[:from]
 
       if options[:from]
         if property_name == options[:from]
           fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
 
-        translations[options[:from].to_sym] = property_name.to_sym
+        translations[options[:from]] = property_name
 
         define_method "#{options[:from]}=" do |val|
           with = options[:with] || options[:transform_with]
-          self[property_name.to_sym] = with.respond_to?(:call) ? with.call(val) : val
+          self[property_name] = with.respond_to?(:call) ? with.call(val) : val
         end
       else
         if options[:transform_with].respond_to? :call
-          transforms[property_name.to_sym] = options[:transform_with]
+          transforms[property_name] = options[:transform_with]
         end
       end
     end
@@ -43,10 +42,10 @@ module Hashie
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      if self.class.translations.key? property.to_sym
+      if self.class.translations.key? property
         send("#{property}=", value)
-      elsif self.class.transforms.key? property.to_sym
-        super property, self.class.transforms[property.to_sym].call(value)
+      elsif self.class.transforms.key? property
+        super property, self.class.transforms[property].call(value)
       elsif property_exists? property
         super
       end
@@ -77,7 +76,7 @@ module Hashie
     # Raises an NoMethodError if the property doesn't exist
     #
     def property_exists?(property)
-      unless self.class.property?(property.to_sym)
+      unless self.class.property?(property)
         fail NoMethodError, "The property '#{property}' is not defined for this Trash."
       end
       true
@@ -89,7 +88,7 @@ module Hashie
     def initialize_attributes(attributes)
       return unless attributes
       attributes_copy = attributes.dup.delete_if do |k, v|
-        if self.class.translations.include?(k.to_sym)
+        if self.class.translations.include?(k)
           self[k] = v
           true
         end

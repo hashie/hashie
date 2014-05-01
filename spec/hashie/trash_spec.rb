@@ -57,11 +57,14 @@ describe Hashie::Trash do
     end
 
     it 'writes to an existing property using []=' do
-      expect { trash['first_name'] = 'Bob' }.not_to raise_error
+      expect { trash[:first_name] = 'Bob' }.not_to raise_error
+      expect(trash.first_name).to eq('Bob')
+      expect { trash['first_name'] = 'John' }.to raise_error(NoMethodError)
     end
 
     it 'writes to a translated property using []=' do
-      expect { trash['firstName'] = 'Bob' }.not_to raise_error
+      expect { trash[:firstName] = 'Bob' }.not_to raise_error
+      expect { trash['firstName'] = 'Bob' }.to raise_error(NoMethodError)
     end
 
     it 'reads/writes to an existing property using a method call' do

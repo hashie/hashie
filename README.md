@@ -238,6 +238,33 @@ p[:awesome]    # => NoMethodError
 p[:occupation] # => 'Rubyist'
 ```
 
+Properties defined as symbols are not the same thing as properties defined as strings.
+
+### Example:
+
+```ruby
+class Tricky < Hashie::Dash
+  property :trick
+  property 'trick'
+end
+
+p = Tricky.new(trick: 'one', 'trick' => 'two')
+p.trick # => 'one', always symbol version
+p[:trick] # => 'one'
+p['trick'] # => 'two'
+```
+
+Note that accessing a property as a method always uses the symbol version.
+
+```ruby
+class Tricky < Hashie::Dash
+  property 'trick'
+end
+
+p = Tricky.new('trick' => 'two')
+p.trick # => NoMethodError
+```
+
 ### Mash and Rails 4 Strong Parameters
 
 Add the following initializer in config/initializers/mash.rb when using Mash with [Rails 4 Strong Parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters). This prevents Mash from responding to `:permitted?` and therefore triggering an ActiveModel `ForbiddenAttributesProtection` exception.

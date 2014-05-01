@@ -29,8 +29,6 @@ module Hashie
     #   existing Dash.
     #
     def self.property(property_name, options = {})
-      property_name = property_name.to_sym
-
       properties << property_name
 
       if options.key?(:default)
@@ -40,9 +38,9 @@ module Hashie
       end
 
       unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
-        define_method(property_name) { |&block| self.[](property_name.to_s, &block) }
+        define_method(property_name) { |&block| self.[](property_name, &block) }
         property_assignment = property_name.to_s.concat('=').to_sym
-        define_method(property_assignment) { |value| self.[]=(property_name.to_s, value) }
+        define_method(property_assignment) { |value| self.[]=(property_name, value) }
       end
 
       if defined? @subclasses
@@ -70,13 +68,13 @@ module Hashie
     # Check to see if the specified property has already been
     # defined.
     def self.property?(name)
-      properties.include? name.to_sym
+      properties.include? name
     end
 
     # Check to see if the specified property is
     # required.
     def self.required?(name)
-      required_properties.include? name.to_sym
+      required_properties.include? name
     end
 
     # You may initialize a Dash with an attributes hash
@@ -104,7 +102,7 @@ module Hashie
     # property's default value if it hasn't been set).
     def [](property)
       assert_property_exists! property
-      value = super(property.to_s)
+      value = super(property)
       # If the value is a lambda, proc, or whatever answers to call, eval the thing!
       if value.is_a? Proc
         self[property] = value.call # Set the result of the call as a value
@@ -119,7 +117,7 @@ module Hashie
     def []=(property, value)
       assert_property_required! property, value
       assert_property_exists! property
-      super(property.to_s, value)
+      super(property, value)
     end
 
     def merge(other_hash)
