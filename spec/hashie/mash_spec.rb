@@ -176,7 +176,7 @@ describe Hashie::Mash do
 
       # http://www.ruby-doc.org/core-1.9.3/Hash.html#method-i-update
       it 'accepts a block' do
-        duped = subject.merge(details: { address: 'Pasadena CA' }) { |key, oldv, newv| [oldv, newv].join(', ') }
+        duped = subject.merge(details: { address: 'Pasadena CA' }) { |_, oldv, newv| [oldv, newv].join(', ') }
         expect(duped.details.address).to eq 'Nowhere road, Pasadena CA'
       end
     end
@@ -434,7 +434,7 @@ describe Hashie::Mash do
 
       context 'with block given' do
         it 'returns default value' do
-          expect(mash.fetch(:two) do |key|
+          expect(mash.fetch(:two) do
             'block default value'
           end).to eql('block default value')
         end

@@ -139,7 +139,7 @@ describe DashTest do
     end
 
     it 'accepts block to define a global default' do
-      obj = described_class.new { |hash, key| key.to_s.upcase }
+      obj = described_class.new { |_, key| key.to_s.upcase }
       expect(obj.first_name).to eq 'FIRST_NAME'
       expect(obj.count).to be_zero
     end
