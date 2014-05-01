@@ -1,17 +1,14 @@
 module Hashie
-  autoload :Clash,          'hashie/clash'
-  autoload :Dash,           'hashie/dash'
-  autoload :Hash,           'hashie/hash'
-  autoload :HashExtensions, 'hashie/hash_extensions'
-  autoload :Mash,           'hashie/mash'
-  autoload :PrettyInspect,  'hashie/hash_extensions'
-  autoload :Trash,          'hashie/trash'
-  autoload :Rash,           'hashie/rash'
+  autoload :Clash,              'hashie/clash'
+  autoload :Dash,               'hashie/dash'
+  autoload :Hash,               'hashie/hash'
+  autoload :Mash,               'hashie/mash'
+  autoload :Trash,              'hashie/trash'
+  autoload :Rash,               'hashie/rash'
 
   module Extensions
     autoload :Coercion,          'hashie/extensions/coercion'
     autoload :DeepMerge,         'hashie/extensions/deep_merge'
-    autoload :KeyConversion,     'hashie/extensions/key_conversion'
     autoload :IgnoreUndeclared,  'hashie/extensions/ignore_undeclared'
     autoload :IndifferentAccess, 'hashie/extensions/indifferent_access'
     autoload :MergeInitializer,  'hashie/extensions/merge_initializer'
@@ -19,9 +16,11 @@ module Hashie
     autoload :MethodQuery,       'hashie/extensions/method_access'
     autoload :MethodReader,      'hashie/extensions/method_access'
     autoload :MethodWriter,      'hashie/extensions/method_access'
-    autoload :StringifyKeys,     'hashie/extensions/key_conversion'
-    autoload :SymbolizeKeys,     'hashie/extensions/key_conversion'
+    autoload :StringifyKeys,     'hashie/extensions/stringify_keys'
+    autoload :SymbolizeKeys,     'hashie/extensions/symbolize_keys'
     autoload :DeepFetch,         'hashie/extensions/deep_fetch'
+    autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
+    autoload :KeyConversion,     'hashie/extensions/key_conversion'
 
     module Mash
       autoload :ActiveModel,     'hashie/extensions/mash/active_model'

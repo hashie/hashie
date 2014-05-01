@@ -469,4 +469,12 @@ describe Hashie::Mash do
       expect(mash.to_hash(symbolize_keys: true)[:outer].keys).not_to include('inner')
     end
   end
+
+  describe '#stringify_keys' do
+    it 'turns all keys into strings recursively' do
+      hash = Hashie::Mash[:a => 'hey', 123 => { 345 => 'hey' }]
+      hash.stringify_keys!
+      expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
+    end
+  end
 end
