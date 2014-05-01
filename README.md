@@ -239,8 +239,11 @@ p[:occupation] # => 'Rubyist'
 ```
 
 ### Mash and Rails 4 Strong Parameters
+When using Mash with [Rails 4 Strong Parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters) Mash will automatically detect presence of strong parameters.
+**No further action is required.**
 
-Add the following initializer in config/initializers/mash.rb when using Mash with [Rails 4 Strong Parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters). This prevents Mash from responding to `:permitted?` and therefore triggering an ActiveModel `ForbiddenAttributesProtection` exception.
+However, If strong parameters can't be detected automatically try to include extension manually:
+Add the following initializer in config/initializers/mash.rb. This prevents Mash from responding to `:permitted?` and therefore triggering an ActiveModel `ForbiddenAttributesProtection` exception.
 
 ```ruby
 class Mash
