@@ -500,7 +500,6 @@ describe Hashie::Mash do
       before :each do
         module ActionController
           module StrongParameters
-
           end
         end
         load 'hashie/mash.rb'
