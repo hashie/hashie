@@ -5,7 +5,7 @@ module Hashie
     # raising an error. This is useful when using a Trash to
     # capture a subset of a larger hash.
     #
-    # Note that attempting to retrieve an undeclared property
+    # Note that attempting to retrieve or set an undeclared property
     # will still raise a NoMethodError, even if a value for
     # that property was provided at initialization.
     #
