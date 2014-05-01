@@ -187,7 +187,7 @@ module Hashie
       self
     end
 
-    def respond_to?(method_name, include_private = false)
+    def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
       _, suffix = method_suffix(method_name)
       case suffix

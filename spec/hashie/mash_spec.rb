@@ -314,36 +314,45 @@ describe Hashie::Mash do
   end
 
   describe '#respond_to?' do
+    subject do
+      Hashie::Mash.new(abc: 'def')
+    end
+
     it 'responds to a normal method' do
-      expect(Hashie::Mash.new).to be_respond_to(:key?)
+      expect(subject).to be_respond_to(:key?)
     end
 
     it 'responds to a set key' do
-      expect(Hashie::Mash.new(abc: 'def')).to be_respond_to(:abc)
+      expect(subject).to be_respond_to(:abc)
+      expect(subject.method(:abc)).to_not be_nil
     end
 
     it 'responds to a set key with a suffix' do
       %w(= ? ! _).each do |suffix|
-        expect(Hashie::Mash.new(abc: 'def')).to be_respond_to(:"abc#{suffix}")
+        expect(subject).to be_respond_to(:"abc#{suffix}")
+        expect(subject.method(:"abc#{suffix}")).to_not be_nil
       end
     end
 
     it 'responds to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
-        expect(Hashie::Mash.new(abc: 'def')).to be_respond_to(:"xyz#{suffix}")
+        expect(subject).to be_respond_to(:"xyz#{suffix}")
+        expect(subject.method(:"xyz#{suffix}")).to_not be_nil
       end
     end
 
     it 'does not respond to an unknown key without a suffix' do
-      expect(Hashie::Mash.new(abc: 'def')).not_to be_respond_to(:xyz)
+      expect(subject).not_to be_respond_to(:xyz)
+      expect { subject.method(:xyz) }.to raise_error(NameError)
     end
 
     it 'does not respond to permitted?' do
-      expect(Hashie::Mash.new).to be_respond_to(:permitted?)
+      expect(subject).to be_respond_to(:permitted?)
       klass = Class.new(Hashie::Mash) do
         include Hashie::Extensions::Mash::ActiveModel
       end
       expect(klass.new).not_to be_respond_to(:permitted?)
+      expect { klass.new.method(:permitted?) }.to raise_error(NameError)
       expect { klass.new.permitted? }.to raise_error(ArgumentError)
     end
   end

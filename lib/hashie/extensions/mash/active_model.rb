@@ -3,13 +3,13 @@ module Hashie
     module Mash
       # Extends Mash to behave in a way compatible with ActiveModel.
       module ActiveModel
-        def respond_to?(name, include_private = false)
-          return false if name == :permitted?
+        def respond_to_missing?(method_name, *args)
+          return false if method_name == :permitted?
           super
         end
 
-        def method_missing(name, *args)
-          fail ArgumentError if name == :permitted?
+        def method_missing(method_name, *args)
+          fail ArgumentError if method_name == :permitted?
           super
         end
       end
