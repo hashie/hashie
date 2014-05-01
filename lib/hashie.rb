@@ -22,5 +22,9 @@ module Hashie
     autoload :StringifyKeys,     'hashie/extensions/key_conversion'
     autoload :SymbolizeKeys,     'hashie/extensions/key_conversion'
     autoload :DeepFetch,         'hashie/extensions/deep_fetch'
+
+    module Mash
+      autoload :ActiveModel,     'hashie/extensions/mash/active_model'
+    end
   end
 end

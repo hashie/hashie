@@ -57,6 +57,7 @@ module Hashie
   class Mash < Hash
     ALLOWED_SUFFIXES = %w(? ! = _)
     include Hashie::PrettyInspect
+
     alias_method :to_s, :inspect
 
     # If you pass in an existing hash, it will
@@ -185,11 +186,15 @@ module Hashie
       self
     end
 
-    # Will return true if the Mash has had a key
-    # set in addition to normal respond_to? functionality.
     def respond_to?(method_name, include_private = false)
-      return true if key?(method_name) || prefix_method?(method_name)
-      super
+      return true if key?(method_name)
+      _, suffix = method_suffix(method_name)
+      case suffix
+      when '=', '?', '!', '_'
+        return true
+      else
+        super
+      end
     end
 
     def prefix_method?(method_name)
@@ -199,23 +204,28 @@ module Hashie
 
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
-      suffixes_regex = ALLOWED_SUFFIXES.join
-      match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
-      case match[2]
+      name, suffix = method_suffix(method_name)
+      case suffix
       when '='
-        self[match[1]] = args.first
+        self[name] = args.first
       when '?'
-        !!self[match[1]]
+        !!self[name]
       when '!'
-        initializing_reader(match[1])
+        initializing_reader(name)
       when '_'
-        underbang_reader(match[1])
+        underbang_reader(name)
       else
         default(method_name)
       end
     end
 
     protected
+
+    def method_suffix(method_name)
+      suffixes_regex = ALLOWED_SUFFIXES.join
+      match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
+      [match[1], match[2]]
+    end
 
     def convert_key(key) #:nodoc:
       key.to_s
