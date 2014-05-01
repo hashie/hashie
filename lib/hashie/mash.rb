@@ -58,7 +58,7 @@ module Hashie
     include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::Mash::ActiveModel if defined?(ActionController::StrongParameters)
 
-    ALLOWED_SUFFIXES = %w(? ! = _)
+    ALLOWED_SUFFIXES = %w(? ! = _) unless defined?(ALLOWED_SUFFIXES)
 
     alias_method :to_s, :inspect
 
