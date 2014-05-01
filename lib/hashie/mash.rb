@@ -56,6 +56,7 @@ module Hashie
   #
   class Mash < Hash
     include Hashie::Extensions::PrettyInspect
+    include Hashie::Extensions::Mash::ActiveModel if defined?(ActionController::StrongParameters)
 
     ALLOWED_SUFFIXES = %w(? ! = _)
 
