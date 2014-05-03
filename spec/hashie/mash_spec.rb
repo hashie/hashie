@@ -488,25 +488,14 @@ describe Hashie::Mash do
   end
 
   describe 'it includes active model extensions' do
-    context 'when strong parameters are not used' do
-      before :each do
-        load 'hashie/mash.rb'
-      end
-      it 'should not include active model extensions for strong parameters' do
-        Hashie::Mash.included_modules.should_not include(Hashie::Extensions::Mash::ActiveModel)
-      end
+    it 'includes active model extensions for strong parameters' do
+      require 'action_controller'
+      load 'hashie/mash.rb'
+      Hashie::Mash.included_modules.should include(Hashie::Extensions::Mash::ActiveModel)
     end
-    context 'when strong parameters are used' do
-      before :each do
-        module ActionController
-          module StrongParameters
-          end
-        end
-        load 'hashie/mash.rb'
-      end
-      it 'includes active model extensions for strong parameters' do
-        Hashie::Mash.included_modules.should include(Hashie::Extensions::Mash::ActiveModel)
-      end
+    it 'does not include active model extensions for strong parameters' do
+      load 'hashie/mash.rb'
+      Hashie::Mash.included_modules.should_not include(Hashie::Extensions::Mash::ActiveModel)
     end
   end
 end
