@@ -486,4 +486,16 @@ describe Hashie::Mash do
       expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
     end
   end
+
+  describe 'it includes active model extensions' do
+    it 'includes active model extensions for strong parameters' do
+      require 'action_controller'
+      load 'hashie/mash.rb'
+      Hashie::Mash.included_modules.should include(Hashie::Extensions::Mash::ActiveModel)
+    end
+    it 'does not include active model extensions for strong parameters' do
+      load 'hashie/mash.rb'
+      Hashie::Mash.included_modules.should_not include(Hashie::Extensions::Mash::ActiveModel)
+    end
+  end
 end
