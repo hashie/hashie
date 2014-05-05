@@ -169,12 +169,12 @@ mash.name # => "My Mash"
 mash.name? # => true
 mash.inspect # => <Hashie::Mash name="My Mash">
 
-mash = Mash.new
+mash = Hashie::Mash.new
 # use bang methods for multi-level assignment
 mash.author!.name = "Michael Bleigh"
 mash.author # => <Hashie::Mash name="Michael Bleigh">
 
-mash = Mash.new
+mash = Hashie::Mash.new
 # use under-bang methods for multi-level testing
 mash.author_.name? # => false
 mash.inspect # => <Hashie::Mash>
