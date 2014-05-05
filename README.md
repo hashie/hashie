@@ -1,7 +1,6 @@
 # Hashie [![Build Status](https://secure.travis-ci.org/intridea/hashie.png)](http://travis-ci.org/intridea/hashie) [![Dependency Status](https://gemnasium.com/intridea/hashie.png)](https://gemnasium.com/intridea/hashie)
 
-Hashie is a growing collection of tools that extend Hashes and make
-them more useful.
+Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
 ## Installation
 
@@ -13,20 +12,13 @@ $ gem install hashie
 
 ## Hash Extensions
 
-The library is broken up into a number of atomically includeable Hash
-extension modules as described below. This provides maximum flexibility
-for users to mix and match functionality while maintaining feature parity
-with earlier versions of Hashie.
+The library is broken up into a number of atomically includeable Hash extension modules as described below. This provides maximum flexibility for users to mix and match functionality while maintaining feature parity with earlier versions of Hashie.
 
-Any of the extensions listed below can be mixed into a class by
-`include`-ing `Hashie::Extensions::ExtensionName`.
+Any of the extensions listed below can be mixed into a class by `include`-ing `Hashie::Extensions::ExtensionName`.
 
 ### Coercion
 
-Coercions allow you to set up "coercion rules" based either on the key
-or the value type to massage data as it's being inserted into the Hash.
-Key coercions might be used, for example, in lightweight data modeling
-applications such as an API client:
+Coercions allow you to set up "coercion rules" based either on the key or the value type to massage data as it's being inserted into the Hash. Key coercions might be used, for example, in lightweight data modeling applications such as an API client:
 
 ```ruby
 class Tweet < Hash
@@ -40,9 +32,7 @@ Tweet.new(user: user_hash)
 #    User.new(user_hash) if that isn't present.
 ```
 
-Value coercions, on the other hand, will coerce values based on the type
-of the value being inserted. This is useful if you are trying to build a
-Hash-like class that is self-propagating.
+Value coercions, on the other hand, will coerce values based on the type of the value being inserted. This is useful if you are trying to build a Hash-like class that is self-propagating.
 
 ```ruby
 class SpecialHash < Hash
@@ -60,22 +50,15 @@ end
 
 ### KeyConversion
 
-The KeyConversion extension gives you the convenience methods of
-`symbolize_keys` and `stringify_keys` along with their bang
-counterparts. You can also include just stringify or just symbolize with
-`Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
+The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
 
 ### MergeInitializer
 
-The MergeInitializer extension simply makes it possible to initialize a
-Hash subclass with another Hash, giving you a quick short-hand.
+The MergeInitializer extension simply makes it possible to initialize a Hash subclass with another Hash, giving you a quick short-hand.
 
 ### MethodAccess
 
-The MethodAccess extension allows you to quickly build method-based
-reading, writing, and querying into your Hash descendant. It can also be
-included as individual modules, i.e. `Hashie::Extensions::MethodReader`,
-`Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`
+The MethodAccess extension allows you to quickly build method-based reading, writing, and querying into your Hash descendant. It can also be included as individual modules, i.e. `Hashie::Extensions::MethodReader`, `Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`.
 
 ```ruby
 class MyHash < Hash
@@ -90,22 +73,13 @@ h.abc? # => true
 
 ### IndifferentAccess
 
-This extension can be mixed in to instantly give you indifferent access
-to your Hash subclass. This works just like the params hash in Rails and
-other frameworks where whether you provide symbols or strings to access
-keys, you will get the same results.
+This extension can be mixed in to instantly give you indifferent access to your Hash subclass. This works just like the params hash in Rails and other frameworks where whether you provide symbols or strings to access keys, you will get the same results.
 
-A unique feature of Hashie's IndifferentAccess mixin is that it will
-inject itself recursively into subhashes *without* reinitializing the
-hash in question. This means you can safely merge together indifferent
-and non-indifferent hashes arbitrarily deeply without worrying about
-whether you'll be able to `hash[:other][:another]` properly.
+A unique feature of Hashie's IndifferentAccess mixin is that it will inject itself recursively into subhashes *without* reinitializing the hash in question. This means you can safely merge together indifferent and non-indifferent hashes arbitrarily deeply without worrying about whether you'll be able to `hash[:other][:another]` properly.
 
 ### IgnoreUndeclared
 
-This extension can be mixed in to silently ignore undeclared properties on
-initialization instead of raising an error. This is useful when using a
-Trash to capture a subset of a larger hash.
+This extension can be mixed in to silently ignore undeclared properties on initialization instead of raising an error. This is useful when using a Trash to capture a subset of a larger hash.
 
 ```ruby
 class Person < Trash
@@ -143,19 +117,15 @@ h2 = MyHash.new
 h1 = { x: { y: [4,5,6] }, z: [7,8,9] }
 h2 = { x: { y: [7,8,9] }, z: "xyz" }
 
-h1.deep_merge(h2) #=> { x: { y: [7, 8, 9] }, z: "xyz" }
-h2.deep_merge(h1) #=> { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
+h1.deep_merge(h2) # => { x: { y: [7, 8, 9] }, z: "xyz" }
+h2.deep_merge(h1) # => { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
 ```
 
 ### DeepFetch
 
-This extension can be mixed in to provide for safe and concise retrieval of
-deeply nested hash values. In the event that the requested key does not exist
-a block can be provided and its value will be returned.
+This extension can be mixed in to provide for safe and concise retrieval of deeply nested hash values. In the event that the requested key does not exist a block can be provided and its value will be returned.
 
-Though this is a hash extension, it conveniently allows for arrays to be
-present in the nested structure. This feature makes the extension particularly
-useful for working with JSON API responses.
+Though this is a hash extension, it conveniently allows for arrays to be present in the nested structure. This feature makes the extension particularly useful for working with JSON API responses.
 
 ```ruby
 user = {
@@ -165,24 +135,22 @@ user = {
     { name: 'Open source enthusiasts' }
   ]
 }
+
 user.extend Hashie::Extensions::DeepFetch
 
-user.deep_fetch :name, :first #=> 'Bob'
-user.deep_fetch :name, :middle #=> 'KeyError: Could not fetch middle'
+user.deep_fetch :name, :first # => 'Bob'
+user.deep_fetch :name, :middle # => 'KeyError: Could not fetch middle'
 
 # using a default block
-user.deep_fetch :name, :middle { |key| 'default' }  #=>  'default'
+user.deep_fetch :name, :middle { |key| 'default' }  # =>  'default'
 
 # a nested array
-user.deep_fetch :groups, 1, :name #=> 'Open source enthusiasts'
+user.deep_fetch :groups, 1, :name # => 'Open source enthusiasts'
 ```
 
 ## Mash
 
-Mash is an extended Hash that gives simple pseudo-object functionality
-that can be built from hashes and easily extended. It is designed to
-be used in RESTful API libraries to provide easy object-like access
-to JSON and XML parsed hashes.
+Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is designed to be used in RESTful API libraries to provide easy object-like access to JSON and XML parsed hashes.
 
 ### Example:
 
@@ -206,16 +174,11 @@ mash.author_.name? # => false
 mash.inspect # => <Hashie::Mash>
 ```
 
-**Note:** The `?` method will return false if a key has been set
-to false or nil. In order to check if a key has been set at all, use the
-`mash.key?('some_key')` method instead.
+**Note:** The `?` method will return false if a key has been set to false or nil. In order to check if a key has been set at all, use the `mash.key?('some_key')` method instead.
 
 ## Dash
 
-Dash is an extended Hash that has a discrete set of defined properties
-and only those properties may be set on the hash. Additionally, you
-can set defaults for each property. You can also flag a property as
-required. Required properties will raise an exception if unset.
+Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.
 
 ### Example:
 
@@ -277,8 +240,7 @@ end
 
 ## Trash
 
-A Trash is a Dash that allows you to translate keys on initialization.
-It is used like so:
+A Trash is a Dash that allows you to translate keys on initialization. It is used like so:
 
 ```ruby
 class Person < Hashie::Trash
@@ -293,8 +255,7 @@ when it is initialized using a hash such as through:
 Person.new(firstName: 'Bob')
 ```
 
-Trash also supports translations using lambda, this could be useful when dealing with
-external API's. You can use it in this way:
+Trash also supports translations using lambda, this could be useful when dealing with external API's. You can use it in this way:
 
 ```ruby
 class Result < Hashie::Trash
@@ -313,13 +274,9 @@ result.created_at.class # => Time
 
 ## Clash
 
-Clash is a Chainable Lazy Hash that allows you to easily construct
-complex hashes using method notation chaining. This will allow you
-to use a more action-oriented approach to building options hashes.
+Clash is a Chainable Lazy Hash that allows you to easily construct complex hashes using method notation chaining. This will allow you to use a more action-oriented approach to building options hashes.
 
-Essentially, a Clash is a generalized way to provide much of the same
-kind of "chainability" that libraries like Arel or Rails 2.x's named_scopes
-provide.
+Essentially, a Clash is a generalized way to provide much of the same kind of "chainability" that libraries like Arel or Rails 2.x's named_scopes provide.
 
 ### Example:
 
@@ -354,22 +311,21 @@ If the Rash's value is a `proc`, the `proc` will be automatically called with th
 
 # Mapping names to appropriate greetings
 greeting = Hashie::Rash.new( /^Mr./ => "Hello sir!", /^Mrs./ => "Evening, madame." )
-greeting["Mr. Steve Austin"] #=> "Hello sir!"
-greeting["Mrs. Steve Austin"] #=> "Evening, madame."
+greeting["Mr. Steve Austin"] # => "Hello sir!"
+greeting["Mrs. Steve Austin"] # => "Evening, madame."
 
 # Mapping statements to saucy retorts
 mapper = Hashie::Rash.new(
   /I like (.+)/ => proc { |m| "Who DOESN'T like #{m[1]}?!" },
   /Get off my (.+)!/ => proc { |m| "Forget your #{m[1]}, old man!" }
 )
-mapper["I like traffic lights"] #=> "Who DOESN'T like traffic lights?!"
-mapper["Get off my lawn!"]      #=> "Forget your lawn, old man!"
+mapper["I like traffic lights"] # => "Who DOESN'T like traffic lights?!"
+mapper["Get off my lawn!"]      # => "Forget your lawn, old man!"
 ```
 
 ### Auto-optimized
 
-**Note:** The Rash is automatically optimized every 500 accesses
-(which means that it sorts the list of Regexps, putting the most frequently matched ones at the beginning).
+**Note:** The Rash is automatically optimized every 500 accesses (which means that it sorts the list of Regexps, putting the most frequently matched ones at the beginning).
 
 If this value is too low or too high for your needs, you can tune it by setting: `rash.optimize_every = n`.
 
