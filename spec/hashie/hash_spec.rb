@@ -26,10 +26,16 @@ describe Hash do
     expect(stringified_hash).to eq Hashie::Hash['a' => 'hey', '123' => 'bob']
   end
 
-  it '#to_hash returns a hash with stringified keys' do
+  it '#to_hash returns a hash with same keys' do
     hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3]]
     stringified_hash = hash.to_hash
-    expect(stringified_hash).to eq('a' => 'hey', '123' => 'bob', 'array' => [1, 2, 3])
+    expect(stringified_hash).to eq('a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3])
+  end
+
+  it '#to_hash with stringify_keys set to true returns a hash with stringified_keys' do
+    hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3]]
+    symbolized_hash = hash.to_hash(stringify_keys: true)
+    expect(symbolized_hash).to eq('a' => 'hey', '123' => 'bob', 'array' => [1, 2, 3])
   end
 
   it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do

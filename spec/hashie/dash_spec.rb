@@ -22,7 +22,7 @@ class PropertyBangTest < Hashie::Dash
   property :important!
 end
 
-class Subclassed < DashTest
+class SubclassedTest < DashTest
   property :last_name, required: true
 end
 
@@ -35,7 +35,6 @@ class DeferredTest < Hashie::Dash
 end
 
 describe DashTest do
-
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
 
   it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
@@ -74,7 +73,7 @@ describe DashTest do
     end
 
     it 'fails writing a required property to nil using []=' do
-      expect { subject['first_name'] = nil }.to raise_error(ArgumentError)
+      expect { subject[:first_name] = nil }.to raise_error(ArgumentError)
     end
 
     it 'fails writing to a non-existent property using []=' do
@@ -82,9 +81,9 @@ describe DashTest do
     end
 
     it 'works for an existing property using []=' do
-      subject['first_name'] = 'Bob'
-      expect(subject['first_name']).to eq 'Bob'
+      subject[:first_name] = 'Bob'
       expect(subject[:first_name]).to eq 'Bob'
+      expect { subject['first_name'] }.to raise_error(NoMethodError)
     end
 
     it 'works for an existing property using a method call' do
@@ -99,14 +98,14 @@ describe DashTest do
     end
 
     it 'is able to retrieve properties through blocks' do
-      subject['first_name'] = 'Aiden'
+      subject[:first_name] = 'Aiden'
       value = nil
-      subject.[]('first_name') { |v| value = v }
+      subject.[](:first_name) { |v| value = v }
       expect(value).to eq 'Aiden'
     end
 
     it 'is able to retrieve properties through blocks with method calls' do
-      subject['first_name'] = 'Frodo'
+      subject[:first_name] = 'Frodo'
       value = nil
       subject.first_name { |v| value = v }
       expect(value).to eq 'Frodo'
@@ -115,12 +114,12 @@ describe DashTest do
 
   context 'reading from deferred properties' do
     it 'evaluates proc after initial read' do
-      expect(DeferredTest.new['created_at']).to be_instance_of(Time)
+      expect(DeferredTest.new[:created_at]).to be_instance_of(Time)
     end
 
     it 'does not evalute proc after subsequent reads' do
       deferred = DeferredTest.new
-      expect(deferred['created_at'].object_id).to eq deferred['created_at'].object_id
+      expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
     end
   end
 
@@ -220,13 +219,13 @@ describe DashTest do
     end
 
     it 'checks if a property exists' do
-      expect(described_class.property?('first_name')).to be_true
       expect(described_class.property?(:first_name)).to be_true
+      expect(described_class.property?('first_name')).to be_false
     end
 
     it 'checks if a property is required' do
-      expect(described_class.required?('first_name')).to be_true
       expect(described_class.required?(:first_name)).to be_true
+      expect(described_class.required?('first_name')).to be_false
     end
 
     it 'doesnt include property from subclass' do
@@ -246,7 +245,7 @@ describe DashTest do
     before { subject.replace(first_name: 'Cain') }
 
     it 'return self' do
-      expect(subject.replace(email: 'bar').to_hash).to eq('email' => 'bar', 'count' => 0)
+      expect(subject.replace(email: 'bar').to_hash).to eq(email: 'bar', count: 0)
     end
 
     it 'sets all specified keys to their corresponding values' do
@@ -254,7 +253,7 @@ describe DashTest do
     end
 
     it 'leaves only specified keys and keys with default values' do
-      expect(subject.keys.sort).to eq %w(count first_name)
+      expect(subject.keys.sort_by { |key| key.to_s }).to eq [:count, :first_name]
       expect(subject.email).to be_nil
       expect(subject.count).to eq 0
     end
@@ -310,13 +309,14 @@ describe Hashie::Dash, 'inheritance' do
 
   it 'allows nil defaults' do
     @bottom.property :echo, default: nil
-    expect(@bottom.new).to have_key('echo')
+    expect(@bottom.new).to have_key(:echo)
+    expect(@bottom.new).to_not have_key('echo')
   end
 
 end
 
-describe Subclassed do
-  subject { Subclassed.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
+describe SubclassedTest do
+  subject { SubclassedTest.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
 
   describe '#count' do
     subject { super().count }
@@ -334,5 +334,50 @@ describe Subclassed do
 
   it "didn't override superclass inheritance logic" do
     expect(described_class.instance_variable_get('@inheritance_test')).to be_true
+  end
+end
+
+class MixedPropertiesTest < Hashie::Dash
+  property :symbol
+  property 'string'
+end
+
+describe MixedPropertiesTest do
+  subject { MixedPropertiesTest.new('string' => 'string', symbol: 'symbol') }
+
+  it { should respond_to('string') }
+  it { should respond_to(:symbol) }
+
+  it 'property?' do
+    expect(described_class.property?('string')).to be_true
+    expect(described_class.property?(:symbol)).to be_true
+  end
+
+  it 'fetch' do
+    expect(subject['string']).to eq('string')
+    expect { subject[:string] }.to raise_error(NoMethodError)
+    expect(subject[:symbol]).to eq('symbol')
+    expect { subject['symbol'] }.to raise_error(NoMethodError)
+  end
+
+  it 'double define' do
+    klass = Class.new(MixedPropertiesTest) do
+      property 'symbol'
+    end
+    instance = klass.new(symbol: 'one', 'symbol' => 'two')
+    expect(instance[:symbol]).to eq('one')
+    expect(instance['symbol']).to eq('two')
+  end
+
+  it 'assign' do
+    subject['string'] = 'updated'
+    expect(subject['string']).to eq('updated')
+
+    expect { subject[:string] = 'updated' }.to raise_error(NoMethodError)
+
+    subject[:symbol] = 'updated'
+    expect(subject[:symbol]).to eq('updated')
+
+    expect { subject['symbol'] = 'updated' }.to raise_error(NoMethodError)
   end
 end
