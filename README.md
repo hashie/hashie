@@ -10,6 +10,10 @@ Hashie is available as a RubyGem:
 $ gem install hashie
 ```
 
+## Upgrading
+
+You're reading the documentation for the next release of Hashie, which should be 2.2. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.1.1](https://github.com/intridea/hashie/blob/v2.1.1/README.md).
+
 ## Hash Extensions
 
 The library is broken up into a number of atomically includeable Hash extension modules as described below. This provides maximum flexibility for users to mix and match functionality while maintaining feature parity with earlier versions of Hashie.
@@ -76,6 +80,8 @@ h.abc? # => true
 This extension can be mixed in to instantly give you indifferent access to your Hash subclass. This works just like the params hash in Rails and other frameworks where whether you provide symbols or strings to access keys, you will get the same results.
 
 A unique feature of Hashie's IndifferentAccess mixin is that it will inject itself recursively into subhashes *without* reinitializing the hash in question. This means you can safely merge together indifferent and non-indifferent hashes arbitrarily deeply without worrying about whether you'll be able to `hash[:other][:another]` properly.
+
+Use `Hashie::Extensions::Dash::IndifferentAccess` for instances of `Hashie::Dash`.
 
 ### IgnoreUndeclared
 
@@ -230,7 +236,9 @@ p.trick # => NoMethodError
 
 ### Mash and Rails 4 Strong Parameters
 
-Add the following initializer in config/initializers/mash.rb when using Mash with [Rails 4 Strong Parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters). This prevents Mash from responding to `:permitted?` and therefore triggering an ActiveModel `ForbiddenAttributesProtection` exception.
+If you're using [Rails 4 strong parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters), you will get a [ForbiddenAttributesProtection](https://github.com/rails/strong_parameters/blob/master/lib/active_model/forbidden_attributes_protection.rb) exceptions when mass-assigning attributes.
+
+To allow mass assignment, add the following initializer in config/initializers/mash.rb. This prevents Mash from responding to `:permitted?` and therefore triggering this behavior in [ForbiddenAttributesProtection](https://github.com/rails/strong_parameters/blob/master/lib/active_model/forbidden_attributes_protection.rb).
 
 ```ruby
 class Mash
