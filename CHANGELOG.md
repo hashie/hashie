@@ -1,4 +1,4 @@
-## 2.2 (Next)
+## 3.0 (Next)
 
 **Note:** This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
 
