@@ -64,6 +64,19 @@ module Hashie
               end
             end
 
+            context 'when the nested object is missing' do
+              it 'raises an UndefinedPathError' do
+                expect do
+                  instance.deep_fetch(:library, :unknown_key, :books)
+                end.to(
+                  raise_error(
+                    DeepFetch::UndefinedPathError,
+                    'Could not fetch path (library > unknown_key > books) at unknown_key'
+                  )
+                )
+              end
+            end
+
             context 'when the nested object is nil' do
               it 'raises an UndefinedPathError' do
                 expect do
