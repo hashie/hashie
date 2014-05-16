@@ -18,7 +18,7 @@ module Hashie
           begin
             arg = Integer(arg) if obj.kind_of? Array
             obj.fetch(arg)
-          rescue ArgumentError, IndexError => e
+          rescue ArgumentError, IndexError, NoMethodError => e
             break block.call(arg) if block
             raise UndefinedPathError, "Could not fetch path (#{args.join(' > ')}) at #{arg}", e.backtrace
           end

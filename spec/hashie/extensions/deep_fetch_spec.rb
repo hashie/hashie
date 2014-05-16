@@ -11,6 +11,7 @@ module Hashie
               { title: 'Call of the Wild' },
               { title: 'Moby Dick' }
             ],
+            shelves: nil,
             location: {
               address: '123 Library St.'
             }
@@ -58,6 +59,32 @@ module Hashie
                   raise_error(
                     DeepFetch::UndefinedPathError,
                     'Could not fetch path (library > location > unknown_key) at unknown_key'
+                  )
+                )
+              end
+            end
+
+            context 'when the nested object is missing' do
+              it 'raises an UndefinedPathError' do
+                expect do
+                  instance.deep_fetch(:library, :unknown_key, :books)
+                end.to(
+                  raise_error(
+                    DeepFetch::UndefinedPathError,
+                    'Could not fetch path (library > unknown_key > books) at unknown_key'
+                  )
+                )
+              end
+            end
+
+            context 'when the nested object is nil' do
+              it 'raises an UndefinedPathError' do
+                expect do
+                  instance.deep_fetch(:library, :shelves, :address)
+                end.to(
+                  raise_error(
+                    DeepFetch::UndefinedPathError,
+                    'Could not fetch path (library > shelves > address) at address'
                   )
                 )
               end
