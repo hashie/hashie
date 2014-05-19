@@ -21,6 +21,11 @@ describe Hashie::Extensions::IgnoreUndeclared do
     it 'works with translated properties (with string keys)' do
       expect(subject.new(provence: 'Ontario').state).to eq('Ontario')
     end
+
+    it 'requires properties to be declared on assignment' do
+      hash = subject.new(city: 'Toronto')
+      expect { hash.country = 'Canada' }.to raise_error(NoMethodError)
+    end
   end
 
   context 'combined with DeepMerge' do
@@ -30,17 +35,12 @@ describe Hashie::Extensions::IgnoreUndeclared do
       property :some_key
     end
 
-    it 'requires properties to be declared on assignment' do
-      hash = ForgivingTrashWithMerge.new(some_ignored_key: 17, some_key: 12)
-      expect { hash.deep_merge(some_other_key: 55) }.to raise_error(NoMethodError)
-    end
-
     it 'deep merges' do
       class ForgivingTrashWithMergeAndProperty < ForgivingTrashWithMerge
         property :some_other_key
       end
       hash = ForgivingTrashWithMergeAndProperty.new(some_ignored_key: 17, some_key: 12)
-      expect(hash.deep_merge(some_other_key: 55)).to eq(some_key: 12, some_other_key: 55)
+      expect(hash.deep_merge(some_other_key: 55, some_ignored_key: 18)).to eq(some_key: 12, some_other_key: 55)
     end
   end
 end

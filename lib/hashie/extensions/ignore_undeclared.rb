@@ -36,6 +36,10 @@ module Hashie
           end
         end if attributes
       end
+
+      def property_exists?(property)
+        self.class.property?(property)
+      end
     end
   end
 end
