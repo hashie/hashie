@@ -1,7 +1,7 @@
 Upgrading Hashie
 ================
 
-### Upgrading to 2.2
+### Upgrading to 3.0
 
 #### Compatibility with Rails 4 Strong Parameters
 
