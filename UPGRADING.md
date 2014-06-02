@@ -9,10 +9,9 @@ Version 2.1 introduced support to prevent default Rails 4 mass-assignment protec
 
 To enable 2.1 compatible behavior, install ['hashie\_rails' gem](http://rubygems.org/gems/hashie_rails). 
 
-```ruby
-class Mash
-  include Hashie::Extensions::Mash::ActiveModel
-end
+```bash
+gem install hashie_rails
+```
 
 See [Mash and Rails 4 Strong Parameters](README.md#mash-and-rails-4-strong-parameters) for more details.
 
