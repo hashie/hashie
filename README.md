@@ -236,14 +236,10 @@ p.trick # => NoMethodError
 
 ### Mash and Rails 4 Strong Parameters
 
-If you're using [Rails 4 strong parameters](http://edgeguides.rubyonrails.org/action_controller_overview.html#strong-parameters), you will get a [ForbiddenAttributesProtection](https://github.com/rails/strong_parameters/blob/master/lib/active_model/forbidden_attributes_protection.rb) exceptions when mass-assigning attributes.
+To allow compatibility with Rails 4 use ['hashie\_rails' gem](http://rubygems.org/gems/hashie_rails)
 
-To allow mass assignment, add the following initializer in config/initializers/mash.rb. This prevents Mash from responding to `:permitted?` and therefore triggering this behavior in [ForbiddenAttributesProtection](https://github.com/rails/strong_parameters/blob/master/lib/active_model/forbidden_attributes_protection.rb).
-
-```ruby
-class Mash
-  include Hashie::Extensions::Mash::ActiveModel
-end
+```bash
+gem install hashie_rails
 ```
 
 ## Trash
