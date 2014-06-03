@@ -345,16 +345,6 @@ describe Hashie::Mash do
       expect(subject).not_to be_respond_to(:xyz)
       expect { subject.method(:xyz) }.to raise_error(NameError)
     end
-
-    it 'does not respond to permitted?' do
-      expect(subject).to be_respond_to(:permitted?)
-      klass = Class.new(Hashie::Mash) do
-        include Hashie::Extensions::Mash::ActiveModel
-      end
-      expect(klass.new).not_to be_respond_to(:permitted?)
-      expect { klass.new.method(:permitted?) }.to raise_error(NameError)
-      expect { klass.new.permitted? }.to raise_error(ArgumentError)
-    end
   end
 
   context '#initialize' do
