@@ -12,7 +12,7 @@ $ gem install hashie
 
 ## Upgrading
 
-You're reading the documentation for the next release of Hashie, which should be 2.2. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.1.1](https://github.com/intridea/hashie/blob/v2.1.1/README.md).
+You're reading the documentation for the stable release of Hashie, 3.0. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version.
 
 ## Hash Extensions
 
@@ -236,7 +236,7 @@ p.trick # => NoMethodError
 
 ### Mash and Rails 4 Strong Parameters
 
-To enable compatibility with Rails 4 use the ['hashie\_rails' gem](http://rubygems.org/gems/hashie_rails).
+To enable compatibility with Rails 4 use the [hashie_rails](http://rubygems.org/gems/hashie_rails) gem.
 
 ## Trash
 

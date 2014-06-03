@@ -1,4 +1,4 @@
-## 3.0 (Next)
+## 3.0 (6/3/2014)
 
 **Note:** This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
 

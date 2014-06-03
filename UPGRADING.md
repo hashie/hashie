@@ -5,11 +5,11 @@ Upgrading Hashie
 
 #### Compatibility with Rails 4 Strong Parameters
 
-Version 2.1 introduced support to prevent default Rails 4 mass-assignment protection behavior. This was [issue #89](https://github.com/intridea/hashie/issues/89), resolved in [#104](https://github.com/intridea/hashie/pull/104). In version 2.2 this behavior has been removed in [#147](https://github.com/intridea/hashie/pull/147) in favor of a mixin and extracted into a separate gem in 3.0.
+Version 2.1 introduced support to prevent default Rails 4 mass-assignment protection behavior. This was [issue #89](https://github.com/intridea/hashie/issues/89), resolved in [#104](https://github.com/intridea/hashie/pull/104). In version 2.2 this behavior has been removed in [#147](https://github.com/intridea/hashie/pull/147) in favor of a mixin and finally extracted into a separate gem in Hashie 3.0.
 
-To enable 2.1 compatible behavior, use the ['hashie\_rails' gem](http://rubygems.org/gems/hashie_rails).
+To enable 2.1 compatible behavior with Rails 4, use the [hashie_rails](http://rubygems.org/gems/hashie_rails) gem.
 
-```bash
+```
 gem 'hashie_rails'
 ```
 
