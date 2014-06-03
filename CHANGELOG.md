@@ -1,3 +1,7 @@
+## Next Release
+
+* Your contribution here.
+
 ## 3.0 (6/3/2014)
 
 **Note:** This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
@@ -8,7 +12,6 @@
 * [#152](https://github.com/intridea/hashie/pull/152): Do not automatically stringify keys in Hashie::Hash#to_hash, pass `:stringify_keys` to achieve backward compatible behavior - [@dblock](https://github.com/dblock).
 * [#148](https://github.com/intridea/hashie/pull/148): Consolidated Hashie::Hash#stringify_keys implementation - [@dblock](https://github.com/dblock).
 * [#149](https://github.com/intridea/hashie/issues/149): Allow IgnoreUndeclared and DeepMerge to be used with undeclared properties - [@jhaesus](https://github.com/jhaesus).
-* Your contribution here.
 
 ## 2.1.1 (4/12/2014)
 
