@@ -103,12 +103,12 @@ describe Hashie::Extensions::IndifferentAccess do
       it 'removes old keys' do
         [:foo, 'foo'].each do |k|
           expect(h[k]).to be_nil
-          expect(h.key?(k)).to be_false
+          expect(h.key?(k)).to be_falsy
         end
       end
 
       it 'creates new keys with indifferent access' do
-        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h.key?(k)).to be_true }
+        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h.key?(k)).to be_truthy }
         expect(h[:bar]).to eq 'baz'
         expect(h['bar']).to eq 'baz'
         expect(h[:hi]).to eq 'bye'

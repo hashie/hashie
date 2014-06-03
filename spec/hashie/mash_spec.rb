@@ -5,7 +5,7 @@ describe Hashie::Mash do
   subject { Hashie::Mash.new }
 
   it 'inherits from Hash' do
-    expect(subject.is_a?(Hash)).to be_true
+    expect(subject.is_a?(Hash)).to be_truthy
   end
 
   it 'sets hash values through method= calls' do
@@ -33,9 +33,9 @@ describe Hashie::Mash do
   end
 
   it 'tests for already set values when passed a ? method' do
-    expect(subject.test?).to be_false
+    expect(subject.test?).to be_falsy
     subject.test = 'abc'
-    expect(subject.test?).to be_true
+    expect(subject.test?).to be_truthy
   end
 
   it 'returns false on a ? method if a value has been set to nil or false' do
@@ -47,7 +47,7 @@ describe Hashie::Mash do
 
   it 'makes all [] and []= into strings for consistency' do
     subject['abc'] = 123
-    expect(subject.key?('abc')).to be_true
+    expect(subject.key?('abc')).to be_truthy
     expect(subject['abc']).to eq 123
   end
 
@@ -72,7 +72,7 @@ describe Hashie::Mash do
   end
 
   it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
-    expect(subject.abc!.is_a?(Hashie::Mash)).to be_true
+    expect(subject.abc!.is_a?(Hashie::Mash)).to be_truthy
   end
 
   it 'returns the existing value when passed a bang method for an existing key' do
@@ -81,7 +81,7 @@ describe Hashie::Mash do
   end
 
   it 'returns a Hashie::Mash when passed an under bang method to a non-existenct key' do
-    expect(subject.abc_.is_a?(Hashie::Mash)).to be_true
+    expect(subject.abc_.is_a?(Hashie::Mash)).to be_truthy
   end
 
   it 'returns the existing value when passed an under bang method for an existing key' do
@@ -90,7 +90,7 @@ describe Hashie::Mash do
   end
 
   it '#initializing_reader returns a Hashie::Mash when passed a non-existent key' do
-    expect(subject.initializing_reader(:abc).is_a?(Hashie::Mash)).to be_true
+    expect(subject.initializing_reader(:abc).is_a?(Hashie::Mash)).to be_truthy
   end
 
   it 'allows for multi-level assignment through bang methods' do
@@ -218,18 +218,18 @@ describe Hashie::Mash do
       end
 
       it 'sets all specified keys to their corresponding values' do
-        expect(subject.middle_name?).to be_true
-        expect(subject.details?).to be_true
+        expect(subject.middle_name?).to be_truthy
+        expect(subject.details?).to be_truthy
         expect(subject.middle_name).to eq 'Cain'
-        expect(subject.details.city?).to be_true
+        expect(subject.details.city?).to be_truthy
         expect(subject.details.city).to eq 'Imagination'
       end
 
       it 'leaves only specified keys' do
         expect(subject.keys.sort).to eq %w(details middle_name)
-        expect(subject.first_name?).to be_false
+        expect(subject.first_name?).to be_falsy
         expect(subject).not_to respond_to(:first_name)
-        expect(subject.last_name?).to be_false
+        expect(subject.last_name?).to be_falsy
         expect(subject).not_to respond_to(:last_name)
       end
     end
@@ -366,7 +366,7 @@ describe Hashie::Mash do
 
     it 'converts hashes recursively into Hashie::Mashes' do
       converted = Hashie::Mash.new(a: { b: 1, c: { d: 23 } })
-      expect(converted.a.is_a?(Hashie::Mash)).to be_true
+      expect(converted.a.is_a?(Hashie::Mash)).to be_truthy
       expect(converted.a.b).to eq 1
       expect(converted.a.c.d).to eq 23
     end
@@ -393,15 +393,15 @@ describe Hashie::Mash do
       expect(initial.default_proc).not_to be_nil
       expect(initial.default).to be_nil
       expect(initial.test).to eq []
-      expect(initial.test?).to be_true
+      expect(initial.test?).to be_truthy
     end
 
     it 'converts Hashie::Mashes within Arrays back to Hashes' do
       initial_hash = { 'a' => [{ 'b' => 12, 'c' => ['d' => 50, 'e' => 51] }, 23] }
       converted = Hashie::Mash.new(initial_hash)
-      expect(converted.to_hash['a'].first.is_a?(Hashie::Mash)).to be_false
-      expect(converted.to_hash['a'].first.is_a?(Hash)).to be_true
-      expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_false
+      expect(converted.to_hash['a'].first.is_a?(Hashie::Mash)).to be_falsy
+      expect(converted.to_hash['a'].first.is_a?(Hash)).to be_truthy
+      expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_falsy
     end
   end
 

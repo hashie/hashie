@@ -219,17 +219,17 @@ describe DashTest do
     end
 
     it 'checks if a property exists' do
-      expect(described_class.property?(:first_name)).to be_true
-      expect(described_class.property?('first_name')).to be_false
+      expect(described_class.property?(:first_name)).to be_truthy
+      expect(described_class.property?('first_name')).to be_falsy
     end
 
     it 'checks if a property is required' do
-      expect(described_class.required?(:first_name)).to be_true
-      expect(described_class.required?('first_name')).to be_false
+      expect(described_class.required?(:first_name)).to be_truthy
+      expect(described_class.required?('first_name')).to be_falsy
     end
 
     it 'doesnt include property from subclass' do
-      expect(described_class.property?(:last_name)).to be_false
+      expect(described_class.property?(:last_name)).to be_falsy
     end
 
     it 'lists declared defaults' do
@@ -237,7 +237,7 @@ describe DashTest do
     end
 
     it 'allows properties that end in bang' do
-      expect(PropertyBangTest.property?(:important!)).to be_true
+      expect(PropertyBangTest.property?(:important!)).to be_truthy
     end
   end
 
@@ -329,11 +329,11 @@ describe SubclassedTest do
   it { should respond_to(:last_name=) }
 
   it 'has one additional property' do
-    expect(described_class.property?(:last_name)).to be_true
+    expect(described_class.property?(:last_name)).to be_truthy
   end
 
   it "didn't override superclass inheritance logic" do
-    expect(described_class.instance_variable_get('@inheritance_test')).to be_true
+    expect(described_class.instance_variable_get('@inheritance_test')).to be_truthy
   end
 end
 
@@ -349,8 +349,8 @@ describe MixedPropertiesTest do
   it { should respond_to(:symbol) }
 
   it 'property?' do
-    expect(described_class.property?('string')).to be_true
-    expect(described_class.property?(:symbol)).to be_true
+    expect(described_class.property?('string')).to be_truthy
+    expect(described_class.property?(:symbol)).to be_truthy
   end
 
   it 'fetch' do
