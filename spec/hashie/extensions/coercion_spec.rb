@@ -114,6 +114,38 @@ describe Hashie::Extensions::Coercion do
         expect(tweet[:user]).to be_a(UserMash)
       end
     end
+
+    context 'when used with IndifferentAccess to coerce a Mash' do
+      class MyHash < Hash
+        include Hashie::Extensions::Coercion
+        include Hashie::Extensions::IndifferentAccess
+        include Hashie::Extensions::MergeInitializer
+      end
+
+      class UserHash < MyHash
+      end
+
+      class TweetHash < MyHash
+        coerce_key :user, UserHash
+      end
+
+      it 'coerces with instance initialization' do
+        tweet = TweetHash.new(user: Hashie::Mash.new(email: 'foo@bar.com'))
+        expect(tweet[:user]).to be_a(UserHash)
+      end
+
+      it 'coerces when setting with string index' do
+        tweet = TweetHash.new
+        tweet['user'] = Hashie::Mash.new(email: 'foo@bar.com')
+        expect(tweet[:user]).to be_a(UserHash)
+      end
+
+      it 'coerces when setting with symbol index' do
+        tweet = TweetHash.new
+        tweet[:user] = Hashie::Mash.new(email: 'foo@bar.com')
+        expect(tweet[:user]).to be_a(UserHash)
+      end
+    end
   end
 
   describe '#coerce_value' do

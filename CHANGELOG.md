@@ -1,5 +1,6 @@
 ## Next Release
 
+* [#165](https://github.com/intridea/hashie/pull/165): Fixed stack overflow when coercing mashes that contain ActiveSupport::HashWithIndifferentAccess values. See [#164](https://github.com/intridea/hashie/pull/164) and [#166](https://github.com/intridea/hashie/pull/166) for details. - [@numinit](https://github.com/numinit) and [@kgrz](https://github.com/kgrz).
 * Your contribution here.
 
 ## 3.0 (6/3/2014)

@@ -9,3 +9,6 @@ end
 gemspec
 
 gem 'rubocop', '0.21.0'
+
+# ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
+gem 'activesupport'
