@@ -9,3 +9,4 @@ end
 gemspec
 
 gem 'rubocop', '0.21.0'
+gem 'activesupport'
