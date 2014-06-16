@@ -142,6 +142,19 @@ module Hashie
       self
     end
 
+    def update_properties(properties)
+      initialize_attributes(properties)
+
+      self.class.defaults.each_pair do |prop, value|
+        self[prop] = begin
+          value.dup
+        rescue TypeError
+          value
+        end if self[prop].nil?
+      end
+      assert_required_properties_set!
+    end
+
     private
 
     def initialize_attributes(attributes)
