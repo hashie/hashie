@@ -77,7 +77,7 @@ module Hashie
     #
     def property_exists?(property)
       unless self.class.property?(property)
-        fail NoMethodError, "The property '#{property}' is not defined for this Trash."
+        fail NoMethodError, "The property '#{property}' is not defined for this Trash(#{self.class.name})."
       end
       true
     end

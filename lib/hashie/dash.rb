@@ -152,7 +152,7 @@ module Hashie
 
     def assert_property_exists!(property)
       unless self.class.property?(property)
-        fail NoMethodError, "The property '#{property}' is not defined for this Dash."
+        fail NoMethodError, "The property '#{property}' is not defined for this Dash(#{self.class.name})."
       end
     end
 
@@ -164,13 +164,13 @@ module Hashie
 
     def assert_property_set!(property)
       if send(property).nil?
-        fail ArgumentError, "The property '#{property}' is required for this Dash."
+        fail ArgumentError, "The property '#{property}' is required for this Dash(#{self.class.name})."
       end
     end
 
     def assert_property_required!(property, value)
       if self.class.required?(property) && value.nil?
-        fail ArgumentError, "The property '#{property}' is required for this Dash."
+        fail ArgumentError, "The property '#{property}' is required for this Dash(#{self.class.name})."
       end
     end
   end
