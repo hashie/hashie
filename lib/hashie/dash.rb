@@ -142,8 +142,8 @@ module Hashie
       self
     end
 
-    def update_properties(properties)
-      initialize_attributes(properties)
+    def update_attributes!(attributes)
+      initialize_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
         self[prop] = begin

@@ -267,11 +267,11 @@ describe DashTest do
     end
   end
 
-  describe '#update_properties' do
+  describe '#update_attributes!(params)' do
     let(:params) { { first_name: 'Alice', email: 'alice@example.com' } }
 
     it 'update the attributes' do
-      subject.update_properties(params)
+      subject.update_attributes!(params)
       expect(subject.first_name).to eq params[:first_name]
       expect(subject.email).to eq params[:email]
       expect(subject.count).to eq subject.count
@@ -281,7 +281,7 @@ describe DashTest do
       let(:params) { { first_name: nil, email: 'alice@example.com' } }
 
       it 'raise an ArgumentError' do
-        expect { subject.update_properties(params) }.to raise_error(ArgumentError)
+        expect { subject.update_attributes!(params) }.to raise_error(ArgumentError)
       end
     end
 
@@ -289,7 +289,7 @@ describe DashTest do
       let(:params) { { count: nil, email: 'alice@example.com' } }
 
       it 'set the property back to the default value' do
-        subject.update_properties(params)
+        subject.update_attributes!(params)
         expect(subject.email).to eq params[:email]
         expect(subject.count).to eq subject.class.defaults[:count]
       end
