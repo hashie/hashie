@@ -205,6 +205,11 @@ p.occupation   # => 'Rubyist'
 p.email        # => 'abc@def.com'
 p[:awesome]    # => NoMethodError
 p[:occupation] # => 'Rubyist'
+p.update_properties(name: 'Trudy', occupation: 'Evil')
+p.occupation   # => 'Evil'
+p.name         # => 'Trudy'
+p.update_properties(occupation: nil)
+p.occupation   # => 'Rubyist'
 ```
 
 Properties defined as symbols are not the same thing as properties defined as strings.
