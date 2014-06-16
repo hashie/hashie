@@ -76,9 +76,7 @@ module Hashie
     # Raises an NoMethodError if the property doesn't exist
     #
     def property_exists?(property)
-      unless self.class.property?(property)
-        fail NoMethodError, "The property '#{property}' is not defined for (#{self.class.name})."
-      end
+      fail_no_property_error!(property) unless self.class.property?(property)
       true
     end
 
