@@ -274,7 +274,7 @@ describe DashTest do
       subject.update_attributes!(params)
       expect(subject.first_name).to eq params[:first_name]
       expect(subject.email).to eq params[:email]
-      expect(subject.count).to eq subject.count
+      expect(subject.count).to eq subject.class.defaults[:count]
     end
 
     context 'when required property is update to nil' do
