@@ -91,7 +91,7 @@ module Hashie
       end
 
       initialize_attributes(attributes)
-      assert_required_properties_set!
+      assert_required_attributes_set!
     end
 
     alias_method :_regular_reader, :[]
@@ -142,6 +142,19 @@ module Hashie
       self
     end
 
+    def update_attributes!(attributes)
+      initialize_attributes(attributes)
+
+      self.class.defaults.each_pair do |prop, value|
+        self[prop] = begin
+          value.dup
+        rescue TypeError
+          value
+        end if self[prop].nil?
+      end
+      assert_required_attributes_set!
+    end
+
     private
 
     def initialize_attributes(attributes)
@@ -156,7 +169,7 @@ module Hashie
       end
     end
 
-    def assert_required_properties_set!
+    def assert_required_attributes_set!
       self.class.required_properties.each do |required_property|
         assert_property_set!(required_property)
       end

@@ -18,6 +18,14 @@ class DashNoRequiredTest < Hashie::Dash
   property :count, default: 0
 end
 
+class DashWithCoercion < Hashie::Dash
+  include Hashie::Extensions::Coercion
+  property :person
+  property :city
+
+  coerce_key :person, ::DashNoRequiredTest
+end
+
 class PropertyBangTest < Hashie::Dash
   property :important!
 end
@@ -266,6 +274,49 @@ describe DashTest do
       end
     end
   end
+
+  describe '#update_attributes!(params)' do
+    let(:params) { { first_name: 'Alice', email: 'alice@example.com' } }
+
+    context 'when there is coercion' do
+      let(:params_before) { { city: 'nyc', person: { first_name: 'Bob', email: 'bob@example.com' } } }
+      let(:params_after) { { city: 'sfo', person: { first_name: 'Alice', email: 'alice@example.com' } } }
+
+      subject { DashWithCoercion.new(params_before) }
+
+      it 'update the attributes' do
+        expect(subject.person.first_name).to eq params_before[:person][:first_name]
+        subject.update_attributes!(params_after)
+        expect(subject.person.first_name).to eq params_after[:person][:first_name]
+      end
+    end
+
+    it 'update the attributes' do
+      subject.update_attributes!(params)
+      expect(subject.first_name).to eq params[:first_name]
+      expect(subject.email).to eq params[:email]
+      expect(subject.count).to eq subject.class.defaults[:count]
+    end
+
+    context 'when required property is update to nil' do
+      let(:params) { { first_name: nil, email: 'alice@example.com' } }
+
+      it 'raise an ArgumentError' do
+        expect { subject.update_attributes!(params) }.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when a default property is update to nil' do
+      let(:params) { { count: nil, email: 'alice@example.com' } }
+
+      it 'set the property back to the default value' do
+        subject.update_attributes!(params)
+        expect(subject.email).to eq params[:email]
+        expect(subject.count).to eq subject.class.defaults[:count]
+      end
+    end
+  end
+
 end
 
 describe Hashie::Dash, 'inheritance' do
