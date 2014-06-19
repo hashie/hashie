@@ -6,6 +6,16 @@ describe Hashie::Extensions::Dash::IndifferentAccess do
     property :name
   end
 
+  context 'when included in Dash' do
+    let(:patch) { Hashie::Extensions::Dash::IndifferentAccess::ClassMethods }
+    let(:dash_class) { Class.new(Hashie::Dash) }
+
+    it 'extends with the patch once' do
+      expect(patch).to receive(:extended).with(dash_class).once
+      dash_class.send(:include, Hashie::Extensions::Dash::IndifferentAccess)
+    end
+  end
+
   context 'initialized with' do
     it 'string' do
       instance = DashWithIndifferentAccess.new('name' => 'Name')
