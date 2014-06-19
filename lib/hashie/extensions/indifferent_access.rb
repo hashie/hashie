@@ -24,7 +24,10 @@ module Hashie
     #
     module IndifferentAccess
       def self.included(base)
-        base.extend(Hashie::Extensions::Dash::IndifferentAccess::ClassMethods) if base <= Hashie::Dash
+        Hashie::Extensions::Dash::IndifferentAccess::ClassMethods.tap do |extension|
+          base.extend(extension) if base <= Hashie::Dash && !base.singleton_class.included_modules.include?(extension)
+        end
+
         base.class_eval do
           alias_method :regular_writer, :[]=
           alias_method :[]=, :indifferent_writer
