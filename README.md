@@ -81,8 +81,6 @@ This extension can be mixed in to instantly give you indifferent access to your 
 
 A unique feature of Hashie's IndifferentAccess mixin is that it will inject itself recursively into subhashes *without* reinitializing the hash in question. This means you can safely merge together indifferent and non-indifferent hashes arbitrarily deeply without worrying about whether you'll be able to `hash[:other][:another]` properly.
 
-Use `Hashie::Extensions::Dash::IndifferentAccess` for instances of `Hashie::Dash`.
-
 ### IgnoreUndeclared
 
 This extension can be mixed in to silently ignore undeclared properties on initialization instead of raising an error. This is useful when using a Trash to capture a subset of a larger hash.
@@ -205,6 +203,11 @@ p.occupation   # => 'Rubyist'
 p.email        # => 'abc@def.com'
 p[:awesome]    # => NoMethodError
 p[:occupation] # => 'Rubyist'
+p.update_attributes!(name: 'Trudy', occupation: 'Evil')
+p.occupation   # => 'Evil'
+p.name         # => 'Trudy'
+p.update_attributes!(occupation: nil)
+p.occupation   # => 'Rubyist'
 ```
 
 Properties defined as symbols are not the same thing as properties defined as strings.

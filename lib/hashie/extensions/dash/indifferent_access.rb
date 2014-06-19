@@ -14,6 +14,21 @@ module Hashie
             name = name.to_s
             !!properties.find { |property| property.to_s == name }
           end
+
+          def translation_exists?(name)
+            name = name.to_s
+            !!translations.keys.find { |key| key.to_s == name }
+          end
+
+          def transformed_property(property_name, value)
+            transform = transforms[property_name] || transforms[:"#{property_name}"]
+            transform.call(value)
+          end
+
+          def transformation_exists?(name)
+            name = name.to_s
+            !!transforms.keys.find { |key| key.to_s == name }
+          end
         end
       end
     end

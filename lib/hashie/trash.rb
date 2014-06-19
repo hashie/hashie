@@ -42,13 +42,25 @@ module Hashie
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
-      if self.class.translations.key? property
+      if self.class.translation_exists? property
         send("#{property}=", value)
-      elsif self.class.transforms.key? property
-        super property, self.class.transforms[property].call(value)
+      elsif self.class.transformation_exists? property
+        super property, self.class.transformed_property(property, value)
       elsif property_exists? property
         super
       end
+    end
+
+    def self.transformed_property(property_name, value)
+      transforms[property_name].call(value)
+    end
+
+    def self.translation_exists?(name)
+      translations.key? name
+    end
+
+    def self.transformation_exists?(name)
+      transforms.key? name
     end
 
     def self.permitted_input_keys
