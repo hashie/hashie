@@ -43,6 +43,14 @@ class DeferredTest < Hashie::Dash
 end
 
 describe DashTest do
+  def property_required_error(property)
+    [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
+  end
+
+  def no_property_error(property)
+    [NoMethodError, "The property '#{property}' is not defined for #{subject.class.name}."]
+  end
+
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
 
   it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
@@ -68,30 +76,30 @@ describe DashTest do
   it { should_not respond_to(:nonexistent) }
 
   it 'errors out for a non-existent property' do
-    expect { subject['nonexistent'] }.to raise_error(NoMethodError)
+    expect { subject['nonexistent'] }.to raise_error(*no_property_error('nonexistent'))
   end
 
   it 'errors out when attempting to set a required property to nil' do
-    expect { subject.first_name = nil }.to raise_error(ArgumentError)
+    expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
   end
 
   context 'writing to properties' do
     it 'fails writing a required property to nil' do
-      expect { subject.first_name = nil }.to raise_error(ArgumentError)
+      expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
     end
 
     it 'fails writing a required property to nil using []=' do
-      expect { subject[:first_name] = nil }.to raise_error(ArgumentError)
+      expect { subject[:first_name] = nil }.to raise_error(*property_required_error('first_name'))
     end
 
     it 'fails writing to a non-existent property using []=' do
-      expect { subject['nonexistent'] = 123 }.to raise_error(NoMethodError)
+      expect { subject['nonexistent'] = 123 }.to raise_error(*no_property_error('nonexistent'))
     end
 
     it 'works for an existing property using []=' do
       subject[:first_name] = 'Bob'
       expect(subject[:first_name]).to eq 'Bob'
-      expect { subject['first_name'] }.to raise_error(NoMethodError)
+      expect { subject['first_name'] }.to raise_error(*no_property_error('first_name'))
     end
 
     it 'works for an existing property using a method call' do
@@ -102,7 +110,7 @@ describe DashTest do
 
   context 'reading from properties' do
     it 'fails reading from a non-existent property using []' do
-      expect { subject['nonexistent'] }.to raise_error(NoMethodError)
+      expect { subject['nonexistent'] }.to raise_error(*no_property_error('nonexistent'))
     end
 
     it 'is able to retrieve properties through blocks' do
@@ -133,7 +141,7 @@ describe DashTest do
 
   describe '#new' do
     it 'fails with non-existent properties' do
-      expect { described_class.new(bork: '') }.to raise_error(NoMethodError)
+      expect { described_class.new(bork: '') }.to raise_error(*no_property_error('bork'))
     end
 
     it 'sets properties that it is able to' do
@@ -152,7 +160,7 @@ describe DashTest do
     end
 
     it 'fails when required values are missing' do
-      expect { DashTest.new }.to raise_error(ArgumentError)
+      expect { DashTest.new }.to raise_error(*property_required_error('first_name'))
     end
 
     it 'does not overwrite default values' do
@@ -176,11 +184,11 @@ describe DashTest do
     end
 
     it 'fails with non-existent properties' do
-      expect { subject.merge(middle_name: 'James') }.to raise_error(NoMethodError)
+      expect { subject.merge(middle_name: 'James') }.to raise_error(*no_property_error('middle_name'))
     end
 
     it 'errors out when attempting to set a required property to nil' do
-      expect { subject.merge(first_name: nil) }.to raise_error(ArgumentError)
+      expect { subject.merge(first_name: nil) }.to raise_error(*property_required_error('first_name'))
     end
 
     context 'given a block' do
