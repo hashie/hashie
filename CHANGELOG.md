@@ -1,4 +1,8 @@
-## 3.1 (7/25/2014)
+## Next
+
+* Your contribution here.
+
+## 3.1 (6/25/2014)
 
 * [#169](https://github.com/intridea/hashie/pull/169): Hash#to_hash will also convert nested objects that implement to_hash - [@gregory](https://github.com/gregory).
 * [#171](https://github.com/intridea/hashie/pull/171): Include Trash and Dash class name when raising `NoMethodError` - [@gregory](https://github.com/gregory).
