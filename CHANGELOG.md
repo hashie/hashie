@@ -1,11 +1,10 @@
-## Next Release
+## 3.1 (7/25/2014)
 
 * [#169](https://github.com/intridea/hashie/pull/169): Hash#to_hash will also convert nested objects that implement to_hash - [@gregory](https://github.com/gregory).
 * [#171](https://github.com/intridea/hashie/pull/171): Include Trash and Dash class name when raising `NoMethodError` - [@gregory](https://github.com/gregory).
 * [#172](https://github.com/intridea/hashie/pull/172): Added Dash and Trash#update_attributes! - [@gregory](https://github.com/gregory).
 * [#173](https://github.com/intridea/hashie/pull/173): Auto include Dash::IndifferentAccess when IndiferentAccess is included in Dash - [@gregory](https://github.com/gregory).
 * [#174](https://github.com/intridea/hashie/pull/174): Fixed `from` and `transform_with` Trash features when IndifferentAccess is included - [@gregory](https://github.com/gregory).
-* Your contribution here.
 
 ## 3.0 (6/3/2014)
 

@@ -12,7 +12,7 @@ $ gem install hashie
 
 ## Upgrading
 
-You're reading the documentation for the next release of Hashie, which should be 3.0.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.0](https://github.com/intridea/hashie/blob/v3.0.0/README.md).
+You're reading the documentation for the stable release of Hashie, 3.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version.
 
 ## Hash Extensions
 
