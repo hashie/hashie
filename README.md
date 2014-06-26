@@ -52,6 +52,50 @@ class SpecialHash < Hash
 end
 ```
 
+### Coercing Collections
+
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :mentions, Array[User]
+  coerce_key :friends, Set[User]
+end
+
+user_hash = { name: "Bob" }
+mentions_hash= [user_hash, user_hash]
+friends_hash = [user_hash]
+tweet = Tweet.new(mentions: mentions_hash, friends: friends_hash)
+# => automatically calls User.coerce(user_hash) or
+#    User.new(user_hash) if that isn't present on each element of the array
+
+tweet.mentions.map(&:class) # => [User, User]
+tweet.friends.class # => Set
+```
+
+### Hash attributes Coercion
+
+```ruby
+class Relation
+  def initialize(string)
+    @relation = string
+  end
+end
+
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :relations, Hash[User => Relation]
+end
+
+user_hash = { name: "Bob" }
+relations_hash= { user_hash => "father", user_hash => "friend" }
+tweet = Tweet.new(relations: relations_hash)
+tweet.relations.map { |k,v| [k.class, v.class] } # => [[User, Relation], [User, Relation]]
+tweet.relations.class # => Hash
+
+# => automatically calls User.coerce(user_hash) on each key
+#    and Relation.new on each value since Relation doesn't define the `coerce` class method
+```
+
 ### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.

@@ -50,6 +50,48 @@ describe Hashie::Extensions::Coercion do
       expect(instance[:bar]).to be_coerced
     end
 
+    it 'supports coercion for Array' do
+      subject.coerce_key :foo, Array[Coercable]
+
+      instance[:foo] = %w('bar', 'bar2')
+      expect(instance[:foo]).to all(be_coerced)
+      expect(instance[:foo]).to be_a(Array)
+    end
+
+    it 'supports coercion for Set' do
+      subject.coerce_key :foo, Set[Coercable]
+
+      instance[:foo] = Set.new(%w('bar', 'bar2'))
+      expect(instance[:foo]).to all(be_coerced)
+      expect(instance[:foo]).to be_a(Set)
+    end
+
+    it 'supports coercion for Set of primitive' do
+      subject.coerce_key :foo, Set[Initializable]
+
+      instance[:foo] = %w('bar', 'bar2')
+      expect(instance[:foo].map(&:value)).to all(eq 'String')
+      expect(instance[:foo]).to be_none { |v| v.coerced? }
+      expect(instance[:foo]).to be_a(Set)
+    end
+
+    it 'supports coercion for Hash' do
+      subject.coerce_key :foo, Hash[Coercable => Coercable]
+
+      instance[:foo] = { 'bar_key' => 'bar_value', 'bar2_key' => 'bar2_value' }
+      expect(instance[:foo].keys).to all(be_coerced)
+      expect(instance[:foo].values).to all(be_coerced)
+      expect(instance[:foo]).to be_a(Hash)
+    end
+
+    it 'supports coercion for Hash with primitive as value' do
+      subject.coerce_key :foo, Hash[Coercable => Initializable]
+
+      instance[:foo] = { 'bar_key' => '1', 'bar2_key' => '2' }
+      expect(instance[:foo].values.map(&:value)).to all(eq 'String')
+      expect(instance[:foo].keys).to all(be_coerced)
+    end
+
     it 'calls #new if no coerce method is available' do
       subject.coerce_key :foo, Initializable
 
