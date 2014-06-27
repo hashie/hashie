@@ -52,6 +52,30 @@ describe Hashie::Extensions::IndifferentAccess do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
         expect(h.values_at('foo', :baz)).to eq %w(bar qux)
       end
+
+      it 'returns the same instance of the hash that was set' do
+        hash = Hash.new
+        h = subject.build(foo: hash)
+        expect(h.values_at(:foo)[0]).to be(hash)
+      end
+
+      it 'returns the same instance of the array that was set' do
+        array = Array.new
+        h = subject.build(foo: array)
+        expect(h.values_at(:foo)[0]).to be(array)
+      end
+
+      it 'returns the same instance of the string that was set' do
+        str = "my string"
+        h = subject.build(foo: str)
+        expect(h.values_at(:foo)[0]).to be(str)
+      end
+
+      it 'returns the same instance of the object that was set' do
+        object = Object.new
+        h = subject.build(foo: object)
+        expect(h.values_at(:foo)[0]).to be(object)
+      end
     end
 
     describe '#fetch' do
@@ -59,6 +83,30 @@ describe Hashie::Extensions::IndifferentAccess do
         h = subject.build(foo: 'bar')
         expect(h.fetch(:foo)).to eq h.fetch('foo')
         expect(h.fetch(:foo)).to eq 'bar'
+      end
+
+      it 'returns the same instance of the hash that was set' do
+        hash = Hash.new
+        h = subject.build(foo: hash)
+        expect(h.fetch(:foo)).to be(hash)
+      end
+
+      it 'returns the same instance of the array that was set' do
+        array = Array.new
+        h = subject.build(foo: array)
+        expect(h.fetch(:foo)).to be(array)
+      end
+
+      it 'returns the same instance of the string that was set' do
+        str = "my string"
+        h = subject.build(foo: str)
+        expect(h.fetch(:foo)).to be(str)
+      end
+
+      it 'returns the same instance of the object that was set' do
+        object = Object.new
+        h = subject.build(foo: object)
+        expect(h.fetch(:foo)).to be(object)
       end
     end
 
