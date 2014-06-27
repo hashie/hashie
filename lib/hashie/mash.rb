@@ -128,6 +128,10 @@ module Hashie
       super(convert_key(key))
     end
 
+    def values_at(*keys)
+      super(*keys.map { |key| convert_key(key) })
+    end
+
     alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup
