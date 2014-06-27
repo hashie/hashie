@@ -66,7 +66,7 @@ describe Hashie::Extensions::IndifferentAccess do
       end
 
       it 'returns the same instance of the string that was set' do
-        str = "my string"
+        str = 'my string'
         h = subject.build(foo: str)
         expect(h.values_at(:foo)[0]).to be(str)
       end
@@ -98,7 +98,7 @@ describe Hashie::Extensions::IndifferentAccess do
       end
 
       it 'returns the same instance of the string that was set' do
-        str = "my string"
+        str = 'my string'
         h = subject.build(foo: str)
         expect(h.fetch(:foo)).to be(str)
       end
