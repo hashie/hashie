@@ -72,7 +72,7 @@ tweet.mentions.map(&:class) # => [User, User]
 tweet.friends.class # => Set
 ```
 
-### Hash attributes Coercion
+### Hash Attribute Coercion
 
 ```ruby
 class Relation
