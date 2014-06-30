@@ -10,16 +10,26 @@ module Hashie
         def []=(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
-          if value && into
-            if into.respond_to?(:coerce)
-              value = into.coerce(value)
-            else
-              value = into.new(value)
-            end
+          return super(key, value) unless value && into
+          return super(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
+
+          if into.class >= Hash
+            key_coerce = coerce_or_init(into.flatten[0])
+            value_coerce = coerce_or_init(into.flatten[-1])
+            value = Hash[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
+          else # Enumerable but not Hash: Array, Set
+            value_coerce = coerce_or_init(into.first)
+            value = into.class.new(value.map { |v| value_coerce.call(v) })
           end
 
           super(key, value)
         end
+
+        def coerce_or_init(type)
+          type.respond_to?(:coerce) ? ->(v) { type.coerce(v) } : ->(v) { type.new(v) }
+        end
+
+        private :coerce_or_init
 
         def custom_writer(key, value, _convert = true)
           self[key] = value
