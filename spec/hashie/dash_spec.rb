@@ -440,3 +440,101 @@ describe MixedPropertiesTest do
     expect { subject['symbol'] = 'updated' }.to raise_error(NoMethodError)
   end
 end
+
+class EnumeratedTypeProperties < Hashie::Dash
+  property :name
+  property :role,   in: [:manager, :client, :developer], required: true
+  property :office, in: ['New York', 'London', 'Tokyo']
+end
+
+describe EnumeratedTypeProperties do
+  subject { EnumeratedTypeProperties.new(name: 'Smith', role: :manager, office: 'New York') }
+
+  def property_required_error(property)
+    [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
+  end
+
+  def invalid_enumerated_type_error(property, value)
+    [ArgumentError, "'#{value}' is not a valid value for the property '#{property}' for #{subject.class.name}"]
+  end
+
+  it 'allows for querying of enumerated types' do
+    expect(subject.class.enumerated_type?(:name)).to eq(false)
+    expect(subject.class.enumerated_type?(:role)).to eq(true)
+  end
+
+  it 'allows valid values for optional properties' do
+    expect { subject[:office] = 'London' }.not_to raise_error
+    expect(subject[:office]).to eq('London')
+  end
+
+  it 'allows null values for optional properties' do
+    expect { subject[:office] = nil }.not_to raise_error
+    expect(subject[:office]).to eq(nil)
+  end
+
+  it 'doesn\'t allow invalid values for optional properties' do
+    expect { subject[:office] = 'Paris' }.to raise_error(*invalid_enumerated_type_error(:office, 'Paris'))
+  end
+
+  it 'allows valid values for required properties' do
+    expect { subject[:role] = :manager }.not_to raise_error
+    expect(subject[:role]).to eq(:manager)
+  end
+
+  it 'doesn\'t allow null values for required properties' do
+    expect { subject[:role] = nil }.to raise_error(*property_required_error(:role))
+  end
+
+  it 'doesn\'t allow invalid values for required properties' do
+    expect { subject[:role] = :designer }.to raise_error(*invalid_enumerated_type_error(:role, :designer))
+  end
+
+end
+
+class EnumeratedTypePropertiesSubclass < EnumeratedTypeProperties; end
+
+describe EnumeratedTypePropertiesSubclass do
+  subject { EnumeratedTypePropertiesSubclass.new(name: 'Smith', role: :manager, office: 'New York') }
+
+  def property_required_error(property)
+    [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
+  end
+
+  def invalid_enumerated_type_error(property, value)
+    [ArgumentError, "'#{value}' is not a valid value for the property '#{property}' for #{subject.class.name}"]
+  end
+
+  it 'allows for querying of enumerated types' do
+    expect(subject.class.enumerated_type?(:name)).to eq(false)
+    expect(subject.class.enumerated_type?(:role)).to eq(true)
+  end
+
+  it 'allows valid values for optional properties' do
+    expect { subject[:office] = 'London' }.not_to raise_error
+    expect(subject[:office]).to eq('London')
+  end
+
+  it 'allows null values for optional properties' do
+    expect { subject[:office] = nil }.not_to raise_error
+    expect(subject[:office]).to eq(nil)
+  end
+
+  it 'doesn\'t allow invalid values for optional properties' do
+    expect { subject[:office] = 'Paris' }.to raise_error(*invalid_enumerated_type_error(:office, 'Paris'))
+  end
+
+  it 'allows valid values for required properties' do
+    expect { subject[:role] = :manager }.not_to raise_error
+    expect(subject[:role]).to eq(:manager)
+  end
+
+  it 'doesn\'t allow null values for required properties' do
+    expect { subject[:role] = nil }.to raise_error(*property_required_error(:role))
+  end
+
+  it 'doesn\'t allow invalid values for required properties' do
+    expect { subject[:role] = :designer }.to raise_error(*invalid_enumerated_type_error(:role, :designer))
+  end
+
+end

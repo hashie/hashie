@@ -226,7 +226,9 @@ mash.inspect # => <Hashie::Mash>
 
 ## Dash
 
-Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.
+Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. 
+
+An array of valid values may also be defined for each property, assigning a value that is not included in the list will raise an exception. nil values are accepted, unless the property is also flagged as being required.
 
 ### Example:
 
@@ -235,23 +237,28 @@ class Person < Hashie::Dash
   property :name, required: true
   property :email
   property :occupation, default: 'Rubyist'
+  property :native_language, in: ['English','Spanish','French']
 end
 
 p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
 
 p = Person.new(name: "Bob")
 p.name # => 'Bob'
-p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
+p.name = nil                 # => ArgumentError: The property 'name' is required for this Dash.
 p.email = 'abc@def.com'
-p.occupation   # => 'Rubyist'
-p.email        # => 'abc@def.com'
-p[:awesome]    # => NoMethodError
-p[:occupation] # => 'Rubyist'
+p.occupation                 # => 'Rubyist'
+p.email                      # => 'abc@def.com'
+p[:awesome]                  # => NoMethodError
+p[:occupation]               # => 'Rubyist'
 p.update_attributes!(name: 'Trudy', occupation: 'Evil')
-p.occupation   # => 'Evil'
-p.name         # => 'Trudy'
+p.occupation                 # => 'Evil'
+p.name                       # => 'Trudy'
 p.update_attributes!(occupation: nil)
-p.occupation   # => 'Rubyist'
+p.occupation                 # => 'Rubyist'
+p.native_language            # => nil
+p.native_language = 'English'
+p.native_language            # => 'English'
+p.native_language = 'German' # => ArgumentError: 'German' is not a valid value for the property 'native\_language' for this Dash.
 ```
 
 Properties defined as symbols are not the same thing as properties defined as strings.

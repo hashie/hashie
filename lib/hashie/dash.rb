@@ -47,15 +47,19 @@ module Hashie
         @subclasses.each { |klass| klass.property(property_name, options) }
       end
       required_properties << property_name if options.delete(:required)
+
+      enumerated_types[property_name.to_sym] = options.delete(:in) if options.key?(:in)
     end
 
     class << self
       attr_reader :properties, :defaults
       attr_reader :required_properties
+      attr_reader :enumerated_types
     end
     instance_variable_set('@properties', Set.new)
     instance_variable_set('@defaults', {})
     instance_variable_set('@required_properties', Set.new)
+    instance_variable_set('@enumerated_types', {})
 
     def self.inherited(klass)
       super
@@ -63,6 +67,7 @@ module Hashie
       klass.instance_variable_set('@properties', properties.dup)
       klass.instance_variable_set('@defaults', defaults.dup)
       klass.instance_variable_set('@required_properties', required_properties.dup)
+      klass.instance_variable_set('@enumerated_types', enumerated_types.dup)
     end
 
     # Check to see if the specified property has already been
@@ -75,6 +80,10 @@ module Hashie
     # required.
     def self.required?(name)
       required_properties.include? name
+    end
+
+    def self.enumerated_type?(name)
+      enumerated_types.key?(name.to_sym)
     end
 
     # You may initialize a Dash with an attributes hash
@@ -117,6 +126,7 @@ module Hashie
     def []=(property, value)
       assert_property_required! property, value
       assert_property_exists! property
+      assert_property_valid_enumerated_type! property, value
       super(property, value)
     end
 
@@ -181,12 +191,20 @@ module Hashie
       fail_property_required_error!(property) if self.class.required?(property) && value.nil?
     end
 
+    def assert_property_valid_enumerated_type!(property, value)
+      fail_invalid_enumerated_type_error(property, value) if self.class.enumerated_type?(property) && value && !self.class.enumerated_types[property.to_sym].include?(value)
+    end
+
     def fail_property_required_error!(property)
       fail ArgumentError, "The property '#{property}' is required for #{self.class.name}."
     end
 
     def fail_no_property_error!(property)
       fail NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
+    end
+
+    def fail_invalid_enumerated_type_error(property, value)
+      fail ArgumentError, "'#{value}' is not a valid value for the property '#{property}' for #{self.class.name}"
     end
   end
 end

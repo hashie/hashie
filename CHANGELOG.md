@@ -1,6 +1,7 @@
 ## Next
 
 * [#179](https://github.com/intridea/hashie/pull/179) Mash#values_at will convert each key before doing the lookup - [@nahiluhmot](https://github.com/nahiluhmot).
+* [#182](https://github.com/intridea/hashie/pull/182) Added support for enumerated types in Dash - [@d-tw](https://github.com/d-tw).
 * Your contribution here.
 
 ## 3.1 (6/25/2014)
