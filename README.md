@@ -224,6 +224,49 @@ mash.inspect # => <Hashie::Mash>
 
 **Note:** The `?` method will return false if a key has been set to false or nil. In order to check if a key has been set at all, use the `mash.key?('some_key')` method instead.
 
+Mash allows you also to transform any files into a Mash objects.
+
+### Example:
+
+```yml
+#/etc/config/settings/twitter.yml
+development:
+  api_key: 'api_key'
+production:
+  api_key: <%= ENV['API_KEY'] %> #let's say that ENV['API_KEY'] is set to 'abcd'
+```
+
+```ruby
+mash = Mash.load('settings/twitter.yml')
+mash.development.api_key # => 'localhost'
+mash.development.api_key = "foo" # => <# RuntimeError can't modify frozen ...>
+mash.development.api_key? # => true
+```
+
+You can access a Mash from another class:
+
+```ruby
+mash = Mash.load('settings/twitter.yml')[ENV['RACK_ENV']]
+Twitter.extend mash.to_module # NOTE: if you want another name than settings, call: to_module('my_settings')
+Twitter.settings.api_key # => 'abcd'
+```
+
+You can use another parser (by default: YamlErbParser):
+
+```
+#/etc/data/user.csv
+id | name          | lastname
+---|------------- | -------------
+1  |John          | Doe
+2  |Laurent       | Garnier
+```
+
+```ruby
+mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
+# => { 1 => { name: 'John', lastname: 'Doe'}, 2 => { name: 'Laurent', lastname: 'Garnier' } }
+mash[1] #=> { name: 'John', lastname: 'Doe' }
+```
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.

@@ -28,6 +28,10 @@ module Hashie
       autoload :ActiveModel,     'hashie/extensions/mash/active_model'
     end
 
+    module Parsers
+      autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
+    end
+
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
     end

@@ -499,4 +499,96 @@ describe Hashie::Mash do
       end
     end
   end
+
+  describe '.load(filename, options = {})' do
+    let(:config) do
+      {
+        'production' => {
+          'foo' => 'production_foo'
+        }
+      }
+    end
+    let(:path) { 'database.yml' }
+    let(:parser) { double(:parser) }
+
+    subject { described_class.load(path, parser: parser) }
+
+    before do |ex|
+      unless ex.metadata == :test_cache
+        described_class.instance_variable_set('@_mashes', nil) # clean the cached mashes
+      end
+    end
+
+    context 'if the file exists' do
+      before do
+        expect(File).to receive(:file?).with(path).and_return(true)
+        expect(parser).to receive(:perform).with(path).and_return(config)
+      end
+
+      it { is_expected.to be_a(Hashie::Mash) }
+
+      it 'return a Mash from a file' do
+        expect(subject.production).not_to be_nil
+        expect(subject.production.keys).to eq config['production'].keys
+        expect(subject.production.foo).to eq config['production']['foo']
+      end
+
+      it 'freeze the attribtues' do
+        expect { subject.production = {} }.to raise_exception(RuntimeError, /can't modify frozen/)
+      end
+    end
+
+    context 'if the fils does not exists' do
+      before do
+        expect(File).to receive(:file?).with(path).and_return(false)
+      end
+
+      it 'raise an ArgumentError' do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
+    end
+
+    describe 'results are cached' do
+      let(:parser) { double(:parser) }
+
+      subject { described_class.load(path, parser: parser) }
+
+      before do
+        expect(File).to receive(:file?).with(path).and_return(true)
+        expect(File).to receive(:file?).with("#{path}+1").and_return(true)
+        expect(parser).to receive(:perform).once.with(path).and_return(config)
+        expect(parser).to receive(:perform).once.with("#{path}+1").and_return(config)
+      end
+
+      it 'cache the loaded yml file', :test_cache do
+        2.times do
+          expect(subject).to be_a(described_class)
+          expect(described_class.load("#{path}+1", parser: parser)).to be_a(described_class)
+        end
+
+        expect(subject.object_id).to eq subject.object_id
+      end
+    end
+  end
+
+  describe '#to_module(mash_method_name)' do
+    let(:mash) { described_class.new }
+    subject { Class.new.extend mash.to_module }
+
+    it 'defines a settings method on the klass class that extends the module' do
+      expect(subject).to respond_to(:settings)
+      expect(subject.settings).to eq mash
+    end
+
+    context 'when a settings_method_name is set' do
+      let(:mash_method_name) { 'config' }
+
+      subject { Class.new.extend mash.to_module(mash_method_name) }
+
+      it 'defines a settings method on the klass class that extends the module' do
+        expect(subject).to respond_to(mash_method_name.to_sym)
+        expect(subject.send(mash_method_name.to_sym)).to eq mash
+      end
+    end
+  end
 end
