@@ -78,14 +78,13 @@ module Hashie
         # see if any of the regexps match the string
         @regexes.each do |regex|
           match = regex.match(query)
-          if match
-            @regex_counts[regex] += 1
-            value = @hash[regex]
-            if value.respond_to? :call
-              yield value.call(match)
-            else
-              yield value
-            end
+          next unless match
+          @regex_counts[regex] += 1
+          value = @hash[regex]
+          if value.respond_to? :call
+            yield value.call(match)
+          else
+            yield value
           end
         end
 
@@ -110,10 +109,9 @@ module Hashie
     private
 
     def optimize_if_necessary!
-      if (@lookups += 1) >= @optimize_every
-        @regexes = @regex_counts.sort_by { |_, count| -count }.map { |regex, _| regex }
-        @lookups = 0
-      end
+      return unless (@lookups += 1) >= @optimize_every
+      @regexes = @regex_counts.sort_by { |_, count| -count }.map { |regex, _| regex }
+      @lookups = 0
     end
   end
 end
