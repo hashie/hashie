@@ -17,17 +17,17 @@ describe Hashie::Sash do
 
   it 'Can pass overrides via overrides:{}' do
     @s2 = Hashie::Sash.new(overrides: { foo: :bar })
-    @s2.should include(:foo)
+    expect(@s2).to include(:foo)
   end
 
   it 'will fail gracefully if nothing to load.' do
     @s.save
     FileUtils.rm @filename
-    @s.load.should be {}
+    expect(@s.load).to be {}
     @s.file = nil
-    @s.load.should be {}
+    expect(@s.load).to be {}
     FileUtils.touch @filename
-    @s.load.should be {}
+    expect(@s.load).to be {}
   end
 
   it 'will raise an exception if you pass in unknown arguments to new.' do
@@ -40,7 +40,7 @@ describe Hashie::Sash do
       @s.save
       @s2 = Hashie::Sash.new(options: { file: @filename })
       @s2.load
-      @s2['foo'].should eq :bar
+      expect(@s2['foo']).to eq :bar
     end
 
     it 'can set the mode' do
@@ -49,7 +49,7 @@ describe Hashie::Sash do
       @s.save
       # I have no idea why you put in 0600, 0600 becomes 384, and out comes 33152.
       # when I figure out where the conversion is going wrong, I'll update this.
-      File.stat(@s.file).mode.should eq 33_152
+      expect(File.stat(@s.file).mode).to eq 33_152
     end
 
     it 'can auto save' do
@@ -57,14 +57,14 @@ describe Hashie::Sash do
       @s[:auto_save] = true
       @s2 = Hashie::Sash.new(options: { file: @filename })
       @s2.load
-      @s2[:auto_save].should be true
+      expect(@s2[:auto_save]).to be true
     end
 
     it 'can auto load' do
       @s[:auto_load] = true
       @s.save
       @s2 = Hashie::Sash.new(options: { file: @filename, auto_load: true })
-      @s2[:auto_load].should be true
+      expect(@s2[:auto_load]).to be true
     end
 
     # We save twice because in order to produce a backup file, we need an original.
@@ -73,18 +73,18 @@ describe Hashie::Sash do
       @s[:backup] = 'something'
       @s.save
       @s.save
-      File.exist?(@s.backup_file).should eq(true)
+      expect(File.exist?(@s.backup_file)).to eq(true)
     end
 
     it 'will clear before load, destroying previous contents' do
       @s[:clear] = 'clear'
       @s.load
-      @s[:clear].should be_nil
+      expect(@s[:clear]).to be_nil
     end
   end
 
   it 'will behave like a normal Hash' do
-    @s.kind_of?(Hash).should eq(true)
+    expect(@s.kind_of?(Hash)).to eq(true)
   end
 
 end

@@ -53,11 +53,11 @@ describe DashTest do
 
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
 
-  it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
+  it('subclasses Hashie::Hash') { is_expected.to respond_to(:to_mash) }
 
   describe '#to_s' do
     subject { super().to_s }
-    it { should eq '#<DashTest count=0 email="bob@example.com" first_name="Bob">' }
+    it { is_expected.to eq '#<DashTest count=0 email="bob@example.com" first_name="Bob">' }
   end
 
   it 'lists all set properties in inspect' do
@@ -68,12 +68,12 @@ describe DashTest do
 
   describe '#count' do
     subject { super().count }
-    it { should be_zero }
+    it { is_expected.to be_zero }
   end
 
-  it { should respond_to(:first_name) }
-  it { should respond_to(:first_name=) }
-  it { should_not respond_to(:nonexistent) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:first_name=) }
+  it { is_expected.not_to respond_to(:nonexistent) }
 
   it 'errors out for a non-existent property' do
     expect { subject['nonexistent'] }.to raise_error(*no_property_error('nonexistent'))
@@ -379,13 +379,13 @@ describe SubclassedTest do
 
   describe '#count' do
     subject { super().count }
-    it { should be_zero }
+    it { is_expected.to be_zero }
   end
 
-  it { should respond_to(:first_name) }
-  it { should respond_to(:first_name=) }
-  it { should respond_to(:last_name) }
-  it { should respond_to(:last_name=) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:first_name=) }
+  it { is_expected.to respond_to(:last_name) }
+  it { is_expected.to respond_to(:last_name=) }
 
   it 'has one additional property' do
     expect(described_class.property?(:last_name)).to be_truthy
@@ -404,8 +404,8 @@ end
 describe MixedPropertiesTest do
   subject { MixedPropertiesTest.new('string' => 'string', symbol: 'symbol') }
 
-  it { should respond_to('string') }
-  it { should respond_to(:symbol) }
+  it { is_expected.to respond_to('string') }
+  it { is_expected.to respond_to(:symbol) }
 
   it 'property?' do
     expect(described_class.property?('string')).to be_truthy
