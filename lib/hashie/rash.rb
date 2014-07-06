@@ -89,10 +89,10 @@ module Hashie
           end
         end
 
-      when Integer
+      when Numeric
         # see if any of the ranges match the integer
         @ranges.each do |range|
-          yield @hash[range] if range.include? query
+          yield @hash[range] if range.cover? query
         end
 
       when Regexp

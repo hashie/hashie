@@ -37,6 +37,12 @@ describe Hashie::Rash do
     expect(subject[1001]).to be_nil
   end
 
+  it 'finds floats from ranges' do
+    expect(subject[10.1]).to eq 'rangey'
+    expect(subject[1.0]).to eq 'rangey'
+    expect(subject[1000.1]).to be_nil
+  end
+
   it 'evaluates proc values' do
     expect(subject['abcdef']).to eq 'bcd'
     expect(subject['ffffff']).to be_nil
