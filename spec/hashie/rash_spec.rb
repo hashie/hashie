@@ -47,4 +47,31 @@ describe Hashie::Rash do
     expect(subject['abcdef']).to eq 'bcd'
     expect(subject['ffffff']).to be_nil
   end
+
+  it 'finds using the find method' do
+    expect(subject.fetch(10.1)).to eq 'rangey'
+    expect(subject.fetch(true)).to be false
+  end
+
+  it 'raises in find unless a key matches' do
+    expect { subject.fetch(1_000_000) }.to raise_error(KeyError)
+  end
+
+  it 'yields in find unless a key matches' do
+    expect { |y| subject.fetch(1_000_000, &y) }.to yield_control
+    expect { |y| subject.fetch(10.1, &y) }.to_not yield_control
+  end
+
+  it 'gives a default value' do
+    expect(subject.fetch(10.1, 'noop')).to eq 'rangey'
+    expect(subject.fetch(1_000_000, 'noop')).to eq 'noop'
+    expect(subject.fetch(1_000_000) { 'noop' }).to eq 'noop'
+    expect(subject.fetch(1_000_000) { |k| k }).to eq 1_000_000
+    expect(subject.fetch(1_000_000, 'noop') { 'op' }).to eq 'op'
+  end
+
+  it 'responds to hash methods' do
+    expect(subject.respond_to?(:to_a)).to be true
+    expect(subject.methods).to_not include(:to_a)
+  end
 end
