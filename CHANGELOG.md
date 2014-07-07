@@ -2,6 +2,7 @@
 
 * [#179](https://github.com/intridea/hashie/pull/179) Mash#values_at will convert each key before doing the lookup - [@nahiluhmot](https://github.com/nahiluhmot).
 * [#184](https://github.com/intridea/hashie/pull/184) Allow ranges on Rash to match all Numeric types - [@medcat](https://github.com/medcat).
+* [#187](https://github.com/intridea/hashie/pull/187) Automatically require version - [@medcat](https://github.com/medcat).
 * Your contribution here.
 
 ## 3.1 (6/25/2014)
