@@ -61,6 +61,28 @@ module Hashie
     end
 
     #
+    # Raise (or yield) unless something matches the key.
+    #
+    def fetch(*args)
+      fail ArgumentError, "Expected 1-2 arguments, got #{args.length}" \
+        unless (1..2).cover?(args.length)
+
+      key, default = args
+
+      all(key) do |value|
+        return value
+      end
+
+      if block_given?
+        yield key
+      elsif default
+        default
+      else
+        fail KeyError, "key not found: #{key.inspect}"
+      end
+    end
+
+    #
     # Return everything that matches the query.
     #
     def all(query)
@@ -104,6 +126,10 @@ module Hashie
 
     def method_missing(*args, &block)
       @hash.send(*args, &block)
+    end
+
+    def respond_to_missing?(*args)
+      @hash.respond_to?(*args)
     end
 
     private
