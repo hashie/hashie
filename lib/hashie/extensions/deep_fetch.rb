@@ -16,7 +16,7 @@ module Hashie
       def deep_fetch(*args, &block)
         args.reduce(self) do |obj, arg|
           begin
-            arg = Integer(arg) if obj.kind_of? Array
+            arg = Integer(arg) if obj.is_a? Array
             obj.fetch(arg)
           rescue ArgumentError, IndexError, NoMethodError => e
             break block.call(arg) if block

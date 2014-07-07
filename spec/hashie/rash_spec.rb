@@ -10,7 +10,7 @@ describe Hashie::Rash do
       1       => 'awesome',
       1..1000 => 'rangey',
       /(bcd)/ => proc { |m| m[1] }
-      # /.+/ => "EVERYTHING"
+    # /.+/ => "EVERYTHING"
     )
   end
 
