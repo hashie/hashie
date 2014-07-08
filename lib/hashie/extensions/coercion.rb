@@ -2,16 +2,19 @@ module Hashie
   module Extensions
     module Coercion
       def self.included(base)
-        base.extend ClassMethods
         base.send :include, InstanceMethods
+        base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
+
+        base.send :alias_method, :'set_value_without_coercion', :[]=
+        base.send :alias_method, :[]=, :'set_value_with_coercion'
       end
 
       module InstanceMethods
-        def []=(key, value)
+        def set_value_with_coercion(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
-          return super(key, value) unless value && into
-          return super(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
+          return set_value_without_coercion(key, value) unless value && into
+          return set_value_without_coercion(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
 
           if into.class >= Hash
             key_coerce = coerce_or_init(into.flatten[0])
@@ -22,7 +25,7 @@ module Hashie
             value = into.class.new(value.map { |v| value_coerce.call(v) })
           end
 
-          super(key, value)
+          set_value_without_coercion(key, value)
         end
 
         def coerce_or_init(type)
