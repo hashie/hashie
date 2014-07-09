@@ -35,6 +35,12 @@ module Hashie
           object
         elsif object.respond_to?(:stringify_keys!)
           object.stringify_keys!
+        elsif ::Hash === object
+          object.keys.each do |k|
+            stringify_keys_recursively!(object[k])
+            object[k.to_s] = object.delete(k)
+          end
+          object
         else
           object
         end
