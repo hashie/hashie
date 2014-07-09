@@ -13,10 +13,10 @@ describe Hash do
     expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => 'bob']
   end
 
-  it '#stringify_keys! turns all keys into strings non-recursively' do
+  it '#stringify_keys! turns all keys into strings recursively' do
     hash = Hashie::Hash[:a => 'hey', 123 => { 345 => 'hey' }]
     hash.stringify_keys!
-    expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { 345 => 'hey' }]
+    expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
   end
 
   it '#stringify_keys returns a hash with stringified keys' do

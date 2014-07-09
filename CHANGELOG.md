@@ -5,6 +5,8 @@
 * [#184](https://github.com/intridea/hashie/pull/184): Allow ranges on Rash to match all Numeric types - [@medcat](https://github.com/medcat).
 * [#187](https://github.com/intridea/hashie/pull/187): Automatically require version - [@medcat](https://github.com/medcat).
 * [#190](https://github.com/intridea/hashie/issues/190): Fixed `coerce_key` with `from` Trash feature and Coercion extension - [@gregory](https://github.com/gregory).
+* [#192](https://github.com/intridea/hashie/pull/192): Fixed StringifyKeys#stringify_keys! to recursively stringify keys of embedded ::Hash types - [@dblock](https://github.com/dblock).
+
 * Your contribution here.
 
 ## 3.1 (6/25/2014)
