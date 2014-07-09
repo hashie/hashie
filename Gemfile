@@ -8,7 +8,7 @@ end
 
 gemspec
 
-gem 'rubocop', '0.21.0'
+gem 'rubocop', '0.24.1'
 
 # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
-gem 'activesupport'
+gem 'activesupport', require: false

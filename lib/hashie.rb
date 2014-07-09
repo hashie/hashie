@@ -1,3 +1,5 @@
+require 'hashie/version'
+
 module Hashie
   autoload :Clash,              'hashie/clash'
   autoload :Dash,               'hashie/dash'

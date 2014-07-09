@@ -10,7 +10,7 @@ describe Hashie::Rash do
       1       => 'awesome',
       1..1000 => 'rangey',
       /(bcd)/ => proc { |m| m[1] }
-      # /.+/ => "EVERYTHING"
+    # /.+/ => "EVERYTHING"
     )
   end
 
@@ -35,6 +35,12 @@ describe Hashie::Rash do
     expect(subject[999]).to eq 'rangey'
     expect(subject[1000]).to eq 'rangey'
     expect(subject[1001]).to be_nil
+  end
+
+  it 'finds floats from ranges' do
+    expect(subject[10.1]).to eq 'rangey'
+    expect(subject[1.0]).to eq 'rangey'
+    expect(subject[1000.1]).to be_nil
   end
 
   it 'evaluates proc values' do

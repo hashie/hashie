@@ -31,7 +31,7 @@ module Hashie
             out[assignment_key] << (Hash === array_object ? flexibly_convert_to_hash(array_object, options) : array_object)
           end
         else
-          out[assignment_key] = Hash === self[k] ? flexibly_convert_to_hash(self[k], options) : self[k]
+          out[assignment_key] = (Hash === self[k] || self[k].respond_to?(:to_hash)) ? flexibly_convert_to_hash(self[k], options) : self[k]
         end
       end
       out

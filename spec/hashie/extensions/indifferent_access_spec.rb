@@ -26,6 +26,20 @@ describe Hashie::Extensions::IndifferentAccess do
     end
   end
 
+  class IndifferentHashWithDash < Hashie::Dash
+    include Hashie::Extensions::IndifferentAccess
+    property :foo
+  end
+
+  describe 'when included in dash' do
+    let(:params) { { foo: 'bar' } }
+    subject { IndifferentHashWithDash.new(params) }
+
+    it 'initialize with a symbol' do
+      expect(subject.foo).to eq params[:foo]
+    end
+  end
+
   shared_examples_for 'hash with indifferent access' do
     it 'is able to access via string or symbol' do
       h = subject.build(abc: 123)

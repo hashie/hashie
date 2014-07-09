@@ -91,7 +91,7 @@ module Hashie
       end
 
       initialize_attributes(attributes)
-      assert_required_properties_set!
+      assert_required_attributes_set!
     end
 
     alias_method :_regular_reader, :[]
@@ -142,6 +142,19 @@ module Hashie
       self
     end
 
+    def update_attributes!(attributes)
+      initialize_attributes(attributes)
+
+      self.class.defaults.each_pair do |prop, value|
+        self[prop] = begin
+          value.dup
+        rescue TypeError
+          value
+        end if self[prop].nil?
+      end
+      assert_required_attributes_set!
+    end
+
     private
 
     def initialize_attributes(attributes)
@@ -151,27 +164,29 @@ module Hashie
     end
 
     def assert_property_exists!(property)
-      unless self.class.property?(property)
-        fail NoMethodError, "The property '#{property}' is not defined for this Dash."
-      end
+      fail_no_property_error!(property) unless self.class.property?(property)
     end
 
-    def assert_required_properties_set!
+    def assert_required_attributes_set!
       self.class.required_properties.each do |required_property|
         assert_property_set!(required_property)
       end
     end
 
     def assert_property_set!(property)
-      if send(property).nil?
-        fail ArgumentError, "The property '#{property}' is required for this Dash."
-      end
+      fail_property_required_error!(property) if send(property).nil?
     end
 
     def assert_property_required!(property, value)
-      if self.class.required?(property) && value.nil?
-        fail ArgumentError, "The property '#{property}' is required for this Dash."
-      end
+      fail_property_required_error!(property) if self.class.required?(property) && value.nil?
+    end
+
+    def fail_property_required_error!(property)
+      fail ArgumentError, "The property '#{property}' is required for #{self.class.name}."
+    end
+
+    def fail_no_property_error!(property)
+      fail NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
     end
   end
 end

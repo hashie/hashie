@@ -476,4 +476,27 @@ describe Hashie::Mash do
       expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
     end
   end
+
+  describe '#values_at' do
+    let(:hash) { { 'key_one' => 1, :key_two => 2 } }
+    let(:mash) { Hashie::Mash.new(hash) }
+
+    context 'when the original type is given' do
+      it 'returns the values' do
+        expect(mash.values_at('key_one', :key_two)).to eq([1, 2])
+      end
+    end
+
+    context 'when a different, but acceptable type is given' do
+      it 'returns the values' do
+        expect(mash.values_at(:key_one, 'key_two')).to eq([1, 2])
+      end
+    end
+
+    context 'when a key is given that is not in the Mash' do
+      it 'returns nil for that value' do
+        expect(mash.values_at('key_one', :key_three)).to eq([1, nil])
+      end
+    end
+  end
 end

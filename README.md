@@ -12,7 +12,7 @@ $ gem install hashie
 
 ## Upgrading
 
-You're reading the documentation for the next release of Hashie, which should be 3.0.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.0](https://github.com/intridea/hashie/blob/v3.0.0/README.md).
+You're reading the documentation for the next release of Hashie, which should be 3.1.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.1](https://github.com/intridea/hashie/blob/v3.1.0/README.md).
 
 ## Hash Extensions
 
@@ -52,6 +52,50 @@ class SpecialHash < Hash
 end
 ```
 
+### Coercing Collections
+
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :mentions, Array[User]
+  coerce_key :friends, Set[User]
+end
+
+user_hash = { name: "Bob" }
+mentions_hash= [user_hash, user_hash]
+friends_hash = [user_hash]
+tweet = Tweet.new(mentions: mentions_hash, friends: friends_hash)
+# => automatically calls User.coerce(user_hash) or
+#    User.new(user_hash) if that isn't present on each element of the array
+
+tweet.mentions.map(&:class) # => [User, User]
+tweet.friends.class # => Set
+```
+
+### Coercing Hashes
+
+```ruby
+class Relation
+  def initialize(string)
+    @relation = string
+  end
+end
+
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :relations, Hash[User => Relation]
+end
+
+user_hash = { name: "Bob" }
+relations_hash= { user_hash => "father", user_hash => "friend" }
+tweet = Tweet.new(relations: relations_hash)
+tweet.relations.map { |k,v| [k.class, v.class] } # => [[User, Relation], [User, Relation]]
+tweet.relations.class # => Hash
+
+# => automatically calls User.coerce(user_hash) on each key
+#    and Relation.new on each value since Relation doesn't define the `coerce` class method
+```
+
 ### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
@@ -80,8 +124,6 @@ h.abc? # => true
 This extension can be mixed in to instantly give you indifferent access to your Hash subclass. This works just like the params hash in Rails and other frameworks where whether you provide symbols or strings to access keys, you will get the same results.
 
 A unique feature of Hashie's IndifferentAccess mixin is that it will inject itself recursively into subhashes *without* reinitializing the hash in question. This means you can safely merge together indifferent and non-indifferent hashes arbitrarily deeply without worrying about whether you'll be able to `hash[:other][:another]` properly.
-
-Use `Hashie::Extensions::Dash::IndifferentAccess` for instances of `Hashie::Dash`.
 
 ### IgnoreUndeclared
 
@@ -205,6 +247,11 @@ p.occupation   # => 'Rubyist'
 p.email        # => 'abc@def.com'
 p[:awesome]    # => NoMethodError
 p[:occupation] # => 'Rubyist'
+p.update_attributes!(name: 'Trudy', occupation: 'Evil')
+p.occupation   # => 'Evil'
+p.name         # => 'Trudy'
+p.update_attributes!(occupation: nil)
+p.occupation   # => 'Rubyist'
 ```
 
 Properties defined as symbols are not the same thing as properties defined as strings.
