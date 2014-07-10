@@ -1,4 +1,4 @@
-## Next
+## 3.2.0 (7/10/2014)
 
 * [#164](https://github.com/intridea/hashie/pull/164), [#165](https://github.com/intridea/hashie/pull/165), [#166](https://github.com/intridea/hashie/pull/166): Fixed stack overflow when coercing mashes that contain ActiveSupport::HashWithIndifferentAccess values - [@numinit](https://github.com/numinit), [@kgrz](https://github.com/kgrz).
 * [#177](https://github.com/intridea/hashie/pull/177): Added support for coercing enumerables and collections - [@gregory](https://github.com/gregory).
@@ -8,9 +8,7 @@
 * [#190](https://github.com/intridea/hashie/issues/190): Fixed `coerce_key` with `from` Trash feature and Coercion extension - [@gregory](https://github.com/gregory).
 * [#192](https://github.com/intridea/hashie/pull/192): Fixed StringifyKeys#stringify_keys! to recursively stringify keys of embedded ::Hash types - [@dblock](https://github.com/dblock).
 
-* Your contribution here.
-
-## 3.1 (6/25/2014)
+## 3.1.0 (6/25/2014)
 
 * [#169](https://github.com/intridea/hashie/pull/169): Hash#to_hash will also convert nested objects that implement to_hash - [@gregory](https://github.com/gregory).
 * [#171](https://github.com/intridea/hashie/pull/171): Include Trash and Dash class name when raising `NoMethodError` - [@gregory](https://github.com/gregory).
@@ -18,7 +16,7 @@
 * [#173](https://github.com/intridea/hashie/pull/173): Auto include Dash::IndifferentAccess when IndiferentAccess is included in Dash - [@gregory](https://github.com/gregory).
 * [#174](https://github.com/intridea/hashie/pull/174): Fixed `from` and `transform_with` Trash features when IndifferentAccess is included - [@gregory](https://github.com/gregory).
 
-## 3.0 (6/3/2014)
+## 3.0.0 (6/3/2014)
 
 **Note:** This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
 
@@ -30,6 +28,7 @@
 * [#149](https://github.com/intridea/hashie/issues/149): Allow IgnoreUndeclared and DeepMerge to be used with undeclared properties - [@jhaesus](https://github.com/jhaesus).
 
 ## 2.1.1 (4/12/2014)
+
 * [#144](https://github.com/intridea/hashie/issues/144): Fixed regression invoking `to_hash` with no parameters - [@mbleigh](https://github.com/mbleigh).
 
 ## 2.1.0 (4/6/2014)
