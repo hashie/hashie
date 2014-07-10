@@ -1,3 +1,7 @@
+## 3.2.1 (Next)
+
+* Your contribution here.
+
 ## 3.2.0 (7/10/2014)
 
 * [#164](https://github.com/intridea/hashie/pull/164), [#165](https://github.com/intridea/hashie/pull/165), [#166](https://github.com/intridea/hashie/pull/166): Fixed stack overflow when coercing mashes that contain ActiveSupport::HashWithIndifferentAccess values - [@numinit](https://github.com/numinit), [@kgrz](https://github.com/kgrz).
