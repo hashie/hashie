@@ -24,10 +24,6 @@ module Hashie
     autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
 
-    module Mash
-      autoload :ActiveModel,     'hashie/extensions/mash/active_model'
-    end
-
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
     end
