@@ -59,6 +59,25 @@ module Hashie
 
     ALLOWED_SUFFIXES = %w(? ! = _)
 
+    def self.load(path, options = {})
+      @_mashes ||= new do |h, file_path|
+        fail ArgumentError, "The following file doesn't exist: #{file_path}" unless File.file?(file_path)
+
+        parser = options.fetch(:parser) {  Hashie::Extensions::Parsers::YamlErbParser }
+        h[file_path] = new(parser.perform(file_path)).freeze
+      end
+      @_mashes[path]
+    end
+
+    def to_module(mash_method_name = :settings)
+      mash = self
+      Module.new do |m|
+        m.send :define_method, mash_method_name.to_sym do
+          mash
+        end
+      end
+    end
+
     alias_method :to_s, :inspect
 
     # If you pass in an existing hash, it will

@@ -24,6 +24,10 @@ module Hashie
     autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
 
+    module Parsers
+      autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
+    end
+
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
     end
