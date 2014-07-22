@@ -83,9 +83,9 @@ module Hashie
 
       def convert_value(value)
         if hash_lacking_indifference?(value)
-          IndifferentAccess.inject(value.dup)
+          IndifferentAccess.inject!(value)
         elsif value.is_a?(::Array)
-          value.dup.replace(value.map { |e| convert_value(e) })
+          value.replace(value.map { |e| convert_value(e) })
         else
           value
         end
