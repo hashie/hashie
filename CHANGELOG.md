@@ -1,6 +1,7 @@
 ## 3.2.1 (Next)
 
-* [#183](https://github.com/intridea/hashie/pull/183) Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
+* [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
+* [#197](https://github.com/intridea/hashie/pull/197): Dont convert keys to string on initalization of mash - [@gregory](https://github.com/gregory).
 * Your contribution here.
 
 ## 3.2.0 (7/10/2014)

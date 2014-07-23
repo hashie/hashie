@@ -147,7 +147,7 @@ describe Hashie::Extensions::Coercion do
       it 'coerces when setting with string index' do
         tweet = TweetMash.new
         tweet['user'] = { email: 'foo@bar.com' }
-        expect(tweet[:user]).to be_a(UserMash)
+        expect(tweet['user']).to be_a(UserMash)
       end
 
       it 'coerces when setting with symbol index' do

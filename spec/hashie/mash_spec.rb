@@ -10,11 +10,11 @@ describe Hashie::Mash do
 
   it 'sets hash values through method= calls' do
     subject.test = 'abc'
-    expect(subject['test']).to eq 'abc'
+    expect(subject[:test]).to eq 'abc'
   end
 
   it 'retrieves set values through method calls' do
-    subject['test'] = 'abc'
+    subject[:test] = 'abc'
     expect(subject.test).to eq 'abc'
   end
 
@@ -26,7 +26,7 @@ describe Hashie::Mash do
   end
 
   it 'retrieves set values through blocks with method calls' do
-    subject['test'] = 'abc'
+    subject[:test] = 'abc'
     value = nil
     subject.test { |v| value = v }
     expect(value).to eq 'abc'
@@ -214,7 +214,7 @@ describe Hashie::Mash do
       end
 
       it 'returns self' do
-        expect(subject.replace(foo: 'bar').to_hash).to eq('foo' => 'bar')
+        expect(subject.replace(foo: 'bar').to_hash).to eq(foo: 'bar')
       end
 
       it 'sets all specified keys to their corresponding values' do
@@ -226,7 +226,7 @@ describe Hashie::Mash do
       end
 
       it 'leaves only specified keys' do
-        expect(subject.keys.sort).to eq %w(details middle_name)
+        expect(subject.keys.sort).to eq [:details, :middle_name]
         expect(subject.first_name?).to be_falsy
         expect(subject).not_to respond_to(:first_name)
         expect(subject.last_name?).to be_falsy
@@ -236,7 +236,7 @@ describe Hashie::Mash do
 
     describe 'delete' do
       it 'deletes with String key' do
-        subject.delete('details')
+        subject.delete(:details)
         expect(subject.details).to be_nil
         expect(subject).not_to be_respond_to :details
       end
@@ -354,6 +354,14 @@ describe Hashie::Mash do
       expect(converted.name).to eq 'Bob'
     end
 
+    it 'does not force the key type to string' do
+      h = { :abc  => 123, 'name' => 'Bob', 123 => 'foo', true => 'false', /foo/ => 'bar' }
+      converted = Hashie::Mash.new h
+      expect(converted.to_hash).to eq h
+      expect(converted.abc).to eq h[:abc]
+      expect(converted.name).to eq h['name']
+    end
+
     it 'converts hashes recursively into Hashie::Mashes' do
       converted = Hashie::Mash.new(a: { b: 1, c: { d: 23 } })
       expect(converted.a.is_a?(Hashie::Mash)).to be_truthy
@@ -410,7 +418,8 @@ describe Hashie::Mash do
 
       context 'when key has other than original but acceptable type' do
         it 'returns the value' do
-          expect(mash.fetch('one')).to eql(1)
+          expect { mash.fetch('one') }.to raise_exception(KeyError)
+          expect(mash.fetch(:one)).to eql(1)
         end
       end
     end
@@ -488,8 +497,9 @@ describe Hashie::Mash do
     end
 
     context 'when a different, but acceptable type is given' do
-      it 'returns the values' do
-        expect(mash.values_at(:key_one, 'key_two')).to eq([1, 2])
+      it 'returns the existing values' do
+        expect(mash.values_at(:key_one, 'key_two')).to eq([nil, nil])
+        expect(mash.values_at('key_one', :key_two)).to eq([1, 2])
       end
     end
 
