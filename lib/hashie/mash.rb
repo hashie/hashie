@@ -91,21 +91,13 @@ module Hashie
 
     class << self; alias_method :[], :new; end
 
-    def id #:nodoc:
-      self['id']
-    end
-
-    def type #:nodoc:
-      self['type']
-    end
-
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
 
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def custom_reader(key)
-      value = regular_reader(convert_key(key))
+      value = regular_reader(key)
       yield value if block_given?
       value
     end
@@ -114,7 +106,7 @@ module Hashie
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
-      regular_writer(convert_key(key), convert ? convert_value(value) : value)
+      regular_writer(key, convert ? convert_value(value) : value)
     end
 
     alias_method :[], :custom_reader
@@ -123,32 +115,14 @@ module Hashie
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
-      ck = convert_key(key)
-      regular_writer(ck, self.class.new) unless key?(ck)
-      regular_reader(ck)
+      regular_writer(key, self.class.new) unless key?(key)
+      regular_reader(key)
     end
 
     # This is the under bang method reader, it will return a temporary new Mash
     # if there isn't a value already assigned to the key requested.
     def underbang_reader(key)
-      ck = convert_key(key)
-      if key?(ck)
-        regular_reader(ck)
-      else
-        self.class.new
-      end
-    end
-
-    def fetch(key, *args)
-      super(convert_key(key), *args)
-    end
-
-    def delete(key)
-      super(convert_key(key))
-    end
-
-    def values_at(*keys)
-      super(*keys.map { |key| convert_key(key) })
+      key?(key) ? regular_reader(key) : self.class.new
     end
 
     alias_method :regular_dup, :dup
@@ -157,9 +131,6 @@ module Hashie
       self.class.new(self, default)
     end
 
-    def key?(key)
-      super(convert_key(key))
-    end
     alias_method :has_key?, :key?
     alias_method :include?, :key?
     alias_method :member?, :key?
@@ -175,13 +146,12 @@ module Hashie
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash, &blk)
       other_hash.each_pair do |k, v|
-        key = convert_key(k)
-        if regular_reader(key).is_a?(Mash) && v.is_a?(::Hash)
-          custom_reader(key).deep_update(v, &blk)
+        if regular_reader(k).is_a?(Mash) && v.is_a?(::Hash)
+          custom_reader(k).deep_update(v, &blk)
         else
           value = convert_value(v, true)
-          value = convert_value(blk.call(key, self[k], value), true) if blk
-          custom_writer(key, value, false)
+          value = convert_value(blk.call(k, self[k], value), true) if blk
+          custom_writer(k, value, false)
         end
       end
       self
@@ -198,9 +168,7 @@ module Hashie
     # Merges (non-recursively) the hash from the argument,
     # changing the receiving hash
     def shallow_update(other_hash)
-      other_hash.each_pair do |k, v|
-        regular_writer(convert_key(k), convert_value(v, true))
-      end
+      other_hash.each_pair { |k, v| regular_writer(k, convert_value(v, true)) }
       self
     end
 
@@ -228,6 +196,8 @@ module Hashie
 
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
+      return self.[](method_name.to_s, &blk) if key?(method_name.to_s)
+
       name, suffix = method_suffix(method_name)
       case suffix
       when '='
@@ -248,11 +218,16 @@ module Hashie
     def method_suffix(method_name)
       suffixes_regex = ALLOWED_SUFFIXES.join
       match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
-      [match[1], match[2]]
+      [convert_key(match[1], method_name), match[2]]
     end
 
-    def convert_key(key) #:nodoc:
-      key.to_s
+    def convert_key(transformed_value, original_value)
+      case original_value
+      when Symbol
+        transformed_value.to_sym
+      when String
+        transformed_value.to_s
+      end
     end
 
     def convert_value(val, duping = false) #:nodoc:
