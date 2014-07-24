@@ -54,6 +54,17 @@ module Hashie
   #   mash.author_.name = "Michael Bleigh"  (assigned to temp object)
   #   mash.author # => <Mash>
   #
+  # A Mash will let you overwrite methods with attributes. You can access those
+  # overridden methods by prefixing them with <tt>hash_</tt>. You cannot,
+  # however, overwrite the <tt>hash_</tt> aliases.
+  #
+  # == Method Overwriting Example
+  #
+  #   mash = Mash.new
+  #   mash.zip = '10001'
+  #   mash.zip # => nil
+  #   mash.hash_zip # => [[[:zip, '10001']]]
+  #   mash.hash_zip = '10002' # => ArgumentError: You cannot overwrite a hash method (hash_zip)
   class Mash < Hash
     include Hashie::Extensions::PrettyInspect
 
@@ -106,6 +117,9 @@ module Hashie
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
+      fail ArgumentError, "You cannot overwrite a hash method (#{key})" if hash_method?(key)
+
+      alias_hash_method(key) if hash_method?(key, true)
       regular_writer(key, convert ? convert_value(value) : value)
     end
 
@@ -178,6 +192,10 @@ module Hashie
       self
     end
 
+    def respond_to?(method_name)
+      super || hash_method?(method_name)
+    end
+
     def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
       _, suffix = method_suffix(method_name)
@@ -197,6 +215,7 @@ module Hashie
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
       return self.[](method_name.to_s, &blk) if key?(method_name.to_s)
+      return __send__(method_name.to_s.sub('hash_', '')) if hash_method?(method_name.to_s)
 
       name, suffix = method_suffix(method_name)
       case suffix
@@ -214,6 +233,12 @@ module Hashie
     end
 
     protected
+
+    def alias_hash_method(name)
+      eigenclass = class << self; self; end
+      eigenclass.__send__(:alias_method, :"hash_#{name}", name)
+      eigenclass.__send__(:define_method, name, -> { self[name] })
+    end
 
     def method_suffix(method_name)
       suffixes_regex = ALLOWED_SUFFIXES.join
@@ -244,6 +269,12 @@ module Hashie
       else
         val
       end
+    end
+
+    def hash_method?(method_name, disable_guard = false)
+      return false unless disable_guard || method_name.to_s.start_with?('hash_')
+
+      methods.map { |method| method.to_s }.include?(method_name.to_s.sub('hash_', ''))
     end
   end
 end

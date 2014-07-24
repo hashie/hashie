@@ -124,6 +124,51 @@ describe Hashie::Mash do
     expect(subject.type).to eq 'Steve'
   end
 
+  context 'method aliasing and protection' do
+    it 'aliases real methods to hash_<method_name> after they are overwritten' do
+      subject.zip = '10001'
+      expect(subject.hash_zip).to eq [[[:zip, '10001']]]
+    end
+
+    it 'allows overwriting the basic, un-aliased methods' do
+      subject.zip = '10001'
+      expect(subject.zip).to eq '10001'
+    end
+
+    it 'allows attributes named hash_<non-method>' do
+      expect { subject.hash_library_name = 'Hashie' }.not_to raise_error
+      expect(subject.hash_library_name).to eq 'Hashie'
+    end
+
+    it 'raises an ArgumentError when trying to overwrite a real method alias' do
+      expect { subject.hash_zip = '10001' }.to raise_error ArgumentError
+    end
+
+    it 'responds to hash_<method_name> aliases' do
+      expect(subject).to respond_to(:hash_zip)
+    end
+
+    context 'from initialization with a pre-existing Hash' do
+      subject { Hashie::Mash.new(zip: '10001') }
+
+      it 'aliases real methods to hash_<method_name>' do
+        expect(subject.hash_zip).to eq [[[:zip, '10001']]]
+      end
+
+      it 'overwrites the basic, un-aliased methods' do
+        expect(subject.zip).to eq '10001'
+      end
+
+      context 'containing a hash_<method_name> key' do
+        subject { Hashie::Mash.new(hash_zip: '10001') }
+
+        it 'raises an argument error' do
+          expect { subject }.to raise_error ArgumentError
+        end
+      end
+    end
+  end
+
   context 'updating' do
     subject do
       described_class.new(
