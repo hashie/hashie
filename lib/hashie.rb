@@ -7,6 +7,7 @@ module Hashie
   autoload :Mash,               'hashie/mash'
   autoload :Trash,              'hashie/trash'
   autoload :Rash,               'hashie/rash'
+  autoload :Smash,              'hashie/smash'
 
   module Extensions
     autoload :Coercion,          'hashie/extensions/coercion'

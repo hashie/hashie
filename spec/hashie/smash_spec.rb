@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'delegate'
 
-describe Hashie::Mash do
-  subject { Hashie::Mash.new }
+describe Hashie::Smash do
+  subject { Hashie::Smash.new }
 
   it 'inherits from Hash' do
     expect(subject.is_a?(Hash)).to be_truthy
@@ -71,8 +71,8 @@ describe Hashie::Mash do
     expect(subject.abc('foobar')).to eq 123
   end
 
-  it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
-    expect(subject.abc!.is_a?(Hashie::Mash)).to be_truthy
+  it 'returns a Hashie::Smash when passed a bang method to a non-existing key' do
+    expect(subject.abc!.is_a?(Hashie::Smash)).to be_truthy
   end
 
   it 'returns the existing value when passed a bang method for an existing key' do
@@ -80,8 +80,8 @@ describe Hashie::Mash do
     expect(subject.name!).to eq 'Bob'
   end
 
-  it 'returns a Hashie::Mash when passed an under bang method to a non-existenct key' do
-    expect(subject.abc_.is_a?(Hashie::Mash)).to be_truthy
+  it 'returns a Hashie::Smash when passed an under bang method to a non-existenct key' do
+    expect(subject.abc_.is_a?(Hashie::Smash)).to be_truthy
   end
 
   it 'returns the existing value when passed an under bang method for an existing key' do
@@ -89,15 +89,15 @@ describe Hashie::Mash do
     expect(subject.name_).to eq 'Bob'
   end
 
-  it '#initializing_reader returns a Hashie::Mash when passed a non-existent key' do
-    expect(subject.initializing_reader(:abc).is_a?(Hashie::Mash)).to be_truthy
+  it '#initializing_reader returns a Hashie::Smash when passed a non-existent key' do
+    expect(subject.initializing_reader(:abc).is_a?(Hashie::Smash)).to be_truthy
   end
 
   it 'allows for multi-level assignment through bang methods' do
     subject.author!.name = 'Michael Bleigh'
-    expect(subject.author).to eq Hashie::Mash.new(name: 'Michael Bleigh')
+    expect(subject.author).to eq Hashie::Smash.new(name: 'Michael Bleigh')
     subject.author!.website!.url = 'http://www.mbleigh.com/'
-    expect(subject.author.website).to eq Hashie::Mash.new(url: 'http://www.mbleigh.com/')
+    expect(subject.author.website).to eq Hashie::Smash.new(url: 'http://www.mbleigh.com/')
   end
 
   it 'allows for multi-level under bang testing' do
@@ -124,20 +124,9 @@ describe Hashie::Mash do
     expect(subject.type).to eq 'Steve'
   end
 
-  context 'method aliasing and protection' do
-    it 'aliases real methods to hash_<method_name> after they are overwritten' do
-      subject.zip = '10001'
-      expect(subject.hash_zip).to eq [[[:zip, '10001']]]
-    end
-
-    it 'allows overwriting the basic, un-aliased methods' do
-      subject.zip = '10001'
-      expect(subject.zip).to eq '10001'
-    end
-
-    it 'allows attributes named hash_<non-method>' do
-      expect { subject.hash_library_name = 'Hashie' }.not_to raise_error
-      expect(subject.hash_library_name).to eq 'Hashie'
+  context 'method protection' do
+    it 'raises an ArgumentError when trying to overwrite a real method' do
+      expect { subject.zip = '10001' }.to raise_error ArgumentError
     end
 
     it 'raises an ArgumentError when trying to overwrite a real method alias' do
@@ -149,20 +138,16 @@ describe Hashie::Mash do
     end
 
     context 'from initialization with a pre-existing Hash' do
-      subject { Hashie::Mash.new(zip: '10001') }
+      subject { Hashie::Smash.new(zip: '10001') }
 
-      it 'aliases real methods to hash_<method_name>' do
-        expect(subject.hash_zip).to eq [[[:zip, '10001']]]
-      end
-
-      it 'overwrites the basic, un-aliased methods' do
-        expect(subject.zip).to eq '10001'
+      it 'raises an ArgumentError when trying to overwrite a real method' do
+        expect { subject }.to raise_error ArgumentError
       end
 
       context 'containing a hash_<method_name> key' do
-        subject { Hashie::Mash.new(hash_zip: '10001') }
+        subject { Hashie::Smash.new(hash_zip: '10001') }
 
-        it 'raises an argument error' do
+        it 'raises an ArgumentError' do
           expect { subject }.to raise_error ArgumentError
         end
       end
@@ -181,7 +166,7 @@ describe Hashie::Mash do
     end
 
     describe '#deep_update' do
-      it 'recursively Hashie::Mash Hashie::Mashes and hashes together' do
+      it 'recursively Hashie::Smash Hashie::Smashes and hashes together' do
         subject.deep_update(details: { email: 'michael@intridea.com', city: 'Imagineton' })
         expect(subject.first_name).to eq 'Michael'
         expect(subject.details.email).to eq 'michael@intridea.com'
@@ -190,10 +175,10 @@ describe Hashie::Mash do
       end
 
       it 'converts values only once' do
-        class ConvertedMash < Hashie::Mash
+        class ConvertedSmash < Hashie::Smash
         end
 
-        rhs = ConvertedMash.new(email: 'foo@bar.com')
+        rhs = ConvertedSmash.new(email: 'foo@bar.com')
         expect(subject).to receive(:convert_value).exactly(1).times
         subject.deep_update(rhs)
       end
@@ -227,7 +212,7 @@ describe Hashie::Mash do
     end
 
     describe 'shallow update' do
-      it 'shallowly Hashie::Mash Hashie::Mashes and hashes together' do
+      it 'shallowly Hashie::Smash Hashie::Smashes and hashes together' do
         expect(subject.shallow_update(details: {  email: 'michael@intridea.com',
                                                   city: 'Imagineton' })).to eql(subject)
 
@@ -294,73 +279,73 @@ describe Hashie::Mash do
     end
   end
 
-  it 'converts hash assignments into Hashie::Mashes' do
+  it 'converts hash assignments into Hashie::Smashes' do
     subject.details = { email: 'randy@asf.com', address: { state: 'TX' } }
     expect(subject.details.email).to eq 'randy@asf.com'
     expect(subject.details.address.state).to eq 'TX'
   end
 
-  it 'does not convert the type of Hashie::Mashes childs to Hashie::Mash' do
-    class MyMash < Hashie::Mash
+  it 'does not convert the type of Hashie::Smashes childs to Hashie::Smash' do
+    class MySmash < Hashie::Smash
     end
 
-    record = MyMash.new
-    record.son = MyMash.new
-    expect(record.son.class).to eq MyMash
+    record = MySmash.new
+    record.son = MySmash.new
+    expect(record.son.class).to eq MySmash
   end
 
-  it 'does not change the class of Mashes when converted' do
-    class SubMash < Hashie::Mash
+  it 'does not change the class of Smashes when converted' do
+    class SubSmash < Hashie::Smash
     end
 
-    record = Hashie::Mash.new
-    son = SubMash.new
+    record = Hashie::Smash.new
+    son = SubSmash.new
     record['submash'] = son
-    expect(record['submash']).to be_kind_of(SubMash)
+    expect(record['submash']).to be_kind_of(SubSmash)
   end
 
   it 'respects the class when passed a bang method for a non-existent key' do
-    record = Hashie::Mash.new
-    expect(record.non_existent!).to be_kind_of(Hashie::Mash)
+    record = Hashie::Smash.new
+    expect(record.non_existent!).to be_kind_of(Hashie::Smash)
 
-    class SubMash < Hashie::Mash
+    class SubSmash < Hashie::Smash
     end
 
-    son = SubMash.new
-    expect(son.non_existent!).to be_kind_of(SubMash)
+    son = SubSmash.new
+    expect(son.non_existent!).to be_kind_of(SubSmash)
   end
 
   it 'respects the class when passed an under bang method for a non-existent key' do
-    record = Hashie::Mash.new
-    expect(record.non_existent_).to be_kind_of(Hashie::Mash)
+    record = Hashie::Smash.new
+    expect(record.non_existent_).to be_kind_of(Hashie::Smash)
 
-    class SubMash < Hashie::Mash
+    class SubSmash < Hashie::Smash
     end
 
-    son = SubMash.new
-    expect(son.non_existent_).to be_kind_of(SubMash)
+    son = SubSmash.new
+    expect(son.non_existent_).to be_kind_of(SubSmash)
   end
 
   it 'respects the class when converting the value' do
-    record = Hashie::Mash.new
-    record.details = Hashie::Mash.new(email: 'randy@asf.com')
-    expect(record.details).to be_kind_of(Hashie::Mash)
+    record = Hashie::Smash.new
+    record.details = Hashie::Smash.new(email: 'randy@asf.com')
+    expect(record.details).to be_kind_of(Hashie::Smash)
   end
 
   it 'respects another subclass when converting the value' do
-    record = Hashie::Mash.new
+    record = Hashie::Smash.new
 
-    class SubMash < Hashie::Mash
+    class SubSmash < Hashie::Smash
     end
 
-    son = SubMash.new(email: 'foo@bar.com')
+    son = SubSmash.new(email: 'foo@bar.com')
     record.details = son
-    expect(record.details).to be_kind_of(SubMash)
+    expect(record.details).to be_kind_of(SubSmash)
   end
 
   describe '#respond_to?' do
     subject do
-      Hashie::Mash.new(abc: 'def')
+      Hashie::Smash.new(abc: 'def')
     end
 
     it 'responds to a normal method' do
@@ -393,36 +378,36 @@ describe Hashie::Mash do
   end
 
   context '#initialize' do
-    it 'converts an existing hash to a Hashie::Mash' do
-      converted = Hashie::Mash.new(abc: 123, name: 'Bob')
+    it 'converts an existing hash to a Hashie::Smash' do
+      converted = Hashie::Smash.new(abc: 123, name: 'Bob')
       expect(converted.abc).to eq 123
       expect(converted.name).to eq 'Bob'
     end
 
     it 'does not force the key type to string' do
       h = { :abc  => 123, 'name' => 'Bob', 123 => 'foo', true => 'false', /foo/ => 'bar' }
-      converted = Hashie::Mash.new h
+      converted = Hashie::Smash.new h
       expect(converted.to_hash).to eq h
       expect(converted.abc).to eq h[:abc]
       expect(converted.name).to eq h['name']
     end
 
-    it 'converts hashes recursively into Hashie::Mashes' do
-      converted = Hashie::Mash.new(a: { b: 1, c: { d: 23 } })
-      expect(converted.a.is_a?(Hashie::Mash)).to be_truthy
+    it 'converts hashes recursively into Hashie::Smashes' do
+      converted = Hashie::Smash.new(a: { b: 1, c: { d: 23 } })
+      expect(converted.a.is_a?(Hashie::Smash)).to be_truthy
       expect(converted.a.b).to eq 1
       expect(converted.a.c.d).to eq 23
     end
 
-    it 'converts hashes in arrays into Hashie::Mashes' do
-      converted = Hashie::Mash.new(a: [{ b: 12 }, 23])
+    it 'converts hashes in arrays into Hashie::Smashes' do
+      converted = Hashie::Smash.new(a: [{ b: 12 }, 23])
       expect(converted.a.first.b).to eq 12
       expect(converted.a.last).to eq 23
     end
 
-    it 'converts an existing Hashie::Mash into a Hashie::Mash' do
-      initial = Hashie::Mash.new(name: 'randy', address: { state: 'TX' })
-      copy = Hashie::Mash.new(initial)
+    it 'converts an existing Hashie::Smash into a Hashie::Smash' do
+      initial = Hashie::Smash.new(name: 'randy', address: { state: 'TX' })
+      copy = Hashie::Smash.new(initial)
       expect(initial.name).to eq copy.name
       expect(initial.__id__).not_to eq copy.__id__
       expect(copy.address.state).to eq 'TX'
@@ -432,25 +417,25 @@ describe Hashie::Mash do
     end
 
     it 'accepts a default block' do
-      initial = Hashie::Mash.new { |h, i| h[i] = [] }
+      initial = Hashie::Smash.new { |h, i| h[i] = [] }
       expect(initial.default_proc).not_to be_nil
       expect(initial.default).to be_nil
       expect(initial.test).to eq []
       expect(initial.test?).to be_truthy
     end
 
-    it 'converts Hashie::Mashes within Arrays back to Hashes' do
+    it 'converts Hashie::Smashes within Arrays back to Hashes' do
       initial_hash = { 'a' => [{ 'b' => 12, 'c' => ['d' => 50, 'e' => 51] }, 23] }
-      converted = Hashie::Mash.new(initial_hash)
-      expect(converted.to_hash['a'].first.is_a?(Hashie::Mash)).to be_falsy
+      converted = Hashie::Smash.new(initial_hash)
+      expect(converted.to_hash['a'].first.is_a?(Hashie::Smash)).to be_falsy
       expect(converted.to_hash['a'].first.is_a?(Hash)).to be_truthy
-      expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_falsy
+      expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Smash)).to be_falsy
     end
   end
 
   describe '#fetch' do
     let(:hash) { { one: 1, other: false } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { Hashie::Smash.new(hash) }
 
     context 'when key exists' do
       it 'returns the value' do
@@ -497,7 +482,7 @@ describe Hashie::Mash do
 
   describe '#to_hash' do
     let(:hash) { { 'outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3] } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { Hashie::Smash.new(hash) }
 
     it 'returns a standard Hash' do
       expect(mash.to_hash).to be_a(::Hash)
@@ -525,7 +510,7 @@ describe Hashie::Mash do
 
   describe '#stringify_keys' do
     it 'turns all keys into strings recursively' do
-      hash = Hashie::Mash[:a => 'hey', 123 => { 345 => 'hey' }]
+      hash = Hashie::Smash[:a => 'hey', 123 => { 345 => 'hey' }]
       hash.stringify_keys!
       expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
     end
@@ -533,7 +518,7 @@ describe Hashie::Mash do
 
   describe '#values_at' do
     let(:hash) { { 'key_one' => 1, :key_two => 2 } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { Hashie::Smash.new(hash) }
 
     context 'when the original type is given' do
       it 'returns the values' do
@@ -548,7 +533,7 @@ describe Hashie::Mash do
       end
     end
 
-    context 'when a key is given that is not in the Mash' do
+    context 'when a key is given that is not in the Smash' do
       it 'returns nil for that value' do
         expect(mash.values_at('key_one', :key_three)).to eq([1, nil])
       end
@@ -580,9 +565,9 @@ describe Hashie::Mash do
         expect(parser).to receive(:perform).with(path).and_return(config)
       end
 
-      it { is_expected.to be_a(Hashie::Mash) }
+      it { is_expected.to be_a(Hashie::Smash) }
 
-      it 'return a Mash from a file' do
+      it 'return a Smash from a file' do
         expect(subject.production).not_to be_nil
         expect(subject.production.keys).to eq config['production'].keys
         expect(subject.production.foo).to eq config['production']['foo']
