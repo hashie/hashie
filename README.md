@@ -278,6 +278,18 @@ mash.hash_zip # => [[[:zip, '10001']]]
 mash.hash_zip = '10002' # => ArgumentError: You cannot overwrite a hash method (hash_zip)
 ```
 
+## Smash
+
+Smash, or "safe Mash," is a Mash with method protection. It affords all of the basic functionality of a Mash, but prevents you from attempting to overwrite its functions with attributes.
+
+```ruby
+smash = Hashie::Smash.new
+smash.user = 'John Doe'
+smash.user # => 'John Doe'
+
+smash.zip = '10001' # => ArgumentError: You cannot overwrite a hash method (zip)
+```
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.
