@@ -29,7 +29,10 @@ module Hashie
         end
 
         def coerce_or_init(type)
-          type.respond_to?(:coerce) ? ->(v) { type.coerce(v) } : ->(v) { type.new(v) }
+          type.respond_to?(:coerce) ? ->(v) { type.coerce(v) } : ->(v) do
+            return v if v.is_a? type
+            type.new(v)
+          end
         end
 
         private :coerce_or_init

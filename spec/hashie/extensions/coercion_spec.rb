@@ -92,6 +92,22 @@ describe Hashie::Extensions::Coercion do
       expect(instance[:foo].keys).to all(be_coerced)
     end
 
+    pending 'supports coercion for Float' do
+      subject.coerce_key :foo, Float
+
+      instance[:foo] = '2.0'
+      expect(instance[:foo]).to be_a(Float)
+      expect(instance[:foo]).to eq(2.0)
+    end
+
+    it 'does not coerce unnecessarily' do
+      subject.coerce_key :foo, Float
+
+      instance[:foo] = 2.0
+      expect(instance[:foo]).to be_a(Float)
+      expect(instance[:foo]).to eq(2.0)
+    end
+
     it 'calls #new if no coerce method is available' do
       subject.coerce_key :foo, Initializable
 
