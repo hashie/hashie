@@ -41,6 +41,13 @@ describe Hashie::Extensions::Coercion do
       expect(instance[:foo]).to be_coerced
     end
 
+    it 'skips unnecessary coercions' do
+      subject.coerce_key :foo, Coercable
+
+      instance[:foo] = Coercable.new('bar')
+      expect(instance[:foo]).to_not be_coerced
+    end
+
     it 'supports an array of keys' do
       subject.coerce_keys :foo, :bar, Coercable
 
