@@ -38,12 +38,9 @@ module Hashie
         end
 
         def coerce_or_init(type)
-          if type == :boolean
-            ->(v) do
-              return v if v == !!v
-              fail NotImplementedError, 'Boolean coercion is not supported'
-            end
-          elsif CORE_TYPES.key?(type)
+          return type if type.is_a? Proc
+
+          if CORE_TYPES.key?(type)
             ->(v) do
               return v if v.is_a? type
               return v.send(CORE_TYPES[type])

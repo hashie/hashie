@@ -145,17 +145,29 @@ describe Hashie::Extensions::Coercion do
       include_examples 'coerces from alphabetical types', String, :to_s
       include_examples 'coerces from alphabetical types', Symbol, :to_sym
 
-      it 'checks boolean types' do
-        subject.coerce_key :true, :boolean
-        subject.coerce_key :false, :boolean
+      it 'can coerce booleans via a proc' do
+        subject.coerce_key :foo, ->(v) do
+          case v
+          when String
+            return !!(v =~ /^(true|t|yes|y|1)$/i)
+          when Numeric
+            return !v.to_i.zero?
+          else
+            return v == true
+          end
+        end
 
-        instance[:true] = true
-        instance[:false] = false
-        expect(instance[:true]).to be_a(TrueClass)
-        expect(instance[:false]).to be_a(FalseClass)
+        true_values = [true, 'true', 't', 'yes', 'y', '1', 1, -1]
+        false_values = [false, 'false', 'f', 'no', 'n', '0', 0]
 
-        expect { instance[:true] = 'true' }.to raise_error(NotImplementedError, 'Boolean coercion is not supported')
-        expect { instance[:false] = 'false' }.to raise_error(NotImplementedError, 'Boolean coercion is not supported')
+        true_values.each do |v|
+          instance[:foo] = v
+          expect(instance[:foo]).to be_a(TrueClass)
+        end
+        false_values.each do |v|
+          instance[:foo] = v
+          expect(instance[:foo]).to be_a(FalseClass)
+        end
       end
 
       it 'raises errors for non-coercable types' do
