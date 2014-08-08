@@ -99,12 +99,65 @@ describe Hashie::Extensions::Coercion do
       expect(instance[:foo].keys).to all(be_coerced)
     end
 
-    pending 'supports coercion for Float' do
-      subject.coerce_key :foo, Float
+    context 'coercing core types' do
+      def test_coercion(literal, target_type, coerce_method)
+        subject.coerce_key :foo, target_type
+        instance[:foo] = literal
+        expect(instance[:foo]).to be_a(target_type)
+        expect(instance[:foo]).to eq(literal.send(coerce_method))
+      end
 
-      instance[:foo] = '2.0'
-      expect(instance[:foo]).to be_a(Float)
-      expect(instance[:foo]).to eq(2.0)
+      RSpec.shared_examples 'coerces from numeric types' do |target_type, coerce_method|
+        it "coerces from String to #{target_type} via #{coerce_method}" do
+          test_coercion '2.0', target_type, coerce_method
+        end
+
+        it "coerces from Integer to #{target_type} via #{coerce_method}" do
+          # Fixnum
+          test_coercion 2, target_type, coerce_method
+          # Bignum
+          test_coercion 12_345_667_890_987_654_321, target_type, coerce_method
+        end
+
+        it "coerces from Rational to #{target_type} via #{coerce_method}" do
+          test_coercion Rational(2, 3), target_type, coerce_method
+        end
+      end
+
+      RSpec.shared_examples 'coerces from alphabetical types' do |target_type, coerce_method|
+        it "coerces from String to #{target_type} via #{coerce_method}" do
+          test_coercion 'abc', target_type, coerce_method
+        end
+
+        it "coerces from Symbol to #{target_type} via #{coerce_method}" do
+          test_coercion :abc, target_type, coerce_method
+        end
+      end
+
+      include_examples 'coerces from numeric types', Integer, :to_i
+      include_examples 'coerces from numeric types', Float, :to_f
+      include_examples 'coerces from numeric types', String, :to_s
+
+      include_examples 'coerces from alphabetical types', String, :to_s
+      include_examples 'coerces from alphabetical types', Symbol, :to_sym
+
+      it 'checks boolean types' do
+        subject.coerce_key :true, :boolean
+        subject.coerce_key :false, :boolean
+
+        instance[:true] = true
+        instance[:false] = false
+        expect(instance[:true]).to be_a(TrueClass)
+        expect(instance[:false]).to be_a(FalseClass)
+
+        expect { instance[:true] = 'true' }.to raise_error(NotImplementedError, 'Boolean coercion is not supported')
+        expect { instance[:false] = 'false' }.to raise_error(NotImplementedError, 'Boolean coercion is not supported')
+      end
+
+      it 'raises errors for non-coercable types' do
+        subject.coerce_key :foo, TrueClass
+        expect { instance[:foo] = true }.to raise_error(TypeError, 'TrueClass is not a coercable type')
+      end
     end
 
     it 'does not coerce unnecessarily' do

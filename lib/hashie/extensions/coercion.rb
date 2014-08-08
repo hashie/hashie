@@ -1,6 +1,13 @@
 module Hashie
   module Extensions
     module Coercion
+      CORE_TYPES = {
+        Integer => :to_i,
+        Float   => :to_f,
+        String  => :to_s,
+        Symbol  => :to_sym
+      }
+
       def self.included(base)
         base.send :include, InstanceMethods
         base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
@@ -29,16 +36,28 @@ module Hashie
         end
 
         def coerce_or_init(type)
-          if  type.respond_to?(:coerce)
+          if type == :boolean
+            ->(v) do
+              return v if v == !!v
+              fail NotImplementedError, 'Boolean coercion is not supported'
+            end
+          elsif CORE_TYPES.key?(type)
+            ->(v) do
+              return v if v.is_a? type
+              return v.send(CORE_TYPES[type])
+            end
+          elsif type.respond_to?(:coerce)
             ->(v) do
               return v if v.is_a? type
               type.coerce(v)
             end
-          else
+          elsif type.respond_to?(:new)
             ->(v) do
               return v if v.is_a? type
               type.new(v)
             end
+          else
+            fail TypeError, "#{type} is not a coercable type"
           end
         end
 
