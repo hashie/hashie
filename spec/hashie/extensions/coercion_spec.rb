@@ -156,7 +156,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'raises errors for non-coercable types' do
         subject.coerce_key :foo, TrueClass
-        expect { instance[:foo] = true }.to raise_error(TypeError, 'TrueClass is not a coercable type')
+        expect { instance[:foo] = true }.to raise_error(TypeError, /TrueClass is not a coercable type/)
       end
     end
 
@@ -313,6 +313,46 @@ describe Hashie::Extensions::Coercion do
         expect(instance[:foo]).not_to be_kind_of(Coercable)
         instance[:foo] = klass.new
         expect(instance[:foo]).to be_kind_of(Coercable)
+      end
+    end
+
+    context 'core types' do
+      it 'coerces String to Integer when possible' do
+        subject.coerce_value String, Integer
+
+        instance[:foo] = '2'
+        instance[:bar] = '2.7'
+        instance[:hi] = 'hi'
+        expect(instance[:foo]).to be_a(Integer)
+        expect(instance[:foo]).to eq(2)
+        expect(instance[:bar]).to be_a(Integer)
+        expect(instance[:bar]).to eq(2)
+        expect(instance[:hi]).to be_a(Integer)
+        expect(instance[:hi]).to eq(0) # not what I expected...
+      end
+
+      it 'coerces non-numeric from String to Integer' do
+        # This was surprising, but I guess it's "correct"
+        # unless there is a stricter `to_i` alternative
+        subject.coerce_value String, Integer
+        instance[:hi] = 'hi'
+        expect(instance[:hi]).to be_a(Integer)
+        expect(instance[:hi]).to eq(0)
+      end
+
+      it 'raises a TypeError when coercion is not possible' do
+        subject.coerce_value Fixnum, Symbol
+        expect { instance[:hi] = 1 }.to raise_error(TypeError, /Cannot coerce property :hi from Fixnum to Symbol/)
+      end
+
+      pending 'coerces Integer to String' do
+        # This isn't possible because coerce_value doesn't handle superclasses
+        instance[:foo] = 2
+        instance[:bar] = 2.7
+        expect(instance[:foo]).to be_a(String)
+        expect(instance[:foo]).to eq('2')
+        expect(instance[:bar]).to be_a(String)
+        expect(instance[:bar]).to eq('2.0')
       end
     end
   end

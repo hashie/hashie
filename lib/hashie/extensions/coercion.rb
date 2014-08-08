@@ -33,6 +33,8 @@ module Hashie
           end
 
           set_value_without_coercion(key, value)
+        rescue NoMethodError, TypeError => e
+          raise TypeError, "Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{e.message}"
         end
 
         def coerce_or_init(type)
