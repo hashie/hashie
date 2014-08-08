@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::Coercion do
+  class NotInitializable
+    private_class_method :new
+  end
+
   class Initializable
     attr_reader :coerced, :value
 
@@ -155,8 +159,24 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'raises errors for non-coercable types' do
-        subject.coerce_key :foo, TrueClass
-        expect { instance[:foo] = true }.to raise_error(TypeError, /TrueClass is not a coercable type/)
+        subject.coerce_key :foo, NotInitializable
+        expect { instance[:foo] = 'true' }.to raise_error(TypeError, /NotInitializable is not a coercable type/)
+      end
+
+      pending 'can coerce false' do
+        subject.coerce_key :foo, Initializable
+
+        instance[:foo] = false
+        expect(instance[:foo]).to be_coerced
+        expect(instance[:foo].value).to eq(false)
+      end
+
+      pending 'can coerce nil' do
+        subject.coerce_key :foo, Initializable
+
+        instance[:foo] = nil
+        expect(instance[:foo]).to be_coerced
+        expect(instance[:foo].value).to be_nil
       end
     end
 
@@ -346,13 +366,30 @@ describe Hashie::Extensions::Coercion do
       end
 
       pending 'coerces Integer to String' do
-        # This isn't possible because coerce_value doesn't handle superclasses
+        subject.coerce_value Integer, String
+
         instance[:foo] = 2
         instance[:bar] = 2.7
         expect(instance[:foo]).to be_a(String)
         expect(instance[:foo]).to eq('2')
         expect(instance[:bar]).to be_a(String)
         expect(instance[:bar]).to eq('2.0')
+      end
+
+      pending 'coerces Numeric to String' do
+        subject.coerce_value Numeric, String
+
+        {
+          fixnum: 2,
+          bignum: 12_345_667_890_987_654_321,
+          float: 2.7,
+          rational: Rational(2, 3),
+          complex: Complex(1)
+        }.each do | k, v |
+          instance[k] = v
+          expect(instance[k]).to be_a(String)
+          expect(instance[k]).to eq(v.to_s)
+        end
       end
     end
   end
