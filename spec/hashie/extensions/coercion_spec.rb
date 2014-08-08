@@ -145,6 +145,14 @@ describe Hashie::Extensions::Coercion do
       include_examples 'coerces from alphabetical types', String, :to_s
       include_examples 'coerces from alphabetical types', Symbol, :to_sym
 
+      it 'can coerce String to Rational when possible' do
+        test_coercion '2/3', Rational, :to_r
+      end
+
+      it 'can coerce String to Complex when possible' do
+        test_coercion '2/3+3/4i', Complex, :to_c
+      end
+
       it 'can coerce booleans via a proc' do
         subject.coerce_key :foo, ->(v) do
           case v

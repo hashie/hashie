@@ -2,10 +2,12 @@ module Hashie
   module Extensions
     module Coercion
       CORE_TYPES = {
-        Integer => :to_i,
-        Float   => :to_f,
-        String  => :to_s,
-        Symbol  => :to_sym
+        Integer    => :to_i,
+        Float      => :to_f,
+        Complex    => :to_c,
+        Rational   => :to_r,
+        String     => :to_s,
+        Symbol     => :to_sym
       }
 
       def self.included(base)
