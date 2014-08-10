@@ -186,6 +186,28 @@ describe Hashie::Trash do
     end
   end
 
+  describe 'inheritable transforms' do
+    class TrashA < Hashie::Trash
+      property :some_value, transform_with: lambda { |v| v.to_i }
+    end
+
+    class TrashB < TrashA
+      property :some_other_value, transform_with: lambda { |v| v.to_i }
+    end
+
+    class TrashC < TrashB
+      property :some_value, transform_with: lambda { |v| -v.to_i }
+    end
+
+    it 'inherit properties transforms' do
+      expect(TrashB.new(some_value: '123', some_other_value: '456').some_value).to eq(123)
+    end
+
+    it 'replaces property transform' do
+      expect(TrashC.new(some_value: '123', some_other_value: '456').some_value).to eq(-123)
+    end
+  end
+
   it 'raises an error when :from have the same value as property' do
     expect do
       class WrongTrash < Hashie::Trash
