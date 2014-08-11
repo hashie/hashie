@@ -39,6 +39,16 @@ module Hashie
       end
     end
 
+    class << self
+      attr_reader :transforms
+    end
+    instance_variable_set('@transforms', {})
+
+    def self.inherited(klass)
+      super
+      klass.instance_variable_set('@transforms', transforms.dup)
+    end
+
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
@@ -69,20 +79,12 @@ module Hashie
 
     private
 
-    def self.properties
-      @properties ||= []
-    end
-
     def self.translations
       @translations ||= {}
     end
 
     def self.inverse_translations
       @inverse_translations ||= Hash[translations.map(&:reverse)]
-    end
-
-    def self.transforms
-      @transforms ||= {}
     end
 
     # Raises an NoMethodError if the property doesn't exist
