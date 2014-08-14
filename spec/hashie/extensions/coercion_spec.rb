@@ -36,6 +36,32 @@ describe Hashie::Extensions::Coercion do
   let(:instance) { subject.new }
 
   describe '#coerce_key' do
+    context 'nesting' do
+      class RootCoercableHash < Hash
+        include Hashie::Extensions::Coercion
+        include Hashie::Extensions::MergeInitializer
+        coerce_key :foo, Integer
+      end
+
+      class NestedCoercableHash < RootCoercableHash
+        include Hashie::Extensions::Coercion
+        include Hashie::Extensions::MergeInitializer
+        coerce_key :foo, Integer
+      end
+
+      subject { RootCoercableHash }
+      let(:instance) { subject.new }
+
+      it 'coeces nested objects' do
+        subject.coerce_key :nested, NestedCoercableHash
+
+        instance[:nested] = { foo: '123' }
+        expect(instance[:nested]).to be_a(NestedCoercableHash)
+        expect(instance[:nested][:foo]).to be_an(Integer)
+        expect(instance[:nested][:foo]).to eq('123')
+      end
+    end
+
     it { expect(subject).to be_respond_to(:coerce_key) }
 
     it 'runs through coerce on a specified key' do
@@ -153,6 +179,19 @@ describe Hashie::Extensions::Coercion do
         test_coercion '2/3+3/4i', Complex, :to_c
       end
 
+      it 'coerces collections with core types' do
+        subject.coerce_key :foo, Hash[String => String]
+
+        instance[:foo] = {
+          abc: 123,
+          xyz: 987
+        }
+        expect(instance[:foo]).to eq(
+                                       'abc' => '123',
+                                       'xyz' => '987'
+                                     )
+      end
+
       it 'can coerce booleans via a proc' do
         subject.coerce_key :foo, ->(v) do
           case v
@@ -180,7 +219,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'raises errors for non-coercable types' do
         subject.coerce_key :foo, NotInitializable
-        expect { instance[:foo] = 'true' }.to raise_error(TypeError, /NotInitializable is not a coercable type/)
+        expect { instance[:foo] = 'true' }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /NotInitializable is not a coercable type/)
       end
 
       pending 'can coerce false' do
@@ -382,7 +421,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'raises a TypeError when coercion is not possible' do
         subject.coerce_value Fixnum, Symbol
-        expect { instance[:hi] = 1 }.to raise_error(TypeError, /Cannot coerce property :hi from Fixnum to Symbol/)
+        expect { instance[:hi] = 1 }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /Cannot coerce property :hi from Fixnum to Symbol/)
       end
 
       pending 'coerces Integer to String' do
