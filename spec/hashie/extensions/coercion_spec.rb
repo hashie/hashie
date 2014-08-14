@@ -8,13 +8,13 @@ describe Hashie::Extensions::Coercion do
   class Initializable
     attr_reader :coerced, :value
 
-    def initialize(obj, coerced = false)
+    def initialize(obj, coerced = nil)
       @coerced = coerced
       @value = obj.class.to_s
     end
 
     def coerced?
-      !!@coerced
+      !@coerced.nil?
     end
   end
 
@@ -37,28 +37,61 @@ describe Hashie::Extensions::Coercion do
 
   describe '#coerce_key' do
     context 'nesting' do
-      class RootCoercableHash < Hash
+      class BaseCoercableHash < Hash
         include Hashie::Extensions::Coercion
         include Hashie::Extensions::MergeInitializer
-        coerce_key :foo, Integer
       end
 
-      class NestedCoercableHash < RootCoercableHash
-        include Hashie::Extensions::Coercion
-        include Hashie::Extensions::MergeInitializer
-        coerce_key :foo, Integer
+      class NestedCoercableHash < BaseCoercableHash
+        coerce_key :foo, String
+        coerce_key :bar, Integer
+      end
+
+      class RootCoercableHash < BaseCoercableHash
+        coerce_key :nested, NestedCoercableHash
+        coerce_key :nested_list, Array[NestedCoercableHash]
+        coerce_key :nested_hash, Hash[String => NestedCoercableHash]
+      end
+
+      def test_nested_object(obj)
+        expect(obj).to be_a(NestedCoercableHash)
+        expect(obj[:foo]).to be_a(String)
+        expect(obj[:bar]).to be_an(Integer)
       end
 
       subject { RootCoercableHash }
       let(:instance) { subject.new }
 
       it 'coeces nested objects' do
-        subject.coerce_key :nested, NestedCoercableHash
+        instance[:nested] = { foo: 123, bar: '456' }
+        test_nested_object(instance[:nested])
+      end
 
-        instance[:nested] = { foo: '123' }
-        expect(instance[:nested]).to be_a(NestedCoercableHash)
-        expect(instance[:nested][:foo]).to be_an(Integer)
-        expect(instance[:nested][:foo]).to eq('123')
+      it 'coeces nested arrays' do
+        instance[:nested_list] = [
+          { foo: 123, bar: '456' },
+          { foo: 234, bar: '567' },
+          { foo: 345, bar: '678' }
+        ]
+        expect(instance[:nested_list]).to be_a Array
+        expect(instance[:nested_list].size).to eq(3)
+        instance[:nested_list].each do | nested |
+          test_nested_object nested
+        end
+      end
+
+      it 'coeces nested hashes' do
+        instance[:nested_hash] = {
+          a: { foo: 123, bar: '456' },
+          b: { foo: 234, bar: '567' },
+          c: { foo: 345, bar: '678' }
+        }
+        expect(instance[:nested_hash]).to be_a Hash
+        expect(instance[:nested_hash].size).to eq(3)
+        instance[:nested_hash].each do | key, nested |
+          expect(key).to be_a(String)
+          test_nested_object nested
+        end
       end
     end
 
@@ -222,20 +255,20 @@ describe Hashie::Extensions::Coercion do
         expect { instance[:foo] = 'true' }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /NotInitializable is not a coercable type/)
       end
 
-      pending 'can coerce false' do
-        subject.coerce_key :foo, Initializable
+      it 'can coerce false' do
+        subject.coerce_key :foo, Coercable
 
         instance[:foo] = false
         expect(instance[:foo]).to be_coerced
-        expect(instance[:foo].value).to eq(false)
+        expect(instance[:foo].value).to eq('FalseClass')
       end
 
-      pending 'can coerce nil' do
-        subject.coerce_key :foo, Initializable
+      it 'does not coerce nil' do
+        subject.coerce_key :foo, String
 
         instance[:foo] = nil
-        expect(instance[:foo]).to be_coerced
-        expect(instance[:foo].value).to be_nil
+        expect(instance[:foo]).to_not eq('')
+        expect(instance[:foo]).to be_nil
       end
     end
 
@@ -424,18 +457,28 @@ describe Hashie::Extensions::Coercion do
         expect { instance[:hi] = 1 }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /Cannot coerce property :hi from Fixnum to Symbol/)
       end
 
-      pending 'coerces Integer to String' do
+      it 'coerces Integer to String' do
         subject.coerce_value Integer, String
 
-        instance[:foo] = 2
-        instance[:bar] = 2.7
-        expect(instance[:foo]).to be_a(String)
-        expect(instance[:foo]).to eq('2')
-        expect(instance[:bar]).to be_a(String)
-        expect(instance[:bar]).to eq('2.0')
+        {
+          fixnum: 2,
+          bignum: 12_345_667_890_987_654_321,
+          float: 2.7,
+          rational: Rational(2, 3),
+          complex: Complex(1)
+        }.each do | k, v |
+          instance[k] = v
+          if v.is_a? Integer
+            expect(instance[k]).to be_a(String)
+            expect(instance[k]).to eq(v.to_s)
+          else
+            expect(instance[k]).to_not be_a(String)
+            expect(instance[k]).to eq(v)
+          end
+        end
       end
 
-      pending 'coerces Numeric to String' do
+      it 'coerces Numeric to String' do
         subject.coerce_value Numeric, String
 
         {
