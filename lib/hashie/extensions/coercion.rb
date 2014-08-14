@@ -1,9 +1,8 @@
 module Hashie
+  class CoercionError < StandardError; end
+
   module Extensions
     module Coercion
-      class CoercionError < StandardError
-      end
-
       CORE_TYPES = {
         Integer    => :to_i,
         Float      => :to_f,

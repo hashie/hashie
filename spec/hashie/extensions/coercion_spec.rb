@@ -252,7 +252,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'raises errors for non-coercable types' do
         subject.coerce_key :foo, NotInitializable
-        expect { instance[:foo] = 'true' }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /NotInitializable is not a coercable type/)
+        expect { instance[:foo] = 'true' }.to raise_error(Hashie::CoercionError, /NotInitializable is not a coercable type/)
       end
 
       it 'can coerce false' do
@@ -270,14 +270,6 @@ describe Hashie::Extensions::Coercion do
         expect(instance[:foo]).to_not eq('')
         expect(instance[:foo]).to be_nil
       end
-    end
-
-    it 'does not coerce unnecessarily' do
-      subject.coerce_key :foo, Float
-
-      instance[:foo] = 2.0
-      expect(instance[:foo]).to be_a(Float)
-      expect(instance[:foo]).to eq(2.0)
     end
 
     it 'calls #new if no coerce method is available' do
@@ -452,9 +444,9 @@ describe Hashie::Extensions::Coercion do
         expect(instance[:hi]).to eq(0)
       end
 
-      it 'raises a TypeError when coercion is not possible' do
+      it 'raises a CoercionError when coercion is not possible' do
         subject.coerce_value Fixnum, Symbol
-        expect { instance[:hi] = 1 }.to raise_error(Hashie::Extensions::Coercion::CoercionError, /Cannot coerce property :hi from Fixnum to Symbol/)
+        expect { instance[:hi] = 1 }.to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from Fixnum to Symbol/)
       end
 
       it 'coerces Integer to String' do
