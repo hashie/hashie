@@ -225,7 +225,7 @@ describe Hashie::Extensions::Coercion do
                                      )
       end
 
-      it 'can coerce booleans via a proc' do
+      it 'can coerce via a proc' do
         subject.coerce_key :foo, ->(v) do
           case v
           when String
@@ -483,6 +483,24 @@ describe Hashie::Extensions::Coercion do
           instance[k] = v
           expect(instance[k]).to be_a(String)
           expect(instance[k]).to eq(v.to_s)
+        end
+      end
+
+      it 'can coerce via a proc' do
+        subject.coerce_value String, ->(v) do
+          return !!(v =~ /^(true|t|yes|y|1)$/i)
+        end
+
+        true_values = %w(true t yes y 1)
+        false_values = %w(false f no n 0)
+
+        true_values.each do |v|
+          instance[:foo] = v
+          expect(instance[:foo]).to be_a(TrueClass)
+        end
+        false_values.each do |v|
+          instance[:foo] = v
+          expect(instance[:foo]).to be_a(FalseClass)
         end
       end
     end
