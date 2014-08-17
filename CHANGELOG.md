@@ -3,6 +3,7 @@
 * [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
 * [#197](https://github.com/intridea/hashie/pull/197): Dont convert keys to string on initalization of mash - [@gregory](https://github.com/gregory).
 * Your contribution here.
+* [#200](https://github.com/intridea/hashie/pull/200): Improved coercion: primitives and error handling - [@maxlinc](https://github.com/maxlinc).
 
 ## 3.2.0 (7/10/2014)
 

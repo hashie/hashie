@@ -96,6 +96,47 @@ tweet.relations.class # => Hash
 #    and Relation.new on each value since Relation doesn't define the `coerce` class method
 ```
 
+### Coercing Core Types
+
+Hashie handles coercion to the following by using standard conversion methods:
+
+| type     | method   |
+|----------|----------|
+| Integer  | `#to_i`  |
+| Float    | `#to_f`  |
+| Complex  | `#to_c`  |
+| Rational | `#to_r`  |
+| String   | `#to_s`  |
+| Symbol   | `#to_sym`|
+
+**Note**: The standard Ruby conversion methods are less strict than you may assume. For example, `:foo.to_i` raises an error but `"foo".to_i` returns 0.
+
+You can also use coerce from the following supertypes with `coerce_value`:
+- Integer
+- Numeric
+
+Hashie does not have built-in support for coercion boolean values, since Ruby does not have a built-in boolean type or standard method for to a boolean. You can coerce to booleans using a custom proc.
+
+### Coercion Proc
+
+You can use a custom coercion proc on either `#coerce_key` or `#coerce_value`. This is useful for coercing to booleans or other simple types without creating a new class and `coerce` method. For example:
+
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion
+  coerce_key :retweeted, ->(v) do
+    case v
+    when String
+      return !!(v =~ /^(true|t|yes|y|1)$/i)
+    when Numeric
+      return !v.to_i.zero?
+    else
+      return v == true
+    end
+  end
+end
+```
+
 ### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
