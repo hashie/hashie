@@ -1,6 +1,7 @@
 ## 3.2.1 (Next)
 
 * [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
+* [#195](https://github.com/intridea/hashie/pull/195): Ensure that the same object is returned after injecting IndifferentAccess - [@michaelherold](https://github.com/michaelherold).
 * [#197](https://github.com/intridea/hashie/pull/197): Dont convert keys to string on initalization of mash - [@gregory](https://github.com/gregory).
 * [#201](https://github.com/intridea/hashie/pull/201): Hashie::Trash transforms can be inherited - [@fobocaster](https://github.com/fobocaster).
 * [#189](https://github.com/intridea/hashie/pull/189): Added Rash#fetch - [@medcat](https://github.com/medcat).
