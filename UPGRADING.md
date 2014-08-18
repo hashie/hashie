@@ -1,6 +1,22 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.2.1
+
+#### Possible coercion changes
+
+The improvements made to coercions in version 3.2.1 [issue #200](https://github.com/intridea/hashie/pull/200) do not break the documented API, but are significant enough that changes may effect undocumented side-effects. Applications that depended on those side-effects will need to be updated.
+
+**Change**: Type coercion no longer creates new objects if the input matches the target type. Previously coerced properties always resulted in the creation of a new object, even when it wasn't necessary. This had the effect of a `dup` or `clone` on coerced properties but not uncoerced ones.
+
+If necessary, `dup` or `clone` your own objects. Do not assume Hashie will do it for you.
+
+**Change**: Failed coercion attempts now raise Hashie::CoercionError.
+
+Hashie now raises a Hashie::CoercionError that details on the property that could not be coerced, the source and target type of the coercion, and the internal error. Previously only the internal error was raised.
+
+Applications that were attempting to rescuing the internal errors should be updated to rescue Hashie::CoercionError instead.
+
 ### Upgrading to 3.0
 
 #### Compatibility with Rails 4 Strong Parameters

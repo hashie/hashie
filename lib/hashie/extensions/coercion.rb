@@ -1,6 +1,22 @@
 module Hashie
+  class CoercionError < StandardError; end
+
   module Extensions
     module Coercion
+      CORE_TYPES = {
+        Integer    => :to_i,
+        Float      => :to_f,
+        Complex    => :to_c,
+        Rational   => :to_r,
+        String     => :to_s,
+        Symbol     => :to_sym
+      }
+
+      ABSTRACT_CORE_TYPES = {
+        Integer => [Fixnum, Bignum],
+        Numeric => [Fixnum, Bignum, Float, Complex, Rational]
+      }
+
       def self.included(base)
         base.send :include, InstanceMethods
         base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
@@ -13,23 +29,47 @@ module Hashie
         def set_value_with_coercion(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
-          return set_value_without_coercion(key, value) unless value && into
-          return set_value_without_coercion(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
+          return set_value_without_coercion(key, value) if value.nil? || into.nil?
 
-          if into.class >= Hash
-            key_coerce = coerce_or_init(into.flatten[0])
-            value_coerce = coerce_or_init(into.flatten[-1])
-            value = Hash[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
-          else # Enumerable but not Hash: Array, Set
-            value_coerce = coerce_or_init(into.first)
-            value = into.class.new(value.map { |v| value_coerce.call(v) })
+          begin
+            return set_value_without_coercion(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
+
+            if into.class >= Hash
+              key_coerce = coerce_or_init(into.flatten[0])
+              value_coerce = coerce_or_init(into.flatten[-1])
+              value = Hash[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
+            else # Enumerable but not Hash: Array, Set
+              value_coerce = coerce_or_init(into.first)
+              value = into.class.new(value.map { |v| value_coerce.call(v) })
+            end
+          rescue NoMethodError, TypeError => e
+            raise CoercionError, "Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{e.message}"
           end
 
           set_value_without_coercion(key, value)
         end
 
         def coerce_or_init(type)
-          type.respond_to?(:coerce) ? ->(v) { type.coerce(v) } : ->(v) { type.new(v) }
+          return type if type.is_a? Proc
+
+          if CORE_TYPES.key?(type)
+            ->(v) do
+              return v if v.is_a? type
+              return v.send(CORE_TYPES[type])
+            end
+          elsif type.respond_to?(:coerce)
+            ->(v) do
+              return v if v.is_a? type
+              type.coerce(v)
+            end
+          elsif type.respond_to?(:new)
+            ->(v) do
+              return v if v.is_a? type
+              type.new(v)
+            end
+          else
+            fail TypeError, "#{type} is not a coercable type"
+          end
         end
 
         private :coerce_or_init
@@ -101,6 +141,12 @@ module Hashie
         #   end
         def coerce_value(from, into, options = {})
           options = { strict: true }.merge(options)
+
+          if ABSTRACT_CORE_TYPES.key? from
+            ABSTRACT_CORE_TYPES[from].each do | type |
+              coerce_value type, into, options
+            end
+          end
 
           if options[:strict]
             (@strict_value_coercions ||= {})[from] = into
