@@ -160,6 +160,11 @@ module Hashie
     alias_method :update, :deep_update
     alias_method :merge!, :update
 
+    # Assigns a value to a key
+    def assign_property(name, value)
+      self[name] = value
+    end
+
     # Performs a shallow_update on a duplicate of the current mash
     def shallow_merge(other_hash)
       dup.shallow_update(other_hash)
@@ -201,7 +206,7 @@ module Hashie
       name, suffix = method_suffix(method_name)
       case suffix
       when '='
-        self[name] = args.first
+        assign_property(name, args.first)
       when '?'
         !!self[name]
       when '!'

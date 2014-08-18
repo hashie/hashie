@@ -5,8 +5,9 @@
 * [#197](https://github.com/intridea/hashie/pull/197): Dont convert keys to string on initalization of mash - [@gregory](https://github.com/gregory).
 * [#201](https://github.com/intridea/hashie/pull/201): Hashie::Trash transforms can be inherited - [@fobocaster](https://github.com/fobocaster).
 * [#189](https://github.com/intridea/hashie/pull/189): Added Rash#fetch - [@medcat](https://github.com/medcat).
-* [#204](https://github.com/intridea/hashie/pull/204): Added Hashie::Extensions::MethodOverridingWriter and Hashie::Extensions::MethodAccessWithOverride - [@michaelherold](https://github.com/michaelherold).
 * [#200](https://github.com/intridea/hashie/pull/200): Improved coercion: primitives and error handling - [@maxlinc](https://github.com/maxlinc).
+* [#204](https://github.com/intridea/hashie/pull/204): Added Hashie::Extensions::MethodOverridingWriter and Hashie::Extensions::MethodAccessWithOverride - [@michaelherold](https://github.com/michaelherold).
+* [#205](http://github.com/intridea/hashie/pull/205): Added Hashie::Extensions::Mash::SafeAssignment - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## 3.2.0 (7/10/2014)

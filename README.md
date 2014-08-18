@@ -342,6 +342,21 @@ mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 mash[1] #=> { name: 'John', lastname: 'Doe' }
 ```
 
+### Mash Extension: SafeAssignment
+
+This extension can be mixed into a Mash to guard the attempted overwriting of methods by property setters. When mixed in, the Mash will raise an `ArgumentError` if you attempt to write a property with the same name as an existing method.
+
+#### Example:
+
+```ruby
+class SafeMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::SafeAssignment
+end
+
+safe_mash = SafeMash.new
+safe_mash.zip = 'Test' # => ArgumentError
+```
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.
