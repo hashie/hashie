@@ -160,6 +160,29 @@ h.abc  # => 'def'
 h.abc? # => true
 ```
 
+### MethodAccessWithOverride
+
+The MethodAccessWithOverride extension is like the MethodAccess extension, except that it allows you to override Hash methods. It aliases any overridden method with two leading underscores. To include only this overriding functionality, you can include the single module `Hashie::Extensions::MethodOverridingWriter`.
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::MethodAccess
+end
+
+class MyOverridingHash < Hash
+  include Hashie::Extensions::MethodAccessWithOverride
+end
+
+non_overriding = MyHash.new
+non_overriding.zip = 'a-dee-doo-dah'
+non_overriding.zip #=> [[['zip', 'a-dee-doo-dah']]]
+
+overriding = MyHash.new
+overriding.zip = 'a-dee-doo-dah'
+overriding.zip   #=> 'a-dee-doo-dah'
+overriding.__zip #=> [[['zip', 'a-dee-doo-dah']]]
+```
+
 ### IndifferentAccess
 
 This extension can be mixed in to instantly give you indifferent access to your Hash subclass. This works just like the params hash in Rails and other frameworks where whether you provide symbols or strings to access keys, you will get the same results.
