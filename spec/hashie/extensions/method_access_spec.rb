@@ -119,3 +119,58 @@ describe Hashie::Extensions::MethodAccess do
     expect((klass.ancestors & [Hashie::Extensions::MethodReader, Hashie::Extensions::MethodWriter, Hashie::Extensions::MethodQuery]).size).to eq 3
   end
 end
+
+describe Hashie::Extensions::MethodOverridingWriter do
+  class OverridingHash < Hash
+    include Hashie::Extensions::MethodOverridingWriter
+  end
+
+  subject { OverridingHash.new }
+
+  it 'writes from a method call' do
+    subject.awesome = 'sauce'
+    expect(subject['awesome']).to eq 'sauce'
+  end
+
+  it 'convertes the key using the #convert_key method' do
+    allow(subject).to receive(:convert_key).and_return(:awesome)
+    subject.awesome = 'sauce'
+    expect(subject[:awesome]).to eq 'sauce'
+  end
+
+  it 'raises NoMethodError on non equals-ending methods' do
+    expect { subject.awesome }.to raise_error(NoMethodError)
+  end
+
+  it '#respond_to_missing? correctly' do
+    expect(subject).to respond_to(:abc=)
+    expect(subject).not_to respond_to(:abc)
+    expect(subject.method(:abc=)).not_to be_nil
+  end
+
+  context 'when writing a Hash method' do
+    before { subject.zip = 'a-dee-doo-dah' }
+
+    it 'overrides the original method' do
+      expect(subject.zip).to eq 'a-dee-doo-dah'
+    end
+
+    it 'aliases the method with two leading underscores' do
+      expect(subject.__zip).to eq [[%w(zip a-dee-doo-dah)]]
+    end
+
+    it 'does not re-alias when overriding an already overridden method' do
+      subject.zip = 'test'
+      expect(subject.zip).to eq 'test'
+      expect(subject.__zip).to eq [[%w(zip test)]]
+    end
+  end
+end
+
+describe Hashie::Extensions::MethodAccessWithOverride do
+  it 'includes all of the other method mixins' do
+    klass = Class.new(Hash)
+    klass.send :include, Hashie::Extensions::MethodAccessWithOverride
+    expect((klass.ancestors & [Hashie::Extensions::MethodReader, Hashie::Extensions::MethodOverridingWriter, Hashie::Extensions::MethodQuery]).size).to eq 3
+  end
+end
