@@ -239,7 +239,7 @@ user.deep_fetch :groups, 1, :name # => 'Open source enthusiasts'
 
 ## Mash
 
-Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is designed to be used in RESTful API libraries to provide easy object-like access to JSON and XML parsed hashes.
+Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is intended to give the user easier access to the objects within the Mash through a property-like syntax, while still retaining all Hash functionality.
 
 ### Example:
 
@@ -264,6 +264,17 @@ mash.inspect # => <Hashie::Mash>
 ```
 
 **Note:** The `?` method will return false if a key has been set to false or nil. In order to check if a key has been set at all, use the `mash.key?('some_key')` method instead.
+
+Please note that a Mash will not override methods through the use of the property-like syntax. This can lead to confusion if you expect to be able to access a Mash value through the property-like syntax for a key that conflicts with a method name. However, it protects users of your library from the unexpected behavior of those methods being overridden behind the scenes.
+
+### Example:
+
+```ruby
+mash = Hashie::Mash.new
+mash.name = "My Mash"
+mash.zip = "Method Override?"
+mash.zip # => [[["name", "My Mash"]], [["zip", "Method Override?"]]]
+```
 
 Mash allows you also to transform any files into a Mash objects.
 
