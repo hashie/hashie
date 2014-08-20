@@ -40,13 +40,15 @@ module Hashie
     end
 
     class << self
-      attr_reader :transforms
+      attr_reader :transforms, :translations
     end
     instance_variable_set('@transforms', {})
+    instance_variable_set('@translations', {})
 
     def self.inherited(klass)
       super
       klass.instance_variable_set('@transforms', transforms.dup)
+      klass.instance_variable_set('@translations', translations.dup)
     end
 
     # Set a value on the Dash in a Hash-like way. Only works
@@ -78,10 +80,6 @@ module Hashie
     end
 
     private
-
-    def self.translations
-      @translations ||= {}
-    end
 
     def self.inverse_translations
       @inverse_translations ||= Hash[translations.map(&:reverse)]
