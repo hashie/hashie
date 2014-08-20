@@ -31,5 +31,9 @@ module Hashie
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
     end
+
+    module Mash
+      autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
+    end
   end
 end
