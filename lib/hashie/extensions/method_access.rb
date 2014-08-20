@@ -120,5 +120,80 @@ module Hashie
         end
       end
     end
+
+    # MethodOverridingWriter gives you #key_name= shortcuts for
+    # writing to your hash. It allows methods to be overridden by
+    # #key_name= shortcuts and aliases those methods with two
+    # leading underscores.
+    #
+    # Keys are written as strings. Override #convert_key if you
+    # would like to have symbols or something else.
+    #
+    # Note that MethodOverridingWriter also overrides
+    # #respond_to_missing? such that any #method_name= will respond
+    # appropriately as true.
+    #
+    # @example
+    #   class MyHash < Hash
+    #     include Hashie::Extensions::MethodOverridingWriter
+    #   end
+    #
+    #   h = MyHash.new
+    #   h.awesome = 'sauce'
+    #   h['awesome'] # => 'sauce'
+    #   h.zip = 'a-dee-doo-dah'
+    #   h.zip # => 'a-dee-doo-dah'
+    #   h.__zip # => [[['awesome', 'sauce'], ['zip', 'a-dee-doo-dah']]]
+    #
+    module MethodOverridingWriter
+      def convert_key(key)
+        key.to_s
+      end
+
+      def method_missing(name, *args)
+        if args.size == 1 && name.to_s =~ /(.*)=$/
+          key = Regexp.last_match[1]
+          redefine_method(key) if method?(key) && !already_overridden?(key)
+          return self[convert_key(key)] = args.first
+        end
+
+        super
+      end
+
+      def respond_to_missing?(name, include_private = false)
+        return true if name.to_s.end_with?('=')
+        super
+      end
+
+      protected
+
+      def already_overridden?(name)
+        method?("__#{name}")
+      end
+
+      def method?(name)
+        methods.map { |m| m.to_s }.include?(name)
+      end
+
+      def redefine_method(method_name)
+        eigenclass = class << self; self; end
+        eigenclass.__send__(:alias_method, "__#{method_name}", method_name)
+        eigenclass.__send__(:define_method, method_name, -> { self[method_name] })
+      end
+    end
+
+    # A macro module that will automatically include MethodReader,
+    # MethodOverridingWriter, and MethodQuery, giving you the ability
+    # to read, write, and query keys in a hash using method call
+    # shortcuts that can override object methods. Any overridden
+    # object method is automatically aliased with two leading
+    # underscores.
+    module MethodAccessWithOverride
+      def self.included(base)
+        [MethodReader, MethodOverridingWriter, MethodQuery].each do |mod|
+          base.send :include, mod
+        end
+      end
+    end
   end
 end
