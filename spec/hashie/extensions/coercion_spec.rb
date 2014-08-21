@@ -62,12 +62,12 @@ describe Hashie::Extensions::Coercion do
       subject { RootCoercableHash }
       let(:instance) { subject.new }
 
-      it 'coeces nested objects' do
+      it 'coerces nested objects' do
         instance[:nested] = { foo: 123, bar: '456' }
         test_nested_object(instance[:nested])
       end
 
-      it 'coeces nested arrays' do
+      it 'coerces nested arrays' do
         instance[:nested_list] = [
           { foo: 123, bar: '456' },
           { foo: 234, bar: '567' },
@@ -80,7 +80,7 @@ describe Hashie::Extensions::Coercion do
         end
       end
 
-      it 'coeces nested hashes' do
+      it 'coerces nested hashes' do
         instance[:nested_hash] = {
           a: { foo: 123, bar: '456' },
           b: { foo: 234, bar: '567' },
@@ -91,6 +91,25 @@ describe Hashie::Extensions::Coercion do
         instance[:nested_hash].each do | key, nested |
           expect(key).to be_a(String)
           test_nested_object nested
+        end
+      end
+
+      context 'when repetitively including the module' do
+        class RepetitiveCoercableHash < NestedCoercableHash
+          include Hashie::Extensions::Coercion
+          include Hashie::Extensions::MergeInitializer
+
+          coerce_key :nested, NestedCoercableHash
+        end
+
+        subject { RepetitiveCoercableHash }
+        let(:instance) { subject.new }
+
+        it 'does not raise a stack overflow error' do
+          expect do
+            instance[:nested] = { foo: 123, bar: '456' }
+            test_nested_object(instance[:nested])
+          end.not_to raise_error
         end
       end
     end

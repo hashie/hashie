@@ -21,8 +21,8 @@ module Hashie
         base.send :include, InstanceMethods
         base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
 
-        base.send :alias_method, :'set_value_without_coercion', :[]=
-        base.send :alias_method, :[]=, :'set_value_with_coercion'
+        base.send :alias_method, :set_value_without_coercion, :[]= unless base.method_defined?(:set_value_without_coercion)
+        base.send :alias_method, :[]=, :set_value_with_coercion
       end
 
       module InstanceMethods
