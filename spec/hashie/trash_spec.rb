@@ -187,24 +187,38 @@ describe Hashie::Trash do
   end
 
   describe 'inheritable transforms' do
-    class TrashA < Hashie::Trash
+    class TransformA < Hashie::Trash
       property :some_value, transform_with: lambda { |v| v.to_i }
     end
 
-    class TrashB < TrashA
+    class TransformB < TransformA
       property :some_other_value, transform_with: lambda { |v| v.to_i }
     end
 
-    class TrashC < TrashB
+    class TransformC < TransformB
       property :some_value, transform_with: lambda { |v| -v.to_i }
     end
 
     it 'inherit properties transforms' do
-      expect(TrashB.new(some_value: '123', some_other_value: '456').some_value).to eq(123)
+      expect(TransformB.new(some_value: '123', some_other_value: '456').some_value).to eq(123)
     end
 
     it 'replaces property transform' do
-      expect(TrashC.new(some_value: '123', some_other_value: '456').some_value).to eq(-123)
+      expect(TransformC.new(some_value: '123', some_other_value: '456').some_value).to eq(-123)
+    end
+  end
+
+  describe 'inheritable translations' do
+    class TranslationA < Hashie::Trash
+      property :some_value, from: 'someValue', with: lambda { |v| v.to_i }
+    end
+
+    class TranslationB < TranslationA
+      property :some_other_value, from: 'someOtherValue'
+    end
+
+    it 'inherit properties translations' do
+      expect(TranslationB.new('someValue' => '123').some_value).to eq(123)
     end
   end
 
