@@ -21,6 +21,7 @@ module Hashie
     autoload :StringifyKeys,     'hashie/extensions/stringify_keys'
     autoload :SymbolizeKeys,     'hashie/extensions/symbolize_keys'
     autoload :DeepFetch,         'hashie/extensions/deep_fetch'
+    autoload :DeepFind,          'hashie/extensions/deep_find'
     autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
 
