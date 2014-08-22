@@ -260,6 +260,32 @@ user.deep_fetch :name, :middle { |key| 'default' }  # =>  'default'
 user.deep_fetch :groups, 1, :name # => 'Open source enthusiasts'
 ```
 
+### DeepFind
+
+This extension can be mixed in to provide for concise searching for keys within a deeply nested hash.
+
+It can also search through any Enumerable contained within the hash for objects with the specified key.
+
+Note: The searches are depth-first, so it is not guaranteed that a shallowly nested value will be found before a deeply nested value.
+
+```ruby
+user = {
+  name: { first: 'Bob', last: 'Boberts' },
+  groups: [
+    { name: 'Rubyists' },
+    { name: 'Open source enthusiasts' }
+  ]
+}
+
+user.extend Hashie::Extensions::DeepFind
+
+user.deep_find(:name)   #=> { first: 'Bob', last: 'Boberts' }
+user.deep_detect(:name) #=> { first: 'Bob', last: 'Boberts' }
+
+user.deep_find_all(:name) #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
+user.deep_select(:name)   #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
+```
+
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is intended to give the user easier access to the objects within the Mash through a property-like syntax, while still retaining all Hash functionality.

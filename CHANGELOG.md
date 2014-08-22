@@ -10,6 +10,7 @@
 * [#205](http://github.com/intridea/hashie/pull/205): Added Hashie::Extensions::Mash::SafeAssignment - [@michaelherold](https://github.com/michaelherold).
 * [#206](http://github.com/intridea/hashie/pull/206): Fixed stack overflow from repetitively including coercion in subclasses - [@michaelherold](https://github.com/michaelherold).
 * [#207](http://github.com/intridea/hashie/pull/207): Fixed inheritance of transformations in Trash - [@fobocaster](https://github.com/fobocaster).
+* [#209](http://github.com/intridea/hashie/pull/209): Added Hashie::Extensions::DeepFind - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## 3.2.0 (7/10/2014)
