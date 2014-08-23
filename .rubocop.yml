@@ -1,36 +1,34 @@
 AllCops:
   Exclude:
-    - vendor/**
-    - bin/**
     - .bundle/**
+    - bin/**
+    - vendor/**
 
-LineLength:
+Style/CaseEquality:
   Enabled: false
 
-MethodLength:
-  Enabled: false
-
-ClassLength:
-  Enabled: false
-
-Documentation:
+Style/Documentation:
   # don't require classes to be documented
   Enabled: false
 
-Encoding:
+Style/DoubleNegation:
+  Enabled: false
+
+Style/Encoding:
   # no need to always specify encoding
   Enabled: false
 
-Lambda:
-  # TODO: replace all lambda with -> or Proc
+Metrics/ClassLength:
   Enabled: false
 
-CyclomaticComplexity:
+Metrics/CyclomaticComplexity:
   Enabled: false
 
-DoubleNegation:
+Metrics/LineLength:
   Enabled: false
 
-CaseEquality:
+Metrics/MethodLength:
   Enabled: false
 
+Metrics/PerceivedComplexity:
+  Max: 10

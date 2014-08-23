@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Hashie::Extensions::Dash::IndifferentAccess do
   class TrashWithIndifferentAccess < Hashie::Trash
     include Hashie::Extensions::Dash::IndifferentAccess
-    property :per_page, transform_with: lambda { |v| v.to_i }
+    property :per_page, transform_with: ->(v) { v.to_i }
     property :total, from: :total_pages
   end
 

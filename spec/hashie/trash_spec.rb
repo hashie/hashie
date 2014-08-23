@@ -110,7 +110,7 @@ describe Hashie::Trash do
 
   describe 'translating properties using a proc' do
     class TrashLambdaTest < Hashie::Trash
-      property :first_name, from: :firstName, with: lambda { |value| value.reverse }
+      property :first_name, from: :firstName, with: ->(value) { value.reverse }
     end
 
     let(:lambda_trash) { TrashLambdaTest.new }
@@ -136,7 +136,7 @@ describe Hashie::Trash do
 
   describe 'uses with or transform_with interchangeably' do
     class TrashLambdaTestTransformWith < Hashie::Trash
-      property :first_name, from: :firstName, transform_with: lambda { |value| value.reverse }
+      property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
     end
 
     let(:lambda_trash) { TrashLambdaTestTransformWith.new }
@@ -154,7 +154,7 @@ describe Hashie::Trash do
 
   describe 'translating properties without from option using a proc' do
     class TrashLambdaTestWithProperties < Hashie::Trash
-      property :first_name, transform_with: lambda { |value| value.reverse }
+      property :first_name, transform_with: ->(value) { value.reverse }
     end
 
     let(:lambda_trash) { TrashLambdaTestWithProperties.new }
@@ -170,7 +170,7 @@ describe Hashie::Trash do
 
     context 'when :from option is given' do
       class TrashLambdaTest3 < Hashie::Trash
-        property :first_name, from: :firstName, transform_with: lambda { |value| value.reverse }
+        property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
       end
 
       it 'does not override the :from option in the constructor' do
@@ -188,15 +188,15 @@ describe Hashie::Trash do
 
   describe 'inheritable transforms' do
     class TransformA < Hashie::Trash
-      property :some_value, transform_with: lambda { |v| v.to_i }
+      property :some_value, transform_with: ->(v) { v.to_i }
     end
 
     class TransformB < TransformA
-      property :some_other_value, transform_with: lambda { |v| v.to_i }
+      property :some_other_value, transform_with: ->(v) { v.to_i }
     end
 
     class TransformC < TransformB
-      property :some_value, transform_with: lambda { |v| -v.to_i }
+      property :some_value, transform_with: ->(v) { -v.to_i }
     end
 
     it 'inherit properties transforms' do
@@ -210,7 +210,7 @@ describe Hashie::Trash do
 
   describe 'inheritable translations' do
     class TranslationA < Hashie::Trash
-      property :some_value, from: 'someValue', with: lambda { |v| v.to_i }
+      property :some_value, from: 'someValue', with: ->(v) { v.to_i }
     end
 
     class TranslationB < TranslationA
