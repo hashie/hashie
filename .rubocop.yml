@@ -34,3 +34,5 @@ DoubleNegation:
 CaseEquality:
   Enabled: false
 
+Metrics/PerceivedComplexity:
+  Max: 10
