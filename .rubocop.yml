@@ -18,10 +18,6 @@ Style/Encoding:
   # no need to always specify encoding
   Enabled: false
 
-Style/Lambda:
-  # TODO: replace all lambda with -> or Proc
-  Enabled: false
-
 Metrics/ClassLength:
   Enabled: false
 

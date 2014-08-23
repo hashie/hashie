@@ -53,17 +53,17 @@ module Hashie
           return type if type.is_a? Proc
 
           if CORE_TYPES.key?(type)
-            ->(v) do
+            lambda do |v|
               return v if v.is_a? type
               return v.send(CORE_TYPES[type])
             end
           elsif type.respond_to?(:coerce)
-            ->(v) do
+            lambda do |v|
               return v if v.is_a? type
               type.coerce(v)
             end
           elsif type.respond_to?(:new)
-            ->(v) do
+            lambda do |v|
               return v if v.is_a? type
               type.new(v)
             end

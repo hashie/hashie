@@ -245,7 +245,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'can coerce via a proc' do
-        subject.coerce_key :foo, ->(v) do
+        subject.coerce_key(:foo, lambda do |v|
           case v
           when String
             return !!(v =~ /^(true|t|yes|y|1)$/i)
@@ -254,7 +254,7 @@ describe Hashie::Extensions::Coercion do
           else
             return v == true
           end
-        end
+        end)
 
         true_values = [true, 'true', 't', 'yes', 'y', '1', 1, -1]
         false_values = [false, 'false', 'f', 'no', 'n', '0', 0]
@@ -506,9 +506,9 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'can coerce via a proc' do
-        subject.coerce_value String, ->(v) do
+        subject.coerce_value(String, lambda do |v|
           return !!(v =~ /^(true|t|yes|y|1)$/i)
-        end
+        end)
 
         true_values = %w(true t yes y 1)
         false_values = %w(false f no n 0)
