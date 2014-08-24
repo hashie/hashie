@@ -29,7 +29,7 @@ describe Hashie::Trash do
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      expect(TrashTest.translations[:firstName]).to eq(first_name: nil)
+      expect(TrashTest.translations[:firstName]).to eq(:first_name)
     end
 
     it 'maintains inverse translations hash mapping from the translated to the original name' do
@@ -150,6 +150,10 @@ describe Hashie::Trash do
 
     it 'translates the second key' do
       expect(subject.value_b).to eq 'value in b'
+    end
+
+    it 'maintains translations hash mapping from the original to the translated name' do
+      expect(SomeDataModel.translations).to eq(config: [:value_a, :value_b])
     end
   end
 
