@@ -29,7 +29,7 @@ describe Hashie::Trash do
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      expect(TrashTest.translations[:firstName]).to eq :first_name
+      expect(TrashTest.translations[:firstName]).to eq(:first_name)
     end
 
     it 'maintains inverse translations hash mapping from the translated to the original name' do
@@ -131,6 +131,29 @@ describe Hashie::Trash do
     it 'does not translate the value given as right property' do
       lambda_trash.first_name = 'Michael'
       expect(lambda_trash.first_name).to eq 'Michael'
+    end
+  end
+
+  describe 'translating multiple properties using a proc' do
+    class SomeDataModel < Hashie::Trash
+      property :value_a, from: :config, with: ->(config) { config.a }
+      property :value_b, from: :config, with: ->(config) { config.b }
+    end
+
+    ConfigDataModel = Struct.new(:a, :b)
+
+    subject { SomeDataModel.new(config: ConfigDataModel.new('value in a', 'value in b')) }
+
+    it 'translates the first key' do
+      expect(subject.value_a).to eq 'value in a'
+    end
+
+    it 'translates the second key' do
+      expect(subject.value_b).to eq 'value in b'
+    end
+
+    it 'maintains translations hash mapping from the original to the translated name' do
+      expect(SomeDataModel.translations).to eq(config: [:value_a, :value_b])
     end
   end
 
