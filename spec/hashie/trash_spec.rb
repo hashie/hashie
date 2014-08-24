@@ -29,7 +29,7 @@ describe Hashie::Trash do
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      expect(TrashTest.translations[:firstName]).to eq :first_name
+      expect(TrashTest.translations[:firstName]).to eq(first_name: nil)
     end
 
     it 'maintains inverse translations hash mapping from the translated to the original name' do

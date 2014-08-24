@@ -26,11 +26,13 @@ module Hashie
           fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
         end
 
-        translations[options[:from]] = property_name
+        translations[options[:from]] ||= {}
+        translations[options[:from]][property_name] = options[:with] || options[:transform_with]
 
         define_method "#{options[:from]}=" do |val|
-          with = options[:with] || options[:transform_with]
-          self[property_name] = with.respond_to?(:call) ? with.call(val) : val
+          self.class.translations[options[:from]].each do |name, with|
+            self[name] = with.respond_to?(:call) ? with.call(val) : val
+          end
         end
       else
         if options[:transform_with].respond_to? :call
@@ -82,7 +84,15 @@ module Hashie
     private
 
     def self.inverse_translations
-      @inverse_translations ||= Hash[translations.map(&:reverse)]
+      @inverse_translations ||= begin
+        h = {}
+        translations.each do |(property_name, property_translations)|
+          property_translations.keys.each do |k|
+            h[k] = property_name
+          end
+        end
+        h
+      end
     end
 
     # Raises an NoMethodError if the property doesn't exist

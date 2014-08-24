@@ -11,6 +11,7 @@
 * [#206](http://github.com/intridea/hashie/pull/206): Fixed stack overflow from repetitively including coercion in subclasses - [@michaelherold](https://github.com/michaelherold).
 * [#207](http://github.com/intridea/hashie/pull/207): Fixed inheritance of transformations in Trash - [@fobocaster](https://github.com/fobocaster).
 * [#209](http://github.com/intridea/hashie/pull/209): Added Hashie::Extensions::DeepFind - [@michaelherold](https://github.com/michaelherold).
+* [#69](https://github.com/intridea/hashie/pull/69): Fixed regression in assigning multiple properties in Hashie::Trash - [@michaelherold](https://github.com/michaelherold), [@einzige](https://github.com/einzige), [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ## 3.2.0 (7/10/2014)
