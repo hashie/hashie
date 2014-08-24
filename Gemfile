@@ -6,6 +6,11 @@ platforms :rbx do
   gem 'racc'
 end
 
+group :development do
+  gem 'pry'
+  gem 'pry-stack_explorer', platforms: [:ruby_19, :ruby_20, :ruby_21]
+end
+
 gemspec
 
 gem 'rubocop', '0.24.1'
