@@ -134,6 +134,25 @@ describe Hashie::Trash do
     end
   end
 
+  describe 'translating multiple properties using a proc' do
+    class SomeDataModel < Hashie::Trash
+      property :value_a, from: :config, with: ->(config) { config.a }
+      property :value_b, from: :config, with: ->(config) { config.b }
+    end
+
+    ConfigDataModel = Struct.new(:a, :b)
+
+    subject { SomeDataModel.new(config: ConfigDataModel.new('value in a', 'value in b')) }
+
+    it 'translates the first key' do
+      expect(subject.value_a).to eq 'value in a'
+    end
+
+    it 'translates the second key' do
+      expect(subject.value_b).to eq 'value in b'
+    end
+  end
+
   describe 'uses with or transform_with interchangeably' do
     class TrashLambdaTestTransformWith < Hashie::Trash
       property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
