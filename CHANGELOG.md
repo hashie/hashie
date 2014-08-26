@@ -1,4 +1,4 @@
-## 3.2.1 (Next)
+## 3.3.0 (8/26/2014)
 
 * [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
 * [#195](https://github.com/intridea/hashie/pull/195): Ensure that the same object is returned after injecting IndifferentAccess - [@michaelherold](https://github.com/michaelherold).
@@ -12,7 +12,6 @@
 * [#207](http://github.com/intridea/hashie/pull/207): Fixed inheritance of transformations in Trash - [@fobocaster](https://github.com/fobocaster).
 * [#209](http://github.com/intridea/hashie/pull/209): Added Hashie::Extensions::DeepFind - [@michaelherold](https://github.com/michaelherold).
 * [#69](https://github.com/intridea/hashie/pull/69): Fixed regression in assigning multiple properties in Hashie::Trash - [@michaelherold](https://github.com/michaelherold), [@einzige](https://github.com/einzige), [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ## 3.2.0 (7/10/2014)
 
