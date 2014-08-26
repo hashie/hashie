@@ -1,3 +1,7 @@
+## Next Release
+
+* Your contribution here.
+
 ## 3.3.0 (8/26/2014)
 
 * [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
