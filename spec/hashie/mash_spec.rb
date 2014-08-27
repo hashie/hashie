@@ -71,6 +71,16 @@ describe Hashie::Mash do
     expect(subject.abc('foobar')).to eq 123
   end
 
+  # Added due to downstream gems assuming indifferent access to be true for Mash
+  # When this is not, bump major version so that downstream gems can target
+  # correct version and fix accordingly.
+  # See https://github.com/intridea/hashie/pull/197
+  it 'maintains indifferent access when nested' do
+    subject[:a] = { b: 'c' }
+    expect(subject[:a][:b]).to eq 'c'
+    expect(subject[:a]['b']).to eq 'c'
+  end
+
   it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
     expect(subject.abc!.is_a?(Hashie::Mash)).to be_truthy
   end
