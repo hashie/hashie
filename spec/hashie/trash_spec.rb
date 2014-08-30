@@ -252,4 +252,18 @@ describe Hashie::Trash do
       end
     end.to raise_error(ArgumentError)
   end
+
+  context 'when subclassing' do
+    class Person < Hashie::Trash
+      property :first_name, from: :firstName
+    end
+
+    class Hobbit < Person; end
+
+    subject { Hobbit.new(firstName: 'Frodo') }
+
+    it 'keeps translation definitions in subclasses' do
+      expect(subject.first_name).to eq('Frodo')
+    end
+  end
 end
