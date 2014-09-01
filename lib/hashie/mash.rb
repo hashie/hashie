@@ -58,6 +58,7 @@ module Hashie
     include Hashie::Extensions::PrettyInspect
 
     ALLOWED_SUFFIXES = %w(? ! = _)
+    SUFFIXES_PARSER  = /(.*?)([#{ALLOWED_SUFFIXES.join}]?)$/
 
     def self.load(path, options = {})
       @_mashes ||= new do |h, file_path|
@@ -251,8 +252,7 @@ module Hashie
     protected
 
     def method_suffix(method_name)
-      suffixes_regex = ALLOWED_SUFFIXES.join
-      match = method_name.to_s.match(/(.*?)([#{suffixes_regex}]?)$/)
+      match = method_name.to_s.match(SUFFIXES_PARSER)
       [match[1], match[2]]
     end
 
