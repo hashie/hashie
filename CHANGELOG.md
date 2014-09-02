@@ -1,6 +1,7 @@
 ## Next Release
 
 * Your contribution here.
+* [#221](https://github.com/intridea/hashie/pull/221): Reduce amount of allocated objects on calls with suffixes in Hashie::Mash - [@kubum](https://github.com/kubum).
 
 ## 3.3.1 (8/26/2014)
 
