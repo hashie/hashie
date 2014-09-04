@@ -269,7 +269,7 @@ describe DashTest do
     end
 
     it 'leaves only specified keys and keys with default values' do
-      expect(subject.keys.sort_by { |key| key.to_s }).to eq [:count, :first_name]
+      expect(subject.keys.sort_by(&:to_s)).to eq [:count, :first_name]
       expect(subject.email).to be_nil
       expect(subject.count).to eq 0
     end

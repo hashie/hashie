@@ -1,6 +1,7 @@
 ## Next Release
 
 * Your contribution here.
+* [#224](https://github.com/intridea/hashie/pull/224): Merging Hashie::Mash now correctly only calls the block on duplicate values - [@amysutedja](https://github.com/amysutedja).
 * [#221](https://github.com/intridea/hashie/pull/221): Reduce amount of allocated objects on calls with suffixes in Hashie::Mash - [@kubum](https://github.com/kubum).
 
 ## 3.3.1 (8/26/2014)

@@ -160,7 +160,7 @@ describe Hashie::Extensions::Coercion do
 
       instance[:foo] = %w('bar', 'bar2')
       expect(instance[:foo].map(&:value)).to all(eq 'String')
-      expect(instance[:foo]).to be_none { |v| v.coerced? }
+      expect(instance[:foo]).to be_none(&:coerced?)
       expect(instance[:foo]).to be_a(Set)
     end
 

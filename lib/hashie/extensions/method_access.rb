@@ -172,7 +172,7 @@ module Hashie
       end
 
       def method?(name)
-        methods.map { |m| m.to_s }.include?(name)
+        methods.map(&:to_s).include?(name)
       end
 
       def redefine_method(method_name)
