@@ -11,8 +11,10 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.require_paths = ['lib']
-  gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  gem.files         = %w(.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md Rakefile hashie.gemspec)
+  gem.files         += Dir['lib/**/*.rb']
+  gem.files         += Dir['spec/**/*.rb']
+  gem.test_files    = Dir['spec/**/*.rb']
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec', '~> 3.0'
