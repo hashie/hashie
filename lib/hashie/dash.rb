@@ -37,7 +37,7 @@ module Hashie
         defaults.delete property_name
       end
 
-      unless instance_methods.map { |m| m.to_s }.include?("#{property_name}=")
+      unless instance_methods.map(&:to_s).include?("#{property_name}=")
         define_method(property_name) { |&block| self.[](property_name, &block) }
         property_assignment = property_name.to_s.concat('=').to_sym
         define_method(property_assignment) { |value| self.[]=(property_name, value) }

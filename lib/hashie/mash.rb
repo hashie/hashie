@@ -181,7 +181,7 @@ module Hashie
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
-          value = convert_value(blk.call(key, self[k], value), true) if blk
+          value = convert_value(blk.call(key, self[k], value), true) if blk && self.key?(k)
           custom_writer(key, value, false)
         end
       end
