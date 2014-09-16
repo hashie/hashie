@@ -6,10 +6,13 @@ module Hashie
       class YamlErbParser
         def initialize(file_path)
           @content = File.read(file_path)
+          @file_path = file_path
         end
 
         def perform
-          YAML.load ERB.new(@content).result
+          template = ERB.new(@content)
+          template.filename = @file_path
+          YAML.load template.result
         end
 
         def self.perform(file_path)
