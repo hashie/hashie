@@ -30,6 +30,11 @@ describe Hashie::Extensions::IndifferentAccess do
     end
   end
 
+  class CoercableHash < Hash
+    include Hashie::Extensions::Coercion
+    include Hashie::Extensions::MergeInitializer
+  end
+
   shared_examples_for 'hash with indifferent access' do
     it 'is able to access via string or symbol' do
       indifferent_hash = ActiveSupport::HashWithIndifferentAccess.new(abc: 123)
@@ -173,5 +178,20 @@ describe Hashie::Extensions::IndifferentAccess do
   describe 'with try convert initializer' do
     subject { IndifferentHashWithTryConvertInitializer }
     it_should_behave_like 'hash with indifferent access'
+  end
+
+  describe 'with coercion' do
+    subject { CoercableHash }
+
+    let(:instance) { subject.new }
+
+    it 'supports coercion for ActiveSupport::HashWithIndifferentAccess' do
+      subject.coerce_key :foo, ActiveSupport::HashWithIndifferentAccess.new(Coercable => Coercable)
+      instance[:foo] = { 'bar_key' => 'bar_value', 'bar2_key' => 'bar2_value' }
+      expect(instance[:foo].keys).to all(be_coerced)
+      expect(instance[:foo].values).to all(be_coerced)
+      expect(instance[:foo]).to be_a(ActiveSupport::HashWithIndifferentAccess)
+    end
+
   end
 end

@@ -34,10 +34,10 @@ module Hashie
           begin
             return set_value_without_coercion(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
 
-            if into.class >= Hash
+            if into.class <= ::Hash
               key_coerce = coerce_or_init(into.flatten[0])
               value_coerce = coerce_or_init(into.flatten[-1])
-              value = Hash[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
+              value = into.class[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
             else # Enumerable but not Hash: Array, Set
               value_coerce = coerce_or_init(into.first)
               value = into.class.new(value.map { |v| value_coerce.call(v) })
