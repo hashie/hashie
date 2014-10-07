@@ -12,6 +12,12 @@ class DashTest < Hashie::Dash
   property :count, default: 0
 end
 
+class DashCustomRequireTest < DashTest
+  property :first_name, required: { message: 'is required.' }
+  property :last_name, required: 'is required.'
+  property :email, required: ->(o) { "is required for #{o.first_name}." }
+end
+
 class DashNoRequiredTest < Hashie::Dash
   property :first_name
   property :email
@@ -47,11 +53,24 @@ describe DashTest do
     [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
   end
 
+  def property_required_custom_error(property)
+    [ArgumentError, "The property '#{property}' is required."]
+  end
+
+  def property_required_custom_lambda_error(property)
+    [ArgumentError, "The property '#{property}' is required for John."]
+  end
+
+  def property_required_key_invalid_error
+    [KeyError, 'Only :message key supported.']
+  end
+
   def no_property_error(property)
     [NoMethodError, "The property '#{property}' is not defined for #{subject.class.name}."]
   end
 
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
+  let(:custom_required_test) { DashCustomRequireTest.new(first_name: 'John', last_name: 'Doe', email: 'john@mailinator.com') }
 
   it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
 
@@ -81,6 +100,20 @@ describe DashTest do
 
   it 'errors out when attempting to set a required property to nil' do
     expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
+  end
+
+  it 'errors out when attempting to set a required property to nil, with custom message' do
+    expect { custom_required_test.first_name = nil }.to raise_error(*property_required_custom_error('first_name'))
+    expect { custom_required_test.last_name = nil }.to raise_error(*property_required_custom_error('last_name'))
+    expect { custom_required_test.email = nil }.to raise_error(*property_required_custom_lambda_error('email'))
+  end
+
+  it 'errors out when required key not :message' do
+    expect do
+      class DashInvalidRequiredKeyTest < Hashie::Dash
+        property :first_name, required: { custom_message: 'is required.' }
+      end
+    end.to raise_error(*property_required_key_invalid_error)
   end
 
   context 'writing to properties' do
