@@ -385,22 +385,26 @@ safe_mash.zip = 'Test' # => ArgumentError
 
 ## Dash
 
-Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset.
+Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.
 
 ### Example:
 
 ```ruby
 class Person < Hashie::Dash
   property :name, required: true
+  property :age, required: true, message: 'must be set.'
   property :email
   property :occupation, default: 'Rubyist'
 end
 
 p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
+p = Person.new(name: 'Bob') # => ArgumentError: The property 'age' must be set.
 
-p = Person.new(name: "Bob")
-p.name # => 'Bob'
-p.name = nil # => ArgumentError: The property 'name' is required for this Dash.
+p = Person.new(name: "Bob", age: 18)
+p.name         # => 'Bob'
+p.name = nil   # => ArgumentError: The property 'name' is required for this Dash.
+p.age          # => 18
+p.age = nil    # => ArgumentError: The property 'age' must be set.
 p.email = 'abc@def.com'
 p.occupation   # => 'Rubyist'
 p.email        # => 'abc@def.com'

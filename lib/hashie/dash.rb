@@ -27,6 +27,7 @@ module Hashie
     # * <tt>:required</tt> - Specify the value as required for this
     #   property, to raise an error if a value is unset in a new or
     #   existing Dash.
+    # * <tt>:message</tt> - Specify custom error message for required property
     #
     def self.property(property_name, options = {})
       properties << property_name
@@ -46,7 +47,12 @@ module Hashie
       if defined? @subclasses
         @subclasses.each { |klass| klass.property(property_name, options) }
       end
-      required_properties << property_name if options.delete(:required)
+
+      if options.delete(:required)
+        required_properties[property_name] = options.delete(:message) || "is required for #{name}."
+      else
+        fail ArgumentError, 'The :message option should be used with :required option.' if options.key?(:message)
+      end
     end
 
     class << self
@@ -55,7 +61,7 @@ module Hashie
     end
     instance_variable_set('@properties', Set.new)
     instance_variable_set('@defaults', {})
-    instance_variable_set('@required_properties', Set.new)
+    instance_variable_set('@required_properties', {})
 
     def self.inherited(klass)
       super
@@ -74,7 +80,7 @@ module Hashie
     # Check to see if the specified property is
     # required.
     def self.required?(name)
-      required_properties.include? name
+      required_properties.key? name
     end
 
     # You may initialize a Dash with an attributes hash
@@ -168,7 +174,7 @@ module Hashie
     end
 
     def assert_required_attributes_set!
-      self.class.required_properties.each do |required_property|
+      self.class.required_properties.each_key do |required_property|
         assert_property_set!(required_property)
       end
     end
@@ -182,7 +188,7 @@ module Hashie
     end
 
     def fail_property_required_error!(property)
-      fail ArgumentError, "The property '#{property}' is required for #{self.class.name}."
+      fail ArgumentError, "The property '#{property}' #{self.class.required_properties[property]}"
     end
 
     def fail_no_property_error!(property)
