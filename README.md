@@ -413,6 +413,19 @@ p.update_attributes!(occupation: nil)
 p.occupation   # => 'Rubyist'
 ```
 
+Also :required option can accept custom error messages.
+
+### Example:
+
+```ruby
+class Person < Hashie::Dash
+  property :name, required: true
+  property :hash, required: { message: 'must be set' }
+  property :string, required: 'must be set'
+  property :proc, required: ->(p) { "this property required for #{p.name}" }
+end
+```
+
 Properties defined as symbols are not the same thing as properties defined as strings.
 
 ### Example:
