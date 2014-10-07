@@ -62,7 +62,7 @@ describe DashTest do
   end
 
   def property_required_key_invalid_error
-    [KeyError, 'Only :message key supported.']
+    [ArgumentError, 'Only :message key supported.']
   end
 
   def no_property_error(property)
@@ -111,7 +111,7 @@ describe DashTest do
   it 'errors out when required key not :message' do
     expect do
       class DashInvalidRequiredKeyTest < Hashie::Dash
-        property :first_name, required: { custom_message: 'is required.' }
+        property :first_name, required: { custom_message: 'is required.', message: 'is required.' }
       end
     end.to raise_error(*property_required_key_invalid_error)
   end

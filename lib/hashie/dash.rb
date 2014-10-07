@@ -49,7 +49,9 @@ module Hashie
 
       required_option = options.delete(:required)
       if required_option
-        fail(KeyError, 'Only :message key supported.') if required_option.is_a?(::Hash) && !required_option[:message]
+        if required_option.is_a?(::Hash) && !required_option.keys.eql?([:message])
+          fail ArgumentError, 'Only :message key supported.'
+        end
         required_properties[property_name] = required_option
       end
     end
