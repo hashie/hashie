@@ -223,11 +223,8 @@ class MyHash < Hash
   include Hashie::Extensions::DeepMerge
 end
 
-h1 = MyHash.new
-h2 = MyHash.new
-
-h1 = { x: { y: [4,5,6] }, z: [7,8,9] }
-h2 = { x: { y: [7,8,9] }, z: "xyz" }
+h1 = MyHash[{ x: { y: [4,5,6] }, z: [7,8,9] }]
+h2 = MyHash[{ x: { y: [7,8,9] }, z: "xyz" }]
 
 h1.deep_merge(h2) # => { x: { y: [7, 8, 9] }, z: "xyz" }
 h2.deep_merge(h1) # => { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
