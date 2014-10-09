@@ -34,6 +34,10 @@ class SubclassedTest < DashTest
   property :last_name, required: true
 end
 
+class RequiredMessageTest < DashTest
+  property :first_name, required: true, message: 'must be set.'
+end
+
 class DashDefaultTest < Hashie::Dash
   property :aliases, default: ['Snake']
 end
@@ -47,11 +51,20 @@ describe DashTest do
     [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
   end
 
+  def property_required_custom_error(property)
+    [ArgumentError, "The property '#{property}' must be set."]
+  end
+
+  def property_message_without_required_error
+    [ArgumentError, 'The :message option should be used with :required option.']
+  end
+
   def no_property_error(property)
     [NoMethodError, "The property '#{property}' is not defined for #{subject.class.name}."]
   end
 
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
+  let(:required_message) { RequiredMessageTest.new(first_name: 'Bob') }
 
   it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
 
@@ -83,13 +96,29 @@ describe DashTest do
     expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
   end
 
+  it 'errors out when message added to not required property' do
+    expect do
+      class DashMessageOptionWithoutRequiredTest < Hashie::Dash
+        property :first_name, message: 'is required.'
+      end
+    end.to raise_error(*property_message_without_required_error)
+
+    expect do
+      class DashMessageOptionWithoutRequiredTest < Hashie::Dash
+        property :first_name, required: false, message: 'is required.'
+      end
+    end.to raise_error(*property_message_without_required_error)
+  end
+
   context 'writing to properties' do
     it 'fails writing a required property to nil' do
       expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
+      expect { required_message.first_name = nil }.to raise_error(*property_required_custom_error('first_name'))
     end
 
     it 'fails writing a required property to nil using []=' do
       expect { subject[:first_name] = nil }.to raise_error(*property_required_error('first_name'))
+      expect { required_message[:first_name] = nil }.to raise_error(*property_required_custom_error('first_name'))
     end
 
     it 'fails writing to a non-existent property using []=' do
