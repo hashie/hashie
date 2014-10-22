@@ -251,7 +251,7 @@ user.deep_fetch :name, :first # => 'Bob'
 user.deep_fetch :name, :middle # => 'KeyError: Could not fetch middle'
 
 # using a default block
-user.deep_fetch :name, :middle { |key| 'default' }  # =>  'default'
+user.deep_fetch(:name, :middle) { |key| 'default' }  # =>  'default'
 
 # a nested array
 user.deep_fetch :groups, 1, :name # => 'Open source enthusiasts'
