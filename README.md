@@ -157,7 +157,7 @@ end
 h = MyHash.new
 h.abc = 'def'
 h.abc  # => 'def'
-h.abc? # => true
+h.abc? # => 'def'
 ```
 
 ### MethodAccessWithOverride
