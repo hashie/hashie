@@ -1,3 +1,7 @@
+## Next
+
+* Your contribution here.
+
 ## 3.3.2 (11/26/2014)
 
 * [#233](https://github.com/intridea/hashie/pull/233): Custom error messages for required properties in Hashie::Dash subclasses - [@joss](https://github.com/joss).
