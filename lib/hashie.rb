@@ -24,6 +24,7 @@ module Hashie
     autoload :DeepFind,          'hashie/extensions/deep_find'
     autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
+    autoload :MethodAccessWithOverride, 'hashie/extensions/method_access'
 
     module Parsers
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
