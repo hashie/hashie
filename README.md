@@ -1,4 +1,4 @@
-# Hashie [![Build Status](https://secure.travis-ci.org/intridea/hashie.png)](http://travis-ci.org/intridea/hashie) [![Dependency Status](https://gemnasium.com/intridea/hashie.png)](https://gemnasium.com/intridea/hashie) [![Code Climate](https://codeclimate.com/github/intridea/hashie.png)](https://codeclimate.com/github/intridea/hashie)
+# Hashie [![Build Status](https://secure.travis-ci.org/intridea/hashie.png)](http://travis-ci.org/intridea/hashie) [![Dependency Status](https://gemnasium.com/intridea/hashie.png)](https://gemnasium.com/intridea/hashie) [![Code Climate](https://codeclimate.com/github/intridea/hashie.png)](https://codeclimate.com/github/intridea/hashie) [![Test Coverage](https://codeclimate.com/github/intridea/hashie/badges/coverage.png)](https://codeclimate.com/github/intridea/hashie)
 
 Hashie is a growing collection of tools that extend Hashes and make them more useful.
 

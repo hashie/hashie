@@ -19,4 +19,5 @@ gemspec
 group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
   gem 'activesupport', require: false
+  gem 'codeclimate-test-reporter', require: false
 end
