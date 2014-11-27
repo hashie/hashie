@@ -54,7 +54,7 @@ module Hashie
       case args.length
       when 1
         val = args.first
-        val = self[key].merge(val) if self[key].is_a?(::Hash) && val.is_a?(::Hash)
+        val = self.class.new(self[key]).merge(val) if self[key].is_a?(::Hash) && val.is_a?(::Hash)
       else
         val = args
       end
@@ -64,22 +64,23 @@ module Hashie
     end
 
     def method_missing(name, *args) #:nodoc:
-      name = name.to_s
-      if name.match(/!$/) && args.empty?
+      if args.empty? && name.to_s.end_with?('!')
         key = name[0...-1].to_sym
 
-        if self[key].nil?
-          self[key] = Clash.new({}, self)
-        elsif self[key].is_a?(::Hash) && !self[key].is_a?(Clash)
-          self[key] = Clash.new(self[key], self)
+        case self[key]
+        when NilClass
+          self[key] = self.class.new({}, self)
+        when Clash
+          self[key]
+        when Hash
+          self[key] = self.class.new(self[key], self)
         else
           fail ChainError, 'Tried to chain into a non-hash key.'
         end
-
-        self[key]
       elsif args.any?
-        key = name.to_sym
-        merge_store(key, *args)
+        merge_store(name, *args)
+      else
+        super
       end
     end
   end
