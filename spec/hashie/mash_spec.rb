@@ -271,6 +271,12 @@ describe Hashie::Mash do
     expect(subject.details.address.state).to eq 'TX'
   end
 
+  it 'does not duplicate a Hashie::Hash object on assignment' do
+    my_hash = described_class.new
+    subject.foo = my_hash
+    expect(subject.foo).to equal(my_hash)
+  end
+
   it 'does not convert the type of Hashie::Mashes childs to Hashie::Mash' do
     class MyMash < Hashie::Mash
     end

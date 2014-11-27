@@ -262,8 +262,6 @@ module Hashie
 
     def convert_value(val, duping = false) #:nodoc:
       case val
-      when self.class
-        val.dup
       when Hash
         duping ? val.dup : val
       when ::Hash
