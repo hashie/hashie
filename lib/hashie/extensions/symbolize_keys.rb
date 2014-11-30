@@ -8,10 +8,7 @@ module Hashie
       #   test.symbolize_keys!
       #   test # => {:abc => 'def'}
       def symbolize_keys!
-        keys.each do |k|
-          symbolize_keys_recursively!(self[k])
-          self[k.to_sym] = delete(k)
-        end
+        _symbolize_keys!(self)
         self
       end
 
@@ -25,18 +22,23 @@ module Hashie
 
       # Symbolize all keys recursively within nested
       # hashes and arrays.
-      def symbolize_keys_recursively!(object)
-        if self.class === object
+      def _symbolize_keys_recursively!(object)
+        case object
+        when self.class
           object.symbolize_keys!
-        elsif ::Array === object
+        when ::Array
           object.each do |i|
-            symbolize_keys_recursively!(i)
+            _symbolize_keys_recursively!(i)
           end
-          object
-        elsif object.respond_to?(:symbolize_keys!)
-          object.symbolize_keys!
-        else
-          object
+        when ::Hash
+          _symbolize_keys!(object)
+        end
+      end
+
+      def _symbolize_keys!(hash)
+        hash.keys.each do |k|
+          _symbolize_keys_recursively!(hash[k])
+          hash[k.to_sym] = hash.delete(k)
         end
       end
     end

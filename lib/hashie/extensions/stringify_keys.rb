@@ -8,10 +8,7 @@ module Hashie
       #   test.stringify_keys!
       #   test # => {'abc' => 'def'}
       def stringify_keys!
-        keys.each do |k|
-          stringify_keys_recursively!(self[k])
-          self[k.to_s] = delete(k)
-        end
+        _stringify_keys!(self)
         self
       end
 
@@ -25,24 +22,23 @@ module Hashie
 
       # Stringify all keys recursively within nested
       # hashes and arrays.
-      def stringify_keys_recursively!(object)
-        if self.class === object
+      def _stringify_keys_recursively!(object)
+        case object
+        when self.class
           object.stringify_keys!
-        elsif ::Array === object
+        when ::Array
           object.each do |i|
-            stringify_keys_recursively!(i)
+            _stringify_keys_recursively!(i)
           end
-          object
-        elsif object.respond_to?(:stringify_keys!)
-          object.stringify_keys!
-        elsif ::Hash === object
-          object.keys.each do |k|
-            stringify_keys_recursively!(object[k])
-            object[k.to_s] = object.delete(k)
-          end
-          object
-        else
-          object
+        when ::Hash
+          _stringify_keys!(object)
+        end
+      end
+
+      def _stringify_keys!(hash)
+        hash.keys.each do |k|
+          _stringify_keys_recursively!(hash[k])
+          hash[k.to_s] = hash.delete(k)
         end
       end
     end
