@@ -1,5 +1,6 @@
 ## Next
 
+* [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
