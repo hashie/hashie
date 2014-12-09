@@ -13,5 +13,12 @@ describe Hashie::Extensions::Mash::SafeAssignment do
         expect { subject.zip = 'Test' }.to raise_error(ArgumentError)
       end
     end
+
+    context 'when setting as a hash key' do
+      it 'still raises if conflicts with a method' do
+        expect { subject[:zip] = 'Test' }.to raise_error(ArgumentError)
+      end
+    end
+
   end
 end
