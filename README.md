@@ -377,7 +377,8 @@ class SafeMash < ::Hashie::Mash
 end
 
 safe_mash = SafeMash.new
-safe_mash.zip = 'Test' # => ArgumentError
+safe_mash.zip   = 'Test' # => ArgumentError
+safe_mash[:zip] = 'test' # => still ArgumentError
 ```
 
 ## Dash
