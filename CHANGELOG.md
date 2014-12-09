@@ -2,6 +2,7 @@
 
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
 * [#249](https://github.com/intridea/hashie/pull/249): SafeAssignment will now also protect hash-style assignments - [@jrochkind](https://github.com/jrochkind).
+* [#251](https://github.com/intridea/hashie/pull/251): Add block to indifferent access #fetch - [@jgraichen](https://github.com/jgraichen).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)

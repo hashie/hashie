@@ -107,8 +107,8 @@ module Hashie
         regular_writer convert_key(key), convert_value(value)
       end
 
-      def indifferent_fetch(key, *args)
-        regular_fetch convert_key(key), *args
+      def indifferent_fetch(key, *args, &block)
+        regular_fetch convert_key(key), *args, &block
       end
 
       def indifferent_delete(key)
