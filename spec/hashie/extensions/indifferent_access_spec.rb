@@ -108,6 +108,11 @@ describe Hashie::Extensions::IndifferentAccess do
         h = subject.build(foo: object)
         expect(h.fetch(:foo)).to be(object)
       end
+
+      it 'yields with key name if key does not exists' do
+        h = subject.build(a: 0)
+        expect(h.fetch(:foo) { |key| ['default for', key] }).to eq ['default for', 'foo']
+      end
     end
 
     describe '#delete' do
