@@ -1,10 +1,6 @@
 source 'http://rubygems.org'
 
-platforms :rbx do
-  gem 'rubysl'
-  gem 'rubinius-developer_tools'
-  gem 'racc'
-end
+gemspec
 
 group :development do
   gem 'pry'
@@ -13,8 +9,6 @@ group :development do
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1', require: false
 end
-
-gemspec
 
 group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
