@@ -26,7 +26,11 @@ module Hashie
     #
     # * <tt>:required</tt> - Specify the value as required for this
     #   property, to raise an error if a value is unset in a new or
-    #   existing Dash.
+    #   existing Dash. If a Proc is provided, it will be run in the
+    #   context of the Dash instance. If a Symbol is provided, the
+    #   property it represents must not be nil. The property is only
+    #   required if the value is truthy.
+    #
     # * <tt>:message</tt> - Specify custom error message for required property
     #
     def self.property(property_name, options = {})
@@ -48,8 +52,10 @@ module Hashie
         @subclasses.each { |klass| klass.property(property_name, options) }
       end
 
-      if options.delete(:required)
-        required_properties[property_name] = options.delete(:message) || "is required for #{name}."
+      condition = options.delete(:required)
+      if condition
+        message = options.delete(:message) || "is required for #{name}."
+        required_properties[property_name] = { condition: condition, message: message }
       else
         fail ArgumentError, 'The :message option should be used with :required option.' if options.key?(:message)
       end
@@ -180,19 +186,30 @@ module Hashie
     end
 
     def assert_property_set!(property)
-      fail_property_required_error!(property) if send(property).nil?
+      fail_property_required_error!(property) if send(property).nil? && required?(property)
     end
 
     def assert_property_required!(property, value)
-      fail_property_required_error!(property) if self.class.required?(property) && value.nil?
+      fail_property_required_error!(property) if value.nil? && required?(property)
     end
 
     def fail_property_required_error!(property)
-      fail ArgumentError, "The property '#{property}' #{self.class.required_properties[property]}"
+      fail ArgumentError, "The property '#{property}' #{self.class.required_properties[property][:message]}"
     end
 
     def fail_no_property_error!(property)
       fail NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
+    end
+
+    def required?(property)
+      return false unless self.class.required?(property)
+
+      condition = self.class.required_properties[property][:condition]
+      case condition
+      when Proc   then !!(instance_exec(&condition))
+      when Symbol then !!(send(condition))
+      else             !!(condition)
+      end
     end
   end
 end
