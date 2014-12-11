@@ -32,6 +32,7 @@ module Hashie
 
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
+      autoload :PsychSerialization, 'hashie/extensions/dash/psych_serialization'
     end
 
     module Mash
