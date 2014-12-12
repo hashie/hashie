@@ -425,6 +425,25 @@ describe SubclassedTest do
   end
 end
 
+class ConditionallyRequiredTest < Hashie::Dash
+  property :username
+  property :password, required: -> { !username.nil? }, message: 'must be set, too.'
+end
+
+describe ConditionallyRequiredTest do
+  it 'does not allow a conditionally required property to be set to nil if required' do
+    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }.to raise_error(ArgumentError, "The property 'password' must be set, too.")
+  end
+
+  it 'allows a conditionally required property to be set to nil if not required' do
+    expect { ConditionallyRequiredTest.new(username: nil, password: nil) }.not_to raise_error
+  end
+
+  it 'allows a conditionally required property to be set if required' do
+    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: '$ecure!') }.not_to raise_error
+  end
+end
+
 class MixedPropertiesTest < Hashie::Dash
   property :symbol
   property 'string'

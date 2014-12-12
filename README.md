@@ -385,6 +385,8 @@ safe_mash[:zip] = 'test' # => still ArgumentError
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.
 
+You can also conditionally require certain properties by passing a Proc or Symbol. If a Proc is provided, it will be run in the context of the Dash instance. If a Symbol is provided, the value returned for the property or method of the same name will be evaluated. The property will be required if the result of the conditional is truthy.
+
 ### Example:
 
 ```ruby
@@ -392,7 +394,13 @@ class Person < Hashie::Dash
   property :name, required: true
   property :age, required: true, message: 'must be set.'
   property :email
+  property :phone, required: -> { email.nil? }, message: 'is required if email is not set.'
+  property :pants, required: :weekday?, message: 'are only required on weekdays.'
   property :occupation, default: 'Rubyist'
+
+  def weekday?
+    [ Time.now.saturday?, Time.now.sunday? ].none?
+  end
 end
 
 p = Person.new # => ArgumentError: The property 'name' is required for this Dash.
