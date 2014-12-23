@@ -38,4 +38,9 @@ module Hashie
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
     end
   end
+
+  class << self
+    include Hashie::Extensions::StringifyKeys::ClassMethods
+    include Hashie::Extensions::SymbolizeKeys::ClassMethods
+  end
 end

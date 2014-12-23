@@ -7,6 +7,7 @@
 * [#256](https://github.com/intridia/hashie/pull/256): Inherit key coercions - [@Erol](https://github.com/Erol).
 * [#259](https://github.com/intridia/hashie/pull/259): Fix handling of default proc values in Mash - [@Erol](https://github.com/Erol).
 * [#260](https://github.com/intridia/hashie/pull/260): Add block to Extensions::DeepMerge - [@galathius](https://github.com/galathius).
+* [#254](https://github.com/intridea/hashie/pull/254): Public utility methods for stringify/symbolize keys - [@maxlinc](https://github.com/maxlinc).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
