@@ -404,6 +404,21 @@ describe Hashie::Extensions::Coercion do
         expect(tweet[:user]).to be_a(UserHash)
       end
     end
+
+    context 'when subclassing' do
+      class MyHash < Hash
+        include Hashie::Extensions::Coercion
+
+        coerce_key :value, Integer
+      end
+
+      class MySubclass < MyHash
+      end
+
+      it 'inherits key coercions' do
+        expect(MyHash.key_coercions).to eql(MySubclass.key_coercions)
+      end
+    end
   end
 
   describe '#coerce_value' do

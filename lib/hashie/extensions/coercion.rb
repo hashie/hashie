@@ -172,6 +172,11 @@ module Hashie
           from = value.class
           strict_value_coercions[from] || lenient_value_coercions[from]
         end
+
+        def inherited(klass)
+          super
+          klass.instance_variable_set('@key_coercions', @key_coercions)
+        end
       end
     end
   end
