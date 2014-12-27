@@ -101,16 +101,20 @@ module Hashie
         #     coerce_key :user, User
         #   end
         def coerce_key(*attrs)
-          @key_coercions ||= {}
           into = attrs.pop
-          attrs.each { |key| @key_coercions[key] = into }
+          attrs.each { |key| key_coercions[key] = into }
         end
 
         alias_method :coerce_keys, :coerce_key
 
         # Returns a hash of any existing key coercions.
         def key_coercions
-          @key_coercions || {}
+          @key_coercions ||= {}
+        end
+
+        # Sets a hash of key coercions, overriding existing ones.
+        def key_coercions=(another)
+          @key_coercions = another
         end
 
         # Returns the specific key coercion for the specified key,
@@ -175,7 +179,8 @@ module Hashie
 
         def inherited(klass)
           super
-          klass.instance_variable_set('@key_coercions', @key_coercions)
+
+          klass.key_coercions = key_coercions
         end
       end
     end
