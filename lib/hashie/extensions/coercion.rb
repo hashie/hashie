@@ -116,6 +116,7 @@ module Hashie
         def key_coercions=(another)
           @key_coercions = another
         end
+        protected :key_coercions=
 
         # Returns the specific key coercion for the specified key,
         # if one exists.
