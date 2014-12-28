@@ -86,6 +86,9 @@ module Hashie
       end
 
       module ClassMethods
+        attr_writer :key_coercions
+        protected :key_coercions=
+
         # Set up a coercion rule such that any time the specified
         # key is set it will be coerced into the specified class.
         # Coercion will occur by first attempting to call Class.coerce
@@ -101,16 +104,15 @@ module Hashie
         #     coerce_key :user, User
         #   end
         def coerce_key(*attrs)
-          @key_coercions ||= {}
           into = attrs.pop
-          attrs.each { |key| @key_coercions[key] = into }
+          attrs.each { |key| key_coercions[key] = into }
         end
 
         alias_method :coerce_keys, :coerce_key
 
         # Returns a hash of any existing key coercions.
         def key_coercions
-          @key_coercions || {}
+          @key_coercions ||= {}
         end
 
         # Returns the specific key coercion for the specified key,
@@ -171,6 +173,12 @@ module Hashie
         def value_coercion(value)
           from = value.class
           strict_value_coercions[from] || lenient_value_coercions[from]
+        end
+
+        def inherited(klass)
+          super
+
+          klass.key_coercions = key_coercions
         end
       end
     end
