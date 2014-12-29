@@ -230,6 +230,21 @@ h1.deep_merge(h2) # => { x: { y: [7, 8, 9] }, z: "xyz" }
 h2.deep_merge(h1) # => { x: { y: [4, 5, 6] }, z: [7, 8, 9] }
 ```
 
+Like with Hash#merge in the standard library, a block can be provided to merge values:
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::DeepMerge
+end
+
+h1 = MyHash[{ a: 100, b: 200, c: { c1: 100 } }]
+h2 = MyHash[{ b: 250, c: { c1: 200 } }]
+
+h1.deep_merge(h2) { |key, this_val, other_val| this_val + other_val }
+# => { a: 100, b: 450, c: { c1: 300 } }
+```
+
+
 ### DeepFetch
 
 This extension can be mixed in to provide for safe and concise retrieval of deeply nested hash values. In the event that the requested key does not exist a block can be provided and its value will be returned.
