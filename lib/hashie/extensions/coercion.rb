@@ -151,10 +151,10 @@ module Hashie
           end
 
           if options[:strict]
-            (@strict_value_coercions ||= {})[from] = into
+            strict_value_coercions[from] = into
           else
             while from.superclass && from.superclass != Object
-              (@lenient_value_coercions ||= {})[from] = into
+              lenient_value_coercions[from] = into
               from = from.superclass
             end
           end
@@ -162,11 +162,11 @@ module Hashie
 
         # Return all value coercions that have the :strict rule as true.
         def strict_value_coercions
-          @strict_value_coercions || {}
+          @strict_value_coercions ||= {}
         end
         # Return all value coercions that have the :strict rule as false.
         def lenient_value_coercions
-          @value_coercions || {}
+          @lenient_value_coercions ||= {}
         end
 
         # Fetch the value coercion, if any, for the specified object.
