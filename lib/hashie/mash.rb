@@ -61,13 +61,13 @@ module Hashie
     SUFFIXES_PARSER  = /(.*?)([#{ALLOWED_SUFFIXES.join}]?)$/
 
     def self.load(path, options = {})
-      @_mashes ||= new do |h, file_path|
-        fail ArgumentError, "The following file doesn't exist: #{file_path}" unless File.file?(file_path)
+      @_mashes ||= new
 
-        parser = options.fetch(:parser) {  Hashie::Extensions::Parsers::YamlErbParser }
-        h[file_path] = new(parser.perform(file_path)).freeze
-      end
-      @_mashes[path]
+      return @_mashes[path] if @_mashes.key?(path)
+      fail ArgumentError, "The following file doesn't exist: #{path}" unless File.file?(path)
+
+      parser = options.fetch(:parser) {  Hashie::Extensions::Parsers::YamlErbParser }
+      @_mashes[path] = new(parser.perform(path)).freeze
     end
 
     def to_module(mash_method_name = :settings)
@@ -106,6 +106,7 @@ module Hashie
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def custom_reader(key)
+      default_proc.call(self, key) if default_proc && !key?(key)
       value = regular_reader(convert_key(key))
       yield value if block_given?
       value
@@ -245,7 +246,7 @@ module Hashie
       when '_'
         underbang_reader(name)
       else
-        default(method_name)
+        self[method_name]
       end
     end
 

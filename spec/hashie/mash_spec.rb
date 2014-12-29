@@ -402,6 +402,38 @@ describe Hashie::Mash do
       expect(initial.test?).to be_truthy
     end
 
+    it 'allows assignment of an empty array in a default block' do
+      initial = Hashie::Mash.new { |h, k| h[k] = [] }
+      initial.hello << 100
+      expect(initial.hello).to eq [100]
+      initial['hi'] << 100
+      expect(initial['hi']).to eq [100]
+    end
+
+    it 'allows assignment of a non-empty array in a default block' do
+      initial = Hashie::Mash.new { |h, k| h[k] = [100] }
+      initial.hello << 200
+      expect(initial.hello).to eq [100, 200]
+      initial['hi'] << 200
+      expect(initial['hi']).to eq [100, 200]
+    end
+
+    it 'allows assignment of an empty hash in a default block' do
+      initial = Hashie::Mash.new { |h, k| h[k] = {} }
+      initial.hello[:a] = 100
+      expect(initial.hello).to eq Hashie::Mash.new(a: 100)
+      initial[:hi][:a] = 100
+      expect(initial[:hi]).to eq Hashie::Mash.new(a: 100)
+    end
+
+    it 'allows assignment of a non-empty hash in a default block' do
+      initial = Hashie::Mash.new { |h, k| h[k] = { a: 100 } }
+      initial.hello[:b] = 200
+      expect(initial.hello).to eq Hashie::Mash.new(a: 100, b: 200)
+      initial[:hi][:b] = 200
+      expect(initial[:hi]).to eq Hashie::Mash.new(a: 100, b: 200)
+    end
+
     it 'converts Hashie::Mashes within Arrays back to Hashes' do
       initial_hash = { 'a' => [{ 'b' => 12, 'c' => ['d' => 50, 'e' => 51] }, 23] }
       converted = Hashie::Mash.new(initial_hash)

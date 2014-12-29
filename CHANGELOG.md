@@ -5,6 +5,7 @@
 * [#251](https://github.com/intridea/hashie/pull/251): Add block to indifferent access #fetch - [@jgraichen](https://github.com/jgraichen).
 * [#252](https://github.com/intridia/hashie/pull/252): Add support for conditionally required Hashie::Dash attributes - [@ccashwell](https://github.com/ccashwell).
 * [#256](https://github.com/intridia/hashie/pull/256): Inherit key coercions - [@Erol](https://github.com/Erol).
+* [#259](https://github.com/intridia/hashie/pull/259): Fix handling of default proc values in Mash - [@Erol](https://github.com/Erol).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
