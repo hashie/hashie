@@ -141,17 +141,13 @@ end
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
 
-Hashie also has a utility method for converting keys on a Hash within including a mixin:
+Hashie also has a utility method for converting keys on a Hash without a mixin:
 
 ```ruby
-Hashie.symbolize_keys! hash
-# => Symbolizes keys of hash.
-Hashie.symbolize_keys hash
-# => Returns a copy of hash with keys symbolized.
-Hashie.stringify_keys hash
-# => Stringifies keys of hash.
-Hashie.stringify_keys hash
-# => Returns a copy of hash with keys stringified.
+Hashie.symbolize_keys! hash # => Symbolizes keys of hash.
+Hashie.symbolize_keys hash # => Returns a copy of hash with keys symbolized.
+Hashie.stringify_keys hash # => Stringifies keys of hash.
+Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 ```
 
 ### MergeInitializer
