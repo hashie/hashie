@@ -192,6 +192,5 @@ describe Hashie::Extensions::IndifferentAccess do
       expect(instance[:foo].values).to all(be_coerced)
       expect(instance[:foo]).to be_a(ActiveSupport::HashWithIndifferentAccess)
     end
-
   end
 end

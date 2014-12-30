@@ -353,7 +353,6 @@ describe DashTest do
       end
     end
   end
-
 end
 
 describe Hashie::Dash, 'inheritance' do
@@ -400,7 +399,6 @@ describe Hashie::Dash, 'inheritance' do
     expect(@bottom.new).to have_key(:echo)
     expect(@bottom.new).to_not have_key('echo')
   end
-
 end
 
 describe SubclassedTest do

@@ -205,7 +205,6 @@ describe Hashie::Trash do
         t.first_name = 'Michael'
         expect(t.first_name).to eq 'Michael'
       end
-
     end
   end
 

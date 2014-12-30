@@ -19,6 +19,5 @@ describe Hashie::Extensions::Mash::SafeAssignment do
         expect { subject[:zip] = 'Test' }.to raise_error(ArgumentError)
       end
     end
-
   end
 end
