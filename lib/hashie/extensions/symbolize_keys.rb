@@ -8,7 +8,7 @@ module Hashie
       #   test.symbolize_keys!
       #   test # => {:abc => 'def'}
       def symbolize_keys!
-        _symbolize_keys!(self)
+        SymbolizeKeys.symbolize_keys!(self)
         self
       end
 
@@ -18,28 +18,50 @@ module Hashie
         dup.symbolize_keys!
       end
 
-      protected
+      module ClassMethods
+        # Symbolize all keys recursively within nested
+        # hashes and arrays.
+        # @api private
+        def symbolize_keys_recursively!(object)
+          object.symbolize_keys! if object.respond_to? :symbolize_keys!
 
-      # Symbolize all keys recursively within nested
-      # hashes and arrays.
-      def _symbolize_keys_recursively!(object)
-        case object
-        when self.class
-          object.symbolize_keys!
-        when ::Array
-          object.each do |i|
-            _symbolize_keys_recursively!(i)
+          case object
+          when ::Array
+            object.each do |i|
+              symbolize_keys_recursively!(i)
+            end
+          when ::Hash
+            symbolize_keys!(object)
           end
-        when ::Hash
-          _symbolize_keys!(object)
+        end
+
+        # Convert all keys in hash to symbols.
+        #
+        # @param [Hash] hash
+        # @example
+        #   test = {'abc' => 'def'}
+        #   Hashie.symbolize_keys! test
+        #   test # => {:abc => 'def'}
+        def symbolize_keys!(hash)
+          hash.keys.each do |k|
+            symbolize_keys_recursively!(hash[k])
+            hash[k.to_sym] = hash.delete(k)
+          end
+          hash
+        end
+
+        # Return a copy of hash with all keys converted
+        # to symbols.
+        # @param [::Hash] hash
+        def symbolize_keys(hash)
+          hash.dup.tap do | new_hash |
+            symbolize_keys! new_hash
+          end
         end
       end
 
-      def _symbolize_keys!(hash)
-        hash.keys.each do |k|
-          _symbolize_keys_recursively!(hash[k])
-          hash[k.to_sym] = hash.delete(k)
-        end
+      class << self
+        include ClassMethods
       end
     end
   end
