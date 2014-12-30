@@ -2,12 +2,12 @@
 
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
 * [#249](https://github.com/intridea/hashie/pull/249): SafeAssignment will now also protect hash-style assignments - [@jrochkind](https://github.com/jrochkind).
-* [#251](https://github.com/intridea/hashie/pull/251): Add block to indifferent access #fetch - [@jgraichen](https://github.com/jgraichen).
-* [#252](https://github.com/intridia/hashie/pull/252): Add support for conditionally required Hashie::Dash attributes - [@ccashwell](https://github.com/ccashwell).
+* [#251](https://github.com/intridea/hashie/pull/251): Added block support to indifferent access #fetch - [@jgraichen](https://github.com/jgraichen).
+* [#252](https://github.com/intridia/hashie/pull/252): Added support for conditionally required Hashie::Dash attributes - [@ccashwell](https://github.com/ccashwell).
 * [#256](https://github.com/intridia/hashie/pull/256): Inherit key coercions - [@Erol](https://github.com/Erol).
-* [#259](https://github.com/intridia/hashie/pull/259): Fix handling of default proc values in Mash - [@Erol](https://github.com/Erol).
-* [#260](https://github.com/intridia/hashie/pull/260): Add block to Extensions::DeepMerge - [@galathius](https://github.com/galathius).
-* [#254](https://github.com/intridea/hashie/pull/254): Public utility methods for stringify/symbolize keys - [@maxlinc](https://github.com/maxlinc).
+* [#259](https://github.com/intridia/hashie/pull/259): Fixed handling of default proc values in Mash - [@Erol](https://github.com/Erol).
+* [#260](https://github.com/intridia/hashie/pull/260): Added block support to Extensions::DeepMerge - [@galathius](https://github.com/galathius).
+* [#254](https://github.com/intridea/hashie/pull/254): Added public utility methods for stringify and symbolize keys - [@maxlinc](https://github.com/maxlinc).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
