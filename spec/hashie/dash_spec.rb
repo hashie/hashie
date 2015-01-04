@@ -486,3 +486,15 @@ describe MixedPropertiesTest do
     expect { subject['symbol'] = 'updated' }.to raise_error(NoMethodError)
   end
 end
+
+context 'Dynamic Dash Class' do
+  it 'define property' do
+    klass       = Class.new(Hashie::Dash)
+    my_property = 'my_property'
+    my_orig     = my_property.dup
+
+    klass.property(my_property)
+
+    expect(my_property).to eq(my_orig)
+  end
+end
