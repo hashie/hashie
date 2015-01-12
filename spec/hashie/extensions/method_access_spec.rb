@@ -30,7 +30,7 @@ describe Hashie::Extensions::MethodReader do
   end
 
   it 'returns false for undefined keys if key with question has been called ' do
-    expect(subject.new.awesome?).to eq false 
+    expect(subject.new.awesome?).to eq false
   end
 
   it 'returns true for defined keys if key with question has been called' do
