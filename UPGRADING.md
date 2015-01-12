@@ -1,6 +1,30 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.2.2
+
+#### Testing if key defined
+
+In versions <= 3.2.1 Hash object being questioned doesn't return a boolean value as it's mentioned in README.md
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::MethodAccess
+end
+
+h = MyHash.new
+h.abc = 'def'
+h.abc  # => 'def'
+h.abc? # => 'def'
+```
+
+In versions >= 3.2.2 it returns a boolean value
+
+```ruby
+h.abc? # => true
+h.abb? # => false
+```
+
 ### Upgrading to 3.2.1
 
 #### Possible coercion changes

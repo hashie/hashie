@@ -29,6 +29,14 @@ describe Hashie::Extensions::MethodReader do
     expect { subject.new.awesome }.to raise_error(NoMethodError)
   end
 
+  it 'returns false for undefined keys if key with question has been called ' do
+    expect(subject.new.awesome?).to eq false
+  end
+
+  it 'returns true for defined keys if key with question has been called' do
+    expect(subject.new(awesome: 'sauce').awesome?).to eq true
+  end
+
   describe '#respond_to?' do
     it 'is true for string keys' do
       expect(subject.new('awesome' => 'sauce')).to be_respond_to(:awesome)
