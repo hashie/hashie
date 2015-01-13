@@ -1,6 +1,7 @@
 ## Next Release
 
 * Your contribution here.
+* [#264](https://github.com/intridea/hashie/pull/264): Questioning abc? returns a boolean value instead of key value in Hashie::Extensions::MethodReader included classes - [@Zloy](https://github.com/Zloy).
 * [#233](https://github.com/intridea/hashie/pull/233): Custom error messages for required properties in Hashie::Dash subclasses - [@joss](https://github.com/joss).
 * [#231](https://github.com/intridea/hashie/pull/231): Added support for coercion on class type that inherit from Hash - [@gregory](https://github.com/gregory).
 * [#228](https://github.com/intridea/hashie/pull/228): Made Hashie::Extensions::Parsers::YamlErbParser pass template filename to ERB - [@jperville](https://github.com/jperville).
