@@ -8,6 +8,7 @@
 * [#259](https://github.com/intridia/hashie/pull/259): Fixed handling of default proc values in Mash - [@Erol](https://github.com/Erol).
 * [#260](https://github.com/intridia/hashie/pull/260): Added block support to Extensions::DeepMerge - [@galathius](https://github.com/galathius).
 * [#254](https://github.com/intridea/hashie/pull/254): Added public utility methods for stringify and symbolize keys - [@maxlinc](https://github.com/maxlinc).
+* [#261](https://github.com/intridea/hashie/pull/261): Fixed bug where Dash.property modifies argument object - [@d_tw](https://github.com/d_tw).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
