@@ -5,7 +5,7 @@ Upgrading Hashie
 
 #### Testing if key defined
 
-Versions <= 3.2.1 being questioned don't return a boolean value as it's mentioned in README.md
+In versions <= 3.2.1 Hash object being questioned doesn't return a boolean value as it's mentioned in README.md
 
 ```ruby
 class MyHash < Hash
