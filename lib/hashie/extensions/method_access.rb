@@ -35,6 +35,10 @@ module Hashie
       def method_missing(name, *args)
         return self[name.to_s] if key?(name.to_s)
         return self[name.to_sym] if key?(name.to_sym)
+        if name[-1] == '?'
+          kname = name.to_s[0..-2]
+          return key?(kname) || key?(kname.to_sym)
+        end
         super
       end
     end
