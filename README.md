@@ -192,7 +192,7 @@ non_overriding = MyHash.new
 non_overriding.zip = 'a-dee-doo-dah'
 non_overriding.zip #=> [[['zip', 'a-dee-doo-dah']]]
 
-overriding = MyHash.new
+overriding = MyOverridingHash.new
 overriding.zip = 'a-dee-doo-dah'
 overriding.zip   #=> 'a-dee-doo-dah'
 overriding.__zip #=> [[['zip', 'a-dee-doo-dah']]]
