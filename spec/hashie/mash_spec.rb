@@ -639,4 +639,16 @@ describe Hashie::Mash do
       end
     end
   end
+
+  describe '#extractable_options?' do
+    require 'active_support'
+
+    subject { described_class.new(name: 'foo') }
+    let(:args) { [101, 'bar', subject] }
+
+    it 'can be extracted from an array' do
+      expect(args.extract_options!).to eq subject
+      expect(args).to eq [101, 'bar']
+    end
+  end
 end
