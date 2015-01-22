@@ -250,6 +250,11 @@ module Hashie
       end
     end
 
+    # play nice with ActiveSupport Array#extract_options!
+    def extractable_options?
+      true
+    end
+
     protected
 
     def method_suffix(method_name)
