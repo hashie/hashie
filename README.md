@@ -313,6 +313,48 @@ user.deep_find_all(:name) #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'O
 user.deep_select(:name)   #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
 ```
 
+### DeepLocate
+
+This extension can be mixed in to provide a depth first search based search for enumerables matching a given comparator callable.
+
+It returns all enumerables which contain at least one element, for which the given comparator returns ```true```.
+
+Because the container objects are returned, the result elements can be modified in place. This way, one can perform modifications on deeply nested hashes without the need to know the exact paths.
+
+```ruby
+
+books = [
+  {
+    title: "Ruby for beginners",
+    pages: 120
+  },
+  {
+    title: "CSS for intermediates",
+    pages: 80
+  },
+  {
+    title: "Collection of ruby books",
+    books: [
+      {
+        title: "Ruby for the rest of us",
+        pages: 576
+      }
+    ]
+  }
+]
+
+books.extend(Hashie::Extensions::DeepLocate)
+
+# for ruby 1.9 leave *no* space between the lambda rocket and the braces
+# http://ruby-journal.com/becareful-with-space-in-lambda-hash-rocket-syntax-between-ruby-1-dot-9-and-2-dot-0/
+
+books.deep_locate -> (key, value, object) { key == :title && value.include?("Ruby") }
+# => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"Ruby for the rest of us", :pages=>576}]
+
+books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
+# => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"CSS for intermediates", :pages=>80}]
+```
+
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is intended to give the user easier access to the objects within the Mash through a property-like syntax, while still retaining all Hash functionality.
