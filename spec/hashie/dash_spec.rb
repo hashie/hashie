@@ -46,6 +46,11 @@ class DeferredTest < Hashie::Dash
   property :created_at, default: proc { Time.now }
 end
 
+class DeferredWithSelfTest < Hashie::Dash
+  property :created_at, default: -> { Time.now }
+  property :updated_at, default: ->(test) { test.created_at }
+end
+
 describe DashTest do
   def property_required_error(property)
     [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
@@ -165,6 +170,14 @@ describe DashTest do
     it 'does not evalute proc after subsequent reads' do
       deferred = DeferredTest.new
       expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
+    end
+  end
+
+  context 'reading from a deferred property based on context' do
+    it 'provides the current hash as context for evaluation' do
+      deferred = DeferredWithSelfTest.new
+      expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
+      expect(deferred[:updated_at].object_id).to eq deferred[:created_at].object_id
     end
   end
 
