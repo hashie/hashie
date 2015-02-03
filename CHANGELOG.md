@@ -16,6 +16,7 @@
 * [#261](https://github.com/intridea/hashie/pull/261): Fixed bug where Dash.property modifies argument object - [@d_tw](https://github.com/d_tw).
 * [#264](https://github.com/intridea/hashie/pull/264): Methods such as abc? return true/false with Hashie::Extensions::MethodReader - [@Zloy](https://github.com/Zloy).
 * [#269](https://github.com/intridea/hashie/pull/269): Add #extractable_options? so ActiveSupport Array#extract_options! can extract it - [@ridiculous](https://github.com/ridiculous).
+* [#269](https://github.com/intridea/hashie/pull/272): Added Hashie::Extensions::DeepLocate - [@msievers](https://github.com/msievers).
 * Your contribution here.
 
 ## 3.3.2 (11/26/2014)
