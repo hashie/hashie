@@ -346,15 +346,25 @@ describe Hashie::Mash do
     it 'responds to a set key with a suffix' do
       %w(= ? ! _).each do |suffix|
         expect(subject).to be_respond_to(:"abc#{suffix}")
-        expect(subject.method(:"abc#{suffix}")).to_not be_nil
       end
+
+      # it seems for ruby 2.2 :"abc#{suffix}" !== :"abc#{'='}" internally
+      expect(subject.method(:"abc#{'='}")).to_not be_nil
+      expect(subject.method(:"abc#{'?'}")).to_not be_nil
+      expect(subject.method(:"abc#{'!'}")).to_not be_nil
+      expect(subject.method(:"abc#{'_'}")).to_not be_nil
     end
 
     it 'responds to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
         expect(subject).to be_respond_to(:"xyz#{suffix}")
-        expect(subject.method(:"xyz#{suffix}")).to_not be_nil
       end
+
+      # it seems for ruby 2.2 :"abc#{suffix}" !== :"abc#{'='}" internally
+      expect(subject.method(:"xyz#{'='}")).to_not be_nil
+      expect(subject.method(:"xyz#{'?'}")).to_not be_nil
+      expect(subject.method(:"xyz#{'!'}")).to_not be_nil
+      expect(subject.method(:"xyz#{'_'}")).to_not be_nil
     end
 
     it 'does not respond to an unknown key without a suffix' do
