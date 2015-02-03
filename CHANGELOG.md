@@ -1,4 +1,8 @@
-## Next
+## Next Release
+
+* Your contribution here
+
+## 3.4.0 (02/02/2014)
 
 * [#271](https://github.com/intridea/hashie/pull/271): Added ability to define defaults based on current hash - [@gregory](https://github.com/gregory).
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
