@@ -1,6 +1,7 @@
 ## Next Release
 
 * [#269](https://github.com/intridea/hashie/pull/272): Added Hashie::Extensions::DeepLocate - [@msievers](https://github.com/msievers).
+* [#270](https://github.com/intridea/hashie/pull/277): Fixed ArgumentError raised when using IndifferentAccess and HashWithIndifferentAccess - [@gardenofwine](https://github.com/gardenofwine).
 * Your contribution here
 
 ## 3.4.0 (02/02/2014)

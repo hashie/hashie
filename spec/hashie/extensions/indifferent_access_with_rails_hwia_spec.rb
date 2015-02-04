@@ -1,8 +1,9 @@
 # This set of tests verifies that Hashie::Extensions::IndifferentAccess works with
 # ActiveSupport HashWithIndifferentAccess hashes. See #164 and #166 for details.
 
-require 'spec_helper'
 require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash'
+require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
   class IndifferentHashWithMergeInitializer < Hash
@@ -33,6 +34,10 @@ describe Hashie::Extensions::IndifferentAccess do
   class CoercableHash < Hash
     include Hashie::Extensions::Coercion
     include Hashie::Extensions::MergeInitializer
+  end
+
+  class MashWithIndifferentAccess < Hashie::Mash
+    include Hashie::Extensions::IndifferentAccess
   end
 
   shared_examples_for 'hash with indifferent access' do
@@ -191,6 +196,13 @@ describe Hashie::Extensions::IndifferentAccess do
       expect(instance[:foo].keys).to all(be_coerced)
       expect(instance[:foo].values).to all(be_coerced)
       expect(instance[:foo]).to be_a(ActiveSupport::HashWithIndifferentAccess)
+    end
+  end
+
+  describe 'Mash with indifferent access' do
+    it 'is able to be created for a deep nested HashWithIndifferentAccess' do
+      indifferent_hash = ActiveSupport::HashWithIndifferentAccess.new(abc: { def: 123 })
+      MashWithIndifferentAccess.new(indifferent_hash)
     end
   end
 end
