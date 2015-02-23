@@ -1,5 +1,7 @@
 # Hashie
 
+[![Join the chat at https://gitter.im/intridea/hashie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/intridea/hashie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Gem Version](http://img.shields.io/gem/v/hashie.svg)](http://badge.fury.io/rb/hashie)
 [![Build Status](http://img.shields.io/travis/intridea/hashie.svg)](https://travis-ci.org/intridea/hashie)
 [![Dependency Status](https://gemnasium.com/intridea/hashie.svg)](https://gemnasium.com/intridea/hashie)
