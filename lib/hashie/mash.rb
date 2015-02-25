@@ -255,6 +255,11 @@ module Hashie
       true
     end
 
+    # another ActiveSupport method, see issue #270
+    def reverse_merge(other_hash)
+      Hashie::Mash.new(other_hash).merge(self)
+    end
+
     protected
 
     def method_suffix(method_name)

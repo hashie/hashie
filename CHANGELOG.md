@@ -2,6 +2,7 @@
 
 * [#269](https://github.com/intridea/hashie/pull/272): Added Hashie::Extensions::DeepLocate - [@msievers](https://github.com/msievers).
 * [#270](https://github.com/intridea/hashie/pull/277): Fixed ArgumentError raised when using IndifferentAccess and HashWithIndifferentAccess - [@gardenofwine](https://github.com/gardenofwine).
+* [#281](https://github.com/intridea/hashie/pull/281): Added #reverse_merge to Mash to override ActiveSupport's version - [@mgold](https://github.com/mgold).
 * Your contribution here
 
 ## 3.4.0 (02/02/2014)
