@@ -47,8 +47,13 @@ describe Hashie::Extensions::Coercion do
         coerce_key :bar, Integer
       end
 
+      class OtherNestedCoercableHash < BaseCoercableHash
+        coerce_key :foo, Symbol
+      end
+
       class RootCoercableHash < BaseCoercableHash
         coerce_key :nested, NestedCoercableHash
+        coerce_key :other, OtherNestedCoercableHash
         coerce_key :nested_list, Array[NestedCoercableHash]
         coerce_key :nested_hash, Hash[String => NestedCoercableHash]
       end
@@ -61,6 +66,13 @@ describe Hashie::Extensions::Coercion do
 
       subject { RootCoercableHash }
       let(:instance) { subject.new }
+
+      it 'does not add coercions to superclass' do
+        instance[:nested] = { foo: 'bar' }
+        instance[:other]  = { foo: 'bar' }
+        expect(instance[:nested][:foo]).to be_a String
+        expect(instance[:other][:foo]).to be_a Symbol
+      end
 
       it 'coerces nested objects' do
         instance[:nested] = { foo: 123, bar: '456' }
