@@ -651,4 +651,17 @@ describe Hashie::Mash do
       expect(args).to eq [101, 'bar']
     end
   end
+
+  describe '#reverse_merge' do
+    subject { described_class.new(a: 1, b: 2) }
+
+    it 'unifies strings and symbols' do
+      expect(subject.reverse_merge(a: 2).length).to eq 2
+      expect(subject.reverse_merge('a' => 2).length).to eq 2
+    end
+
+    it 'does not overwrite values' do
+      expect(subject.reverse_merge(a: 5).a).to eq subject.a
+    end
+  end
 end
