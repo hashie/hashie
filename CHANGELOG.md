@@ -5,7 +5,7 @@
 * [#281](https://github.com/intridea/hashie/pull/281): Added #reverse_merge to Mash to override ActiveSupport's version - [@mgold](https://github.com/mgold).
 * Your contribution here
 
-## 3.4.0 (02/02/2014)
+## 3.4.0 (02/02/2015)
 
 * [#271](https://github.com/intridea/hashie/pull/271): Added ability to define defaults based on current hash - [@gregory](https://github.com/gregory).
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
