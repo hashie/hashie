@@ -406,17 +406,23 @@ describe Hashie::Extensions::Coercion do
     end
 
     context 'when subclassing' do
-      class MyHash < Hash
+      class MyOwnBase < Hash
         include Hashie::Extensions::Coercion
+      end
 
+      class MyOwnHash < MyOwnBase
         coerce_key :value, Integer
       end
 
-      class MySubclass < MyHash
+      class MyOwnSubclass < MyOwnHash
       end
 
       it 'inherits key coercions' do
-        expect(MyHash.key_coercions).to eql(MySubclass.key_coercions)
+        expect(MyOwnHash.key_coercions).to eql(MyOwnSubclass.key_coercions)
+      end
+
+      it 'the superclass does not accumulate coerced attributes from subclasses' do
+        expect(MyOwnBase.key_coercions).to eq({})
       end
     end
   end
