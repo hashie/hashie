@@ -178,7 +178,7 @@ module Hashie
         def inherited(klass)
           super
 
-          klass.key_coercions = key_coercions
+          klass.key_coercions = key_coercions.dup
         end
       end
     end
