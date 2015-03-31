@@ -1,5 +1,5 @@
 ## Next Release
-
+* [#282](https://github.com/intridea/hashie/pull/282): Fixed a bug that caused coercions in a subclass to be added to the superclass - [@maxlinc](https://github.com/maxlinc) [@martinstreicher](https://github.com/martinstreicher).
 * [#269](https://github.com/intridea/hashie/pull/272): Added Hashie::Extensions::DeepLocate - [@msievers](https://github.com/msievers).
 * [#270](https://github.com/intridea/hashie/pull/277): Fixed ArgumentError raised when using IndifferentAccess and HashWithIndifferentAccess - [@gardenofwine](https://github.com/gardenofwine).
 * [#281](https://github.com/intridea/hashie/pull/281): Added #reverse_merge to Mash to override ActiveSupport's version - [@mgold](https://github.com/mgold).
