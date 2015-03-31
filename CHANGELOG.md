@@ -1,11 +1,15 @@
-## 3.4.1
+## Next Release
+
+* Your contribution here
+
+## 3.4.1 (3/31/2015)
 
 * [#269](https://github.com/intridea/hashie/pull/272): Added Hashie::Extensions::DeepLocate - [@msievers](https://github.com/msievers).
 * [#270](https://github.com/intridea/hashie/pull/277): Fixed ArgumentError raised when using IndifferentAccess and HashWithIndifferentAccess - [@gardenofwine](https://github.com/gardenofwine).
 * [#281](https://github.com/intridea/hashie/pull/281): Added #reverse_merge to Mash to override ActiveSupport's version - [@mgold](https://github.com/mgold).
 * [#282](https://github.com/intridea/hashie/pull/282): Fixed coercions in a subclass accumulating in the superclass - [@maxlinc](https://github.com/maxlinc), [@martinstreicher](https://github.com/martinstreicher).
 
-## 3.4.0 (02/02/2015)
+## 3.4.0 (2/02/2015)
 
 * [#271](https://github.com/intridea/hashie/pull/271): Added ability to define defaults based on current hash - [@gregory](https://github.com/gregory).
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
