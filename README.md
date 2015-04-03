@@ -154,7 +154,7 @@ Hashie also has a utility method for converting keys on a Hash without a mixin:
 ```ruby
 Hashie.symbolize_keys! hash # => Symbolizes keys of hash.
 Hashie.symbolize_keys hash # => Returns a copy of hash with keys symbolized.
-Hashie.stringify_keys hash # => Stringifies keys of hash.
+Hashie.stringify_keys! hash # => Stringifies keys of hash.
 Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 ```
 
