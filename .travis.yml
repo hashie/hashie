@@ -2,6 +2,7 @@ language: ruby
 sudo: false
 
 rvm:
+  - 2.2.1
   - 2.1.2
   - 2.1.0
   - 2.0.0
@@ -15,3 +16,4 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: 2.2.1 # https://github.com/intridea/hashie/pull/285
