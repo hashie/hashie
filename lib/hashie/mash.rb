@@ -92,14 +92,6 @@ module Hashie
 
     class << self; alias_method :[], :new; end
 
-    def id #:nodoc:
-      self['id']
-    end
-
-    def type #:nodoc:
-      self['type']
-    end
-
     alias_method :regular_reader, :[]
     alias_method :regular_writer, :[]=
 

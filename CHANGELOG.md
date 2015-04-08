@@ -1,5 +1,7 @@
 ## Next Release
 
+* [#292](https://github.com/intridea/hashie/pull/292): Remove unneeded Mash#id and #type cover methods - [@jrochkind](https://github.com/jrochkind)
+
 * Your contribution here
 
 ## 3.4.1 (3/31/2015)
