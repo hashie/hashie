@@ -1,6 +1,7 @@
 ## Next Release
 
-* Your contribution here
+* [#292](https://github.com/intridea/hashie/pull/292): Removed `Mash#id` and `Mash#type` - [@jrochkind](https://github.com/jrochkind).
+* Your contribution here.
 
 ## 3.4.1 (3/31/2015)
 
