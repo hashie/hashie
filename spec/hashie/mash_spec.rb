@@ -348,7 +348,7 @@ describe Hashie::Mash do
         expect(subject).to be_respond_to(:"abc#{suffix}")
       end
 
-      # it seems for ruby 2.2 :"abc#{suffix}" !== :"abc#{'='}" internally
+      # for ruby 2.2 - https://github.com/intridea/hashie/pull/285
       expect(subject.method(:"abc#{'='}")).to_not be_nil
       expect(subject.method(:"abc#{'?'}")).to_not be_nil
       expect(subject.method(:"abc#{'!'}")).to_not be_nil
@@ -360,7 +360,7 @@ describe Hashie::Mash do
         expect(subject).to be_respond_to(:"xyz#{suffix}")
       end
 
-      # it seems for ruby 2.2 :"abc#{suffix}" !== :"abc#{'='}" internally
+      # for ruby 2.2 - https://github.com/intridea/hashie/pull/285
       expect(subject.method(:"xyz#{'='}")).to_not be_nil
       expect(subject.method(:"xyz#{'?'}")).to_not be_nil
       expect(subject.method(:"xyz#{'!'}")).to_not be_nil
