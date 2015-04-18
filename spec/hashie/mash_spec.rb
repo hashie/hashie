@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'delegate'
+require 'support/ruby_version'
 
 describe Hashie::Mash do
   subject { Hashie::Mash.new }
@@ -346,27 +347,30 @@ describe Hashie::Mash do
     it 'responds to a set key with a suffix' do
       %w(= ? ! _).each do |suffix|
         expect(subject).to be_respond_to(:"abc#{suffix}")
+      end
+    end
+
+    it 'is able to access the suffixed key as a method' do
+      %w(= ? ! _).each do |suffix|
         expect(subject.method(:"abc#{suffix}")).to_not be_nil
       end
-
-      # for ruby 2.2 - https://github.com/intridea/hashie/pull/285
-      expect(subject.method(:"abc#{'='}")).to_not be_nil
-      expect(subject.method(:"abc#{'?'}")).to_not be_nil
-      expect(subject.method(:"abc#{'!'}")).to_not be_nil
-      expect(subject.method(:"abc#{'_'}")).to_not be_nil
     end
 
     it 'responds to an unknown key with a suffix' do
       %w(= ? ! _).each do |suffix|
         expect(subject).to be_respond_to(:"xyz#{suffix}")
-        expect(subject.method(:"xyz#{suffix}")).to_not be_nil
+      end
+    end
+
+    it 'is able to access an unknown suffixed key as a method' do
+      # See https://github.com/intridea/hashie/pull/285 for more information
+      if mri22?
+        pending 'Bug in MRI 2.2.x means this behavior is broken in those versions'
       end
 
-      # for ruby 2.2 - https://github.com/intridea/hashie/pull/285
-      expect(subject.method(:"xyz#{'='}")).to_not be_nil
-      expect(subject.method(:"xyz#{'?'}")).to_not be_nil
-      expect(subject.method(:"xyz#{'!'}")).to_not be_nil
-      expect(subject.method(:"xyz#{'_'}")).to_not be_nil
+      %w(= ? ! _).each do |suffix|
+        expect(subject.method(:"xyz#{suffix}")).to_not be_nil
+      end
     end
 
     it 'does not respond to an unknown key without a suffix' do
