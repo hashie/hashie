@@ -243,7 +243,7 @@ describe Hashie::Mash do
       end
 
       it 'leaves only specified keys' do
-        expect(subject.keys.sort).to eq %i(details middle_name)
+        expect(subject.keys.sort).to eq [:details, :middle_name]
         expect(subject.first_name?).to be_falsy
         expect(subject).not_to respond_to(:first_name)
         expect(subject.last_name?).to be_falsy
