@@ -106,9 +106,9 @@ describe Hashie::Mash do
 
   it 'allows for multi-level assignment through bang methods' do
     subject.author!.name = 'Michael Bleigh'
-    expect(subject.author).to eq Hashie::Mash.new(name: 'Michael Bleigh')
+    expect(subject.author).to eq Hashie::Mash.new('name' => 'Michael Bleigh')
     subject.author!.website!.url = 'http://www.mbleigh.com/'
-    expect(subject.author.website).to eq Hashie::Mash.new(url: 'http://www.mbleigh.com/')
+    expect(subject.author.website).to eq Hashie::Mash.new('url' => 'http://www.mbleigh.com/')
   end
 
   it 'allows for multi-level under bang testing' do
@@ -231,7 +231,7 @@ describe Hashie::Mash do
       end
 
       it 'returns self' do
-        expect(subject.replace(foo: 'bar').to_hash).to eq('foo' => 'bar')
+        expect(subject.replace(foo: 'bar').to_hash).to eq(foo: 'bar')
       end
 
       it 'sets all specified keys to their corresponding values' do
@@ -243,7 +243,7 @@ describe Hashie::Mash do
       end
 
       it 'leaves only specified keys' do
-        expect(subject.keys.sort).to eq %w(details middle_name)
+        expect(subject.keys.sort).to eq %i(details middle_name)
         expect(subject.first_name?).to be_falsy
         expect(subject).not_to respond_to(:first_name)
         expect(subject.last_name?).to be_falsy

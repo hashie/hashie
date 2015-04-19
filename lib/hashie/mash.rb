@@ -98,8 +98,9 @@ module Hashie
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
     def custom_reader(key)
+      key = indifferent_key(key)
       default_proc.call(self, key) if default_proc && !key?(key)
-      value = regular_reader(convert_key(key))
+      value = regular_reader(key)
       yield value if block_given?
       value
     end
@@ -108,7 +109,7 @@ module Hashie
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
-      regular_writer(convert_key(key), convert ? convert_value(value) : value)
+      regular_writer(indifferent_key(key), convert ? convert_value(value) : value)
     end
 
     alias_method :[], :custom_reader
@@ -117,7 +118,7 @@ module Hashie
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
     def initializing_reader(key)
-      ck = convert_key(key)
+      ck = indifferent_key(key)
       regular_writer(ck, self.class.new) unless key?(ck)
       regular_reader(ck)
     end
@@ -125,7 +126,7 @@ module Hashie
     # This is the under bang method reader, it will return a temporary new Mash
     # if there isn't a value already assigned to the key requested.
     def underbang_reader(key)
-      ck = convert_key(key)
+      ck = indifferent_key(key)
       if key?(ck)
         regular_reader(ck)
       else
@@ -134,15 +135,15 @@ module Hashie
     end
 
     def fetch(key, *args)
-      super(convert_key(key), *args)
+      super(indifferent_key(key), *args)
     end
 
     def delete(key)
-      super(convert_key(key))
+      super(indifferent_key(key))
     end
 
     def values_at(*keys)
-      super(*keys.map { |key| convert_key(key) })
+      super(*keys.map { |key| indifferent_key(key) })
     end
 
     alias_method :regular_dup, :dup
@@ -151,8 +152,9 @@ module Hashie
       self.class.new(self, default)
     end
 
+    alias_method :regular_key?, :key?
     def key?(key)
-      super(convert_key(key))
+      super(indifferent_key(key))
     end
     alias_method :has_key?, :key?
     alias_method :include?, :key?
@@ -169,7 +171,7 @@ module Hashie
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash, &blk)
       other_hash.each_pair do |k, v|
-        key = convert_key(k)
+        key = indifferent_key(k)
         if regular_reader(key).is_a?(Mash) && v.is_a?(::Hash)
           custom_reader(key).deep_update(v, &blk)
         else
@@ -198,7 +200,7 @@ module Hashie
     # changing the receiving hash
     def shallow_update(other_hash)
       other_hash.each_pair do |k, v|
-        regular_writer(convert_key(k), convert_value(v, true))
+        regular_writer(indifferent_key(k), convert_value(v, true))
       end
       self
     end
@@ -260,7 +262,13 @@ module Hashie
     end
 
     def convert_key(key) #:nodoc:
-      key.to_s
+      if key.is_a?(String)
+        key.to_sym
+      elsif key.is_a?(Symbol)
+        key.to_s
+      else
+        key
+      end
     end
 
     def convert_value(val, duping = false) #:nodoc:
@@ -277,6 +285,13 @@ module Hashie
       else
         val
       end
+    end
+
+    def indifferent_key(key)
+      ck = convert_key(key)
+      return ck if regular_key?(ck)
+
+      key
     end
   end
 end
