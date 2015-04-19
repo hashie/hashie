@@ -5,7 +5,16 @@ module Hashie
       # a key and returns the first occurrence of the key.
       #
       #  options = {user: {location: {address: '123 Street'}}}
+      #  options.extend(Hashie::Extensions::DeepFind)
       #  options.deep_find(:address) # => '123 Street'
+      #
+      #  class MyHash < Hash
+      #    include Hashie::Extensions::DeepFind
+      #  end
+      #
+      #  my_hash = MyHash.new
+      #  my_hash[:user] = {location: {address: '123 Street'}}
+      #  my_hash.deep_find(:address) # => '123 Street'
       def deep_find(key)
         _deep_find(key)
       end
@@ -16,7 +25,16 @@ module Hashie
       # a key and returns all occurrences of the key.
       #
       #  options = {users: [{location: {address: '123 Street'}}, {location: {address: '234 Street'}}]}
+      #  options.extend(Hashie::Extensions::DeepFind)
       #  options.deep_find_all(:address) # => ['123 Street', '234 Street']
+      #
+      #  class MyHash < Hash
+      #    include Hashie::Extensions::DeepFind
+      #  end
+      #
+      #  my_hash = MyHash.new
+      #  my_hash[:users] = [{location: {address: '123 Street'}}, {location: {address: '234 Street'}}]
+      #  my_hash.deep_find_all(:address) # => ['123 Street', '234 Street']
       def deep_find_all(key)
         matches = _deep_find_all(key)
         matches.empty? ? nil : matches
