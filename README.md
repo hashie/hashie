@@ -145,6 +145,41 @@ class Tweet < Hash
 end
 ```
 
+#### A note on circular coercion
+
+Since `coerce_key` is a class-level method, you cannot have circular coercion without the use of a proc. For example:
+
+```ruby
+class CategoryHash < Hash
+  include Hashie::Extensions::Coercion
+  include Hashie::Extensions::MergeInitializer
+
+  coerce_key :products, Array[ProductHash]
+end
+
+class ProductHash < Hash
+  include Hashie::Extensions::Coercion
+  include Hashie::Extensions::MergeInitializer
+
+  coerce_key :categories, Array[CategoriesHash]
+end
+```
+
+This will fail with a `NameError` for `CategoryHash::ProductHash` because `ProductHash` is not defined at the point that `coerce_key` is happening for `CategoryHash`.
+
+To work around this, you can use a coercion proc. For example, you could do:
+
+```ruby
+class CategoryHash < Hash
+  # ...
+  coerce_key :products, ->(value) do
+    return value.map { |v| ProductHash.new(v) } if value.respond_to?(:map)
+
+    ProductHash.new(value)
+  end
+end
+```
+
 ### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
