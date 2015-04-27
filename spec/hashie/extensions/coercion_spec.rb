@@ -437,6 +437,67 @@ describe Hashie::Extensions::Coercion do
         expect(MyOwnBase.key_coercions).to eq({})
       end
     end
+
+    context 'when using circular coercion' do
+      context 'with a proc on one side' do
+        class CategoryHash < Hash
+          include Hashie::Extensions::Coercion
+          include Hashie::Extensions::MergeInitializer
+
+          coerce_key :products, lambda { |value|
+            return value.map { |v| ProductHash.new(v) } if value.respond_to?(:map)
+
+            ProductHash.new(v)
+          }
+        end
+
+        class ProductHash < Hash
+          include Hashie::Extensions::Coercion
+          include Hashie::Extensions::MergeInitializer
+
+          coerce_key :categories, Array[CategoryHash]
+        end
+
+        let(:category) { CategoryHash.new(type: 'rubygem', products: [Hashie::Mash.new(name: 'Hashie')]) }
+        let(:product) { ProductHash.new(name: 'Hashie', categories: [Hashie::Mash.new(type: 'rubygem')]) }
+
+        it 'coerces CategoryHash[:products] correctly' do
+          expected = [ProductHash]
+          actual = category[:products].map(&:class)
+
+          expect(actual).to eq(expected)
+        end
+
+        it 'coerces ProductHash[:categories] correctly' do
+          expected = [CategoryHash]
+          actual = product[:categories].map(&:class)
+
+          expect(actual).to eq(expected)
+        end
+      end
+
+      context 'without a proc on either side' do
+        it 'fails with a NameError since the other class is not defined yet' do
+          attempted_code = lambda do
+            class AnotherCategoryHash < Hash
+              include Hashie::Extensions::Coercion
+              include Hashie::Extensions::MergeInitializer
+
+              coerce_key :products, Array[AnotherProductHash]
+            end
+
+            class AnotherProductHash < Hash
+              include Hashie::Extensions::Coercion
+              include Hashie::Extensions::MergeInitializer
+
+              coerce_key :categories, Array[AnotherCategoryHash]
+            end
+          end
+
+          expect { attempted_code.call }.to raise_error(NameError)
+        end
+      end
+    end
   end
 
   describe '#coerce_value' do
