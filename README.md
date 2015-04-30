@@ -524,13 +524,58 @@ p = Tricky.new('trick' => 'two')
 p.trick # => NoMethodError
 ```
 
+### Dash Extension: PropertyTranslation
+
+The `Hashie::Extensions::Dash::PropertyTranslation` mixin extends a Dash with
+the ability to remap keys from a source hash.
+
+### Example from inconsistent APIs
+
+Property translation is useful when you need to read data from another
+application -- such as a Java API -- where the keys are named differently from
+Ruby conventions.
+
+```ruby
+class PersonHash < Hashie::Dash
+  include Hashie::Extensions::Dash::PropertyTranslation
+
+  property :first_name, from: :firstName
+  property :last_name, from: :lastName
+  property :first_name, from: :f_name
+  property :last_name, from: :l_name
+end
+
+person = PersonHash.new(firstName: 'Michael', l_name: 'Bleigh')
+person[:first_name]  #=> 'Michael'
+person[:last_name]   #=> 'Bleigh
+```
+
+### Example using translation lambdas
+
+You can also use a lambda to translate the value. This is particularly useful
+when you want to ensure the type of data you're wrapping.
+
+```ruby
+class DataModelHash < Hashie::Dash
+  include Hashie::Extensions::Dash::PropertyTranslation
+
+  property :id, transform_with: ->(value) { value.to_i }
+  property :created_at, from: :created, with: ->(value) { Time.parse(value) }
+end
+
+model = DataModelHash.new(id: '123', created: '2014-04-25 22:35:28')
+model.id.class          #=> Fixnum
+model.created_at.class  #=> Time
+```
+
 ### Mash and Rails 4 Strong Parameters
 
 To enable compatibility with Rails 4 use the [hashie_rails](http://rubygems.org/gems/hashie_rails) gem.
 
 ## Trash
 
-A Trash is a Dash that allows you to translate keys on initialization. It is used like so:
+A Trash is a Dash that allows you to translate keys on initialization. It mixes
+in the PropertyTranslation mixin by default and is used like so:
 
 ```ruby
 class Person < Hashie::Trash
