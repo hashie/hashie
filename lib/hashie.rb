@@ -33,6 +33,7 @@ module Hashie
 
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
+      autoload :PropertyTranslation, 'hashie/extensions/dash/property_translation'
     end
 
     module Mash
