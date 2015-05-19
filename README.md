@@ -605,7 +605,7 @@ model.created_at.class  #=> Time
 
 ### Mash and Rails 4 Strong Parameters
 
-To enable compatibility with Rails 4 use the [hashie_rails](http://rubygems.org/gems/hashie_rails) gem.
+To enable compatibility with Rails 4 use the [hashie-forbidden_attributes](https://github.com/Maxim-Filimonov/hashie-forbidden_attributes) gem.
 
 ## Trash
 
