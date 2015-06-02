@@ -1,8 +1,7 @@
-## Next Release
+## 3.4.2 (6/2/2015)
 
 * [#292](https://github.com/intridea/hashie/pull/292): Removed `Mash#id` and `Mash#type` - [@jrochkind](https://github.com/jrochkind).
 * [#297](https://github.com/intridea/hashie/pull/297): Extracted `Trash`'s behavior into a new `Dash::PropertyTranslation` extension - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
 
 ## 3.4.1 (3/31/2015)
 
