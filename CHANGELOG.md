@@ -1,6 +1,7 @@
 ## Next Release
 
 * Your contribution here.
+* [#304](https://github.com/intridea/hashie/pull/304): Ensured compatibility of `Hash` extensions with singleton objects - [@regexident](https://github.com/regexident).
 
 ## 3.4.2 (6/2/2015)
 

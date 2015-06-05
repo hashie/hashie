@@ -42,4 +42,24 @@ describe Hashie::Extensions::DeepMerge do
       expect(h1).to eq expected_hash
     end
   end
+
+  context 'from extended object' do
+    subject { Hash }
+    let(:h1) { subject.new.merge(a: 100, c: { c1: 100 }).extend(Hashie::Extensions::DeepMerge) }
+    let(:h2) { { b: 250, c: { c1: 200 } } }
+    let(:expected_hash) { { a: 100, b: 250, c: { c1: 200 } } }
+
+    it 'does not raise error' do
+      expect { h1.deep_merge(h2) } .not_to raise_error
+    end
+
+    it 'deep merges two hashes' do
+      expect(h1.deep_merge(h2)).to eq expected_hash
+    end
+
+    it 'deep merges another hash in place via bang method' do
+      h1.deep_merge!(h2)
+      expect(h1).to eq expected_hash
+    end
+  end
 end

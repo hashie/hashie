@@ -15,7 +15,7 @@ module Hashie
       # Return a new hash with all keys converted
       # to symbols.
       def symbolize_keys
-        dup.symbolize_keys!
+        SymbolizeKeys.symbolize_keys(self)
       end
 
       module ClassMethods
@@ -23,9 +23,9 @@ module Hashie
         # hashes and arrays.
         # @api private
         def symbolize_keys_recursively!(object)
-          object.symbolize_keys! if object.respond_to? :symbolize_keys!
-
           case object
+          when self.class
+            symbolize_keys!(object)
           when ::Array
             object.each do |i|
               symbolize_keys_recursively!(i)
@@ -43,6 +43,7 @@ module Hashie
         #   Hashie.symbolize_keys! test
         #   test # => {:abc => 'def'}
         def symbolize_keys!(hash)
+          hash.extend(Hashie::Extensions::SymbolizeKeys) unless hash.respond_to?(:symbolize_keys!)
           hash.keys.each do |k|
             symbolize_keys_recursively!(hash[k])
             hash[k.to_sym] = hash.delete(k)
@@ -54,8 +55,10 @@ module Hashie
         # to symbols.
         # @param [::Hash] hash
         def symbolize_keys(hash)
-          hash.dup.tap do | new_hash |
-            symbolize_keys! new_hash
+          copy = hash.dup
+          copy.extend(Hashie::Extensions::SymbolizeKeys) unless copy.respond_to?(:symbolize_keys!)
+          copy.tap do |new_hash|
+            symbolize_keys!(new_hash)
           end
         end
       end

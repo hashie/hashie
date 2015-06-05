@@ -15,7 +15,7 @@ module Hashie
       # Return a new hash with all keys converted
       # to strings.
       def stringify_keys
-        dup.stringify_keys!
+        StringifyKeys.stringify_keys(self)
       end
 
       module ClassMethods
@@ -25,7 +25,7 @@ module Hashie
         def stringify_keys_recursively!(object)
           case object
           when self.class
-            object.stringify_keys!
+            stringify_keys!(object)
           when ::Array
             object.each do |i|
               stringify_keys_recursively!(i)
@@ -43,6 +43,7 @@ module Hashie
         #   test.stringify_keys!
         #   test # => {'abc' => 'def'}
         def stringify_keys!(hash)
+          hash.extend(Hashie::Extensions::StringifyKeys) unless hash.respond_to?(:stringify_keys!)
           hash.keys.each do |k|
             stringify_keys_recursively!(hash[k])
             hash[k.to_s] = hash.delete(k)
@@ -54,8 +55,10 @@ module Hashie
         # to strings.
         # @param [::Hash] hash
         def stringify_keys(hash)
-          hash.dup.tap do | new_hash |
-            stringify_keys! new_hash
+          copy = hash.dup
+          copy.extend(Hashie::Extensions::StringifyKeys) unless copy.respond_to?(:stringify_keys!)
+          copy.tap do |new_hash|
+            stringify_keys!(new_hash)
           end
         end
       end

@@ -80,6 +80,29 @@ describe Hashie::Extensions::StringifyKeys do
       include_examples 'stringify_keys!'
     end
   end
+
+  context 'singleton methods' do
+    subject { Hash }
+    let(:object) { subject.new.merge(a: 1, b: { c: 2 }).extend(Hashie::Extensions::StringifyKeys) }
+    let(:expected_hash) { { 'a' => 1, 'b' => { 'c' => 2 } } }
+
+    describe '.stringify_keys' do
+      it 'does not raise error' do
+        expect { object.stringify_keys } .not_to raise_error
+      end
+      it 'produces expected stringified hash' do
+        expect(object.stringify_keys).to eq(expected_hash)
+      end
+    end
+    describe '.stringify_keys!' do
+      it 'does not raise error' do
+        expect { object.stringify_keys! } .not_to raise_error
+      end
+      it 'produces expected stringified hash' do
+        expect(object.stringify_keys!).to eq(expected_hash)
+      end
+    end
+  end
 end
 
 describe Hashie do
