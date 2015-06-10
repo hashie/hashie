@@ -3,7 +3,9 @@ module Hashie
     module DeepMerge
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
       def deep_merge(other_hash, &block)
-        dup.deep_merge!(other_hash, &block)
+        copy = dup
+        copy.extend(Hashie::Extensions::DeepMerge) unless copy.respond_to?(:deep_merge!)
+        copy.deep_merge!(other_hash, &block)
       end
 
       # Returns a new hash with +self+ and +other_hash+ merged recursively.

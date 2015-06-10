@@ -85,6 +85,29 @@ describe Hashie::Extensions::SymbolizeKeys do
       include_examples 'symbolize_keys!'
     end
   end
+
+  context 'singleton methods' do
+    subject { Hash }
+    let(:object) { subject.new.merge('a' => 1, 'b' => { 'c' => 2 }).extend(Hashie::Extensions::SymbolizeKeys) }
+    let(:expected_hash) { { a: 1, b: { c: 2 } } }
+
+    describe '.symbolize_keys' do
+      it 'does not raise error' do
+        expect { object.symbolize_keys }.not_to raise_error
+      end
+      it 'produces expected symbolized hash' do
+        expect(object.symbolize_keys).to eq(expected_hash)
+      end
+    end
+    describe '.symbolize_keys!' do
+      it 'does not raise error' do
+        expect { object.symbolize_keys! }.not_to raise_error
+      end
+      it 'produces expected symbolized hash' do
+        expect(object.symbolize_keys!).to eq(expected_hash)
+      end
+    end
+  end
 end
 
 describe Hashie do
