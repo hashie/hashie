@@ -607,6 +607,36 @@ model.created_at.class  #=> Time
 
 To enable compatibility with Rails 4 use the [hashie-forbidden_attributes](https://github.com/Maxim-Filimonov/hashie-forbidden_attributes) gem.
 
+### Dash Extension: Coercion.
+
+If you want to use `Hashie::Extensions::Coercion` together with `Dash` then
+you may probably want to use `Hashie::Extensions::Dash::Coercion` instead.
+This extension automatically includes `Hashie::Extensions::Coercion`
+and also adds a convenient `:coerce` option to `property` so you can define coercion in one line
+instead of using `property` and `coerce_key` separate:
+
+```ruby
+class UserHash < Hashie::Dash
+  include Hashie::Extensions::Coercion
+
+  property :id
+  property :posts
+
+  coerce_key :posts, Array[PostHash]
+end
+```
+
+This is the same as:
+
+```ruby
+class UserHash < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :id
+  property :posts, coerce: Array[PostHash]
+end
+```
+
 ## Trash
 
 A Trash is a Dash that allows you to translate keys on initialization. It mixes

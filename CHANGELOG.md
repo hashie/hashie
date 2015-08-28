@@ -2,6 +2,7 @@
 
 * Your contribution here.
 * [#304](https://github.com/intridea/hashie/pull/304): Ensured compatibility of `Hash` extensions with singleton objects - [@regexident](https://github.com/regexident).
+* [#306](https://github.com/intridea/hashie/pull/306): Added Hashie::Extensions::Dash::Coercion - [@marshall-lee](https://github.com/marshall-lee).
 
 ## 3.4.2 (6/2/2015)
 
