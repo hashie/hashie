@@ -58,7 +58,6 @@ module Hashie
     include Hashie::Extensions::PrettyInspect
 
     ALLOWED_SUFFIXES = %w(? ! = _)
-    SUFFIXES_PARSER  = /(.*?)([#{ALLOWED_SUFFIXES.join}]?)$/
 
     def self.load(path, options = {})
       @_mashes ||= new
@@ -211,10 +210,9 @@ module Hashie
 
     def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
-      _, suffix = method_suffix(method_name)
-      case suffix
-      when '=', '?', '!', '_'
-        return true
+      suffix = method_suffix(method_name)
+      if suffix
+        true
       else
         super
       end
@@ -227,15 +225,15 @@ module Hashie
 
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
-      name, suffix = method_suffix(method_name)
+      name, suffix = method_name_and_suffix(method_name)
       case suffix
-      when '='
+      when '='.freeze
         assign_property(name, args.first)
-      when '?'
+      when '?'.freeze
         !!self[name]
-      when '!'
+      when '!'.freeze
         initializing_reader(name)
-      when '_'
+      when '_'.freeze
         underbang_reader(name)
       else
         self[method_name]
@@ -254,9 +252,18 @@ module Hashie
 
     protected
 
+    def method_name_and_suffix(method_name)
+      method_name = method_name.to_s
+      if method_name.end_with?(*ALLOWED_SUFFIXES)
+        [method_name[0..-2], method_name[-1]]
+      else
+        [method_name[0..-1], nil]
+      end
+    end
+
     def method_suffix(method_name)
-      match = method_name.to_s.match(SUFFIXES_PARSER)
-      [match[1], match[2]]
+      method_name = method_name.to_s
+      method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
 
     def convert_key(key) #:nodoc:
