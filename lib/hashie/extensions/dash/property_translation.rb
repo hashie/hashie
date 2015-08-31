@@ -72,8 +72,6 @@ module Hashie
           def property(property_name, options = {})
             super
 
-            options[:from] = options[:from] if options[:from]
-
             if options[:from]
               if property_name == options[:from]
                 fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
