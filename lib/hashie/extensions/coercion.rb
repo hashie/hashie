@@ -29,50 +29,16 @@ module Hashie
         def set_value_with_coercion(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
-          return set_value_without_coercion(key, value) if value.nil? || into.nil?
-
-          begin
-            return set_value_without_coercion(key, coerce_or_init(into).call(value)) unless into.is_a?(Enumerable)
-
-            if into.class <= ::Hash
-              key_coerce = coerce_or_init(into.flatten[0])
-              value_coerce = coerce_or_init(into.flatten[-1])
-              value = into.class[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
-            else # Enumerable but not Hash: Array, Set
-              value_coerce = coerce_or_init(into.first)
-              value = into.class.new(value.map { |v| value_coerce.call(v) })
+          unless value.nil? || into.nil?
+            begin
+              value = self.class.fetch_coercion(into).call(value)
+            rescue NoMethodError, TypeError => e
+              raise CoercionError, "Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{e.message}"
             end
-          rescue NoMethodError, TypeError => e
-            raise CoercionError, "Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{e.message}"
           end
 
           set_value_without_coercion(key, value)
         end
-
-        def coerce_or_init(type)
-          return type if type.is_a? Proc
-
-          if CORE_TYPES.key?(type)
-            lambda do |v|
-              return v if v.is_a? type
-              return v.send(CORE_TYPES[type])
-            end
-          elsif type.respond_to?(:coerce)
-            lambda do |v|
-              return v if v.is_a? type
-              type.coerce(v)
-            end
-          elsif type.respond_to?(:new)
-            lambda do |v|
-              return v if v.is_a? type
-              type.new(v)
-            end
-          else
-            fail TypeError, "#{type} is not a coercable type"
-          end
-        end
-
-        private :coerce_or_init
 
         def custom_writer(key, value, _convert = true)
           self[key] = value
@@ -173,6 +139,66 @@ module Hashie
         def value_coercion(value)
           from = value.class
           strict_value_coercions[from] || lenient_value_coercions[from]
+        end
+
+        def fetch_coercion(type)
+          return type if type.is_a? Proc
+          coercion_cache[type]
+        end
+
+        def coercion_cache
+          @coercion_cache ||= ::Hash.new do |hash, type|
+            hash[type] = build_coercion(type)
+          end
+        end
+
+        def build_coercion(type)
+          if type.is_a? Enumerable
+            if type.class <= ::Hash
+              type, key_type, value_type = type.class, *type.first
+              build_hash_coercion(type, key_type, value_type)
+            else # Enumerable but not Hash: Array, Set
+              type, value_type = type.class, type.first
+              build_container_coercion(type, value_type)
+            end
+          elsif CORE_TYPES.key? type
+            build_core_type_coercion(type)
+          elsif type.respond_to? :coerce
+            lambda do |value|
+              return value if value.is_a? type
+              type.coerce(value)
+            end
+          elsif type.respond_to? :new
+            lambda do |value|
+              return value if value.is_a? type
+              type.new(value)
+            end
+          else
+            fail TypeError, "#{type} is not a coercable type"
+          end
+        end
+
+        def build_hash_coercion(type, key_type, value_type)
+          key_coerce = fetch_coercion(key_type)
+          value_coerce = fetch_coercion(value_type)
+          lambda do |value|
+            type[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
+          end
+        end
+
+        def build_container_coercion(type, value_type)
+          value_coerce = fetch_coercion(value_type)
+          lambda do |value|
+            type.new(value.map { |v| value_coerce.call(v) })
+          end
+        end
+
+        def build_core_type_coercion(type)
+          name = CORE_TYPES[type]
+          lambda do |value|
+            return value if value.is_a? type
+            return value.send(name)
+          end
         end
 
         def inherited(klass)
