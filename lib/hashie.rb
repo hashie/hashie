@@ -13,6 +13,7 @@ module Hashie
     autoload :DeepMerge,         'hashie/extensions/deep_merge'
     autoload :IgnoreUndeclared,  'hashie/extensions/ignore_undeclared'
     autoload :IndifferentAccess, 'hashie/extensions/indifferent_access'
+    autoload :HashInitializer,  'hashie/extensions/hash_initializer'
     autoload :MergeInitializer,  'hashie/extensions/merge_initializer'
     autoload :MethodAccess,      'hashie/extensions/method_access'
     autoload :MethodQuery,       'hashie/extensions/method_access'
@@ -26,6 +27,7 @@ module Hashie
     autoload :PrettyInspect,     'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
     autoload :MethodAccessWithOverride, 'hashie/extensions/method_access'
+    autoload :Persistable,       'hashie/extensions/persistable'
 
     module Parsers
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
