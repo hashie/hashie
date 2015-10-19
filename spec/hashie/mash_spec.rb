@@ -364,9 +364,7 @@ describe Hashie::Mash do
 
     it 'is able to access an unknown suffixed key as a method' do
       # See https://github.com/intridea/hashie/pull/285 for more information
-      if mri22?
-        pending 'Bug in MRI 2.2.x means this behavior is broken in those versions'
-      end
+      pending_for(engine: 'ruby', versions: %w(2.2.0 2.2.1 2.2.2))
 
       %w(= ? ! _).each do |suffix|
         expect(subject.method(:"xyz#{suffix}")).to_not be_nil
