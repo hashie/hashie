@@ -7,6 +7,7 @@ require 'pry'
 
 require 'rspec'
 require 'hashie'
+require 'rspec/pending_for'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expect|
