@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'delegate'
-require 'support/ruby_version'
 
 describe Hashie::Mash do
   subject { Hashie::Mash.new }
