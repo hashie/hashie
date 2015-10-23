@@ -350,6 +350,8 @@ describe Hashie::Mash do
     end
 
     it 'is able to access the suffixed key as a method' do
+      # When run as an individual file on Ruby 2.0.0 this spec fails on :abc?,
+      # But when run as a suite it passes.  Very Strange.
       %w(= ? ! _).each do |suffix|
         expect(subject.method(:"abc#{suffix}")).to_not be_nil
       end
