@@ -3,12 +3,13 @@ sudo: false
 cache: bundler
 
 rvm:
-  - 2.2.2
-  - 2.1.6
+  - 2.2.3
+  - 2.1.7
   - 2.0.0
   - 1.9.3
-  - jruby-19mode
+  - rbx-2.5.8
   - rbx-2.2.10
+  - jruby-19mode
   - jruby-head
   - ruby-head
 

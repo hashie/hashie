@@ -2,6 +2,7 @@
 
 * Your contribution here.
 * [#304](https://github.com/intridea/hashie/pull/304): Ensured compatibility of `Hash` extensions with singleton objects - [@regexident](https://github.com/regexident).
+* [#316](https://github.com/intridea/hashie/pull/316): Update Travis Build Matrix (ruby-2.2.3, rbx-2.5.8) - [@pboling](https://github.com/pboling).
 * [#306](https://github.com/intridea/hashie/pull/306): Added `Hashie::Extensions::Dash::Coercion` - [@marshall-lee](https://github.com/marshall-lee).
 * [#310](https://github.com/intridea/hashie/pull/310): Fixed `Hashie::Extensions::SafeAssignment` bug with private methods - [@marshall-lee](https://github.com/marshall-lee).
 * [#313](https://github.com/intridea/hashie/pull/313): Restrict pending spec to only Ruby versions 2.2.0-2.2.2 - [@pboling](https://github.com/pboling).
