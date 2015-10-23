@@ -392,6 +392,25 @@ books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
 # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"CSS for intermediates", :pages=>80}]
 ```
 
+## StrictKeyAccess
+
+This extension can be mixed in to allow a Hash to raise an error when attempting to extract a value using a non-existent key.
+    
+### Example:
+    
+```ruby
+class StrictKeyAccessHash < Hash
+  include Hashie::Extensions::StrictKeyAccess
+end
+
+>> hash = StrictKeyAccessHash[foo: "bar"]
+=> {:foo=>"bar"}
+>> hash[:foo]
+=> "bar"
+>> hash[:cow]
+  KeyError: key not found: :cow
+```
+
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is intended to give the user easier access to the objects within the Mash through a property-like syntax, while still retaining all Hash functionality.
