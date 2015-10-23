@@ -92,15 +92,19 @@ describe Hashie::Extensions::MethodQuery do
   subject { QueryHash }
 
   it 'is true for non-nil string key values' do
-    expect(subject.new('abc' => 123)).to be_abc
+    expect(subject.new('abc' => 123).abc?).to eq true
   end
 
   it 'is true for non-nil symbol key values' do
-    expect(subject.new(abc: 123)).to be_abc
+    expect(subject.new(abc: 123).abc?).to eq true
+  end
+
+  it 'is false for false key values' do
+    expect(subject.new(abc: false).abc?).to eq false
   end
 
   it 'is false for nil key values' do
-    expect(subject.new(abc: false)).not_to be_abc
+    expect(subject.new(abc: nil).abc?).to eq false
   end
 
   it 'raises a NoMethodError for non-set keys' do
