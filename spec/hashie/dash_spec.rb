@@ -511,3 +511,26 @@ context 'Dynamic Dash Class' do
     expect(my_property).to eq(my_orig)
   end
 end
+
+context 'with method access' do
+  class DashWithMethodAccess < Hashie::Dash
+    include Hashie::Extensions::IndifferentAccess
+    include Hashie::Extensions::MethodQuery
+
+    property :test
+  end
+
+  subject(:dash) { DashWithMethodAccess.new(test: 'value') }
+
+  describe '#test' do
+    subject { dash.test }
+
+    it { is_expected.to eq('value') }
+  end
+
+  describe '#test?' do
+    subject { dash.test? }
+
+    it { is_expected.to eq true }
+  end
+end

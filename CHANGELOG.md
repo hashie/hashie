@@ -7,6 +7,7 @@
 * [#310](https://github.com/intridea/hashie/pull/310): Fixed `Hashie::Extensions::SafeAssignment` bug with private methods - [@marshall-lee](https://github.com/marshall-lee).
 * [#313](https://github.com/intridea/hashie/pull/313): Restrict pending spec to only Ruby versions 2.2.0-2.2.2 - [@pboling](https://github.com/pboling).
 * [#315](https://github.com/intridea/hashie/pull/315): Default `bin/` scripts: `console` and `setup` - [@pboling](https://github.com/pboling).
+* [#317](https://github.com/intridea/hashie/pull/317): Ensure `Hashie::Extensions::MethodQuery` methods return boolean values - [@michaelherold](https://github.com/michaelherold).
 
 ## 3.4.2 (6/2/2015)
 

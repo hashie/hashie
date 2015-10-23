@@ -107,16 +107,41 @@ module Hashie
     #   h.hji? # => NoMethodError
     module MethodQuery
       def respond_to?(name, include_private = false)
-        return true if name.to_s =~ /(.*)\?$/ && (key?(Regexp.last_match[1]) || key?(Regexp.last_match[1].to_sym))
-        super
+        if query_method?(name) && indifferent_key?(key_from_query_method(name))
+          true
+        else
+          super
+        end
       end
 
       def method_missing(name, *args)
-        if args.empty? && name.to_s =~ /(.*)\?$/ && (key?(Regexp.last_match[1]) || key?(Regexp.last_match[1].to_sym))
-          return self[Regexp.last_match[1]] || self[Regexp.last_match[1].to_sym]
-        end
+        return super unless args.empty?
 
-        super
+        if query_method?(name)
+          key = key_from_query_method(name)
+          if indifferent_key?(key)
+            !!(self[key] || self[key.to_sym])
+          else
+            super
+          end
+        else
+          super
+        end
+      end
+
+      private
+
+      def indifferent_key?(name)
+        name = name.to_s
+        key?(name) || key?(name.to_sym)
+      end
+
+      def key_from_query_method(query_method)
+        query_method.to_s[0..-2]
+      end
+
+      def query_method?(name)
+        name.to_s.end_with?('?')
       end
     end
 
