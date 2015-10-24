@@ -15,7 +15,7 @@ module Hashie
     #     >> hash[:cow]
     #       KeyError: key not found: :cow
     #
-    # NOTE: For googlers coming from Python to Ruby, this extension makes a Hash behave like a "Dictionary".
+    # NOTE: For googlers coming from Python to Ruby, this extension makes a Hash behave more like a "Dictionary".
     #
     module StrictKeyAccess
       class DefaultError < StandardError
@@ -24,20 +24,23 @@ module Hashie
         end
       end
 
-      # NOTE: This extension would break the default behavior of Hash initialization:
+      # NOTE: Defaults don't make any sense with a StrictKeyAccess.
+      # NOTE: When key lookup fails a KeyError is raised.
       #
-      #     >> a = StrictKeyAccessHash.new(a: :b)
+      # Normal:
+      #
+      #     >> a = Hash.new(123)
       #     => {}
-      #     >> a[:a]
-      #       KeyError: key not found: :a
+      #     >> a["noes"]
+      #     => 123
       #
-      # Includes the Hashie::Extensions::MergeInitializer extension to get around that problem.
-      # Also note that defaults still don't make any sense with a StrictKeyAccess.
-      def self.included(base)
-        # Can only include into classes with a hash initializer
-        base.send(:include, Hashie::Extensions::MergeInitializer)
-      end
-
+      # With StrictKeyAccess:
+      #
+      #     >> a = StrictKeyAccessHash.new(123)
+      #     => {}
+      #     >> a["noes"]
+      #       KeyError: key not found: "noes"
+      #
       def [](key)
         fetch(key)
       end
