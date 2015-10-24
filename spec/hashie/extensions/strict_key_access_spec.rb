@@ -7,6 +7,12 @@ describe Hashie::Extensions::StrictKeyAccess do
 
   shared_examples_for 'StrictKeyAccess with valid key' do |options = {}|
     before { pending_for(options[:pending]) } if options[:pending]
+    context 'set' do
+      let(:new_value) { 42 }
+      it('returns value') do
+        expect(instance.send(:[]=, valid_key, new_value)).to eq new_value
+      end
+    end
     context 'access' do
       it('returns value') do
         expect(instance[valid_key]).to eq valid_value
@@ -34,7 +40,7 @@ describe Hashie::Extensions::StrictKeyAccess do
       end
     end
   end
-  shared_examples_for 'StrictKeyAccess with exploding defaults' do
+  shared_examples_for 'StrictKeyAccess raises KeyError instead of allowing defaults' do
     context '#default' do
       it 'raises an error' do
         expect { instance.default(invalid_key) }.to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError,
@@ -62,8 +68,8 @@ describe Hashie::Extensions::StrictKeyAccess do
   end
 
   let(:klass) { StrictKeyAccessHash }
-  let(:instance) { StrictKeyAccessHash.new(*args) }
-  let(:args) do
+  let(:instance) { StrictKeyAccessHash.new(*initialization_args) }
+  let(:initialization_args) do
     [
       { valid_key => valid_value }
     ]
@@ -74,26 +80,31 @@ describe Hashie::Extensions::StrictKeyAccess do
   let(:invalid_value) { 'death' }
 
   context '.new' do
-    it_behaves_like 'StrictKeyAccess with valid key'
+    context 'no defaults at initialization' do
+      let(:initialization_args) { [] }
+      before do
+        instance.merge!(valid_key => valid_value)
+      end
+      it_behaves_like 'StrictKeyAccess with valid key'
+      it_behaves_like 'StrictKeyAccess with invalid key'
+      it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
+    end
+    context 'with defaults at initialization' do
+      before do
+        instance.merge!(valid_key => valid_value)
+      end
+      it_behaves_like 'StrictKeyAccess with valid key'
+      it_behaves_like 'StrictKeyAccess with invalid key'
+      it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
+    end
     it_behaves_like 'StrictKeyAccess with invalid key'
-    it_behaves_like 'StrictKeyAccess with exploding defaults'
+    it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
   end
 
-  context '[]' do
-    let(:instance) { StrictKeyAccessHash[*args] }
+  context '.[]' do
+    let(:instance) { StrictKeyAccessHash[*initialization_args] }
     it_behaves_like 'StrictKeyAccess with valid key', pending: { engine: 'rbx' }
     it_behaves_like 'StrictKeyAccess with invalid key', pending: { engine: 'rbx' }
-    it_behaves_like 'StrictKeyAccess with exploding defaults'
-  end
-
-  context 'with default' do
-    let(:args) do
-      [
-        { valid_key => valid_value }, invalid_value
-      ]
-    end
-    it_behaves_like 'StrictKeyAccess with valid key'
-    it_behaves_like 'StrictKeyAccess with invalid key'
-    it_behaves_like 'StrictKeyAccess with exploding defaults'
+    it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
   end
 end
