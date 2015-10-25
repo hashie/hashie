@@ -18,9 +18,9 @@ Hashie is available as a RubyGem:
 $ gem install hashie
 ```
 
-## Upgrading
+## Stable Release
 
-You're reading the documentation for the next release of Hashie, which should be 3.4.3. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.4.2](https://github.com/intridea/hashie/blob/v3.4.2/README.md).
+You're reading the documentation for the stable release [3.4.3](https://github.com/intridea/hashie/blob/v3.4.3/README.md).
 
 ## Hash Extensions
 
@@ -395,9 +395,9 @@ books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
 ## StrictKeyAccess
 
 This extension can be mixed in to allow a Hash to raise an error when attempting to extract a value using a non-existent key.
-    
+
 ### Example:
-    
+
 ```ruby
 class StrictKeyAccessHash < Hash
   include Hashie::Extensions::StrictKeyAccess
