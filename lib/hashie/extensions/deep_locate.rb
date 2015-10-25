@@ -17,12 +17,7 @@ module Hashie
       #   Hashie::Extensions::DeepLocate.deep_locate -> (key, value, object) { key == :title }, books
       #   # => [{:title=>"Ruby for beginners", :pages=>120}, ...]
       def self.deep_locate(comparator, object)
-        # ensure comparator is a callable
-        unless comparator.respond_to?(:call)
-          comparator = lambda do |non_callable_object|
-            ->(key, _, _) { key == non_callable_object }
-          end.call(comparator)
-        end
+        comparator = _construct_key_comparator(comparator, object) unless comparator.respond_to?(:call)
 
         _deep_locate(comparator, object)
       end
@@ -68,17 +63,18 @@ module Hashie
 
       private
 
+      def self._construct_key_comparator(search_key, object)
+        search_key = search_key.to_s if defined?(::ActiveSupport) && object.is_a?(::ActiveSupport::HashWithIndifferentAccess)
+        search_key = search_key.to_s if object.respond_to?(:indifferent_access?) && object.indifferent_access?
+
+        lambda do |non_callable_object|
+          ->(key, _, _) { key == non_callable_object }
+        end.call(search_key)
+      end
+
       def self._deep_locate(comparator, object, result = [])
         if object.is_a?(::Enumerable)
-          if object.any? do |value|
-            if object.is_a?(::Hash)
-              key, value = value
-            else
-              key = nil
-            end
-
-            comparator.call(key, value, object)
-          end
+          if object.any? { |value| _match_comparator?(value, comparator, object) }
             result.push object
           else
             (object.respond_to?(:values) ? object.values : object.entries).each do |value|
@@ -88,6 +84,16 @@ module Hashie
         end
 
         result
+      end
+
+      def self._match_comparator?(value, comparator, object)
+        if object.is_a?(::Hash)
+          key, value = value
+        else
+          key = nil
+        end
+
+        comparator.call(key, value, object)
       end
     end
   end
