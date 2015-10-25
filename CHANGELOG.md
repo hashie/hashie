@@ -1,4 +1,8 @@
-## 3.4.2 (10/25/2015)
+## 3.4.4 (Next)
+
+* Your contribution here.
+
+## 3.4.3 (10/25/2015)
 
 * [#314](https://github.com/intridea/hashie/pull/314): Added a `StrictKeyAccess` extension that will raise an error whenever a key is accessed that does not exist in the hash - [@pboling](https://github.com/pboling).
 * [#304](https://github.com/intridea/hashie/pull/304): Ensured compatibility of `Hash` extensions with singleton objects - [@regexident](https://github.com/regexident).
