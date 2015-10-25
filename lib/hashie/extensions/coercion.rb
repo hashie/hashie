@@ -111,7 +111,7 @@ module Hashie
           options = { strict: true }.merge(options)
 
           if ABSTRACT_CORE_TYPES.key? from
-            ABSTRACT_CORE_TYPES[from].each do | type |
+            ABSTRACT_CORE_TYPES[from].each do |type|
               coerce_value type, into, options
             end
           end
@@ -130,6 +130,7 @@ module Hashie
         def strict_value_coercions
           @strict_value_coercions ||= {}
         end
+
         # Return all value coercions that have the :strict rule as false.
         def lenient_value_coercions
           @lenient_value_coercions ||= {}
@@ -158,7 +159,8 @@ module Hashie
               type, key_type, value_type = type.class, *type.first
               build_hash_coercion(type, key_type, value_type)
             else # Enumerable but not Hash: Array, Set
-              type, value_type = type.class, type.first
+              value_type = type.first
+              type = type.class
               build_container_coercion(type, value_type)
             end
           elsif CORE_TYPES.key? type

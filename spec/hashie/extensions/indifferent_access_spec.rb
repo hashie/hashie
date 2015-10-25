@@ -54,13 +54,13 @@ describe Hashie::Extensions::IndifferentAccess do
       end
 
       it 'returns the same instance of the hash that was set' do
-        hash = Hash.new
+        hash = {}
         h = subject.build(foo: hash)
         expect(h.values_at(:foo)[0]).to be(hash)
       end
 
       it 'returns the same instance of the array that was set' do
-        array = Array.new
+        array = []
         h = subject.build(foo: array)
         expect(h.values_at(:foo)[0]).to be(array)
       end
@@ -86,13 +86,13 @@ describe Hashie::Extensions::IndifferentAccess do
       end
 
       it 'returns the same instance of the hash that was set' do
-        hash = Hash.new
+        hash = {}
         h = subject.build(foo: hash)
         expect(h.fetch(:foo)).to be(hash)
       end
 
       it 'returns the same instance of the array that was set' do
-        array = Array.new
+        array = []
         h = subject.build(foo: array)
         expect(h.fetch(:foo)).to be(array)
       end
@@ -156,7 +156,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
       it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
-        expect(Hash.new).not_to be_respond_to(:indifferent_access?)
+        expect({}).not_to be_respond_to(:indifferent_access?)
       end
     end
 

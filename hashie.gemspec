@@ -12,9 +12,9 @@ Gem::Specification.new do |gem|
 
   gem.require_paths = ['lib']
   gem.files         = %w(.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md Rakefile hashie.gemspec)
-  gem.files         += Dir['lib/**/*.rb']
-  gem.files         += Dir['spec/**/*.rb']
-  gem.test_files    = Dir['spec/**/*.rb']
+  gem.files += Dir['lib/**/*.rb']
+  gem.files += Dir['spec/**/*.rb']
+  gem.test_files = Dir['spec/**/*.rb']
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec', '~> 3.0'

@@ -87,7 +87,7 @@ describe Hashie::Extensions::Coercion do
         ]
         expect(instance[:nested_list]).to be_a Array
         expect(instance[:nested_list].size).to eq(3)
-        instance[:nested_list].each do | nested |
+        instance[:nested_list].each do |nested|
           test_nested_object nested
         end
       end
@@ -100,7 +100,7 @@ describe Hashie::Extensions::Coercion do
         }
         expect(instance[:nested_hash]).to be_a Hash
         expect(instance[:nested_hash].size).to eq(3)
-        instance[:nested_hash].each do | key, nested |
+        instance[:nested_hash].each do |key, nested|
           expect(key).to be_a(String)
           test_nested_object nested
         end
@@ -251,9 +251,9 @@ describe Hashie::Extensions::Coercion do
           xyz: 987
         }
         expect(instance[:foo]).to eq(
-                                       'abc' => '123',
-                                       'xyz' => '987'
-                                     )
+          'abc' => '123',
+          'xyz' => '987'
+        )
       end
 
       it 'can coerce via a proc' do
@@ -571,7 +571,7 @@ describe Hashie::Extensions::Coercion do
           float: 2.7,
           rational: Rational(2, 3),
           complex: Complex(1)
-        }.each do | k, v |
+        }.each do |k, v|
           instance[k] = v
           if v.is_a? Integer
             expect(instance[k]).to be_a(String)
@@ -592,7 +592,7 @@ describe Hashie::Extensions::Coercion do
           float: 2.7,
           rational: Rational(2, 3),
           complex: Complex(1)
-        }.each do | k, v |
+        }.each do |k, v|
           instance[k] = v
           expect(instance[k]).to be_a(String)
           expect(instance[k]).to eq(v.to_s)

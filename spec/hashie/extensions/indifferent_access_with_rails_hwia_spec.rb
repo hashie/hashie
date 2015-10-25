@@ -118,7 +118,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
       it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
-        expect(Hash.new).not_to be_respond_to(:indifferent_access?)
+        expect({}).not_to be_respond_to(:indifferent_access?)
       end
     end
 
