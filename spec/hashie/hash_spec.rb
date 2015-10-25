@@ -8,21 +8,21 @@ describe Hash do
   end
 
   it '#stringify_keys! turns all keys into strings' do
-    hash = Hashie::Hash[:a => 'hey', 123 => 'bob']
+    hash = Hashie::Hash[a: 'hey', 123 => 'bob']
     hash.stringify_keys!
     expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => 'bob']
   end
 
   it '#stringify_keys! turns all keys into strings recursively' do
-    hash = Hashie::Hash[:a => 'hey', 123 => { 345 => 'hey' }]
+    hash = Hashie::Hash[a: 'hey', 123 => { 345 => 'hey' }]
     hash.stringify_keys!
     expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
   end
 
   it '#stringify_keys returns a hash with stringified keys' do
-    hash = Hashie::Hash[:a => 'hey', 123 => 'bob']
+    hash = Hashie::Hash[a: 'hey', 123 => 'bob']
     stringified_hash = hash.stringify_keys
-    expect(hash).to eq Hashie::Hash[:a => 'hey', 123 => 'bob']
+    expect(hash).to eq Hashie::Hash[a: 'hey', 123 => 'bob']
     expect(stringified_hash).to eq Hashie::Hash['a' => 'hey', '123' => 'bob']
   end
 
@@ -41,7 +41,7 @@ describe Hash do
   it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do
     hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3]]
     symbolized_hash = hash.to_hash(symbolize_keys: true)
-    expect(symbolized_hash).to eq(:a => 'hey', :"123" => 'bob', :array => [1, 2, 3])
+    expect(symbolized_hash).to eq(a: 'hey', :"123" => 'bob', array: [1, 2, 3])
   end
 
   it "#to_hash should not blow up when #to_hash doesn't accept arguments" do
@@ -78,7 +78,7 @@ describe Hash do
     it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do
       hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
       symbolized_hash = hash.to_hash(symbolize_keys: true)
-      expect(symbolized_hash).to eq(:a => 'hey', :"123" => 'bob', :array => [1, 2, 3], subhash: { :a => 'hey', :b => 'bar', :'123' => 'bob', :array => [1, 2, 3] })
+      expect(symbolized_hash).to eq(a: 'hey', :"123" => 'bob', array: [1, 2, 3], subhash: { a: 'hey', b: 'bar', :'123' => 'bob', array: [1, 2, 3] })
     end
   end
 end
