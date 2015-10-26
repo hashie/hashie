@@ -1,6 +1,7 @@
 ## 3.4.4 (Next)
 
 * [#317](https://github.com/intridea/hashie/pull/317): Ensure `Hashie::Extensions::MethodQuery` methods return boolean values - [@michaelherold](https://github.com/michaelherold).
+* [#319](https://github.com/intridea/hashie/pull/319): Fix a regression from 3.4.1 where `Hashie::Extensions::DeepFind` is no longer indifference-aware - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## 3.4.3 (10/25/2015)
