@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Hashie::Clash do
-  subject { Hashie::Clash.new }
-
   it 'is able to set an attribute via method_missing' do
     subject.foo('bar')
     expect(subject[:foo]).to eq 'bar'
@@ -44,5 +42,29 @@ describe Hashie::Clash do
     expect(subject).to eq(baz: 123, hgi: 123)
     expect(subject[:foo]).to be_nil
     expect(subject[:hello]).to be_nil
+  end
+
+  it 'merges multiple bang notation calls' do
+    subject.where!.foo(123)
+    subject.where!.bar(321)
+    expect(subject).to eq(where: { foo: 123, bar: 321 })
+  end
+
+  it 'raises an exception when method is missing' do
+    expect { subject.boo }.to raise_error(NoMethodError)
+  end
+
+  describe 'when inherited' do
+    subject { Class.new(described_class).new }
+
+    it 'bang nodes are instances of a subclass' do
+      subject.where!.foo(123)
+      expect(subject[:where]).to be_instance_of(subject.class)
+    end
+
+    it 'merged nodes are instances of a subclass' do
+      subject.where(abc: 'def').where(hgi: 123)
+      expect(subject[:where]).to be_instance_of(subject.class)
+    end
   end
 end
