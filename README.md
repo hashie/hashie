@@ -644,6 +644,31 @@ end
 
 However, on Rubies less than 2.0, this means that every key you send to the Mash will generate a symbol. Since symbols are not garbage-collected on older versions of Ruby, this can cause a slow memory leak when using a symbolized Mash with data generated from user input.
 
+### Mash Extension:: DefineAccessors
+
+This extension can be mixed into a Mash so it makes it behave like `OpenStruct`. It reduces the overhead of `method_missing?` magic by lazily defining field accessors when they're requested.
+
+```ruby
+class MyHash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::DefineAccessors
+end
+
+mash = MyHash.new
+MyHash.method_defined?(:foo=) #=> false
+mash.foo = 123
+MyHash.method_defined?(:foo=) #=> true
+
+MyHash.method_defined?(:foo) #=> false
+mash.foo #=> 123
+MyHash.method_defined?(:foo) #=> true
+```
+
+You can also extend the existing mash without defining a class:
+
+```ruby
+mash = ::Hashie::Mash.new.with_accessors!
+```
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.

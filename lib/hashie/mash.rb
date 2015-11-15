@@ -119,6 +119,10 @@ module Hashie
       end
     end
 
+    def with_accessors!
+      extend Hashie::Extensions::Mash::DefineAccessors
+    end
+
     alias to_s inspect
 
     # If you pass in an existing hash, it will

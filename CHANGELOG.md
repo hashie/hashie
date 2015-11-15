@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Your contribution here.
+* [#323](https://github.com/intridea/hashie/pull/323): Added `Hashie::Extensions::Mash::DefineAccessors` - [@marshall-lee](https://github.com/marshall-lee).
 
 ### Changed
 
