@@ -1,6 +1,17 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.4.4
+
+#### Mash subclasses and reverse_merge
+
+```ruby
+class MyMash < Hashie::Mash
+end
+```
+
+In versions >= 3.4.4 `MyMash#reverse_merge` returns an instance of `MyMash` but in previous versions it was a `Hashie::Mash` instance.
+
 ### Upgrading to 3.2.2
 
 #### Testing if key defined

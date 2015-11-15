@@ -247,7 +247,7 @@ module Hashie
 
     # another ActiveSupport method, see issue #270
     def reverse_merge(other_hash)
-      Hashie::Mash.new(other_hash).merge(self)
+      self.class.new(other_hash).merge(self)
     end
 
     protected
