@@ -676,5 +676,14 @@ describe Hashie::Mash do
     it 'does not overwrite values' do
       expect(subject.reverse_merge(a: 5).a).to eq subject.a
     end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject { subclass.new(a: 1) }
+
+      it 'creates an instance of subclass' do
+        expect(subject.reverse_merge(a: 5)).to be_kind_of(subclass)
+      end
+    end
   end
 end
