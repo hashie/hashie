@@ -44,6 +44,7 @@ module Hashie
     end
 
     module Mash
+      autoload :KeepOriginalKeys, 'hashie/extensions/mash/keep_original_keys'
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
       autoload :SymbolizeKeys, 'hashie/extensions/mash/symbolize_keys'
     end

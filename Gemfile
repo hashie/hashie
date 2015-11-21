@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gemspec
 
 group :development do
+  gem 'benchmark-ips'
   gem 'pry'
   gem 'pry-stack_explorer', platforms: [:ruby_19, :ruby_20, :ruby_21]
   gem 'rubocop', '0.34.2'

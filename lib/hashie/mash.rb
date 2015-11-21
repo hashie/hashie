@@ -189,6 +189,7 @@ module Hashie
       self.class.new(self, default)
     end
 
+    alias_method :regular_key?, :key?
     def key?(key)
       super(convert_key(key))
     end
