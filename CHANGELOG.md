@@ -33,6 +33,7 @@ scheme are considered to be bugs.
 * [#319](https://github.com/intridea/hashie/pull/319): Fix a regression from 3.4.1 where `Hashie::Extensions::DeepFind` is no longer indifference-aware - [@michaelherold](https://github.com/michaelherold).
 * [#322](https://github.com/intridea/hashie/pull/322): Fixed `reverse_merge` issue with `Mash` subclasses - [@marshall-lee](https://github.com/marshall-lee).
 * [#346](https://github.com/intridea/hashie/pull/346): Fixed `merge` breaking indifferent access - [@docwhat](https://github.com/docwhat), [@michaelherold](https://github.com/michaelherold).
+* [#350](https://github.com/intridea/hashie/pull/350): Fixed from string translations used with `IgnoreUndeclared` - [@marshall-lee](https://github.com/marshall-lee).
 
 ### Security
 
