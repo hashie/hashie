@@ -49,12 +49,19 @@ module Hashie
       end
 
       def _deep_find_all(key, object = self, matches = [])
-        deep_locate_result = Hashie::Extensions::DeepLocate.deep_locate(key, object).tap do |result|
-          result.map! { |element| element[key] }
+        object.each do |sub_key, sub_object|
+          if sub_key.to_sym == key.to_sym
+            matches << sub_object
+          else
+            case sub_object
+            when ::Hash then matches << _deep_find_all(key, sub_object)
+            when ::Array then sub_object.each {|element| matches << _deep_find_all(key, element)}
+            end
+          end
         end
-
-        matches.concat(deep_locate_result)
+        matches.flatten
       end
+
     end
   end
 end

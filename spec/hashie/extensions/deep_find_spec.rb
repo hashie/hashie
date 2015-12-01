@@ -14,7 +14,10 @@ describe Hashie::Extensions::DeepFind do
         location: {
           address: '123 Library St.',
           title: 'Main Library'
-        }
+        },
+        employees: [
+          {info: {name: "John", surname: "Smith", prefix: "Mr."}, position: "Head Librarian"}
+        ],
       },
       title: 'Book Listing'
     }
@@ -28,6 +31,10 @@ describe Hashie::Extensions::DeepFind do
 
     it 'detects a value from a nested array' do
       expect(instance.deep_find(:author)).to eq('Jack London')
+    end
+
+    it 'detects an value even if the value itself is an object' do
+      expect(instance.deep_find(:info)).to eq({name: "John", surname: "Smith", prefix: "Mr."})
     end
 
     it 'returns nil if it does not find a match' do
@@ -57,6 +64,11 @@ describe Hashie::Extensions::DeepFind do
       it 'indifferently detects a value from a nested array' do
         expect(instance.deep_find(:author)).to eq('Jack London')
         expect(instance.deep_find('author')).to eq('Jack London')
+      end
+
+      it 'indifferently detects an value even if the value itself is an object' do
+        expect(instance.deep_find(:info)).to eq({"name" => "John", "surname" => "Smith", "prefix" => "Mr."})
+        expect(instance.deep_find('info')).to eq({"name" => "John", "surname" => "Smith", "prefix" => "Mr."})
       end
 
       it 'indifferently returns nil if it does not find a match' do
@@ -91,6 +103,11 @@ describe Hashie::Extensions::DeepFind do
       it 'indifferently detects a value from a nested array' do
         expect(instance.deep_find(:author)).to eq('Jack London')
         expect(instance.deep_find('author')).to eq('Jack London')
+      end
+
+      it 'indifferently detects an value even if the value itself is an object' do
+        expect(instance.deep_find(:info)).to eq({"name" => "John", "surname" => "Smith", "prefix" => "Mr."})
+        expect(instance.deep_find('info')).to eq({"name" => "John", "surname" => "Smith", "prefix" => "Mr."})
       end
 
       it 'indifferently returns nil if it does not find a match' do
