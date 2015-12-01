@@ -7,15 +7,16 @@ describe Hashie::Extensions::DeepFind do
     {
       library: {
         books: [
-          { title: 'Call of the Wild' },
-          { title: 'Moby Dick' }
+          { title: 'Call of the Wild', author: 'Jack London' },
+          { title: 'Moby Dick', author: 'Herman Melville' }
         ],
         shelves: nil,
         location: {
           address: '123 Library St.',
           title: 'Main Library'
         }
-      }
+      },
+      title: 'Book Listing'
     }
   end
   let(:instance) { subject.new.update(hash) }
@@ -26,7 +27,7 @@ describe Hashie::Extensions::DeepFind do
     end
 
     it 'detects a value from a nested array' do
-      expect(instance.deep_find(:title)).to eq('Call of the Wild')
+      expect(instance.deep_find(:author)).to eq('Jack London')
     end
 
     it 'returns nil if it does not find a match' do
@@ -36,7 +37,7 @@ describe Hashie::Extensions::DeepFind do
 
   describe '#deep_find_all' do
     it 'detects all values from a nested hash' do
-      expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
+      expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
     end
 
     it 'returns nil if it does not find any matches' do
@@ -54,8 +55,8 @@ describe Hashie::Extensions::DeepFind do
       end
 
       it 'indifferently detects a value from a nested array' do
-        expect(instance.deep_find(:title)).to eq('Call of the Wild')
-        expect(instance.deep_find('title')).to eq('Call of the Wild')
+        expect(instance.deep_find(:author)).to eq('Jack London')
+        expect(instance.deep_find('author')).to eq('Jack London')
       end
 
       it 'indifferently returns nil if it does not find a match' do
@@ -88,8 +89,8 @@ describe Hashie::Extensions::DeepFind do
       end
 
       it 'indifferently detects a value from a nested array' do
-        expect(instance.deep_find(:title)).to eq('Call of the Wild')
-        expect(instance.deep_find('title')).to eq('Call of the Wild')
+        expect(instance.deep_find(:title)).to eq('A Tale of Two Cities')
+        expect(instance.deep_find('title')).to eq('A Tale of Two Cities')
       end
 
       it 'indifferently returns nil if it does not find a match' do
@@ -100,8 +101,8 @@ describe Hashie::Extensions::DeepFind do
 
     describe '#deep_find_all' do
       it 'indifferently detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
-        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
+        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
+        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
       end
 
       it 'indifferently returns nil if it does not find any matches' do
