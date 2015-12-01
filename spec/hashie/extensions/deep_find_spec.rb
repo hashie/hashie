@@ -37,7 +37,7 @@ describe Hashie::Extensions::DeepFind do
 
   describe '#deep_find_all' do
     it 'detects all values from a nested hash' do
-      expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
+      expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
     end
 
     it 'returns nil if it does not find any matches' do
@@ -67,8 +67,8 @@ describe Hashie::Extensions::DeepFind do
 
     describe '#deep_find_all' do
       it 'indifferently detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
-        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
+        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
+        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
       end
 
       it 'indifferently returns nil if it does not find any matches' do
@@ -89,8 +89,8 @@ describe Hashie::Extensions::DeepFind do
       end
 
       it 'indifferently detects a value from a nested array' do
-        expect(instance.deep_find(:title)).to eq('A Tale of Two Cities')
-        expect(instance.deep_find('title')).to eq('A Tale of Two Cities')
+        expect(instance.deep_find(:title)).to eq('Book Listing')
+        expect(instance.deep_find('title')).to eq('Book Listing')
       end
 
       it 'indifferently returns nil if it does not find a match' do
@@ -101,8 +101,8 @@ describe Hashie::Extensions::DeepFind do
 
     describe '#deep_find_all' do
       it 'indifferently detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
-        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'A Tale of Two Cities'])
+        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
+        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
       end
 
       it 'indifferently returns nil if it does not find any matches' do
