@@ -250,6 +250,11 @@ module Hashie
       self.class.new(other_hash).merge(self)
     end
 
+    # expose bindings so can be passed to ERB template result for example
+    def get_binding
+      return binding
+    end
+
     protected
 
     def method_name_and_suffix(method_name)
