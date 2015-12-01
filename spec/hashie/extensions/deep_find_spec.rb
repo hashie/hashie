@@ -89,8 +89,8 @@ describe Hashie::Extensions::DeepFind do
       end
 
       it 'indifferently detects a value from a nested array' do
-        expect(instance.deep_find(:title)).to eq('Book Listing')
-        expect(instance.deep_find('title')).to eq('Book Listing')
+        expect(instance.deep_find(:author)).to eq('Jack London')
+        expect(instance.deep_find('author')).to eq('Jack London')
       end
 
       it 'indifferently returns nil if it does not find a match' do
