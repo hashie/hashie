@@ -55,7 +55,7 @@ module Hashie
           else
             case sub_object
             when ::Hash then matches << _deep_find_all(key, sub_object)
-            when ::Array then sub_object.each {|element| matches << _deep_find_all(key, element)}
+            when ::Array then sub_object.each {|element| matches << _deep_find_all(key, element) if element.respond_to?(:each)}
             end
           end
         end
