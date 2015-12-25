@@ -12,7 +12,7 @@ describe Hashie::Extensions::Parsers::YamlErbParser do
     subject { described_class.new(Pathname tempfile.path) }
 
     it '"#perform" can be done in case of path is a Pathname object.' do
-      expect(subject.perform).to eq({"foo"=>"hello"})
+      expect(subject.perform).to eq 'foo' => 'hello'
     end
   end
 
