@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Hashie::Extensions::Parsers::YamlErbParser do
   describe '#perform' do
     let(:tempfile) do
-      file = Tempfile.new
+      file = Tempfile.new(['foo', '.yml'])
       file.write("---\nfoo: hello\n")
       file.rewind
       file
