@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Nothing yet.
+* [#337](https://github.com/intridea/hashie/pull/337), [#331](https://github.com/intridea/hashie/issues/331): `Hashie::Mash#load` accepts a `Pathname` object - [@gipcompany](https://github.com/gipcompany).
 
 ### Changed
 
