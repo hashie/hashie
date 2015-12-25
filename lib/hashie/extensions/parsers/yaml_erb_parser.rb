@@ -11,6 +11,7 @@ module Hashie
 
         def perform
           template = ERB.new(@content)
+          @file_path = @file_path.to_s if @file_path.respond_to? :to_s
           template.filename = @file_path
           YAML.load template.result
         end
