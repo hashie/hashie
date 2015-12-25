@@ -6,7 +6,7 @@ module Hashie
       class YamlErbParser
         def initialize(file_path)
           @content = File.read(file_path)
-          @file_path = file_path
+          @file_path = file_path.is_a?(Pathname) ? file_path.to_s : file_path
         end
 
         def perform
