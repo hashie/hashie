@@ -528,6 +528,22 @@ describe Hashie::Mash do
       expect(mash.to_hash(stringify_keys: true)['outer'].keys).to include('inner')
       expect(mash.to_hash(stringify_keys: true)['outer'].keys).not_to include(:inner)
     end
+
+    if RUBY_VERSION >= '2.0.0'
+      context 'implicit to_hash on double splat' do
+        before{
+          # Ruby 1.9 can't even parse this
+          eval('def destructure(**opts); opts end')
+        }
+        it 'is converted on method calls' do
+          expect(destructure(mash)).to eq(outer: {inner: 42}, testing: [1, 2, 3])
+        end
+
+        it 'is converted on explicit operator call' do
+          expect(eval('{**mash}')).to eq(outer: {inner: 42}, testing: [1, 2, 3])
+        end
+      end
+    end
   end
 
   describe '#stringify_keys' do
