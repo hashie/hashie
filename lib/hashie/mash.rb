@@ -255,19 +255,19 @@ module Hashie
     def method_name_and_suffix(method_name)
       method_name = method_name.to_s
       if method_name.end_with?(*ALLOWED_SUFFIXES)
-        [method_name[0..-2], method_name[-1]]
+        [method_name[0..-2].to_sym, method_name[-1]]
       else
-        [method_name[0..-1], nil]
+        [method_name[0..-1].to_sym, nil]
       end
     end
 
     def method_suffix(method_name)
       method_name = method_name.to_s
-      method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
+      method_name[-1].to_sym if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
 
     def convert_key(key) #:nodoc:
-      key.to_s
+      key.to_s.to_sym
     end
 
     def convert_value(val, duping = false) #:nodoc:
