@@ -3,12 +3,12 @@ sudo: false
 cache: bundler
 
 rvm:
+  - 2.3.0
   - 2.2.3
   - 2.1.7
   - 2.0.0
   - 1.9.3
-  - rbx-2.5.8
-  - rbx-2.2.10
+  - rbx-2
   - jruby-19mode
   - jruby-head
   - ruby-head
@@ -17,3 +17,4 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: rbx-2
