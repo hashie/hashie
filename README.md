@@ -237,9 +237,30 @@ overriding.__zip #=> [[['zip', 'a-dee-doo-dah']]]
 
 ### IndifferentAccess
 
-This extension can be mixed in to instantly give you indifferent access to your Hash subclass. This works just like the params hash in Rails and other frameworks where whether you provide symbols or strings to access keys, you will get the same results.
+This extension can be mixed in to your Hash subclass to allow you to use Strings or Symbols interchangeably as keys; similar to the `params` hash in Rails.
 
-A unique feature of Hashie's IndifferentAccess mixin is that it will inject itself recursively into subhashes *without* reinitializing the hash in question. This means you can safely merge together indifferent and non-indifferent hashes arbitrarily deeply without worrying about whether you'll be able to `hash[:other][:another]` properly.
+In addition, IndifferentAccess will also inject itself into sub-hashes so they behave the same.
+
+Example:
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::MergeInitializer
+  include Hashie::Extensions::IndifferentAccess
+end
+
+myhash = MyHash.new(:cat => 'meow', 'dog' => 'woof')
+myhash['cat'] # => "meow"
+myhash[:cat]  # => "meow"
+myhash[:dog]  # => "woof"
+myhash['dog'] # => "woof"
+
+# Auto-Injecting into sub-hashes.
+myhash['fishes'] = {}
+myhash['fishes'].class # => Hash
+myhash['fishes'][:food] = 'flakes'
+myhash['fishes']['food'] # => "flakes"
+```
 
 ### IgnoreUndeclared
 
