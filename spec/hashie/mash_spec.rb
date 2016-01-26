@@ -530,19 +530,21 @@ describe Hashie::Mash do
     end
 
     if RUBY_VERSION >= '2.0.0'
+      # rubocop:disable Lint/Eval
       context 'implicit to_hash on double splat' do
-        before{
+        before do
           # Ruby 1.9 can't even parse this
           eval('def destructure(**opts); opts end')
-        }
+        end
         it 'is converted on method calls' do
-          expect(destructure(mash)).to eq(outer: {inner: 42}, testing: [1, 2, 3])
+          expect(destructure(mash)).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
         end
 
         it 'is converted on explicit operator call' do
-          expect(eval('{**mash}')).to eq(outer: {inner: 42}, testing: [1, 2, 3])
+          expect(eval('{**mash}')).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
         end
       end
+      # rubocop:enable Lint/Eval
     end
   end
 
