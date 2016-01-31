@@ -31,6 +31,32 @@ describe Hashie::Extensions::IndifferentAccess do
     property :foo
   end
 
+  describe '#merge' do
+    it 'indifferently merges in a hash' do
+      indifferent_hash = Class.new(::Hash) do
+        include Hashie::Extensions::IndifferentAccess
+      end.new
+
+      merged_hash = indifferent_hash.merge(:cat => 'meow')
+
+      expect(merged_hash[:cat]).to eq('meow')
+      expect(merged_hash['cat']).to eq('meow')
+    end
+  end
+
+  describe '#merge!' do
+    it 'indifferently merges in a hash' do
+      indifferent_hash = Class.new(::Hash) do
+        include Hashie::Extensions::IndifferentAccess
+      end.new
+
+      indifferent_hash.merge!(:cat => 'meow')
+
+      expect(indifferent_hash[:cat]).to eq('meow')
+      expect(indifferent_hash['cat']).to eq('meow')
+    end
+  end
+
   describe 'when included in dash' do
     let(:params) { { foo: 'bar' } }
     subject { IndifferentHashWithDash.new(params) }
