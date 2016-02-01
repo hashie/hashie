@@ -2,7 +2,7 @@
 
 There're no particular rules about when to release Hashie. Release bug fixes frequenty, features not so frequently and breaking API changes rarely.
 
-### Release
+## Release
 
 Run tests, check that all tests succeed locally.
 
@@ -13,10 +13,15 @@ bundle exec rake
 
 Check that the last build succeeded in [Travis CI](https://travis-ci.org/intridea/hashie) for all supported platforms.
 
-Increment the version, modify [lib/hashie/version.rb](lib/hashie/version.rb).
+### Check Next Version
 
-* Increment the third number (minor version) if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`).
-* Increment the second number (patch version) if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.6.0`).
+Increment the version, modify [lib/hashie/version.rb](lib/hashie/version.rb). [Changelog](CHANGELOG.md) entries should be helpfully categorized to assist in picking the next version number.
+
+* Increment the third number (minor version) if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`). These should be in the "Fixed", "Security", or "Miscellaneous" categories in the change log.
+* Increment the second number (patch version) if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.6.0`). These should be in the "Added" or "Deprecated" categories in the change log.
+* Increment the first number (major version) if the release has any changed or removed behavior on public APIs (eg. change `0.5.1` to `1.0.0`). These should be in the "Changed" or "Removed" categories in the change log.
+
+### Modify the Readme
 
 Modify the "Stable Release" section in [README.md](README.md). Change the text to reflect that this is going to be the documentation for a stable release. Remove references to the previous release of Hashie. Keep the file open, you'll have to undo this change after the release.
 
@@ -26,14 +31,19 @@ Modify the "Stable Release" section in [README.md](README.md). Change the text t
 You're reading the documentation for the stable release of Hashie, 3.3.0.
 ```
 
-Change "Next Release" in [CHANGELOG.md](CHANGELOG.md) to the new version.
+### Modify the Changelog
+
+Change "Unreleased" in [CHANGELOG.md](CHANGELOG.md) to the new version.
 
 ```markdown
-3.3.0 (8/25/2014)
-=================
+## [3.3.0] - 2014-08-25
+
+[3.3.0]: https://github.com/intridea/hashie/compare/v<LAST_VERSION>..v<THIS_VERSION>
 ```
 
-Remove the line with "Your contribution here.", since there will be no more contributions to this release.
+Replace `<LAST_VERSION>` and `<THIS_VERSION>` with the last and new-to-be-released versions to set up the compare view on Github.
+
+Remove any sections that only have "Nothing yet." underneath them.
 
 Commit your changes.
 
@@ -42,6 +52,8 @@ git add README.md CHANGELOG.md lib/hashie/version.rb
 git commit -m "Preparing for release, 3.3.0."
 git push origin master
 ```
+
+### Push to RubyGems.org
 
 Release.
 
@@ -54,7 +66,7 @@ Pushed git commits and tags.
 Pushed hashie 3.3.0 to rubygems.org.
 ```
 
-### Prepare for the Next Version
+## Prepare for the Next Version
 
 Modify the "Stable Release" section in [README.md](README.md). Change the text to reflect that this is going to be the next release.
 
@@ -65,14 +77,43 @@ You're reading the documentation for the next release of Hashie, which should be
 The current stable release is [3.3.0](https://github.com/intridea/hashie/blob/v3.3.0/README.md).
 ```
 
-Add the next release to [CHANGELOG.md](CHANGELOG.md).
+Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template:
 
 ```markdown
-Next Release
-============
+## [Unreleased][unreleased]
 
-* Your contribution here.
+[unreleased]: https://github.com/intridea/hashie/compare/v<THIS_VERSION>...master
+
+### Added
+
+* Nothing yet.
+
+### Changed
+
+* Nothing yet.
+
+### Deprecated
+
+* Nothing yet.
+
+### Removed
+
+* Nothing yet.
+
+### Fixed
+
+* Nothing yet.
+
+### Security
+
+* Nothing yet.
+
+### Miscellanous
+
+* Nothing yet.
 ```
+
+Replace `<THIS_VERSION>` with the newly released versions to set up the compare view on Github.
 
 Commit your changes.
 

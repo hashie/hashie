@@ -52,7 +52,17 @@ Document any external behavior in the [README](README.md).
 
 #### Update Changelog
 
-Add a line to [CHANGELOG](CHANGELOG.md) under *Next Release*. Make it look like every other line, including your name and link to your Github account.
+Add a line to [CHANGELOG](CHANGELOG.md) under *Unreleased*. Make it look like every other line, including your name and link to your Github account.
+
+There are several categorizations of changes that you can choose from. Add your line to the appropriate section, following these conventions:
+
+* **Added** - When you add a new behavior to any class or module (or add a new extension) that does not break backwards compatibility, you should mark it as "added". This is generally a fully new behavior that does not touch any pre-existing public API. Changes here require a MINOR version bump, following the Semantic Versioning specification.
+* **Changed** - You should mark any change to the behavior of a public API on any class or module as "changed". Changes here require a MAJOR version bump, following the Semantic Versioning specification.
+* **Deprecated** - Any time you deprecate part of the public API on any class or module you should mark the change as "deprecated". Deprecated behavior will be removed in the next MAJOR version bump, but should be left in until then. Changes here require a MINOR version bump, following the Semantic Versioning specification.
+* **Removed** - You should mark any behavior that you removed from a public API on any class or module as "removed". Changes here require a MAJOR version bump, following the Semantic Versioning specification.
+* **Fixed** - Any time you fix a bug you should mark as "fixed". Changes here require a PATCH version bump.
+* **Security** - You should mark any security issue that you fix as "security". Changes here require a PATCH version bump.
+* **Miscellaneous** - Mark any other changes you make (i.e. documentation updates, test harness changes, etc.) as "miscellaneous". Changes here require a PATCH version bump.
 
 #### Commit Changes
 
