@@ -133,6 +133,14 @@ module Hashie
         self
       end
 
+      def merge(*)
+        super.convert!
+      end
+
+      def merge!(*)
+        super.convert!
+      end
+
       protected
 
       def hash_lacking_indifference?(other)

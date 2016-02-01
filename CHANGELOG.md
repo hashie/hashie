@@ -4,6 +4,7 @@
 * [#319](https://github.com/intridea/hashie/pull/319): Fix a regression from 3.4.1 where `Hashie::Extensions::DeepFind` is no longer indifference-aware - [@michaelherold](https://github.com/michaelherold).
 * [#240](https://github.com/intridea/hashie/pull/240): Fixed nesting twice with Clash keys - [@bartoszkopinski](https://github.com/bartoszkopinski).
 * [#322](https://github.com/intridea/hashie/pull/322): Fixed `reverse_merge` issue with `Mash` subclasses - [@marshall-lee](https://github.com/marshall-lee).
+* [#346](https://github.com/intridea/hashie/pull/346): Fixed `merge` breaking indifferent access - [@docwhat](https://github.com/docwhat), [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## 3.4.3 (10/25/2015)
