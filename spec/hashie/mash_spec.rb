@@ -686,4 +686,15 @@ describe Hashie::Mash do
       end
     end
   end
+
+  if RUBY_VERSION >= '2.3.0'
+    describe '#dig' do
+      subject { described_class.new(a: { b: 1 }) }
+
+      it 'accepts both string and symbol as key' do
+        expect(subject.dig(:a, :b)).to eq(1)
+        expect(subject.dig('a', 'b')).to eq(1)
+      end
+    end
+  end
 end

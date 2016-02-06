@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Nothing yet.
+* [#349](https://github.com/intridea/hashie/pull/349): Convert `Hashie::Mash#dig` arguments for Ruby 2.3.0 - [@k0kubun](https://github.com/k0kubun).
 
 ### Changed
 
