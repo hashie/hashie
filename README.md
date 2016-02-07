@@ -24,7 +24,7 @@ You're reading the documentation for the next release of Hashie, which should be
 
 ## Hash Extensions
 
-The library is broken up into a number of atomically includeable Hash extension modules as described below. This provides maximum flexibility for users to mix and match functionality while maintaining feature parity with earlier versions of Hashie.
+The library is broken up into a number of atomically includable Hash extension modules as described below. This provides maximum flexibility for users to mix and match functionality while maintaining feature parity with earlier versions of Hashie.
 
 Any of the extensions listed below can be mixed into a class by `include`-ing `Hashie::Extensions::ExtensionName`.
 
