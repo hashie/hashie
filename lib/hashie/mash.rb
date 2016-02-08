@@ -250,6 +250,12 @@ module Hashie
       self.class.new(other_hash).merge(self)
     end
 
+    if RUBY_VERSION >= '2.3.0'
+      def dig(*keys)
+        super(*keys.map { |key| convert_key(key) })
+      end
+    end
+
     protected
 
     def method_name_and_suffix(method_name)
