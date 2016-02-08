@@ -30,10 +30,13 @@ module Hashie
     #   p.email      # => NoMethodError
     module IgnoreUndeclared
       def initialize_attributes(attributes)
+        return unless attributes
+        klass = self.class
+        translations = klass.respond_to?(:translations) && klass.translations
         attributes.each_pair do |att, value|
-          next unless self.class.property?(att) || (self.class.respond_to?(:translations) && self.class.translations.include?(att.to_sym))
+          next unless klass.property?(att) || (translations && translations.include?(att))
           self[att] = value
-        end if attributes
+        end
       end
 
       def property_exists?(property)
