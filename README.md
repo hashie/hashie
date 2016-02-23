@@ -135,7 +135,7 @@ class Tweet < Hash
   coerce_key :retweeted, ->(v) do
     case v
     when String
-      return !!(v =~ /^(true|t|yes|y|1)$/i)
+      return !!(v =~ /\A(true|t|yes|y|1)\z/i)
     when Numeric
       return !v.to_i.zero?
     else
