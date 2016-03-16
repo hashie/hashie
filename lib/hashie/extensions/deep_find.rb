@@ -45,21 +45,35 @@ module Hashie
       private
 
       def _deep_find(key, object = self)
-        _deep_find_all(key, object).first
+        #_deep_find_all(key, object).first
+        if object.respond_to?(:key?)
+          return object[key] if object.key?(key)
+ 		      reduce_to_match(key, object.values)
+        elsif object.is_a?(Enumerable)
+          reduce_to_match(key, object)
+        end
       end
 
       def _deep_find_all(key, object = self, matches = [])
-        object.each do |sub_key, sub_object|
-          if sub_key.to_sym == key.to_sym
-            matches << sub_object
-          else
-            case sub_object
-            when ::Hash then matches << _deep_find_all(key, sub_object)
-            when ::Array then sub_object.each {|element| matches << _deep_find_all(key, element) if element.respond_to?(:each)}
-            end
-          end
+        if object.respond_to?(:key?)
+          matches << object[key] if object.key?(key)
+          object.values.each { |v| _deep_find_all(key, v, matches) }
+        elsif object.is_a?(Enumerable)
+          object.each { |v| _deep_find_all(key, v, matches) }
         end
-        matches.flatten
+        matches
+
+        # deep_locate_result = Hashie::Extensions::DeepLocate.deep_locate(key, object).tap do |result|
+        #   result.map! { |element| element[key] }
+        # end
+        # matches.concat(deep_locate_result)
+      end
+
+      def reduce_to_match(key, enumerable)
+        enumerable.reduce(nil) do |found, value|
+          return found if found
+          _deep_find(key, value)		
+        end
       end
 
     end
