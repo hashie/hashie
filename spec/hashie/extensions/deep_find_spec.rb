@@ -44,7 +44,7 @@ describe Hashie::Extensions::DeepFind do
 
   describe '#deep_find_all' do
     it 'detects all values from a nested hash' do
-      expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
+      expect(instance.deep_find_all(:title)).to include('Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing')
     end
 
     it 'returns nil if it does not find any matches' do
@@ -79,8 +79,8 @@ describe Hashie::Extensions::DeepFind do
 
     describe '#deep_find_all' do
       it 'indifferently detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
-        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
+        expect(instance.deep_find_all(:title)).to include('Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing')
+        expect(instance.deep_find_all('title')).to include('Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing')
       end
 
       it 'indifferently returns nil if it does not find any matches' do
@@ -118,13 +118,23 @@ describe Hashie::Extensions::DeepFind do
 
     describe '#deep_find_all' do
       it 'indifferently detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
-        expect(instance.deep_find_all('title')).to eq(['Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing'])
+        expect(instance.deep_find_all(:title)).to include('Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing')
+        expect(instance.deep_find_all('title')).to include('Call of the Wild', 'Moby Dick', 'Main Library', 'Book Listing')
       end
 
       it 'indifferently returns nil if it does not find any matches' do
         expect(instance.deep_find_all(:wahoo)).to be_nil
         expect(instance.deep_find_all('wahoo')).to be_nil
+      end
+
+      it "indifferently returns the proper construct of a nested value" do
+        expect(instance.deep_find_all(:employees)).to include([
+          {"info": {"name": "John", "surname": "Smith", "prefix": "Mr."}, "position": "Head Librarian"}
+        ])
+
+        expect(instance.deep_find_all("employees")).to include([
+          {"info": {"name": "John", "surname": "Smith", "prefix": "Mr."}, "position": "Head Librarian"}
+        ])
       end
     end
   end

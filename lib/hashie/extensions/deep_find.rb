@@ -45,7 +45,6 @@ module Hashie
       private
 
       def _deep_find(key, object = self)
-        #_deep_find_all(key, object).first
         if object.respond_to?(:key?)
           return object[key] if object.key?(key)
  		      reduce_to_match(key, object.values)
@@ -62,17 +61,12 @@ module Hashie
           object.each { |v| _deep_find_all(key, v, matches) }
         end
         matches
-
-        # deep_locate_result = Hashie::Extensions::DeepLocate.deep_locate(key, object).tap do |result|
-        #   result.map! { |element| element[key] }
-        # end
-        # matches.concat(deep_locate_result)
       end
 
       def reduce_to_match(key, enumerable)
         enumerable.reduce(nil) do |found, value|
           return found if found
-          _deep_find(key, value)		
+          _deep_find(key, value)
         end
       end
 
