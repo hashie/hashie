@@ -115,10 +115,12 @@ Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template
 
 Replace `<THIS_VERSION>` with the newly released versions to set up the compare view on Github.
 
+Increment the minor version, modify [lib/hashie/version.rb](lib/hashie/version.rb).
+
 Commit your changes.
 
 ```sh
 git add CHANGELOG.md README.md
-git commit -m "Preparing for next release."
+git commit -m "Preparing for next development iteration, 3.3.1."
 git push origin master
 ```
