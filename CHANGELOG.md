@@ -6,25 +6,13 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.4.4] - 2016-04-29
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.4.3...master
+[3.4.4]: https://github.com/intridea/hashie/compare/v3.4.3...v3.4.4
 
 ### Added
 
 * [#349](https://github.com/intridea/hashie/pull/349): Convert `Hashie::Mash#dig` arguments for Ruby 2.3.0 - [@k0kubun](https://github.com/k0kubun).
-
-### Changed
-
-* Nothing yet.
-
-### Deprecated
-
-* Nothing yet.
-
-### Removed
-
-* Nothing yet.
 
 ### Fixed
 
@@ -34,14 +22,6 @@ scheme are considered to be bugs.
 * [#322](https://github.com/intridea/hashie/pull/322): Fixed `reverse_merge` issue with `Mash` subclasses - [@marshall-lee](https://github.com/marshall-lee).
 * [#346](https://github.com/intridea/hashie/pull/346): Fixed `merge` breaking indifferent access - [@docwhat](https://github.com/docwhat), [@michaelherold](https://github.com/michaelherold).
 * [#350](https://github.com/intridea/hashie/pull/350): Fixed from string translations used with `IgnoreUndeclared` - [@marshall-lee](https://github.com/marshall-lee).
-
-### Security
-
-* Nothing yet.
-
-### Miscellanous
-
-* Nothing yet.
 
 ## [3.4.3] - 2015-10-25
 
