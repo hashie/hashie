@@ -1,4 +1,5 @@
 require 'hashie/hash'
+require 'hashie/array'
 
 module Hashie
   # Mash allows you to create pseudo-objects that have method-like
@@ -56,6 +57,7 @@ module Hashie
   #
   class Mash < Hash
     include Hashie::Extensions::PrettyInspect
+    include Hashie::Extensions::RubyVersionCheck
 
     ALLOWED_SUFFIXES = %w(? ! = _)
 
@@ -250,7 +252,7 @@ module Hashie
       self.class.new(other_hash).merge(self)
     end
 
-    if RUBY_VERSION >= '2.3.0'
+    with_minimum_ruby('2.3.0') do
       def dig(*keys)
         super(*keys.map { |key| convert_key(key) })
       end
@@ -287,6 +289,8 @@ module Hashie
         self.class.new(val)
       when Array
         val.map { |e| convert_value(e) }
+      when ::Array
+        Array.new(val.map { |e| convert_value(e) })
       else
         val
       end

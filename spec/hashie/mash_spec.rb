@@ -687,13 +687,20 @@ describe Hashie::Mash do
     end
   end
 
-  if RUBY_VERSION >= '2.3.0'
+  with_minimum_ruby('2.3.0') do
     describe '#dig' do
       subject { described_class.new(a: { b: 1 }) }
-
       it 'accepts both string and symbol as key' do
         expect(subject.dig(:a, :b)).to eq(1)
         expect(subject.dig('a', 'b')).to eq(1)
+      end
+
+      context 'with numeric key' do
+        subject { described_class.new('1' => { b: 1 }) }
+        it 'accepts a numeric value as key' do
+          expect(subject.dig(1, :b)).to eq(1)
+          expect(subject.dig('1', :b)).to eq(1)
+        end
       end
     end
   end

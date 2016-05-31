@@ -7,6 +7,7 @@ module Hashie
   autoload :Mash,               'hashie/mash'
   autoload :Trash,              'hashie/trash'
   autoload :Rash,               'hashie/rash'
+  autoload :Array,              'hashie/array'
 
   module Extensions
     autoload :Coercion,          'hashie/extensions/coercion'
@@ -27,6 +28,7 @@ module Hashie
     autoload :KeyConversion,     'hashie/extensions/key_conversion'
     autoload :MethodAccessWithOverride, 'hashie/extensions/method_access'
     autoload :StrictKeyAccess, 'hashie/extensions/strict_key_access'
+    autoload :RubyVersionCheck, 'hashie/extensions/ruby_version_check'
 
     module Parsers
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
@@ -40,6 +42,10 @@ module Hashie
 
     module Mash
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
+    end
+
+    module Array
+      autoload :PrettyInspect, 'hashie/extensions/array/pretty_inspect'
     end
   end
 
