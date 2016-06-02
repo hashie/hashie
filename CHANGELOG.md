@@ -28,7 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* Nothing yet.
+* [#358](https://github.com/intridea/hashie/pull/358): Fix support for Array#dig - [@modosc](https://github.com/modosc/).
 
 ### Security
 
