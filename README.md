@@ -490,6 +490,13 @@ mash.development.api_key = "foo" # => <# RuntimeError can't modify frozen ...>
 mash.development.api_key? # => true
 ```
 
+You can also load with a `Pathname` object:
+
+```ruby
+mash = Mash.load(Pathname 'settings/twitter.yml')
+mash.development.api_key # => 'localhost'
+```
+
 You can access a Mash from another class:
 
 ```ruby
