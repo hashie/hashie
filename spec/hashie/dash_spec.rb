@@ -12,6 +12,10 @@ class DashTest < Hashie::Dash
   property :count, default: 0
 end
 
+class DashTestDefaultProc < Hashie::Dash
+  property :fields, default: -> { [] }
+end
+
 class DashNoRequiredTest < Hashie::Dash
   property :first_name
   property :email
@@ -49,6 +53,13 @@ end
 class DeferredWithSelfTest < Hashie::Dash
   property :created_at, default: -> { Time.now }
   property :updated_at, default: ->(test) { test.created_at }
+end
+
+describe DashTestDefaultProc do
+  it "as_json behaves correctly with default proc" do
+    object = described_class.new
+    expect(object.as_json).to be == { "fields" => [] }
+  end
 end
 
 describe DashTest do
