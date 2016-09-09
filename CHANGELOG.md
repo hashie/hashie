@@ -16,28 +16,28 @@ scheme are considered to be bugs.
 
 ### Changed
 
-* Nothing yet.
+* Your contribution here.
 
 ### Deprecated
 
-* Nothing yet.
+* [#366](https://github.com/intridea/hashie/pull/366): Hashie is no longer tested on Ruby < 2 - [@dblock](https://github.com/dblock).
 
 ### Removed
 
-* Nothing yet.
+* Your contribution here.
 
 ### Fixed
 
-* [#358](https://github.com/intridea/hashie/pull/358): Fix support for Array#dig - [@modosc](https://github.com/modosc/).
-* [#365](https://github.com/intridea/hashie/pull/365): Ensure ActiveSupport::HashWithIndifferentAccess is defined before use in #deep_locate  - [@mikejarema](https://github.com/mikejarema/).
+* [#358](https://github.com/intridea/hashie/pull/358): Fixed support for Array#dig - [@modosc](https://github.com/modosc).
+* [#365](https://github.com/intridea/hashie/pull/365): Ensured ActiveSupport::HashWithIndifferentAccess is defined before use in #deep_locate  - [@mikejarema](https://github.com/mikejarema).
 
 ### Security
 
-* Nothing yet.
+* Your contribution here.
 
 ### Miscellanous
 
-* Nothing yet.
+* [#366](https://github.com/intridea/hashie/pull/366): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 
 ## [3.4.4] - 2016-04-29
 
@@ -50,8 +50,8 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#240](https://github.com/intridea/hashie/pull/240): Fixed nesting twice with Clash keys - [@bartoszkopinski](https://github.com/bartoszkopinski).
-* [#317](https://github.com/intridea/hashie/pull/317): Ensure `Hashie::Extensions::MethodQuery` methods return boolean values - [@michaelherold](https://github.com/michaelherold).
-* [#319](https://github.com/intridea/hashie/pull/319): Fix a regression from 3.4.1 where `Hashie::Extensions::DeepFind` is no longer indifference-aware - [@michaelherold](https://github.com/michaelherold).
+* [#317](https://github.com/intridea/hashie/pull/317): Ensured `Hashie::Extensions::MethodQuery` methods return boolean values - [@michaelherold](https://github.com/michaelherold).
+* [#319](https://github.com/intridea/hashie/pull/319): Fixed a regression from 3.4.1 where `Hashie::Extensions::DeepFind` is no longer indifference-aware - [@michaelherold](https://github.com/michaelherold).
 * [#322](https://github.com/intridea/hashie/pull/322): Fixed `reverse_merge` issue with `Mash` subclasses - [@marshall-lee](https://github.com/marshall-lee).
 * [#346](https://github.com/intridea/hashie/pull/346): Fixed `merge` breaking indifferent access - [@docwhat](https://github.com/docwhat), [@michaelherold](https://github.com/michaelherold).
 * [#350](https://github.com/intridea/hashie/pull/350): Fixed from string translations used with `IgnoreUndeclared` - [@marshall-lee](https://github.com/marshall-lee).
@@ -121,10 +121,10 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#247](https://github.com/intridea/hashie/pull/247): Fixed #stringify_keys and #symbolize_keys collision with ActiveSupport - [@bartoszkopinski](https://github.com/bartoszkopinski).
-* [#256](https://github.com/intridea/hashie/pull/256): Inherit key coercions - [@Erol](https://github.com/Erol).
+* [#256](https://github.com/intridea/hashie/pull/256): Inherited key coercions - [@Erol](https://github.com/Erol).
 * [#259](https://github.com/intridea/hashie/pull/259): Fixed handling of default proc values in Mash - [@Erol](https://github.com/Erol).
 * [#261](https://github.com/intridea/hashie/pull/261): Fixed bug where Dash.property modifies argument object - [@d-tw](https://github.com/d-tw).
-* [#269](https://github.com/intridea/hashie/pull/269): Add #extractable_options? so ActiveSupport Array#extract_options! can extract it - [@ridiculous](https://github.com/ridiculous).
+* [#269](https://github.com/intridea/hashie/pull/269): Added #extractable_options? so ActiveSupport Array#extract_options! can extract it - [@ridiculous](https://github.com/ridiculous).
 
 ## [3.3.2] - 2014-11-26
 
@@ -138,7 +138,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* [#221](https://github.com/intridea/hashie/pull/221): Reduce amount of allocated objects on calls with suffixes in Hashie::Mash - [@kubum](https://github.com/kubum).
+* [#221](https://github.com/intridea/hashie/pull/221): Reduced amount of allocated objects on calls with suffixes in Hashie::Mash - [@kubum](https://github.com/kubum).
 * [#224](https://github.com/intridea/hashie/pull/224): Merging Hashie::Mash now correctly only calls the block on duplicate values - [@amysutedja](https://github.com/amysutedja).
 * [#228](https://github.com/intridea/hashie/pull/228): Made Hashie::Extensions::Parsers::YamlErbParser pass template filename to ERB - [@jperville](https://github.com/jperville).
 
@@ -151,17 +151,17 @@ scheme are considered to be bugs.
 * [#183](https://github.com/intridea/hashie/pull/183): Added Mash#load with YAML file support - [@gregory](https://github.com/gregory).
 * [#189](https://github.com/intridea/hashie/pull/189): Added Rash#fetch - [@medcat](https://github.com/medcat).
 * [#204](https://github.com/intridea/hashie/pull/204): Added Hashie::Extensions::MethodOverridingWriter and MethodAccessWithOverride - [@michaelherold](https://github.com/michaelherold).
-* [#205](http://github.com/intridea/hashie/pull/205): Added Hashie::Extensions::Mash::SafeAssignment - [@michaelherold](https://github.com/michaelherold).
-* [#209](http://github.com/intridea/hashie/pull/209): Added Hashie::Extensions::DeepFind - [@michaelherold](https://github.com/michaelherold).
+* [#205](https://github.com/intridea/hashie/pull/205): Added Hashie::Extensions::Mash::SafeAssignment - [@michaelherold](https://github.com/michaelherold).
+* [#209](https://github.com/intridea/hashie/pull/209): Added Hashie::Extensions::DeepFind - [@michaelherold](https://github.com/michaelherold).
 
 ### Fixed
 
 * [#69](https://github.com/intridea/hashie/pull/69): Fixed regression in assigning multiple properties in Hashie::Trash - [@michaelherold](https://github.com/michaelherold), [@einzige](https://github.com/einzige), [@dblock](https://github.com/dblock).
-* [#195](https://github.com/intridea/hashie/pull/195): Ensure that the same object is returned after injecting IndifferentAccess - [@michaelherold](https://github.com/michaelherold).
+* [#195](https://github.com/intridea/hashie/pull/195): Ensured that the same object is returned after injecting IndifferentAccess - [@michaelherold](https://github.com/michaelherold).
 * [#201](https://github.com/intridea/hashie/pull/201): Hashie::Trash transforms can be inherited - [@fobocaster](https://github.com/fobocaster).
 * [#200](https://github.com/intridea/hashie/pull/200): Improved coercion: primitives and error handling - [@maxlinc](https://github.com/maxlinc).
-* [#206](http://github.com/intridea/hashie/pull/206): Fixed stack overflow from repetitively including coercion in subclasses - [@michaelherold](https://github.com/michaelherold).
-* [#207](http://github.com/intridea/hashie/pull/207): Fixed inheritance of transformations in Trash - [@fobocaster](https://github.com/fobocaster).
+* [#206](https://github.com/intridea/hashie/pull/206): Fixed stack overflow from repetitively including coercion in subclasses - [@michaelherold](https://github.com/michaelherold).
+* [#207](https://github.com/intridea/hashie/pull/207): Fixed inheritance of transformations in Trash - [@fobocaster](https://github.com/fobocaster).
 
 ## [3.2.0] - 2014-07-10
 
@@ -205,7 +205,7 @@ scheme are considered to be bugs.
 
 [3.0.0]: https://github.com/intridea/hashie/compare/v2.1.2...v3.0.0
 
-**Note:** This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
+Note: This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
 
 ### Added
 
@@ -246,7 +246,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* [#134](https://github.com/intridea/hashie/pull/134): Add deep_fetch extension for nested access - [@tylerdooling](https://github.com/tylerdooling).
+* [#134](https://github.com/intridea/hashie/pull/134): Added deep_fetch extension for nested access - [@tylerdooling](https://github.com/tylerdooling).
 
 ### Changed
 
@@ -282,7 +282,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* [#96](https://github.com/intridea/hashie/pull/96): Make coercion work better with non-symbol keys in Hashie::Mash - [@wapcaplet](https://github.com/wapcaplet).
+* [#96](https://github.com/intridea/hashie/pull/96): Made coercion work better with non-symbol keys in Hashie::Mash - [@wapcaplet](https://github.com/wapcaplet).
 
 ## [2.0.4] - 2013-04-24
 
@@ -290,7 +290,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* [#94](https://github.com/intridea/hashie/pull/94): Make #fetch method consistent with normal Hash - [@markiz](https://github.com/markiz).
+* [#94](https://github.com/intridea/hashie/pull/94): Made #fetch method consistent with normal Hash - [@markiz](https://github.com/markiz).
 
 ### Miscellaneous
 
@@ -302,7 +302,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* [#68](https://github.com/intridea/hashie/pull/68): Fix #replace - [@jimeh](https://github.com/jimeh).
+* [#68](https://github.com/intridea/hashie/pull/68): Fixed #replace - [@jimeh](https://github.com/jimeh).
 * [#88](https://github.com/intridea/hashie/pull/88): Hashie::Mash.new(abc: true).respond_to?(:abc?) works - [@7even](https://github.com/7even).
 
 ## [2.0.2] - 2013-02-26
@@ -311,7 +311,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* [#85](https://github.com/intridea/hashie/pull/85): adding symbolize_keys back to to_hash - [@cromulus](https://github.com/cromulus).
+* [#85](https://github.com/intridea/hashie/pull/85): Added symbolize_keys back to to_hash - [@cromulus](https://github.com/cromulus).
 
 ## [2.0.1] - 2013-02-26
 
@@ -319,11 +319,11 @@ scheme are considered to be bugs.
 
 ### Removed
 
-* [#81](https://github.com/intridea/hashie/pull/81): remove Mash#object_id override - [@matschaffer](https://github.com/matschaffer).
+* [#81](https://github.com/intridea/hashie/pull/81): Removed Mash#object_id override - [@matschaffer](https://github.com/matschaffer).
 
 ### Miscellaneous
 
-* Gem cleanup: removed VERSION, Gemfile.lock [@jch](https://github.com/jch), [@mbleigh](https://github.com/mbleigh).
+* Gem cleanup: removed VERSION, Gemfile.lock - [@jch](https://github.com/jch), [@mbleigh](https://github.com/mbleigh).
 
 ## [2.0.0] - 2013-02-16
 
@@ -337,14 +337,14 @@ scheme are considered to be bugs.
 ### Changed
 
 * [#28](https://github.com/intridea/hashie/pull/28): Hashie::Extensions::Coercion coerce_keys takes arguments - [@mattfawcett](https://github.com/mattfawcett).
-* [#77](https://github.com/intridea/hashie/pull/77): Remove id, type, and object_id as special allowable keys [@jch](https://github.com/jch).
+* [#77](https://github.com/intridea/hashie/pull/77): Removed id, type, and object_id as special allowable keys - [@jch](https://github.com/jch).
 
 ### Fixed
 
-* [#27](https://github.com/intridea/hashie/pull/27): Initialized with merge coerces values - [@mattfawcett](https://github.com/mattfawcett).
+* [#27](https://github.com/intridea/hashie/pull/27): Initialize with merge coerces values - [@mattfawcett](https://github.com/mattfawcett).
 * [#39](https://github.com/intridea/hashie/pull/39): Trash removes translated values on initialization - [@sleverbor](https://github.com/sleverbor).
 * [#49](https://github.com/intridea/hashie/pull/49): Hashie::Hash inherits from ::Hash to avoid ambiguity - [@meh](https://github.com/meh), [@orend](https://github.com/orend).
-* [#62](https://github.com/intridea/hashie/pull/62): update respond_to? method signature to match ruby core definition - [@dlupu](https://github.com/dlupu).
+* [#62](https://github.com/intridea/hashie/pull/62): Updated respond_to? method signature to match ruby core definition - [@dlupu](https://github.com/dlupu).
 * [#63](https://github.com/intridea/hashie/pull/63): Dash defaults are dup'ed before assigned - [@ohrite](https://github.com/ohrite).
 * [#66](https://github.com/intridea/hashie/pull/66): Mash#fetch works with symbol or string keys - [@arthwood](https://github.com/arthwood).
 
