@@ -29,6 +29,7 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#358](https://github.com/intridea/hashie/pull/358): Fix support for Array#dig - [@modosc](https://github.com/modosc/).
+* [#365](https://github.com/intridea/hashie/pull/365): Ensure ActiveSupport::HashWithIndifferentAccess is defined before use in #deep_locate  - [@mikejarema](https://github.com/mikejarema/).
 
 ### Security
 
