@@ -28,7 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* Your contribution here.
+* [#369](https://github.com/intridea/hashie/pull/369): If a translation for a property exists when using IndifferentAccess and IgnoreUndeclared, use the translation to find the property - [@whitethunder](https://github.com/whitethunder).
 
 ### Security
 
