@@ -6,34 +6,22 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.4.5] - 2016-09-16
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.4.4...master
+[3.4.5]: https://github.com/intridea/hashie/compare/v3.4.4...v3.4.5
 
 ### Added
 
 * [#337](https://github.com/intridea/hashie/pull/337), [#331](https://github.com/intridea/hashie/issues/331): `Hashie::Mash#load` accepts a `Pathname` object - [@gipcompany](https://github.com/gipcompany).
 
-### Changed
-
-* Your contribution here.
-
 ### Deprecated
 
 * [#366](https://github.com/intridea/hashie/pull/366): Hashie is no longer tested on Ruby < 2 - [@dblock](https://github.com/dblock).
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
 * [#358](https://github.com/intridea/hashie/pull/358): Fixed support for Array#dig - [@modosc](https://github.com/modosc).
 * [#365](https://github.com/intridea/hashie/pull/365): Ensured ActiveSupport::HashWithIndifferentAccess is defined before use in #deep_locate  - [@mikejarema](https://github.com/mikejarema).
-
-### Security
-
-* Your contribution here.
 
 ### Miscellanous
 
