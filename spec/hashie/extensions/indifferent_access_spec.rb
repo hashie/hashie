@@ -31,6 +31,13 @@ describe Hashie::Extensions::IndifferentAccess do
     property :foo
   end
 
+  class IndifferentHashWithIgnoreUndeclaredAndPropertyTranslation < Hashie::Dash
+    include Hashie::Extensions::IgnoreUndeclared
+    include Hashie::Extensions::Dash::PropertyTranslation
+    include Hashie::Extensions::IndifferentAccess
+    property :foo, from: :bar
+  end
+
   describe '#merge' do
     it 'indifferently merges in a hash' do
       indifferent_hash = Class.new(::Hash) do
@@ -63,6 +70,36 @@ describe Hashie::Extensions::IndifferentAccess do
 
     it 'initialize with a symbol' do
       expect(subject.foo).to eq params[:foo]
+    end
+  end
+
+  describe 'when translating properties and ignoring undeclared' do
+    let(:value) { 'baz' }
+
+    subject { IndifferentHashWithIgnoreUndeclaredAndPropertyTranslation.new(params) }
+
+    context 'and the hash keys are strings' do
+      let(:params) { { 'bar' => value } }
+
+      it 'sets the property' do
+        expect(subject[:foo]).to eq value
+      end
+    end
+
+    context 'and the hash keys are symbols' do
+      let(:params) { { bar: 'baz' } }
+
+      it 'sets the property' do
+        expect(subject[:foo]).to eq value
+      end
+    end
+
+    context 'and there are undeclared keys' do
+      let(:params) { { 'bar' => 'baz', 'fail' => false } }
+
+      it 'sets the property' do
+        expect(subject[:foo]).to eq value
+      end
     end
   end
 

@@ -11,6 +11,7 @@ module Hashie
           # Check to see if the specified property has already been
           # defined.
           def property?(name)
+            name = translations[name.to_sym] if included_modules.include?(Hashie::Extensions::Dash::PropertyTranslation) && translation_exists?(name)
             name = name.to_s
             !!properties.find { |property| property.to_s == name }
           end
@@ -21,7 +22,7 @@ module Hashie
           end
 
           def transformed_property(property_name, value)
-            transform = transforms[property_name] || transforms[:"#{property_name}"]
+            transform = transforms[property_name] || transforms[property_name.to_sym]
             transform.call(value)
           end
 
