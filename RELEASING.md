@@ -43,7 +43,7 @@ Change "Unreleased" in [CHANGELOG.md](CHANGELOG.md) to the new version.
 
 Replace `<LAST_VERSION>` and `<THIS_VERSION>` with the last and new-to-be-released versions to set up the compare view on Github.
 
-Remove any sections that only have "Nothing yet." underneath them.
+Remove any sections that only have "Your contribution here." underneath them.
 
 Commit your changes.
 
@@ -86,31 +86,31 @@ Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template
 
 ### Added
 
-* Nothing yet.
+* Your contribution here.
 
 ### Changed
 
-* Nothing yet.
+* Your contribution here.
 
 ### Deprecated
 
-* Nothing yet.
+* Your contribution here.
 
 ### Removed
 
-* Nothing yet.
+* Your contribution here.
 
 ### Fixed
 
-* Nothing yet.
+* Your contribution here.
 
 ### Security
 
-* Nothing yet.
+* Your contribution here.
 
 ### Miscellanous
 
-* Nothing yet.
+* Your contribution here.
 ```
 
 Replace `<THIS_VERSION>` with the newly released versions to set up the compare view on Github.
