@@ -1,3 +1,6 @@
+require 'hashie/extensions/array/pretty_inspect'
+require 'hashie/extensions/ruby_version_check'
+
 module Hashie
   class Array < ::Array
     include Hashie::Extensions::Array::PrettyInspect

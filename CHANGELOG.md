@@ -28,7 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* Your contribution here.
+* [#368](https://github.com/intridea/hashie/pull/368): Since `hashie/mash` can be required alone, require its dependencies - [@jrafanie](https://github.com/jrafanie).
 
 ### Security
 
