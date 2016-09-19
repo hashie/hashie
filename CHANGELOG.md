@@ -38,6 +38,8 @@ scheme are considered to be bugs.
 
 * Your contribution here.
 
+## [3.4.6] - 2016-09-16
+
 [3.4.6]: https://github.com/intridea/hashie/compare/v3.4.5...v3.4.6
 
 ### Fixed
