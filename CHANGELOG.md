@@ -29,6 +29,7 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#369](https://github.com/intridea/hashie/pull/369): If a translation for a property exists when using IndifferentAccess and IgnoreUndeclared, use the translation to find the property - [@whitethunder](https://github.com/whitethunder).
+* [#376](https://github.com/intridea/hashie/pull/376): Leave string index unchanged if it can't be converted to integer for Array#dig - [@sazor](https://github.com/sazor).
 
 ### Security
 

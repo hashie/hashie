@@ -7,7 +7,14 @@ module Hashie
     include Hashie::Extensions::RubyVersionCheck
     with_minimum_ruby('2.3.0') do
       def dig(*indexes)
-        super(*indexes.map { |idx| Integer(idx) })
+        converted_indexes = indexes.map do |idx|
+          begin
+            Integer(idx)
+          rescue ArgumentError
+            idx
+          end
+        end
+        super(*converted_indexes)
       end
     end
   end
