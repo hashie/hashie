@@ -1,6 +1,18 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.4.7
+
+#### Procs as default values for Dash
+
+```ruby
+class MyHash < Hashie::Dash
+  property :time, default: -> { Time.now }
+end
+```
+
+In versions < 3.4.7 `Time.now` will be evaluated when `time` property is accessed directly first time. 
+In version >= 3.4.7 `Time.now` is evaluated in time of object initialization.
 ### Upgrading to 3.4.4
 
 #### Mash subclasses and reverse_merge

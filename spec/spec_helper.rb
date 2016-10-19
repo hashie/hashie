@@ -10,7 +10,6 @@ require 'hashie'
 require 'rspec/pending_for'
 require './spec/support/ruby_version_check'
 
-# NOTE: should this be here?
 require 'active_support'
 require 'active_support/core_ext'
 

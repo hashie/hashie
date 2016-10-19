@@ -56,9 +56,9 @@ class DeferredWithSelfTest < Hashie::Dash
 end
 
 describe DashTestDefaultProc do
-  it "as_json behaves correctly with default proc" do
+  it 'as_json behaves correctly with default proc' do
     object = described_class.new
-    expect(object.as_json).to be == { "fields" => [] }
+    expect(object.as_json).to be == { 'fields' => [] }
   end
 end
 
