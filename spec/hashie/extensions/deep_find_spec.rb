@@ -42,6 +42,31 @@ describe Hashie::Extensions::DeepFind do
     it 'returns nil if it does not find any matches' do
       expect(instance.deep_find_all(:wahoo)).to be_nil
     end
+
+    context 'when match value is hash itself' do
+      let(:hash) do
+        {
+          title: {
+            type: :string
+          },
+          library: {
+            books: [
+              { title: 'Call of the Wild' },
+              { title: 'Moby Dick' }
+            ],
+            shelves: nil,
+            location: {
+              address: '123 Library St.',
+              title: 'Main Library'
+            }
+          }
+        }
+      end
+
+      it 'detects all values from a nested hash' do
+        expect(instance.deep_find_all(:title)).to eq([{ type: :string }, 'Call of the Wild', 'Moby Dick', 'Main Library'])
+      end
+    end
   end
 
   context 'on an ActiveSupport::HashWithIndifferentAccess' do
