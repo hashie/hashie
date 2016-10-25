@@ -8,6 +8,10 @@ module Hashie
           include Dry::Types.module
         end
 
+        def self.extended(base)
+          base.const_set('Types', Types)
+        end
+
         def build_coercion(type)
           if type.respond_to? :call
             lambda do |value|

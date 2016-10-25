@@ -45,7 +45,6 @@ module Hashie
           end
           define_include_type_method base, :dry_types do |base_class|
             base_class.extend DryTypes
-            base_class.const_set('Types', DryTypes::Types)
           end
         end
       end
