@@ -52,8 +52,8 @@ module Hashie
       end
 
       Includer = CoercionSystemIncludeBuilder.new do |base|
-        base.include InstanceMethods
-        base.extend ClassMethods
+        base.send :include, InstanceMethods
+        base.send :extend, ClassMethods
         unless base.method_defined?(:set_value_without_coercion)
           base.send :alias_method, :set_value_without_coercion, :[]=
         end
