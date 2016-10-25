@@ -34,6 +34,7 @@ module Hashie
     module Coercion
       autoload :HashieTypes, 'hashie/extensions/coercion/hashie_types'
       autoload :ActiveModel, 'hashie/extensions/coercion/active_model'
+      autoload :DryTypes,    'hashie/extensions/coercion/dry_types'
     end
 
     module Parsers
