@@ -12,8 +12,12 @@ end
 
 group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
-  gem 'activesupport', '~> 5.x', require: false
-  gem 'activemodel', '~> 5.x', require: false
+  if RUBY_VERSION >= '2.2.2'
+    gem 'activesupport', '~> 5.x', require: false
+    gem 'activemodel', '~> 5.x', require: false
+  else
+    gem 'activesupport', '~> 4.x', require: false
+  end
   gem 'dry-types', require: false
   gem 'codeclimate-test-reporter', require: false
   gem 'rspec-core', '~> 3.1.7'

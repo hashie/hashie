@@ -40,8 +40,10 @@ module Hashie
           define_default_included base do |base_class|
             base_class.extend HashieTypes
           end
-          define_include_type_method base, :active_model do |base_class|
-            base_class.extend ActiveModel
+          if RUBY_VERSION >= '2.2.2'
+            define_include_type_method base, :active_model do |base_class|
+              base_class.extend ActiveModel
+            end
           end
           define_include_type_method base, :dry_types do |base_class|
             base_class.extend DryTypes
