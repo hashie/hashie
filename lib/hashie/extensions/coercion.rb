@@ -9,6 +9,8 @@ module Hashie
       }
 
       class CoercionSystemIncludeBuilder < Module
+        attr_reader :common_included_block
+
         def initialize(&common_included_block)
           @common_included_block = common_included_block
         end
@@ -36,7 +38,6 @@ module Hashie
         # New Coercion systems must override the base_class here.
         def extended(base)
           define_default_included base do |base_class|
-            puts 'DEFAULT'
             base_class.extend HashieTypes
           end
           define_include_type_method base, :active_model do |base_class|
@@ -45,8 +46,7 @@ module Hashie
         end
       end
 
-      includer = CoercionSystemIncludeBuilder.new do |base|
-        puts 'COMMON'
+      Includer = CoercionSystemIncludeBuilder.new do |base|
         base.include InstanceMethods
         base.extend ClassMethods
         unless base.method_defined?(:set_value_without_coercion)
@@ -54,7 +54,7 @@ module Hashie
         end
         base.send :alias_method, :[]=, :set_value_with_coercion
       end
-      extend includer
+      extend Includer
 
       module InstanceMethods
         def set_value_with_coercion(key, value)

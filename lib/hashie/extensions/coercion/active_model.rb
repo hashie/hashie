@@ -1,6 +1,5 @@
 require 'active_model/type'
 
-
 module Hashie
   module Extensions
     module Coercion
