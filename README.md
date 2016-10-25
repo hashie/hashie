@@ -30,6 +30,54 @@ Any of the extensions listed below can be mixed into a class by `include`-ing `H
 
 ### Coercion
 
+Three systems are available for coercion: ActiveModel types, dry-types, and hashie's builtin types. The use of a specified coercion system is determined by exactly which Coercion module yo include in your Hashie class. Including the default `Hashie::Extensions::Coercion` module will use Hashie's builtin type system.
+
+### Coercion using ActiveModel types
+
+To use ActiveModel's type coercion system, you must add version 5 of ActiveModel to your Gemfile. If you are using Rails, activemodel is included, but you must be using Rail's version 5 in order to use this. If you are on running a lower version of Rails, you will not be able to use ActiveModel's type coercion system due to Ruby's inability to use different Gem versions in the same application.
+
+```ruby
+gem 'activemodel', '~> 5.x'
+```
+
+Then include the `active_model` Coercion module into your Hashie class:
+
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion.active_model
+  coerce_key :count, :integer
+end
+```
+
+The following types are available through ActiveModel::Type. The symbol type has been added by Hashie.
+
+```ruby
+[:big_integer, :binary, :boolean, :date, :datetime, :decimal, :float, :immutable_string, :integer, :string, :text, :time, :symbol]
+```
+
+The `cast` or `cast_value` methods on the `ActiveModel::Type` class are used, `serialize` and `deserialize` are for database interaactions and may be ignored in this context. Read more about ActiveModel::Type here: https://github.com/rails/rails/tree/5-0-stable/activemodel/lib/active_model/type
+
+### Coercion using dry-types
+
+Dry-types is by far the most fully featured and granular type coercion system available for use with Hashie. To use, you must add the dry-types gem to your application's Gemfile.
+
+```ruby
+gem 'dry-types'
+```
+
+Then include the `dry_types` Coercion module into your Hashie class:
+
+```ruby
+class Tweet < Hash
+  include Hashie::Extensions::Coercion.dry_types
+  coerce_key :count, Types::Coercible::Int
+end
+```
+
+Dry-types has far too many types and type constraints available to list here. Please read the documentation to learn what is available: http://dry-rb.org/gems/dry-types/built-in-types/.
+
+### Coercion
+
 Coercions allow you to set up "coercion rules" based either on the key or the value type to massage data as it's being inserted into the Hash. Key coercions might be used, for example, in lightweight data modeling applications such as an API client:
 
 ```ruby
