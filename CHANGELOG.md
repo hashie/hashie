@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Your contribution here.
+* [#379](https://github.com/intridea/hashie/pull/379): Coercion type systems - [@mkcode](https://github.com/mkcode).
 
 ### Changed
 
