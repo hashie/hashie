@@ -17,6 +17,16 @@ module Hashie
             lambda do |value|
               return type.call(value)
             end
+          elsif type.respond_to? :coerce
+            lambda do |value|
+              return value if value.is_a? type
+              type.coerce(value)
+            end
+          elsif type.respond_to? :new
+            lambda do |value|
+              return value if value.is_a? type
+              type.new(value)
+            end
           else
             fail TypeError, "#{type} is not a coercable type"
           end
