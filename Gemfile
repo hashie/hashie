@@ -18,7 +18,12 @@ group :test do
   else
     gem 'activesupport', '~> 4.x', require: false
   end
-  gem 'dry-types', require: false
+  if RUBY_VERSION >= '2.1.0'
+    gem 'dry-types', require: false
+  else
+    gem 'dry-monads', '0.1.1', require: false
+    gem 'dry-types', '0.8.1', require: false
+  end
   gem 'codeclimate-test-reporter', require: false
   gem 'rspec-core', '~> 3.1.7'
   gem 'danger-changelog', '~> 0.1.0', require: false
