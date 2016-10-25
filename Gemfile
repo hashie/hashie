@@ -14,6 +14,7 @@ group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
   gem 'activesupport', '~> 5.x', require: false
   gem 'activemodel', '~> 5.x', require: false
+  gem 'dry-types', require: false
   gem 'codeclimate-test-reporter', require: false
   gem 'rspec-core', '~> 3.1.7'
   gem 'danger-changelog', '~> 0.1.0', require: false
