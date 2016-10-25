@@ -36,6 +36,16 @@ module Hashie
             end
           elsif ACTIVE_MODEL_TYPES.include? type
             build_active_model_type_coercion(type)
+          elsif type.respond_to? :coerce
+            lambda do |value|
+              return value if value.is_a? type
+              type.coerce(value)
+            end
+          elsif type.respond_to? :new
+            lambda do |value|
+              return value if value.is_a? type
+              type.new(value)
+            end
           else
             fail TypeError, "#{type} is not a coercable type"
           end
