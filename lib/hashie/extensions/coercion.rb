@@ -40,7 +40,7 @@ module Hashie
             base_class.extend HashieTypes
           end
           define_include_type_method base, :active_model do |base_class|
-            puts 'ACTIVE_MODEL'
+            base_class.extend ActiveModel
           end
         end
       end
