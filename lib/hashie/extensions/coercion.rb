@@ -188,7 +188,7 @@ module Hashie
         end
 
         def build_coercion
-          raise 'This method must be replaced'
+          fail 'This method must be replaced'
         end
 
         def inherited(klass)

@@ -6,17 +6,23 @@ module Hashie
       module ActiveModel
         # Symbol is the one glaring type omission. Define it quick.
         class Symbol < ::ActiveModel::Type::String
-          def type; :symbol; end
+          def type
+            :symbol
+          end
+
           private
-          def cast_value(value); super.to_sym; end
+
+          def cast_value(value)
+            super.to_sym
+          end
         end
         ::ActiveModel::Type.register(:symbol, Symbol)
 
         # Array of symbols of the included ActiveModel types.
         ACTIVE_MODEL_TYPES = ::ActiveModel::Type.registry
-                                                .send(:registrations)
-                                                .map { |r| r.send(:name) }
-                                                .freeze
+                             .send(:registrations)
+                             .map { |r| r.send(:name) }
+                             .freeze
 
         def build_coercion(type)
           if type.is_a? Enumerable
