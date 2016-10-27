@@ -51,10 +51,9 @@ module Hashie
           define_include_type_method base, :dry_types do |base_class|
             base_class.extend DryTypes
           end
-          if RUBY_VERSION >= '2.2.2'
-            define_include_type_method base, :active_model do |base_class|
-              base_class.extend ActiveModel
-            end
+          return unless RUBY_VERSION >= '2.2.2'
+          define_include_type_method base, :active_model do |base_class|
+            base_class.extend ActiveModel
           end
         end
       end
