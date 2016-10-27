@@ -35,18 +35,26 @@ module Hashie
           end
         end
 
-        # New Coercion systems must override the base_class here.
+        # New Coercion systems must override the base_class here. This defines
+        # methods on module extending this class, which return a module with a
+        # included method that includes the required Coercion methods along with
+        # the coercion system specific overrides. It also defines the default
+        # `included` method which has the same method body as the `hashie_types`
+        # method so that backwards compatibility is preserved.
         def extended(base)
           define_default_included base do |base_class|
             base_class.extend HashieTypes
+          end
+          define_include_type_method base, :hashie_types do |base_class|
+            base_class.extend HashieTypes
+          end
+          define_include_type_method base, :dry_types do |base_class|
+            base_class.extend DryTypes
           end
           if RUBY_VERSION >= '2.2.2'
             define_include_type_method base, :active_model do |base_class|
               base_class.extend ActiveModel
             end
-          end
-          define_include_type_method base, :dry_types do |base_class|
-            base_class.extend DryTypes
           end
         end
       end
