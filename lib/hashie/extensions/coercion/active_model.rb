@@ -4,19 +4,26 @@ module Hashie
   module Extensions
     module Coercion
       module ActiveModel
-        # Symbol is the one glaring type omission. Define it quick.
-        class Symbol < ::ActiveModel::Type::String
-          def type
-            :symbol
-          end
+        # Symbol is the one glaring type omission. Define it if it is not
+        # already defined.
+        begin
+          ::ActiveModel::Type.lookup(:symbol)
+        rescue ArgumentError
+          class Symbol < ::ActiveModel::Type::String
+            def type
+              :symbol
+            end
 
-          private
+            private
 
-          def cast_value(value)
-            super.to_sym
+            # The symbol type leverages in coercion logic in the String
+            # superclass and simply uses `to_sym` to covert to a symbol.
+            def cast_value(value)
+              super.to_sym
+            end
           end
+          ::ActiveModel::Type.register(:symbol, Symbol)
         end
-        ::ActiveModel::Type.register(:symbol, Symbol)
 
         # Array of symbols of the included ActiveModel types.
         ACTIVE_MODEL_TYPES = ::ActiveModel::Type.registry
