@@ -30,7 +30,7 @@ Any of the extensions listed below can be mixed into a class by `include`-ing `H
 
 ### Coercion
 
-Three systems are available for coercion: ActiveModel types, dry-types, and hashie's builtin types. The use of a specified coercion system is determined by exactly which Coercion module yo include in your Hashie class. Including the default `Hashie::Extensions::Coercion` module will use Hashie's builtin type system.
+Three systems are available for coercion: ActiveModel types, dry-types, and hashie's builtin types. The use of a specified coercion system is determined by exactly which Coercion module you include in your Hashie class. Including the default `Hashie::Extensions::Coercion` module will use Hashie's builtin type system.
 
 ### Coercion using ActiveModel types
 
@@ -729,6 +729,17 @@ class UserHash < Hashie::Dash
 
   property :id
   property :posts, coerce: Array[PostHash]
+end
+```
+
+You may also specify any of Hashie's coercion systems in your `Dash`:
+
+```ruby
+class UserHash < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion.dry_types
+
+  property :id
+  property :posts, coerce: Types::Coercible::Hash.symbolized
 end
 ```
 
