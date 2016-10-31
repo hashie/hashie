@@ -31,6 +31,12 @@ module Hashie
     autoload :RubyVersion,       'hashie/extensions/ruby_version'
     autoload :RubyVersionCheck,  'hashie/extensions/ruby_version_check'
 
+    module Coercion
+      autoload :HashieTypes, 'hashie/extensions/coercion/hashie_types'
+      autoload :ActiveModel, 'hashie/extensions/coercion/active_model'
+      autoload :DryTypes,    'hashie/extensions/coercion/dry_types'
+    end
+
     module Parsers
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
     end

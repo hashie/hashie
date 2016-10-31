@@ -2,12 +2,14 @@ module Hashie
   module Extensions
     module Dash
       module Coercion
-        # Extends a Dash with the ability to define coercion for properties.
-
-        def self.included(base)
-          base.send :include, Hashie::Extensions::Coercion
+        includer = ::Hashie::Extensions::Coercion::CoercionSystemIncludeBuilder
+                   .new do |base|
+          # Extends a Dash with the ability to define coercion for properties.
+          common = Hashie::Extensions::Coercion::Includer.common_included_block
+          instance_exec(base, &common)
           base.extend ClassMethods
         end
+        extend includer
 
         module ClassMethods
           # Defines a property on the Dash. Options are the standard

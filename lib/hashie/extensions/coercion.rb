@@ -3,27 +3,70 @@ module Hashie
 
   module Extensions
     module Coercion
-      CORE_TYPES = {
-        Integer    => :to_i,
-        Float      => :to_f,
-        Complex    => :to_c,
-        Rational   => :to_r,
-        String     => :to_s,
-        Symbol     => :to_sym
-      }
-
       ABSTRACT_CORE_TYPES = {
         Integer => [Fixnum, Bignum],
         Numeric => [Fixnum, Bignum, Float, Complex, Rational]
       }
 
-      def self.included(base)
-        base.send :include, InstanceMethods
-        base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
+      class CoercionSystemIncludeBuilder < Module
+        attr_reader :common_included_block
 
-        base.send :alias_method, :set_value_without_coercion, :[]= unless base.method_defined?(:set_value_without_coercion)
+        def initialize(&common_included_block)
+          @common_included_block = common_included_block
+        end
+
+        def define_include_type_method(base_module, name, &type_system_block)
+          common_included_block = @common_included_block
+          base_module.define_singleton_method name do
+            Module.new.tap do |mod|
+              mod.define_singleton_method :included do |base|
+                instance_exec(base, &common_included_block)
+                instance_exec(base, &type_system_block)
+              end
+            end
+          end
+        end
+
+        def define_default_included(base_module, &default_system_block)
+          common_included_block = @common_included_block
+          base_module.define_singleton_method :included do |base|
+            instance_exec(base, &common_included_block)
+            instance_exec(base, &default_system_block)
+          end
+        end
+
+        # New Coercion systems must override the base_class here. This defines
+        # methods on module extending this class, which return a module with a
+        # included method that includes the required Coercion methods along with
+        # the coercion system specific overrides. It also defines the default
+        # `included` method which has the same method body as the `hashie_types`
+        # method so that backwards compatibility is preserved.
+        def extended(base)
+          define_default_included base do |base_class|
+            base_class.extend HashieTypes
+          end
+          define_include_type_method base, :hashie_types do |base_class|
+            base_class.extend HashieTypes
+          end
+          define_include_type_method base, :dry_types do |base_class|
+            base_class.extend DryTypes
+          end
+          return unless RUBY_VERSION >= '2.2.2'
+          define_include_type_method base, :active_model do |base_class|
+            base_class.extend ActiveModel
+          end
+        end
+      end
+
+      Includer = CoercionSystemIncludeBuilder.new do |base|
+        base.send :include, InstanceMethods
+        base.send :extend, ClassMethods
+        unless base.method_defined?(:set_value_without_coercion)
+          base.send :alias_method, :set_value_without_coercion, :[]=
+        end
         base.send :alias_method, :[]=, :set_value_with_coercion
       end
+      extend Includer
 
       module InstanceMethods
         def set_value_with_coercion(key, value)
@@ -153,59 +196,12 @@ module Hashie
           end
         end
 
-        def build_coercion(type)
-          if type.is_a? Enumerable
-            if type.class <= ::Hash
-              type, key_type, value_type = type.class, *type.first
-              build_hash_coercion(type, key_type, value_type)
-            else # Enumerable but not Hash: Array, Set
-              value_type = type.first
-              type = type.class
-              build_container_coercion(type, value_type)
-            end
-          elsif CORE_TYPES.key? type
-            build_core_type_coercion(type)
-          elsif type.respond_to? :coerce
-            lambda do |value|
-              return value if value.is_a? type
-              type.coerce(value)
-            end
-          elsif type.respond_to? :new
-            lambda do |value|
-              return value if value.is_a? type
-              type.new(value)
-            end
-          else
-            fail TypeError, "#{type} is not a coercable type"
-          end
-        end
-
-        def build_hash_coercion(type, key_type, value_type)
-          key_coerce = fetch_coercion(key_type)
-          value_coerce = fetch_coercion(value_type)
-          lambda do |value|
-            type[value.map { |k, v| [key_coerce.call(k), value_coerce.call(v)] }]
-          end
-        end
-
-        def build_container_coercion(type, value_type)
-          value_coerce = fetch_coercion(value_type)
-          lambda do |value|
-            type.new(value.map { |v| value_coerce.call(v) })
-          end
-        end
-
-        def build_core_type_coercion(type)
-          name = CORE_TYPES[type]
-          lambda do |value|
-            return value if value.is_a? type
-            return value.send(name)
-          end
+        def build_coercion
+          fail 'This method must be replaced'
         end
 
         def inherited(klass)
           super
-
           klass.key_coercions = key_coercions.dup
         end
       end
