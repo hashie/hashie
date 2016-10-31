@@ -32,6 +32,7 @@ scheme are considered to be bugs.
 * [#376](https://github.com/intridea/hashie/pull/376): Leave string index unchanged if it can't be converted to integer for Array#dig - [@sazor](https://github.com/sazor).
 * [#377](https://github.com/intridea/hashie/pull/377): Dont use Rubygems to check ruby version - [@sazor](https://github.com/sazor).
 * [#378](https://github.com/intridea/hashie/pull/378): Deep find all searches inside all nested hashes - [@sazor](https://github.com/sazor).
+* [#380](https://github.com/intridea/hashie/pull/380): Evaluate procs default values of Dash in object initialization - [@sazor](https://github.com/sazor).
 
 ### Security
 

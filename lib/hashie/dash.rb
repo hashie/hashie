@@ -97,7 +97,11 @@ module Hashie
       self.class.defaults.each_pair do |prop, value|
         self[prop] = begin
           val = value.dup
-          val.is_a?(Proc) && val.arity > 0 ? val.call(self) : val
+          if val.is_a?(Proc)
+            val.arity == 1 ? val.call(self) : val.call
+          else
+            val
+          end
         rescue TypeError
           value
         end
