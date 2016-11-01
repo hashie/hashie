@@ -28,6 +28,15 @@ The library is broken up into a number of atomically includable Hash extension m
 
 Any of the extensions listed below can be mixed into a class by `include`-ing `Hashie::Extensions::ExtensionName`.
 
+## Logging
+
+Hashie has a built-in logger that you can override. By default, it logs to `STDOUT` but can be replaced by any `Logger` class. The logger is accessible on the Hashie module, as shown below:
+
+```ruby
+# Set the logger to the Rails logger
+Hashie.logger = Rails.logger
+```
+
 ### Coercion
 
 Coercions allow you to set up "coercion rules" based either on the key or the value type to massage data as it's being inserted into the Hash. Key coercions might be used, for example, in lightweight data modeling applications such as an API client:
