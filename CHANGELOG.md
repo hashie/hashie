@@ -12,6 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
+* [#381](https://github.com/intridea/hashie/pull/381): Add a logging layer that lets us report potential issues to our users. As the first logged issue, report when a `Hashie::Mash` is attempting to overwrite a built-in method, since that is one of our number one questions - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Changed

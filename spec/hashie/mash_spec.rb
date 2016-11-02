@@ -134,6 +134,14 @@ describe Hashie::Mash do
     expect(subject.type).to eq 'Steve'
   end
 
+  shared_context 'with a logger' do
+    it 'logs a warning when overriding built-in methods' do
+      Hashie::Mash.new('trust' => { 'two' => 2 })
+
+      expect(logger_output).to match('Hashie::Mash#trust')
+    end
+  end
+
   context 'updating' do
     subject do
       described_class.new(
