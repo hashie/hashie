@@ -206,6 +206,10 @@ Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 
 The MergeInitializer extension simply makes it possible to initialize a Hash subclass with another Hash, giving you a quick short-hand.
 
+### DeepMergeInitializer
+
+The DeepMergeInitializer acts the same as MergeInitializer but also cast all nested hashes to extendable class.
+
 ### MethodAccess
 
 The MethodAccess extension allows you to quickly build method-based reading, writing, and querying into your Hash descendant. It can also be included as individual modules, i.e. `Hashie::Extensions::MethodReader`, `Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`.
