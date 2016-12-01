@@ -17,6 +17,7 @@ scheme are considered to be bugs.
 
 ### Changed
 
+* [#384](https://github.com/intridea/hashie/pull/384): Updated to CodeClimate 1.x - [@boffbowsh](https://github.com/boffbowsh).
 * Your contribution here.
 
 ### Deprecated
