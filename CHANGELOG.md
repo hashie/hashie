@@ -42,6 +42,7 @@ scheme are considered to be bugs.
 
 ### Miscellanous
 
+* [#387](https://github.com/intridea/hashie/pull/387): Fix builds failing due to Rake 11 having a breaking change - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## [3.4.6] - 2016-09-16
