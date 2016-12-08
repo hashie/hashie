@@ -26,7 +26,7 @@ module Hashie
                       if hash.key?(k) && block_given?
                         block.call(k, hash[k], v)
                       else
-                        v
+                        v.respond_to?(:deep_dup) ? v.deep_dup : v
                       end
                     end
         end
