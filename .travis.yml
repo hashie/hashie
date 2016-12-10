@@ -16,7 +16,7 @@ rvm:
 matrix:
   include:
     - rvm: 2.3.1
-      script:
+      before_script:
         - bundle exec danger
   allow_failures:
     - rvm: ruby-head
