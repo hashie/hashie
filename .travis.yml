@@ -16,7 +16,7 @@ rvm:
 matrix:
   include:
     - rvm: 2.3.1
-      script:
+      before_script:
         - bundle exec danger
         - bundle exec codeclimate-test-reporter
   allow_failures:
