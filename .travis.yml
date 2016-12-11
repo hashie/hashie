@@ -18,6 +18,7 @@ matrix:
     - rvm: 2.3.1
       before_script:
         - bundle exec danger
+      after_script:
         - bundle exec codeclimate-test-reporter
   allow_failures:
     - rvm: ruby-head
