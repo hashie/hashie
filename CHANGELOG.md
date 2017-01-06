@@ -9,6 +9,7 @@ scheme are considered to be bugs.
 ## [Unreleased][unreleased]
 
 * [#386](https://github.com/intridea/hashie/pull/386): Fix for #385: Make `deep_merge` always `deep_dup` nested hashes before merging them in so that there are no shared references between the two hashes being merged. - [@mltsy](https://github.com/mltsy).
+* [#389](https://github.com/intridea/hashie/pull/389): Support Ruby 2.4.0 - [@camelmasa](https://github.com/camelmasa).
 
 [3.4.7]: https://github.com/intridea/hashie/compare/v3.4.6...master
 
