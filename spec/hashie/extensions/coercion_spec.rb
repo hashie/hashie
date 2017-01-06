@@ -558,8 +558,14 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'raises a CoercionError when coercion is not possible' do
-        subject.coerce_value Fixnum, Symbol
-        expect { instance[:hi] = 1 }.to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from Fixnum to Symbol/)
+        type = if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
+                 Integer
+               else
+                 Fixnum
+               end
+
+        subject.coerce_value type, Symbol
+        expect { instance[:hi] = 1 }.to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from #{type} to Symbol/)
       end
 
       it 'coerces Integer to String' do
