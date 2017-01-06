@@ -12,7 +12,8 @@ end
 
 group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
-  if Gem::Version.create(RUBY_VERSION) >= Gem::Version.create('2.4.0')
+  require File.expand_path('../lib/hashie/extensions/ruby_version', __FILE__)
+  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
     gem 'activesupport', '~> 5.x', require: false
   else
     gem 'activesupport', '~> 4.x', require: false
