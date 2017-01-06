@@ -44,6 +44,7 @@ Coercions allow you to set up "coercion rules" based either on the key or the va
 ```ruby
 class Tweet < Hash
   include Hashie::Extensions::Coercion
+  include Hashie::Extensions::MergeInitializer
   coerce_key :user, User
 end
 
