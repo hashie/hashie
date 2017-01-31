@@ -1,5 +1,7 @@
 require 'hashie/hash'
 require 'hashie/array'
+require 'hashie/utils'
+require 'hashie/logger'
 
 module Hashie
   # Mash allows you to create pseudo-objects that have method-like

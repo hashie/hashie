@@ -26,6 +26,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#392](https://github.com/intridea/hashie/pull/392): Fix for #391: Require all dependencies of Hashie::Mash - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Security
