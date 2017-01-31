@@ -1,3 +1,5 @@
+require 'hashie/extensions/ruby_version'
+
 module Hashie
   module Extensions
     module RubyVersionCheck
