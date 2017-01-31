@@ -1,3 +1,3 @@
 module Hashie
-  VERSION = '3.4.7'
+  VERSION = '3.5.0'
 end
