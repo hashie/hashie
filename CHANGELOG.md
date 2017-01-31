@@ -6,38 +6,13 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased](https://github.com/intridea/hashie/compare/v3.5.0...master)
-
-### Added
-
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
-
-### Fixed
+## [3.5.1] - 2017-01-31
 
 * [#392](https://github.com/intridea/hashie/pull/392): Fix for #391: Require all dependencies of Hashie::Mash - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
-### Security
+[3.5.1]: https://github.com/intridea/hashie/compare/v3.5.0...v3.5.1
 
-* Your contribution here.
-
-### Miscellanous
-
-* Your contribution here.
-
-## [3.5.0] - 2017-01-31
+## [3.5.0] - 2017-01-31 (YANKED)
 
 * [#386](https://github.com/intridea/hashie/pull/386): Fix for #385: Make `deep_merge` always `deep_dup` nested hashes before merging them in so that there are no shared references between the two hashes being merged. - [@mltsy](https://github.com/mltsy).
 * [#389](https://github.com/intridea/hashie/pull/389): Support Ruby 2.4.0 - [@camelmasa](https://github.com/camelmasa).
