@@ -9,6 +9,7 @@ require 'rspec'
 require 'hashie'
 require 'rspec/pending_for'
 require './spec/support/ruby_version_check'
+require './spec/support/logger'
 
 require 'active_support'
 require 'active_support/core_ext'

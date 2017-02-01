@@ -63,6 +63,29 @@ module Hashie
 
     ALLOWED_SUFFIXES = %w(? ! = _)
 
+    class CannotDisableMashWarnings < StandardError
+      def initialize(message = 'You cannot disable warnings on the base Mash class. Please subclass the Mash and disable it in the subclass.')
+        super(message)
+      end
+    end
+
+    # Disable the logging of warnings based on keys conflicting keys/methods
+    #
+    # @api semipublic
+    # @return [void]
+    def self.disable_warnings
+      fail CannotDisableMashWarnings if self == Hashie::Mash
+      @disable_warnings = true
+    end
+
+    # Checks whether this class disables warnings for conflicting keys/methods
+    #
+    # @api semipublic
+    # @return [Boolean]
+    def self.disable_warnings?
+      !!@disable_warnings
+    end
+
     def self.load(path, options = {})
       @_mashes ||= new
 
@@ -303,6 +326,8 @@ module Hashie
     private
 
     def log_built_in_message(method_key)
+      return if self.class.disable_warnings?
+
       method_information = Hashie::Utils.method_information(method(method_key))
 
       Hashie.logger.warn(

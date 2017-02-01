@@ -531,6 +531,20 @@ mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 mash[1] #=> { name: 'John', lastname: 'Doe' }
 ```
 
+Since Mash gives you the ability to set arbitrary keys that then act as methods, Hashie logs when there is a conflict between a key and a pre-existing method. You can set the logger that this logs message to via the global Hashie logger:
+
+```ruby
+Hashie.logger = Rails.logger
+```
+
+You can also disable the logging in subclasses of Mash:
+
+```ruby
+class Response < Hashie::Mash
+  disable_warnings
+end
+```
+
 ### Mash Extension: SafeAssignment
 
 This extension can be mixed into a Mash to guard the attempted overwriting of methods by property setters. When mixed in, the Mash will raise an `ArgumentError` if you attempt to write a property with the same name as an existing method.
