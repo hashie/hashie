@@ -36,7 +36,7 @@ scheme are considered to be bugs.
 
 ### Miscellanous
 
-* Your contribution here.
+* [#397](https://github.com/intridea/hashie/pull/397): Add the integration specs harness into the main test tasks - [@michaelherold](https://github.com/michaelherold).
 
 ## [3.5.1] - 2017-01-31
 

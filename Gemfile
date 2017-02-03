@@ -8,6 +8,7 @@ group :development do
   gem 'rubocop', '0.34.2'
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1', require: false
+  gem 'guard-yield', '~> 0.1.0', require: false
 end
 
 group :test do
