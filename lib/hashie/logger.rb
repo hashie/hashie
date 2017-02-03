@@ -1,3 +1,5 @@
+require 'logger'
+
 module Hashie
   # The logger that Hashie uses for reporting errors.
   #
