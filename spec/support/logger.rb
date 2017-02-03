@@ -1,7 +1,9 @@
 # A shared context that allows you to check the output of Hashie's logger.
 #
 # @example
-#   shared_context 'with a logger' do
+#   include_context 'with a logger'
+#
+#   it 'logs info message' do
 #     Hashie.logger.info 'What is happening in here?!'
 #
 #     expect(logger_output).to match('What is happening in here?!')

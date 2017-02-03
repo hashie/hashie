@@ -1,8 +1,11 @@
 require 'spec_helper'
 require 'delegate'
+require 'support/logger'
 
 describe Hashie::Mash do
   subject { Hashie::Mash.new }
+
+  include_context 'with a logger'
 
   it 'inherits from Hash' do
     expect(subject.is_a?(Hash)).to be_truthy
@@ -134,12 +137,10 @@ describe Hashie::Mash do
     expect(subject.type).to eq 'Steve'
   end
 
-  shared_context 'with a logger' do
-    it 'logs a warning when overriding built-in methods' do
-      Hashie::Mash.new('trust' => { 'two' => 2 })
+  it 'logs a warning when overriding built-in methods' do
+    Hashie::Mash.new('trust' => { 'two' => 2 })
 
-      expect(logger_output).to match('Hashie::Mash#trust')
-    end
+    expect(logger_output).to match('Hashie::Mash#trust')
   end
 
   context 'updating' do
