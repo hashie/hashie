@@ -1,2 +1,3 @@
 --colour
 --format=documentation
+--exclude-pattern='spec/integration/**/*_spec.rb'
