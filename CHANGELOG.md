@@ -28,6 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#396](https://github.com/intridea/hashie/pull/396): Fix for specs in #381: Incorrect use of shared context meant example was not being run - [@biinari](https://github.com/biinari).
 * Your contribution here.
 
 ### Security
