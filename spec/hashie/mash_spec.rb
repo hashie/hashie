@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'delegate'
-require 'support/logger'
 
 describe Hashie::Mash do
   subject { Hashie::Mash.new }
@@ -137,10 +135,26 @@ describe Hashie::Mash do
     expect(subject.type).to eq 'Steve'
   end
 
-  it 'logs a warning when overriding built-in methods' do
-    Hashie::Mash.new('trust' => { 'two' => 2 })
+  include_context 'with a logger' do
+    it 'logs a warning when overriding built-in methods' do
+      Hashie::Mash.new('trust' => { 'two' => 2 })
 
-    expect(logger_output).to match('Hashie::Mash#trust')
+      expect(logger_output).to match('Hashie::Mash#trust')
+    end
+
+    it 'does not write to the logger when warnings are disabled' do
+      mash_class = Class.new(Hashie::Mash) do
+        disable_warnings
+      end
+
+      mash_class.new('trust' => { 'two' => 2 })
+
+      expect(logger_output).to be_blank
+    end
+
+    it 'cannot disable logging on the base Mash' do
+      expect { Hashie::Mash.disable_warnings }.to raise_error(Hashie::Mash::CannotDisableMashWarnings)
+    end
   end
 
   context 'updating' do

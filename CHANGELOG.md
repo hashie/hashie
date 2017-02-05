@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Your contribution here.
+* [#395](https://github.com/intridea/hashie/pull/395): Add the ability to disable warnings in Mash subclasses - [@michaelherold](https://github.com/michaelherold).
 
 ### Changed
 
