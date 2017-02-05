@@ -13,4 +13,20 @@ end
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 
-task default: [:rubocop, :spec]
+require_relative 'spec/support/integration_specs'
+task :integration_specs do
+  next if ENV['CI']
+  status_codes = []
+  handler = lambda do |status_code|
+    status_codes << status_code unless status_code.zero?
+  end
+
+  run_all_integration_specs(handler: handler, logger: ->(msg) { puts msg })
+
+  if status_codes.any?
+    $stderr.puts "#{status_codes.size} integration test(s) failed"
+    exit status_codes.last
+  end
+end
+
+task default: [:rubocop, :spec, :integration_specs]
