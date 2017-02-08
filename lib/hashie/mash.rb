@@ -134,9 +134,10 @@ module Hashie
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
-      key_as_symbol = key.to_sym
+      key_as_symbol = (key = convert_key(key)).to_sym
+
       log_built_in_message(key_as_symbol) if methods.include?(key_as_symbol)
-      regular_writer(convert_key(key), convert ? convert_value(value) : value)
+      regular_writer(key, convert ? convert_value(value) : value)
     end
 
     alias_method :[], :custom_reader

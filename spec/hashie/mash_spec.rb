@@ -632,6 +632,20 @@ describe Hashie::Mash do
       end
     end
 
+    context 'if the file is passed as Pathname' do
+      require 'pathname'
+      let(:path) { Pathname.new('database.yml') }
+
+      before do
+        expect(File).to receive(:file?).with(path).and_return(true)
+        expect(parser).to receive(:perform).with(path).and_return(config)
+      end
+
+      it 'return a Mash from a file' do
+        expect(subject.production.foo).to eq config['production']['foo']
+      end
+    end
+
     describe 'results are cached' do
       let(:parser) { double(:parser) }
 
