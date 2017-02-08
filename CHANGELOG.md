@@ -29,6 +29,7 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#396](https://github.com/intridea/hashie/pull/396): Fix for specs in #381: Incorrect use of shared context meant example was not being run - [@biinari](https://github.com/biinari).
+* [#399](https://github.com/intridea/hashie/pull/399): Fix passing Pathname object to Hashie::Mesh.load() - [@albb0920](https://github.com/albb0920).
 * Your contribution here.
 
 ### Security
