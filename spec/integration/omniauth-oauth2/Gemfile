@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'hashie', path: '../../..'
+gem 'omniauth-oauth2', '~> 1.4.0'
 gem 'rails', '~> 5.0.1'
 gem 'rspec', '~> 3.5.0'
+gem 'rack-test', '~> 0.6.3'
