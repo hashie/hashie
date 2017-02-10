@@ -4,6 +4,8 @@ coverage
 rdoc
 pkg
 *.gem
+*.log
 .bundle
 .rvmrc
 Gemfile.lock
+log/
