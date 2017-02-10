@@ -6,36 +6,19 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.2] - 2017-02-10
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.1...master
+[3.5.2]: https://github.com/intridea/hashie/compare/v3.5.1...v3.5.2
 
 ### Added
 
 * [#395](https://github.com/intridea/hashie/pull/395): Add the ability to disable warnings in Mash subclasses - [@michaelherold](https://github.com/michaelherold).
 * [#400](https://github.com/intridea/hashie/pull/400): Fix Hashie.logger load and set the Hashie logger to the Rails logger in a Rails environment - [@michaelherold](https://github.com/michaelherold).
 
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
-
 ### Fixed
 
 * [#396](https://github.com/intridea/hashie/pull/396): Fix for specs in #381: Incorrect use of shared context meant example was not being run - [@biinari](https://github.com/biinari).
 * [#399](https://github.com/intridea/hashie/pull/399): Fix passing Pathname object to Hashie::Mesh.load() - [@albb0920](https://github.com/albb0920).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ### Miscellanous
 
@@ -47,7 +30,7 @@ scheme are considered to be bugs.
 
 [3.5.1]: https://github.com/intridea/hashie/compare/v3.5.0...v3.5.1
 
-## [3.5.0] - 2017-01-31 (YANKED)
+## [3.5.0] - 2017-01-31
 
 * [#386](https://github.com/intridea/hashie/pull/386): Fix for #385: Make `deep_merge` always `deep_dup` nested hashes before merging them in so that there are no shared references between the two hashes being merged. - [@mltsy](https://github.com/mltsy).
 * [#389](https://github.com/intridea/hashie/pull/389): Support Ruby 2.4.0 - [@camelmasa](https://github.com/camelmasa).
