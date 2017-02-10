@@ -28,6 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#402](https://github.com/intridea/hashie/pull/402): Use a Railtie to set Hashie.logger on rails boot - [@matthewrudy](https://github.com/matthewrudy).
 * Your contribution here.
 
 ### Security

@@ -62,9 +62,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :some_site
 end
 
-RailsApp::Application.initialize!
-
+# the order is important
+# hashie must be loaded first to register the railtie
 require 'hashie'
+RailsApp::Application.initialize!
 
 RSpec.describe 'the Hashie logger' do
   it 'is set to the Rails logger' do

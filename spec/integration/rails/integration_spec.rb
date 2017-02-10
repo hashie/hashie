@@ -55,9 +55,11 @@ class ApplicationController < ActionController::Base
   end
 end
 
-RailsApp::Application.initialize!
-
+# the order is important
+# hashie must be loaded first to register the railtie
+# then we can initialize
 require 'hashie'
+RailsApp::Application.initialize!
 
 RSpec.describe 'the Hashie logger' do
   it 'is set to the Rails logger' do
