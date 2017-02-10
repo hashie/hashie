@@ -13,6 +13,7 @@ scheme are considered to be bugs.
 ### Added
 
 * [#395](https://github.com/intridea/hashie/pull/395): Add the ability to disable warnings in Mash subclasses - [@michaelherold](https://github.com/michaelherold).
+* [#400](https://github.com/intridea/hashie/pull/400): Fix Hashie.logger load and set the Hashie logger to the Rails logger in a Rails environment - [@michaelherold](https://github.com/michaelherold).
 
 ### Changed
 

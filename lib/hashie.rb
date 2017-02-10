@@ -1,8 +1,7 @@
-require 'logger'
+require 'hashie/logger'
 require 'hashie/version'
 
 module Hashie
-  autoload :Logger,             'hashie/logger'
   autoload :Clash,              'hashie/clash'
   autoload :Dash,               'hashie/dash'
   autoload :Hash,               'hashie/hash'
