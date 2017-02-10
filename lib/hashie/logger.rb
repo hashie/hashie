@@ -5,12 +5,7 @@ module Hashie
   #
   # @return [Logger]
   def self.logger
-    @logger ||=
-      if defined?(::Rails)
-        Rails.logger
-      else
-        Logger.new(STDOUT)
-      end
+    @logger ||= Logger.new(STDOUT)
   end
 
   # Sets the logger that Hashie uses for reporting errors.

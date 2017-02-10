@@ -1,9 +1,12 @@
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
 ENV['RACK_ENV'] = 'test'
 
 require 'rspec/core'
 require 'rails'
 require 'rails/all'
 require 'action_view/testing/resolvers'
+require 'some_site'
 
 module RailsApp
   class Application < ::Rails::Application
@@ -55,9 +58,12 @@ class ApplicationController < ActionController::Base
   end
 end
 
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :some_site
+end
+
 # the order is important
 # hashie must be loaded first to register the railtie
-# then we can initialize
 require 'hashie'
 RailsApp::Application.initialize!
 
