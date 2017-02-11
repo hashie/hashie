@@ -86,6 +86,15 @@ module Hashie
       !!@disable_warnings
     end
 
+    # Inheritance hook that sets class configuration when inherited.
+    #
+    # @api semipublic
+    # @return [void]
+    def self.inherited(subclass)
+      super
+      subclass.disable_warnings if disable_warnings?
+    end
+
     def self.load(path, options = {})
       @_mashes ||= new
 
