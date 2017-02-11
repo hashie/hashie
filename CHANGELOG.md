@@ -6,38 +6,14 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.3] - 2017-02-11
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.2...master
-
-### Added
-
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
+[3.5.3]: https://github.com/intridea/hashie/compare/v3.5.2...v3.5.3
 
 ### Fixed
 
 * [#402](https://github.com/intridea/hashie/pull/402): Use a Railtie to set Hashie.logger on rails boot - [@matthewrudy](https://github.com/matthewrudy).
 * [#406](https://github.com/intridea/hashie/pull/406): Ensure that subclasses that disable warnings propagate that setting to grandchild classes - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
-
-### Miscellanous
-
 * Your contribution here.
 
 ## [3.5.2] - 2017-02-10
