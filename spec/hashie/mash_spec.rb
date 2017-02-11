@@ -155,6 +155,17 @@ describe Hashie::Mash do
     it 'cannot disable logging on the base Mash' do
       expect { Hashie::Mash.disable_warnings }.to raise_error(Hashie::Mash::CannotDisableMashWarnings)
     end
+
+    it 'carries over the disable for warnings on grandchild classes' do
+      child_class = Class.new(Hashie::Mash) do
+        disable_warnings
+      end
+      grandchild_class = Class.new(child_class)
+
+      grandchild_class.new('trust' => { 'two' => 2 })
+
+      expect(logger_output).to be_blank
+    end
   end
 
   context 'updating' do
