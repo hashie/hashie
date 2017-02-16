@@ -8,6 +8,8 @@ scheme are considered to be bugs.
 
 ## [Unreleased][unreleased]
 
+* [#409](https://github.com/intridea/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not availble - [@CallumD](https://github.com/callumd).
+
 [unreleased]: https://github.com/intridea/hashie/compare/v3.5.3...master
 
 ### Added
