@@ -8,8 +8,6 @@ scheme are considered to be bugs.
 
 ## [Unreleased][unreleased]
 
-* [#409](https://github.com/intridea/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not availble - [@CallumD](https://github.com/callumd).
-
 [unreleased]: https://github.com/intridea/hashie/compare/v3.5.3...master
 
 ### Added
@@ -30,6 +28,8 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#409](https://github.com/intridea/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not availble - [@CallumD](https://github.com/callumd).
+* [#411](https://github.com/intridea/hashie/pull/411): Fixed a performance regression from 3.4.3 that caused a 10x slowdown in OmniAuth - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security
