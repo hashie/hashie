@@ -145,7 +145,7 @@ module Hashie
     def custom_writer(key, value, convert = true) #:nodoc:
       key_as_symbol = (key = convert_key(key)).to_sym
 
-      log_built_in_message(key_as_symbol) if methods.include?(key_as_symbol)
+      log_built_in_message(key_as_symbol) if respond_to?(key_as_symbol)
       regular_writer(key, convert ? convert_value(value) : value)
     end
 
