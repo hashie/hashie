@@ -561,6 +561,33 @@ safe_mash.zip   = 'Test' # => ArgumentError
 safe_mash[:zip] = 'test' # => still ArgumentError
 ```
 
+### Mash Extension:: SymbolizeKeys
+
+This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all keys to symbols.
+
+```ruby
+class SymbolizedMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::SymbolizeKeys
+end
+
+symbol_mash = SymbolizedMash.new
+symbol_mash['test'] = 'value'
+symbol_mash.test  #=> 'value'
+symbol_mash.to_h  #=> {test: 'value'}
+```
+
+There is a major benefit and coupled with a major trade-off to this decision (at least on older Rubies). As a benefit, by using symbols as keys, you will be able to use the implicit conversion of a Mash via the `#to_hash` method to destructure (or splat) the contents of a Mash out to a block. This can be handy for doing iterations through the Mash's keys and values, as follows:
+
+```ruby
+symbol_mash = SymbolizedMash.new(id: 123, name: 'Rey')
+symbol_mash.each do |key, value|
+  # key is :id, then :name
+  # value is 123, then 'Rey'
+end
+```
+
+However, on Rubies less than 2.0, this means that every key you send to the Mash will generate a symbol. Since symbols are not garbage-collected on older versions of Ruby, this can cause a slow memory leak when using a symbolized Mash with data generated from user input.
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.
