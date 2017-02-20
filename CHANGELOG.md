@@ -12,6 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
+* [#412](https://github.com/intridea/hashie/pull/412): Added a Hashie::Extensions::Mash::SymbolizeKeys extension that overrides the default stringification behavior for keys - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Changed

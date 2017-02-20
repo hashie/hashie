@@ -45,6 +45,7 @@ module Hashie
 
     module Mash
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
+      autoload :SymbolizeKeys, 'hashie/extensions/mash/symbolize_keys'
     end
 
     module Array
