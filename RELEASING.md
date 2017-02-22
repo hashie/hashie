@@ -108,7 +108,7 @@ Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template
 
 * Your contribution here.
 
-### Miscellanous
+### Miscellaneous
 
 * Your contribution here.
 ```
@@ -120,7 +120,7 @@ Increment the minor version, modify [lib/hashie/version.rb](lib/hashie/version.r
 Commit your changes.
 
 ```sh
-git add CHANGELOG.md README.md
+git add CHANGELOG.md README.md lib/hashie/version.rb
 git commit -m "Preparing for next development iteration, 3.3.1."
 git push origin master
 ```
