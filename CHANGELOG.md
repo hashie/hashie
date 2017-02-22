@@ -6,40 +6,18 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.4] - 2017-02-22
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.3...master
+[3.5.4]: https://github.com/intridea/hashie/compare/v3.5.3...v3.5.4
 
 ### Added
 
 * [#412](https://github.com/intridea/hashie/pull/412): Added a Hashie::Extensions::Mash::SymbolizeKeys extension that overrides the default stringification behavior for keys - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
 * [#409](https://github.com/intridea/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not availble - [@CallumD](https://github.com/callumd).
 * [#411](https://github.com/intridea/hashie/pull/411): Fixed a performance regression from 3.4.3 that caused a 10x slowdown in OmniAuth - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
-
-### Miscellanous
-
-* Your contribution here.
 
 ## [3.5.3] - 2017-02-11
 
