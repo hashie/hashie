@@ -9,7 +9,7 @@ RSpec.describe 'partial-rails' do
     end
 
     it 'does not raise an exception when we require hashie' do
-      expect { require 'hashie' }.not_to raise_exception(LoadError)
+      expect { require 'hashie' }.not_to raise_error
     end
   end
 end
