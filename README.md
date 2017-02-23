@@ -545,6 +545,25 @@ class Response < Hashie::Mash
 end
 ```
 
+### Mash Extension: KeepOriginalKeys
+
+This extension can be mixed into a Mash to keep the form of any keys passed directly into the Mash. By default, Mash converts keys to strings to give indifferent access. This extension still allows indifferent access, but keeps the form of the keys to eliminate confusion when you're not expecting the keys to change.
+
+```ruby
+class KeepingMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::KeepOriginalKeys
+end
+
+mash = KeepingMash.new(:symbol_key => :symbol, 'string_key' => 'string')
+mash.to_hash == { :symbol_key => :symbol, 'string_key' => 'string' }  #=> true
+mash.symbol_key  #=> :symbol
+mash[:symbol_key]  #=> :symbol
+mash['symbol_key']  #=> :symbol
+mash.string_key  #=> 'string'
+mash['string_key']  #=> 'string'
+mash[:string_key]  #=> 'string'
+```
+
 ### Mash Extension: SafeAssignment
 
 This extension can be mixed into a Mash to guard the attempted overwriting of methods by property setters. When mixed in, the Mash will raise an `ArgumentError` if you attempt to write a property with the same name as an existing method.

@@ -12,6 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
+* [#326](https://github.com/intridea/hashie/pull/326): Added `Hashie::Extensions::Mash::KeepOriginalKeys` to give Mashes the ability to keep the original structure given to it - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Changed
