@@ -1,7 +1,9 @@
 source 'http://rubygems.org'
 
+gem 'benchmark-ips'
 gem 'hashie', path: '../../..'
 gem 'omniauth', '~> 1.4.1'
 gem 'sinatra'
+gem 'rake'
 gem 'rspec', '~> 3.5.0'
 gem 'rack-test', '~> 0.6.3'
