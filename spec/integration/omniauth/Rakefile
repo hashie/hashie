@@ -1,0 +1,29 @@
+namespace :perf do
+  task :setup do
+    require 'omniauth'
+    require 'rack/test'
+    app = Rack::Builder.new do |b|
+      b.use Rack::Session::Cookie, secret: 'abc123'
+      b.use OmniAuth::Strategies::Developer
+      b.run ->(_env) { [200, {}, ['Not Found']] }
+    end.to_app
+    @app = Rack::MockRequest.new(app)
+
+    def call_app(path = ENV['GET_PATH'] || '/')
+      result = @app.get(path)
+      fail "Did not succeed #{result.body}" unless result.status == 200
+      result
+    end
+  end
+
+  task ips: :setup do
+    require 'benchmark/ips'
+    Benchmark.ips do |x|
+      x.hold!('../../../tmp/omniauth_benchmark.json')
+      x.report('before') { call_app }
+      x.report('after') { call_app }
+
+      x.compare!
+    end
+  end
+end

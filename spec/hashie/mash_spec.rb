@@ -142,6 +142,14 @@ describe Hashie::Mash do
       expect(logger_output).to match('Hashie::Mash#trust')
     end
 
+    it 'can set keys more than once and does not warn when doing so' do
+      mash = Hashie::Mash.new
+      mash[:test_key] = 'Test value'
+
+      expect { mash[:test_key] = 'A new value' }.not_to raise_error
+      expect(logger_output).to be_blank
+    end
+
     it 'does not write to the logger when warnings are disabled' do
       mash_class = Class.new(Hashie::Mash) do
         disable_warnings
