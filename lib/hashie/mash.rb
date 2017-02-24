@@ -145,7 +145,7 @@ module Hashie
     def custom_writer(key, value, convert = true) #:nodoc:
       key_as_symbol = (key = convert_key(key)).to_sym
 
-      log_built_in_message(key_as_symbol) if respond_to?(key_as_symbol)
+      log_built_in_message(key_as_symbol) if log_collision?(key_as_symbol)
       regular_writer(key, convert ? convert_value(value) : value)
     end
 
@@ -347,6 +347,11 @@ module Hashie
         'This can cause unexpected behavior when accessing the key via as a ' \
         'property. You can still access the key via the #[] method.'
       )
+    end
+
+    def log_collision?(method_key)
+      respond_to?(method_key) && !self.class.disable_warnings? &&
+        !(regular_key?(method_key) || regular_key?(method_key.to_s))
     end
   end
 end

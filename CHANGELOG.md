@@ -29,6 +29,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#415](https://github.com/intridea/hashie/pull/415): Fixed Mash logging keys multiple times which lead to a bad user experience or, in some cases, errors - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security
