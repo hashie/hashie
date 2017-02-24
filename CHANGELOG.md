@@ -6,39 +6,17 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.5] - 2017-02-24
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.4...master
+[3.5.5]: https://github.com/intridea/hashie/compare/v3.5.4...v3.5.5
 
 ### Added
 
 * [#326](https://github.com/intridea/hashie/pull/326): Added `Hashie::Extensions::Mash::KeepOriginalKeys` to give Mashes the ability to keep the original structure given to it - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
 * [#415](https://github.com/intridea/hashie/pull/415): Fixed Mash logging keys multiple times which lead to a bad user experience or, in some cases, errors - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
-
-### Miscellaneous
-
-* Your contribution here.
 
 ## [3.5.4] - 2017-02-22
 
