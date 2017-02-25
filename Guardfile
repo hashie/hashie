@@ -5,6 +5,10 @@ run_all = lambda do |*|
   run_all_integration_specs(logger: ->(msg) { Compat::UI.info(msg) })
 end
 
+guard :inch do
+  watch(%r{lib/.+\.rb})
+end
+
 guard 'rspec', all_on_start: false, cmd: 'bundle exec rspec', run_all: { cmd: 'bundle exec rspec --exclude-pattern "spec/integration/**/*_spec.rb"' } do
   watch(%r{^spec(?!/integration)/.+_spec\.rb})
   watch(%r{^lib/(.+)\.rb}) { |m| "spec/#{m[1]}_spec.rb" }
