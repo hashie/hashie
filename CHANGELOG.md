@@ -36,7 +36,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
-* Your contribution here.
+* Fix "warning: instance variable @disable_warnings not initialized" - [@axfcampos](https://github.com/axfcampos)
 
 ## [3.5.5] - 2017-02-24
 
