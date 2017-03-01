@@ -83,7 +83,7 @@ module Hashie
     # @api semipublic
     # @return [Boolean]
     def self.disable_warnings?
-      !!@disable_warnings
+      @disable_warnings ||= false
     end
 
     # Inheritance hook that sets class configuration when inherited.
