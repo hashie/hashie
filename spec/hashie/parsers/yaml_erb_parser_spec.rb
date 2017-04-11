@@ -1,6 +1,21 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::Parsers::YamlErbParser do
+  describe '#perform' do
+    let(:tempfile) do
+      file = Tempfile.new(['foo', '.yml'])
+      file.write("---\nfoo: hello\n")
+      file.rewind
+      file
+    end
+
+    subject { described_class.new(Pathname tempfile.path) }
+
+    it '"#perform" can be done in case of path is a Pathname object.' do
+      expect(subject.perform).to eq 'foo' => 'hello'
+    end
+  end
+
   describe '.perform' do
     context 'a file' do
       let(:config) do
