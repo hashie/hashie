@@ -12,7 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
-* Your contribution here.
+* [#419](https://github.com/intridea/hashie/pull/419): Allow the dig method on StrictKeyAccess hashes - [@llimllib](https://github.com/llimllib).
 
 ### Changed
 

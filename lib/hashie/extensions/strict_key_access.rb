@@ -69,6 +69,20 @@ module Hashie
           result
         end
       end
+
+      def dig(*keys)
+        value = fetch(keys.shift, nil)
+
+        if value.nil?
+          nil
+        else
+          if keys.empty?
+            value
+          else
+            value.dig(*keys) if value.respond_to? 'dig'
+          end
+        end
+      end
     end
   end
 end

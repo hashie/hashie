@@ -23,6 +23,11 @@ describe Hashie::Extensions::StrictKeyAccess do
         expect(instance.key(valid_value)).to eq valid_key
       end
     end
+    context 'dig' do
+      it('returns value') do
+        expect(instance.dig(valid_key)).to eq valid_value
+      end
+    end
   end
   shared_examples_for 'StrictKeyAccess with invalid key' do |options = {}|
     before { pending_for(options[:pending]) } if options[:pending]
@@ -37,6 +42,11 @@ describe Hashie::Extensions::StrictKeyAccess do
         # Formatting of the error message does not vary here because raised by StrictKeyAccess
         expect { instance.key(invalid_value) }.to raise_error KeyError,
                                                               %(key not found with value of #{invalid_value.inspect})
+      end
+    end
+    context 'dig' do
+      it('returns nil') do
+        expect(instance.dig(invalid_value)).to be_nil
       end
     end
   end
@@ -106,5 +116,21 @@ describe Hashie::Extensions::StrictKeyAccess do
     it_behaves_like 'StrictKeyAccess with valid key', pending: { engine: 'rbx' }
     it_behaves_like 'StrictKeyAccess with invalid key', pending: { engine: 'rbx' }
     it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
+  end
+
+  context '.dig' do
+    let(:instance) { StrictKeyAccessHash[{ symphony: StrictKeyAccessHash[{ of: 'destruction' }] }] }
+
+    it 'returns nested values' do
+      expect(instance.dig(:symphony, :of)).to eq 'destruction'
+    end
+
+    it 'returns nil on top-level keys that don\'t exist' do
+      expect(instance.dig(:metallica)).to eq nil
+    end
+
+    it 'returns nil on nested keys that don\'t exist' do
+      expect(instance.dig(:symphony, :london)).to eq nil
+    end
   end
 end
