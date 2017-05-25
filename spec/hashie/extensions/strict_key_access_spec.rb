@@ -23,6 +23,11 @@ describe Hashie::Extensions::StrictKeyAccess do
         expect(instance.key(valid_value)).to eq valid_key
       end
     end
+    context 'dig' do
+      it('returns value') do
+        expect(instance.dig(valid_key)).to eq valid_value
+      end
+    end
   end
   shared_examples_for 'StrictKeyAccess with invalid key' do |options = {}|
     before { pending_for(options[:pending]) } if options[:pending]
@@ -37,6 +42,11 @@ describe Hashie::Extensions::StrictKeyAccess do
         # Formatting of the error message does not vary here because raised by StrictKeyAccess
         expect { instance.key(invalid_value) }.to raise_error KeyError,
                                                               %(key not found with value of #{invalid_value.inspect})
+      end
+    end
+    context 'dig' do
+      it('returns nil') do
+        expect(instance.dig(invalid_value)).to be_nil
       end
     end
   end
