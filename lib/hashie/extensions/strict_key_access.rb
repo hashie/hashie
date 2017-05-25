@@ -79,7 +79,7 @@ module Hashie
           if keys.empty?
             value
           else
-            value.dig(keys) if keys.responds_to? 'dig'
+            value.dig(keys) if keys.respond_to? 'dig'
           end
         end
       end
