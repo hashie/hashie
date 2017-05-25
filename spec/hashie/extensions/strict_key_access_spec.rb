@@ -117,4 +117,20 @@ describe Hashie::Extensions::StrictKeyAccess do
     it_behaves_like 'StrictKeyAccess with invalid key', pending: { engine: 'rbx' }
     it_behaves_like 'StrictKeyAccess raises KeyError instead of allowing defaults'
   end
+
+  context '.dig' do
+    let(:instance) { StrictKeyAccessHash[{ symphony: StrictKeyAccessHash[{ of: 'destruction' }] }] }
+
+    it 'returns nested values' do
+      expect(instance.dig(:symphony, :of)).to eq 'destruction'
+    end
+
+    it 'returns nil on top-level keys that don\'t exist' do
+      expect(instance.dig(:metallica)).to eq nil
+    end
+
+    it 'returns nil on nested keys that don\'t exist' do
+      expect(instance.dig(:symphony, :london)).to eq nil
+    end
+  end
 end
