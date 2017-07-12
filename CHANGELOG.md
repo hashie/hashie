@@ -6,33 +6,9 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.6] - 2017-07-12
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.5...master
-
-### Added
-
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
-
-### Fixed
-
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
+[3.5.6]: https://github.com/intridea/hashie/compare/v3.5.5...v3.5.6
 
 ### Miscellaneous
 
