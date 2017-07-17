@@ -19,13 +19,7 @@ module Hashie
     #   job  #=> {:id => 123, :status => "active"}
     #
     # @example Create a Hash that coerces all nested hashes to User objects
-    #   class User
-    #     attr_reader :username
-    #
-    #     def initialize(username:)
-    #       @username = username
-    #     end
-    #   end
+    #   User = Class.new(OpenStruct)
     #
     #   class Tweet < Hash
     #     include Hashie::Extensions::Coercion
@@ -36,7 +30,8 @@ module Hashie
     #   tweet = Tweet.new
     #   tweet[:author] = {:username => "yukihiro_matz"}
     #   tweet[:content] = "Hello!"
-    #   tweet  #=> {:author => #<User: @username="yukihiro_matz">, :content => "Hello!"}
+    #   tweet[:author] #=> User.new("yukihiro_matz")
+    #   tweet[:content] #=> "Hello!
     #
     # @example Create a hash that coerces a hash of users and their relations
     #   class Person
@@ -67,10 +62,7 @@ module Hashie
     #
     #   family = Family.new
     #   family[:relationships] = relationships
-    #   #=> {:relationships => {
-    #   #=>   #<Person @name="Bilbo"}> => #<Relation @type="uncle">,
-    #   #=>   #<Person @name="Frodo"}> => #<Relation @type="nephew">
-    #   #=> }}
+    #   #=> {:relationships => { Person.new(name: "Bilbo") => Relation.new(type: "uncle"), Person.new("Frodo") => Relation.new(type: "nephew") } }
     module Coercion
       # A mapping of core type classes to methods to use for coercing to them
       #
@@ -154,8 +146,8 @@ module Hashie
         # @example Replace the `id` and `status` fields in a job status
         #   class JobStatus < Hash
         #     include Hashie::Extensions::Coercion
-        #     coerce_key, :id, Integer
-        #     coerce_key, :status, Symbol
+        #     coerce_key :id, Integer
+        #     coerce_key :status, Symbol
         #   end
         #
         #   job = JobStatus.new
@@ -203,12 +195,16 @@ module Hashie
         # as the coercion to coerce a collection of values for a key.
         #
         # @example Coerce a "user" subhash into a User object
+        #   User = Struct.new(:username)
+        #
         #   class Tweet < Hash
         #     include Hashie::Extensions::Coercion
         #     coerce_key :user, User
         #   end
         #
         # @example Coerce an array of "commenters" into a User objects
+        #   User = Struct.new(:username)
+        #
         #   class Post < Hash
         #     include Hashie::Extensions::Coercion
         #     coerce_key :commenters, Array[User]
@@ -272,8 +268,7 @@ module Hashie
         #     }
         #   )
         #   hash
-        #   #=> {:id => 123, :status => "active",
-        #   #=>  :object => {:id => 456, :type => "site"}}
+        #   #=> {:id => 123, :status => "active", :object => {:id => 456, :type => "site"}}
         #   hash[:object].class  #=> JSONWrapper
         #
         # @api public

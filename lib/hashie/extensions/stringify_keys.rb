@@ -27,7 +27,7 @@ module Hashie
       #
       # @example
       #   test = { abc: 'def' }
-      #   text.extend(Hashie::Extensions::StringifyKeys)
+      #   test.extend(Hashie::Extensions::StringifyKeys)
       #   test.stringify_keys!
       #   test # => { 'abc' => 'def' }
       #
@@ -42,7 +42,7 @@ module Hashie
       #
       # @example
       #   test = { abc: 'def' }
-      #   text.extend(Hashie::Extensions::StringifyKeys)
+      #   test.extend(Hashie::Extensions::StringifyKeys)
       #   test.stringify_keys  #=> { 'abc' => 'def' }
       #   test  #=> { abc: 'def' }
       #

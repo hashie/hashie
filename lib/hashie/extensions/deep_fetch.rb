@@ -11,18 +11,18 @@ module Hashie
     #   response.merge!(user: {location: {address: "123 Easy St."}})
     #   response.deep_fetch(:user, :location, :address)  #=> "123 Easy St."
     #   response.deep_fetch(:user, :location, :country)
-    #   #=> raises an UndefinedPathError because `:country` does not exist
+    #   #=> raise Hashie::Extensions::DeepFetch::UndefinedPathError, "Could not fetch path (user > location > country) at country"
     #   response.deep_fetch(:user, :location, :country) { "Unknown" }
     #   #=> "Unknown"
     #
     # @example Extends a pre-existing object with this capability
     #   tweet = {content: "Hello, world", author: {username: "mdo"}}
-    #   tweet.extend(Hashie::Extension::DeepFetch)
+    #   tweet.extend(Hashie::Extensions::DeepFetch)
     #   tweet.deep_fetch(:author, :username)  #=> "mdo"
     #   tweet.deep_fetch(:author, :username, :id)
-    #   #=> raises an UndefinedPathError because `:id` does not exist
+    #   #=> raise Hashie::Extensions::DeepFetch::UndefinedPathError, "Could not fetch path (author > username > id) at id"
     #   tweet.deep_fetch(:author)
-    #   #=> equivalent to tweet.fetch(:author)
+    #   #=> {username: "mdo"}
     #
     # If a block is provided its value will be returned if the key does not exist.
     #

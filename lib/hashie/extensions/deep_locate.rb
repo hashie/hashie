@@ -102,10 +102,8 @@ module Hashie
       #   a comparator that looks for the key with the name of the comparator.
       #
       # @note This is a depth-first search.
-      # @note If an Enumerable value within the collection has any values that match
-      #   the comparator, the entire enumerable will be included in the result.
       #
-      # @example
+      # @example Locate books within a collection
       #   books = [
       #     { title: "Ruby for beginners", pages: 120 },
       #     {
@@ -119,7 +117,7 @@ module Hashie
       #   books.extend(Hashie::Extensions::DeepLocate)
       #
       #   books.deep_locate(->(key, value, object) { key == :title && value.include?("Ruby") })
-      #   # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"Collection of ruby books", :books=>[{:title=>"Ruby for the rest of us", :pages=>576}]]
+      #   # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"Ruby for the rest of us", :pages=>576}]
       #
       #   books.deep_locate(->(key, value, object) { key == :pages && value <= 120 })
       #   # => [{:title=>"Ruby for beginners", :pages=>120}]

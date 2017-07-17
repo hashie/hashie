@@ -14,6 +14,7 @@ group :development do
   gem 'guard-yield', '~> 0.1.0', require: false
   gem 'yard'
   gem 'yardstick'
+  gem 'yard-doctest'
 end
 
 group :test do
