@@ -344,7 +344,7 @@ module Hashie
       Hashie.logger.warn(
         'You are setting a key that conflicts with a built-in method ' \
         "#{self.class}##{method_key} #{method_information}. " \
-        'This can cause unexpected behavior when accessing the key via as a ' \
+        'This can cause unexpected behavior when accessing the key as a ' \
         'property. You can still access the key via the #[] method.'
       )
     end
