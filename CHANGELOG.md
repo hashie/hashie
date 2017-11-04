@@ -36,7 +36,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
-* Your contribution here.
+* [#425](https://github.com/intridea/hashie/pull/425): Update rubies in CI - [@kachick](https://github.com/kachick).
 
 ## [3.5.6] - 2017-07-12
 
