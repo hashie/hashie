@@ -74,4 +74,10 @@ describe Hashie::Rash do
     expect(subject.respond_to?(:to_a)).to be true
     expect(subject.methods).to_not include(:to_a)
   end
+
+  it 'does not lose keys' do
+    subject.optimize_every = 1
+    expect(subject['hello']).to eq('hello')
+    expect(subject['world']).to eq('world')
+  end
 end

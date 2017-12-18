@@ -28,6 +28,8 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+[#430](https://github.com/intridea/hashie/pull/430): Fix Hashie::Rash randomly losing items - [@Antti](https://github.com/Antti)
+
 * Your contribution here.
 
 ### Security
