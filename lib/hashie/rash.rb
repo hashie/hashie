@@ -136,7 +136,7 @@ module Hashie
 
     def optimize_if_necessary!
       return unless (@lookups += 1) >= @optimize_every
-      @regexes = @regex_counts.sort_by { |_, count| -count }.map { |regex, _| regex }
+      @regexes = @regexes.sort_by { |regex| -@regex_counts[regex] }
       @lookups = 0
     end
   end
