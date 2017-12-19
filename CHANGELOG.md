@@ -6,35 +6,13 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.5.7] - 2017-12-19
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.6...master
-
-### Added
-
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
+[3.5.7]: https://github.com/intridea/hashie/compare/v3.5.6...v3.5.7
 
 ### Fixed
 
 [#430](https://github.com/intridea/hashie/pull/430): Fix Hashie::Rash randomly losing items - [@Antti](https://github.com/Antti)
-
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ### Miscellaneous
 
