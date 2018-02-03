@@ -14,7 +14,7 @@ shared_examples 'stringify_keys!' do
     object[:abc] = 'abc'
     object[123] = '123'
     invoke :stringify_keys!
-    expect((object.keys & %w(abc 123)).size).to eq 2
+    expect((object.keys & %w[abc 123]).size).to eq 2
   end
 
   it 'converts nested instances of the same class' do
@@ -53,7 +53,7 @@ shared_examples 'stringify_keys' do
     object[:abc] = 'def'
     copy = invoke :stringify_keys
     expect(object.keys).to eq [:abc]
-    expect(copy.keys).to eq %w(abc)
+    expect(copy.keys).to eq %w[abc]
   end
 end
 
@@ -71,7 +71,7 @@ describe Hashie::Extensions::StringifyKeys do
 
   context 'class methods' do
     subject { described_class }
-    let(:object) { Hash.new }
+    let(:object) { {} }
 
     describe '.stringify_keys' do
       include_examples 'stringify_keys'
@@ -113,7 +113,7 @@ describe Hashie do
   end
 
   subject { described_class }
-  let(:object) { Hash.new }
+  let(:object) { {} }
 
   describe '.stringify_keys' do
     include_examples 'stringify_keys'

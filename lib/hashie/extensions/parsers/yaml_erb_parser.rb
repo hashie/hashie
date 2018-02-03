@@ -14,7 +14,7 @@ module Hashie
         def perform
           template = ERB.new(@content)
           template.filename = @file_path
-          YAML.load template.result
+          YAML.safe_load template.result
         end
 
         def self.perform(file_path)

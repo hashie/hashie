@@ -20,7 +20,7 @@ describe Hashie::Extensions::MethodReader do
   end
 
   it 'reads nil and false values out properly' do
-    h = subject.new(nil: nil, false: false)
+    h = subject.new(nil: nil, false: false) # rubocop:disable Lint/BooleanSymbol
     expect(h.nil).to eq nil
     expect(h.false).to eq false
   end
@@ -168,13 +168,13 @@ describe Hashie::Extensions::MethodOverridingWriter do
     end
 
     it 'aliases the method with two leading underscores' do
-      expect(subject.__zip).to eq [[%w(zip a-dee-doo-dah)]]
+      expect(subject.__zip).to eq [[%w[zip a-dee-doo-dah]]]
     end
 
     it 'does not re-alias when overriding an already overridden method' do
       subject.zip = 'test'
       expect(subject.zip).to eq 'test'
-      expect(subject.__zip).to eq [[%w(zip test)]]
+      expect(subject.__zip).to eq [[%w[zip test]]]
     end
   end
 end

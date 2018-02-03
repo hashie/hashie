@@ -10,7 +10,7 @@ describe Hashie::Rash do
       1       => 'awesome',
       1..1000 => 'rangey',
       /(bcd)/ => proc { |m| m[1] }
-    # /.+/ => "EVERYTHING"
+      # /.+/ => "EVERYTHING"
     )
   end
 
@@ -18,7 +18,7 @@ describe Hashie::Rash do
     expect(subject['other']).to eq 'whee'
     expect(subject['well hello there']).to eq 'hello'
     expect(subject['the world is round']).to eq 'world'
-    expect(subject.all('hello world').sort).to eq %w(hello world)
+    expect(subject.all('hello world').sort).to eq %w[hello world]
   end
 
   it 'finds regexps' do

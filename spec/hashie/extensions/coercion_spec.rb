@@ -154,7 +154,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Array' do
       subject.coerce_key :foo, Array[Coercable]
 
-      instance[:foo] = %w('bar', 'bar2')
+      instance[:foo] = %w[bar bar2]
       expect(instance[:foo]).to all(be_coerced)
       expect(instance[:foo]).to be_a(Array)
     end
@@ -162,7 +162,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Set' do
       subject.coerce_key :foo, Set[Coercable]
 
-      instance[:foo] = Set.new(%w('bar', 'bar2'))
+      instance[:foo] = Set.new(%w[bar bar2])
       expect(instance[:foo]).to all(be_coerced)
       expect(instance[:foo]).to be_a(Set)
     end
@@ -170,7 +170,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Set of primitive' do
       subject.coerce_key :foo, Set[Initializable]
 
-      instance[:foo] = %w('bar', 'bar2')
+      instance[:foo] = %w[bar bar2]
       expect(instance[:foo].map(&:value)).to all(eq 'String')
       expect(instance[:foo]).to be_none(&:coerced?)
       expect(instance[:foo]).to be_a(Set)
@@ -558,18 +558,26 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'raises a CoercionError when coercion is not possible' do
-        type = if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
-                 Integer
-               else
-                 Fixnum
-               end
+        type =
+          if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
+            Integer
+          else
+            Fixnum # rubocop:disable Lint/UnifiedInteger
+          end
 
         subject.coerce_value type, Symbol
         expect { instance[:hi] = 1 }.to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from #{type} to Symbol/)
       end
 
       it 'coerces Integer to String' do
-        subject.coerce_value Integer, String
+        type =
+          if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
+            Integer
+          else
+            Fixnum # rubocop:disable Lint/UnifiedInteger
+          end
+
+        subject.coerce_value type, String
 
         {
           fixnum: 2,
@@ -579,7 +587,7 @@ describe Hashie::Extensions::Coercion do
           complex: Complex(1)
         }.each do |k, v|
           instance[k] = v
-          if v.is_a? Integer
+          if v.is_a? type
             expect(instance[k]).to be_a(String)
             expect(instance[k]).to eq(v.to_s)
           else
@@ -610,8 +618,8 @@ describe Hashie::Extensions::Coercion do
           return !!(v =~ /^(true|t|yes|y|1)$/i)
         end)
 
-        true_values = %w(true t yes y 1)
-        false_values = %w(false f no n 0)
+        true_values = %w[true t yes y 1]
+        false_values = %w[false f no n 0]
 
         true_values.each do |v|
           instance[:foo] = v

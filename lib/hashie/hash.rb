@@ -17,7 +17,7 @@ module Hashie
     # Converts a mash back to a hash (with stringified or symbolized keys)
     def to_hash(options = {})
       out = {}
-      keys.each do |k|
+      each_key do |k|
         assignment_key = if options[:stringify_keys]
                            k.to_s
                          elsif options[:symbolize_keys]
@@ -28,10 +28,10 @@ module Hashie
         if self[k].is_a?(Array)
           out[assignment_key] ||= []
           self[k].each do |array_object|
-            out[assignment_key] << (Hash === array_object ? flexibly_convert_to_hash(array_object, options) : array_object)
+            out[assignment_key] << (array_object.is_a?(Hash) ? flexibly_convert_to_hash(array_object, options) : array_object)
           end
         else
-          out[assignment_key] = (Hash === self[k] || self[k].respond_to?(:to_hash)) ? flexibly_convert_to_hash(self[k], options) : self[k]
+          out[assignment_key] = self[k].is_a?(Hash) || self[k].respond_to?(:to_hash) ? flexibly_convert_to_hash(self[k], options) : self[k]
         end
       end
       out
@@ -45,7 +45,7 @@ module Hashie
     private
 
     def flexibly_convert_to_hash(object, options = {})
-      if object.method(:to_hash).arity == 0
+      if object.method(:to_hash).arity.zero?
         object.to_hash
       else
         object.to_hash(options)

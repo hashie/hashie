@@ -61,7 +61,7 @@ module Hashie
     include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::RubyVersionCheck
 
-    ALLOWED_SUFFIXES = %w(? ! = _)
+    ALLOWED_SUFFIXES = %w[? ! = _].freeze
 
     class CannotDisableMashWarnings < StandardError
       def initialize(message = 'You cannot disable warnings on the base Mash class. Please subclass the Mash and disable it in the subclass.')
@@ -74,7 +74,7 @@ module Hashie
     # @api semipublic
     # @return [void]
     def self.disable_warnings
-      fail CannotDisableMashWarnings if self == Hashie::Mash
+      raise CannotDisableMashWarnings if self == Hashie::Mash
       @disable_warnings = true
     end
 
@@ -99,9 +99,9 @@ module Hashie
       @_mashes ||= new
 
       return @_mashes[path] if @_mashes.key?(path)
-      fail ArgumentError, "The following file doesn't exist: #{path}" unless File.file?(path)
+      raise ArgumentError, "The following file doesn't exist: #{path}" unless File.file?(path)
 
-      parser = options.fetch(:parser) {  Hashie::Extensions::Parsers::YamlErbParser }
+      parser = options.fetch(:parser) { Hashie::Extensions::Parsers::YamlErbParser }
       @_mashes[path] = new(parser.perform(path)).freeze
     end
 
@@ -114,7 +114,7 @@ module Hashie
       end
     end
 
-    alias_method :to_s, :inspect
+    alias to_s inspect
 
     # If you pass in an existing hash, it will
     # convert it to a Mash including recursively
@@ -125,10 +125,10 @@ module Hashie
       default ? super(default) : super(&blk)
     end
 
-    class << self; alias_method :[], :new; end
+    class << self; alias [] new; end
 
-    alias_method :regular_reader, :[]
-    alias_method :regular_writer, :[]=
+    alias regular_reader []
+    alias regular_writer []=
 
     # Retrieves an attribute set in the Mash. Will convert
     # any key passed in to a string before retrieving.
@@ -149,8 +149,8 @@ module Hashie
       regular_writer(key, convert ? convert_value(value) : value)
     end
 
-    alias_method :[], :custom_reader
-    alias_method :[]=, :custom_writer
+    alias [] custom_reader
+    alias []= custom_writer
 
     # This is the bang method reader, it will return a new Mash
     # if there isn't a value already assigned to the key requested.
@@ -183,26 +183,26 @@ module Hashie
       super(*keys.map { |key| convert_key(key) })
     end
 
-    alias_method :regular_dup, :dup
+    alias regular_dup dup
     # Duplicates the current mash as a new mash.
     def dup
       self.class.new(self, default, &default_proc)
     end
 
-    alias_method :regular_key?, :key?
+    alias regular_key? key?
     def key?(key)
       super(convert_key(key))
     end
-    alias_method :has_key?, :key?
-    alias_method :include?, :key?
-    alias_method :member?, :key?
+    alias has_key? key?
+    alias include? key?
+    alias member? key?
 
     # Performs a deep_update on a duplicate of the
     # current mash.
     def deep_merge(other_hash, &blk)
       dup.deep_update(other_hash, &blk)
     end
-    alias_method :merge, :deep_merge
+    alias merge deep_merge
 
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
@@ -213,15 +213,15 @@ module Hashie
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
-          value = convert_value(blk.call(key, self[k], value), true) if blk && self.key?(k)
+          value = convert_value(yield(key, self[k], value), true) if blk && key?(k)
           custom_writer(key, value, false)
         end
       end
       self
     end
-    alias_method :deep_merge!, :deep_update
-    alias_method :update, :deep_update
-    alias_method :merge!, :update
+    alias deep_merge! deep_update
+    alias update deep_update
+    alias merge! update
 
     # Assigns a value to a key
     def assign_property(name, value)
@@ -263,7 +263,7 @@ module Hashie
       method_name.end_with?(*ALLOWED_SUFFIXES) && key?(method_name.chop)
     end
 
-    def method_missing(method_name, *args, &blk)
+    def method_missing(method_name, *args, &blk) # rubocop:disable Style/MethodMissing
       return self.[](method_name, &blk) if key?(method_name)
       name, suffix = method_name_and_suffix(method_name)
       case suffix

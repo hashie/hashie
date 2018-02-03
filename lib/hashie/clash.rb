@@ -75,12 +75,23 @@ module Hashie
         when Hash
           self[key] = self.class.new(self[key], self)
         else
-          fail ChainError, 'Tried to chain into a non-hash key.'
+          raise ChainError, 'Tried to chain into a non-hash key.'
         end
       elsif args.any?
         merge_store(name, *args)
       else
         super
+      end
+    end
+
+    def respond_to_missing?(method_name, _include_private = false)
+      method_name = method_name.to_s
+
+      if method_name.end_with?('!')
+        key = method_name[0...-1].to_sym
+        [NilClass, Clash, Hash].include?(self[key].class)
+      else
+        true
       end
     end
   end

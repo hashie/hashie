@@ -4,12 +4,12 @@ describe Hashie::Extensions::Parsers::YamlErbParser do
   describe '.perform' do
     context 'a file' do
       let(:config) do
-        <<-EOF
+        <<-CONFIG
 ---
 foo: verbatim
 bar: <%= "erb" %>
 baz: "<%= __FILE__ %>"
-        EOF
+        CONFIG
       end
       let(:path) { 'template.yml' }
 
@@ -36,7 +36,7 @@ baz: "<%= __FILE__ %>"
         file
       end
 
-      subject { described_class.new(Pathname tempfile.path) }
+      subject { described_class.new(Pathname(tempfile.path)) }
 
       it '"#perform" can be done in case of path is a Pathname object.' do
         expect(subject.perform).to eq 'foo' => 'hello'

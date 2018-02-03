@@ -28,7 +28,7 @@ describe Hashie::Extensions::DeepMerge do
 
     it 'merges new nested hash entries by value, not by reference' do
       h1.deep_merge!(h2)
-      expect { h1[:e][:e1] = 'changed' }.not_to change { h2[:e][:e1] }
+      expect { h1[:e][:e1] = 'changed' }.not_to(change { h2[:e][:e1] })
     end
   end
 

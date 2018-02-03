@@ -4,7 +4,22 @@ AllCops:
     - Rakefile
   Exclude:
     - .bundle/**/*
-    - bin/**/*
     - vendor/**/*
 
 inherit_from: .rubocop_todo.yml
+
+# Disabled until we can use the squiggly heredoc (after deprecating Ruby <2.3)
+Layout/IndentHeredoc:
+  Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - 'Dangerfile'
+    - '**/Gemfile'
+    - '**/Rakefile'
+
+# Disabled because of the very generic nature of Hashie. In the cases where we
+# use double negation, there isn't a means that as succinct of doing the type of
+# boolean casting that we do.
+Style/DoubleNegation:
+  Enabled: false
