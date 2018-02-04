@@ -457,6 +457,13 @@ describe Hashie::Mash do
       expect(initial.test?).to be_truthy
     end
 
+    it 'allows propagation of a default block' do
+      h = Hashie::Mash.new { |mash, key| mash[key] = mash.class.new(&mash.default_proc) }
+      expect { h[:x][:y][:z] = :xyz }.not_to raise_error
+      expect(h.x.y.z).to eq(:xyz)
+      expect(h[:x][:y][:z]).to eq(:xyz)
+    end
+
     it 'allows assignment of an empty array in a default block' do
       initial = Hashie::Mash.new { |h, k| h[k] = [] }
       initial.hello << 100

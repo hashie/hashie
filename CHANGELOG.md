@@ -28,6 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#435](https://github.com/intridea/hashie/pull/435): Mash `default_proc`s are now propagated down to nested sub-Hashes - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security

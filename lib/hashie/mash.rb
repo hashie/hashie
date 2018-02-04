@@ -186,7 +186,7 @@ module Hashie
     alias_method :regular_dup, :dup
     # Duplicates the current mash as a new mash.
     def dup
-      self.class.new(self, default)
+      self.class.new(self, default, &default_proc)
     end
 
     alias_method :regular_key?, :key?
