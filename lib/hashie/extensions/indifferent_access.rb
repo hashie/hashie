@@ -133,8 +133,10 @@ module Hashie
         self
       end
 
-      def merge(*)
-        super.convert!
+      def merge(*args)
+        result = super
+        IndifferentAccess.inject!(result) if hash_lacking_indifference?(result)
+        result.convert!
       end
 
       def merge!(*)

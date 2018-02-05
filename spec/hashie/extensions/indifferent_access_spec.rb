@@ -49,6 +49,19 @@ describe Hashie::Extensions::IndifferentAccess do
       expect(merged_hash[:cat]).to eq('meow')
       expect(merged_hash['cat']).to eq('meow')
     end
+
+    it 'injects the resulting new Hash with IndifferentAccess' do
+      hash = IndifferentHashWithMergeInitializer.new(
+        :cat => 'meow',
+        'dog' => { name: 'Mango', sound: 'woof' }
+      )
+
+      dog = hash[:dog]
+      merged = dog.merge(foo: 'bar')
+
+      expect(merged[:foo]).to eq('bar')
+      expect(merged['foo']).to eq('bar')
+    end
   end
 
   describe '#merge!' do
