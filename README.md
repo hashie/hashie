@@ -470,9 +470,11 @@ mash.inspect # => <Hashie::Mash>
 
 **Note:** The `?` method will return false if a key has been set to false or nil. In order to check if a key has been set at all, use the `mash.key?('some_key')` method instead.
 
+### How does Mash handle conflicts with pre-existing methods?
+
 Please note that a Mash will not override methods through the use of the property-like syntax. This can lead to confusion if you expect to be able to access a Mash value through the property-like syntax for a key that conflicts with a method name. However, it protects users of your library from the unexpected behavior of those methods being overridden behind the scenes.
 
-### Example:
+#### Example:
 
 ```ruby
 mash = Hashie::Mash.new
@@ -481,9 +483,40 @@ mash.zip = "Method Override?"
 mash.zip # => [[["name", "My Mash"]], [["zip", "Method Override?"]]]
 ```
 
+Since Mash gives you the ability to set arbitrary keys that then act as methods, Hashie logs when there is a conflict between a key and a pre-existing method. You can set the logger that this logs message to via the global Hashie logger:
+
+```ruby
+Hashie.logger = Rails.logger
+```
+
+You can also disable the logging in subclasses of Mash:
+
+```ruby
+class Response < Hashie::Mash
+  disable_warnings
+end
+```
+
+### How does the wrapping of Mash sub-Hashes work?
+
+Mash duplicates any sub-Hashes that you add to it and wraps them in a Mash. This allows for infinite chaining of nested Hashes within a Mash without modifying the object(s) that are passed into the Mash. When you subclass Mash, the subclass wraps any sub-Hashes in its own class. This preserves any extensions that you mixed into the Mash subclass and allows them to work within the sub-Hashes, in addition to the main containing Mash.
+
+#### Example:
+
+```ruby
+mash = Hashie::Mash.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0" })
+mash.dependencies.class #=> Hashie::Mash
+
+class MyGem < Hashie::Mash; end
+my_gem = MyGem.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0" })
+my_gem.dependencies.class #=> MyGem
+```
+
+### What else can Mash do?
+
 Mash allows you also to transform any files into a Mash objects.
 
-### Example:
+#### Example:
 
 ```yml
 #/etc/config/settings/twitter.yml
@@ -529,20 +562,6 @@ id | name          | lastname
 mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 # => { 1 => { name: 'John', lastname: 'Doe'}, 2 => { name: 'Laurent', lastname: 'Garnier' } }
 mash[1] #=> { name: 'John', lastname: 'Doe' }
-```
-
-Since Mash gives you the ability to set arbitrary keys that then act as methods, Hashie logs when there is a conflict between a key and a pre-existing method. You can set the logger that this logs message to via the global Hashie logger:
-
-```ruby
-Hashie.logger = Rails.logger
-```
-
-You can also disable the logging in subclasses of Mash:
-
-```ruby
-class Response < Hashie::Mash
-  disable_warnings
-end
 ```
 
 ### Mash Extension: KeepOriginalKeys
