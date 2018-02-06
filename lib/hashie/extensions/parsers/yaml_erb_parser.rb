@@ -1,5 +1,7 @@
 require 'yaml'
 require 'erb'
+require 'pathname'
+
 module Hashie
   module Extensions
     module Parsers
