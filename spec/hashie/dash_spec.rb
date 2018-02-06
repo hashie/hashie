@@ -402,6 +402,31 @@ describe DashTest do
         expect(subject.count).to eq subject.class.defaults[:count]
       end
     end
+
+    context 'codependent attributes' do
+      let(:codependent) do
+        Class.new(Hashie::Dash) do
+          property :a, required: -> { b.nil? }, message: 'is required if b is not set.'
+          property :b, required: -> { a.nil? }, message: 'is required if a is not set.'
+        end
+      end
+
+      it 'does not raise an error when only the first property is set' do
+        expect { codependent.new(a: 'ant', b: nil) }.not_to raise_error
+      end
+
+      it 'does not raise an error when only the second property is set' do
+        expect { codependent.new(a: nil, b: 'bat') }.not_to raise_error
+      end
+
+      it 'does not raise an error when both properties are set' do
+        expect { codependent.new(a: 'ant', b: 'bat') }.not_to raise_error
+      end
+
+      it 'raises an error when neither property is set' do
+        expect { codependent.new(a: nil, b: nil) }.to raise_error(ArgumentError)
+      end
+    end
   end
 end
 

@@ -30,6 +30,7 @@ scheme are considered to be bugs.
 
 * [#435](https://github.com/intridea/hashie/pull/435): Mash `default_proc`s are now propagated down to nested sub-Hashes - [@michaelherold](https://github.com/michaelherold).
 * [#436](https://github.com/intridea/hashie/pull/436): Ensure that `Hashie::Extensions::IndifferentAccess` injects itself after a non-destructive merge - [@michaelherold](https://github.com/michaelherold).
+* [#437](https://github.com/intridea/hashie/pull/437): Allow codependent properties to be set on Dash - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security
