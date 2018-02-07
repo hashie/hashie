@@ -695,6 +695,38 @@ p = Tricky.new('trick' => 'two')
 p.trick # => NoMethodError
 ```
 
+### Potential gotchas
+
+Because Dashes are subclasses of the built-in Ruby Hash class, the double-splat operator takes the Dash as-is without any conversion. This can lead to strange behavior when you use the double-splat operator on a Dash as the first part of a keyword list or built Hash. For example:
+
+```ruby
+class Foo < Hashie::Dash
+  property :bar
+end
+
+foo = Foo.new(bar: 'baz')      #=> {:bar=>"baz"}
+qux = { **foo, quux: 'corge' } #=> {:bar=> "baz", :quux=>"corge"}
+qux.is_a?(Foo)                 #=> true
+qux[:quux]
+#=> raise NoMethodError, "The property 'quux' is not defined for Foo."
+qux.key?(:quux) #=> true
+```
+
+You can work around this problem in two ways:
+
+1. Call `#to_h` on the resulting object to convert it into a Hash.
+2. Use the double-splat operator on the Dash as the last argument in the Hash literal. This will cause the resulting object to be a Hash instead of a Dash, thereby circumventing the problem.
+
+```ruby
+qux = { **foo, quux: 'corge' }.to_h #=> {:bar=> "baz", :quux=>"corge"}
+qux.is_a?(Hash)                     #=> true
+qux[:quux]                          #=> "corge"
+
+qux = { quux: 'corge', **foo } #=> {:quux=>"corge", :bar=> "baz"}
+qux.is_a?(Hash)                #=> true
+qux[:quux]                     #=> "corge"
+```
+
 ### Dash Extension: PropertyTranslation
 
 The `Hashie::Extensions::Dash::PropertyTranslation` mixin extends a Dash with
