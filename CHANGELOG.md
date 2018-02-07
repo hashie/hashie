@@ -39,6 +39,7 @@ scheme are considered to be bugs.
 ### Miscellaneous
 
 * [#434](https://github.com/intridea/hashie/pull/434): Add documentation around Mash sub-Hashes - [@michaelherold](https://github.com/michaelherold).
+* [#439](https://github.com/intridea/hashie/pull/439): Add an integration spec for Elasticsearch - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## [3.5.7] - 2017-12-19
