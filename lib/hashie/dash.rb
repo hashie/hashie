@@ -160,7 +160,7 @@ module Hashie
     end
 
     def update_attributes!(attributes)
-      initialize_attributes(attributes)
+      update_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
         self[prop] = begin
@@ -175,9 +175,18 @@ module Hashie
     private
 
     def initialize_attributes(attributes)
+      return unless attributes
+
+      cleaned_attributes = attributes.reject { |_attr, value| value.nil? }
+      update_attributes(cleaned_attributes)
+    end
+
+    def update_attributes(attributes)
+      return unless attributes
+
       attributes.each_pair do |att, value|
         self[att] = value
-      end if attributes
+      end
     end
 
     def assert_property_exists!(property)
