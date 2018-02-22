@@ -3,9 +3,10 @@ sudo: false
 cache: bundler
 
 rvm:
-  - 2.4.2
-  - 2.3.5
-  - 2.2.8
+  - 2.5.0
+  - 2.4.3
+  - 2.3.6
+  - 2.2.9
   - 2.1.10
   - 2.0.0
   - rbx-3
@@ -15,12 +16,12 @@ rvm:
 
 matrix:
   include:
-    - rvm: 2.3.5
+    - rvm: 2.5.0
       before_script:
         - bundle exec danger
       after_script:
         - bundle exec codeclimate-test-reporter
-    - rvm: 2.3.5
+    - rvm: 2.5.0
       install:
         - for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle; done
       script:
