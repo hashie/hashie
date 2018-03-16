@@ -503,6 +503,13 @@ describe Hashie::Mash do
       expect(converted.to_hash['a'].first.is_a?(Hash)).to be_truthy
       expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_falsy
     end
+
+    it 'allows use of suffix in hash keys' do
+      initial_hash = { "#{SecureRandom.hex}_" => 'a' }
+      expect_any_instance_of(Hashie::Mash).to_not receive(:log_built_in_message)
+      mash = Hashie::Mash.new(initial_hash)
+      expect(mash[initial_hash.first.first]).to eq('a')
+    end
   end
 
   describe '#fetch' do
