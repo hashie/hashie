@@ -248,13 +248,13 @@ module Hashie
       self
     end
 
-    def respond_to_missing?(method_name, *args, ignore_suffix: false)
+    def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
       suffix = method_suffix(method_name)
-      if suffix && !ignore_suffix
+      if suffix && !@ignore_suffix
         true
       else
-        super(method_name, args)
+        super
       end
     end
 
@@ -350,8 +350,11 @@ module Hashie
     end
 
     def log_collision?(method_key)
-      respond_to?(method_key, ignore_suffix: true) && !self.class.disable_warnings? &&
+      @ignore_suffix = true
+      respond_to?(method_key) && !self.class.disable_warnings? &&
         !(regular_key?(method_key) || regular_key?(method_key.to_s))
+    ensure
+      @ignore_suffix = false
     end
   end
 end
