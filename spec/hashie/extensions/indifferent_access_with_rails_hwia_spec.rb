@@ -11,7 +11,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :new
+      alias build new
     end
   end
 
@@ -19,7 +19,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :[]
+      alias build []
     end
   end
 
@@ -27,7 +27,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :try_convert
+      alias build try_convert
     end
   end
 
@@ -54,7 +54,7 @@ describe Hashie::Extensions::IndifferentAccess do
           :foo => 'bar', 'baz' => 'qux'
         )
         h = subject.build(indifferent_hash)
-        expect(h.values_at('foo', :baz)).to eq %w(bar qux)
+        expect(h.values_at('foo', :baz)).to eq %w[bar qux]
       end
     end
 
@@ -91,7 +91,7 @@ describe Hashie::Extensions::IndifferentAccess do
         expect(h).to be_key('foo')
       end
 
-      %w(include? member? has_key?).each do |key_alias|
+      %w[include? member? has_key?].each do |key_alias|
         it "is aliased as #{key_alias}" do
           expect(h.send(key_alias.to_sym, :foo)).to be(true)
           expect(h.send(key_alias.to_sym, 'foo')).to be(true)

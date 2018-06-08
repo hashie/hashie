@@ -42,6 +42,7 @@ scheme are considered to be bugs.
 
 * [#434](https://github.com/intridea/hashie/pull/434): Add documentation around Mash sub-Hashes - [@michaelherold](https://github.com/michaelherold).
 * [#439](https://github.com/intridea/hashie/pull/439): Add an integration spec for Elasticsearch - [@michaelherold](https://github.com/michaelherold).
+* [#448](https://github.com/intridea/hashie/pull/448): Upgraded RuboCop to 0.57.1. - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ## [3.5.7] - 2017-12-19

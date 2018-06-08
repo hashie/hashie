@@ -1,4 +1,4 @@
-require File.expand_path('../lib/hashie/version', __FILE__)
+require File.expand_path('lib/hashie/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'hashie'
@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.require_paths = ['lib']
-  gem.files         = %w(.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md Rakefile hashie.gemspec)
+  gem.files         = %w[.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md Rakefile hashie.gemspec]
   gem.files += Dir['lib/**/*.rb']
   gem.files += Dir['spec/**/*.rb']
   gem.test_files = Dir['spec/**/*.rb']

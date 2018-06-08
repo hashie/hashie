@@ -74,9 +74,7 @@ module Hashie
 
       def self._deep_locate(comparator, object, result = [])
         if object.is_a?(::Enumerable)
-          if object.any? { |value| _match_comparator?(value, comparator, object) }
-            result.push object
-          end
+          result.push object if object.any? { |value| _match_comparator?(value, comparator, object) }
           (object.respond_to?(:values) ? object.values : object.entries).each do |value|
             _deep_locate(comparator, value, result)
           end

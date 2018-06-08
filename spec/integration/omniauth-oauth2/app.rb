@@ -19,7 +19,7 @@ module RailsApp
   end
 end
 
-LAYOUT = <<-HTML
+LAYOUT = <<-HTML.freeze
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +32,7 @@ LAYOUT = <<-HTML
 </html>
 HTML
 
-INDEX = '<h1>Hello, world!</h1>'
+INDEX = '<h1>Hello, world!</h1>'.freeze
 
 class ApplicationController < ActionController::Base
   include Rails.application.routes.url_helpers
@@ -44,8 +44,7 @@ class ApplicationController < ActionController::Base
     'application/index.html.erb'   => INDEX
   )]
 
-  def index
-  end
+  def index; end
 end
 
 Bundler.require(:default, Rails.env)

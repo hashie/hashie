@@ -153,7 +153,7 @@ describe Hashie::Trash do
     end
 
     it 'maintains translations hash mapping from the original to the translated name' do
-      expect(SomeDataModel.translations).to eq(config: [:value_a, :value_b])
+      expect(SomeDataModel.translations).to eq(config: %i[value_a value_b])
     end
   end
 

@@ -46,25 +46,25 @@ module Hashie
       end
 
       def default(_ = nil)
-        fail DefaultError
+        raise DefaultError
       end
 
       def default=(_)
-        fail DefaultError
+        raise DefaultError
       end
 
       def default_proc
-        fail DefaultError
+        raise DefaultError
       end
 
       def default_proc=(_)
-        fail DefaultError
+        raise DefaultError
       end
 
       def key(value)
         result = super
         if result.nil? && (!key?(result) || self[result] != value)
-          fail KeyError, "key not found with value of #{value.inspect}"
+          raise KeyError, "key not found with value of #{value.inspect}"
         else
           result
         end

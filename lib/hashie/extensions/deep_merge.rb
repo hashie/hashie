@@ -24,7 +24,7 @@ module Hashie
                       _recursive_merge(hash[k], v, &block)
                     else
                       if hash.key?(k) && block_given?
-                        block.call(k, hash[k], v)
+                        yield(k, hash[k], v)
                       else
                         v.respond_to?(:deep_dup) ? v.deep_dup : v
                       end

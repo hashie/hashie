@@ -17,9 +17,7 @@ module Hashie
         private
 
         def self.included(descendant)
-          unless descendant <= Hashie::Mash
-            fail ArgumentError, "#{descendant} is not a kind of Hashie::Mash"
-          end
+          raise ArgumentError, "#{descendant} is not a kind of Hashie::Mash" unless descendant <= Hashie::Mash
         end
 
         # Converts the key when necessary to access the correct Mash key.
