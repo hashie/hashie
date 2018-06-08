@@ -1,12 +1,10 @@
 # Hashie
 
 [![Join the chat at https://gitter.im/intridea/hashie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/intridea/hashie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Gem Version](http://img.shields.io/gem/v/hashie.svg)](http://badge.fury.io/rb/hashie)
 [![Build Status](http://img.shields.io/travis/intridea/hashie.svg)](https://travis-ci.org/intridea/hashie)
-[![Dependency Status](https://gemnasium.com/intridea/hashie.svg)](https://gemnasium.com/intridea/hashie)
-[![Code Climate](https://codeclimate.com/github/intridea/hashie.svg)](https://codeclimate.com/github/intridea/hashie)
-[![Coverage Status](https://codeclimate.com/github/intridea/hashie/badges/coverage.svg)](https://codeclimate.com/github/intridea/hashie)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/test_coverage)](https://codeclimate.com/github/intridea/hashie/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/maintainability)](https://codeclimate.com/github/intridea/hashie/maintainability)
 
 Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
