@@ -133,7 +133,7 @@ You can also use coerce from the following supertypes with `coerce_value`:
 - Integer
 - Numeric
 
-Hashie does not have built-in support for coercion boolean values, since Ruby does not have a built-in boolean type or standard method for to a boolean. You can coerce to booleans using a custom proc.
+Hashie does not have built-in support for coercing boolean values, since Ruby does not have a built-in boolean type or standard method for coercing to a boolean. You can coerce to booleans using a custom proc.
 
 ### Coercion Proc
 
