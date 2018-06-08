@@ -1,10 +1,19 @@
 AllCops:
-  Include:
-    - Guardfile
-    - Rakefile
+  TargetRubyVersion: 2.1
   Exclude:
     - .bundle/**/*
-    - bin/**/*
     - vendor/**/*
+
+Lint/UnifiedInteger:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 256
 
 inherit_from: .rubocop_todo.yml

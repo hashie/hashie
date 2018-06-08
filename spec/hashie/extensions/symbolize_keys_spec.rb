@@ -14,7 +14,7 @@ shared_examples 'symbolize_keys!' do
     object['abc'] = 'abc'
     object['def'] = 'def'
     invoke :symbolize_keys!
-    expect((object.keys & [:abc, :def]).size).to eq 2
+    expect((object.keys & %i[abc def]).size).to eq 2
   end
 
   it 'converts nested instances of the same class' do
@@ -76,7 +76,7 @@ describe Hashie::Extensions::SymbolizeKeys do
 
   context 'class methods' do
     subject { described_class }
-    let(:object) { Hash.new }
+    let(:object) { {} }
 
     describe '.symbolize_keys' do
       include_examples 'symbolize_keys'
@@ -118,7 +118,7 @@ describe Hashie do
   end
 
   subject { described_class }
-  let(:object) { Hash.new }
+  let(:object) { {} }
 
   describe '.symbolize_keys' do
     include_examples 'symbolize_keys'

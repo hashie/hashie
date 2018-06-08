@@ -73,9 +73,7 @@ module Hashie
             super
 
             if options[:from]
-              if property_name == options[:from]
-                fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
-              end
+              raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same" if property_name == options[:from]
 
               translations_hash[options[:from]] ||= {}
               translations_hash[options[:from]][property_name] = options[:with] || options[:transform_with]
@@ -86,9 +84,7 @@ module Hashie
                 end
               end
             else
-              if options[:transform_with].respond_to? :call
-                transforms[property_name] = options[:transform_with]
-              end
+              transforms[property_name] = options[:transform_with] if options[:transform_with].respond_to? :call
             end
           end
 
@@ -107,11 +103,11 @@ module Hashie
           def translations
             @translations ||= {}.tap do |h|
               translations_hash.each do |(property_name, property_translations)|
-                if property_translations.size > 1
-                  h[property_name] = property_translations.keys
-                else
-                  h[property_name] = property_translations.keys.first
-                end
+                h[property_name] = if property_translations.size > 1
+                                     property_translations.keys
+                                   else
+                                     property_translations.keys.first
+                                   end
               end
             end
           end

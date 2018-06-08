@@ -36,7 +36,7 @@ baz: "<%= __FILE__ %>"
         file
       end
 
-      subject { described_class.new(Pathname tempfile.path) }
+      subject { described_class.new(Pathname(tempfile.path)) }
 
       it '"#perform" can be done in case of path is a Pathname object.' do
         expect(subject.perform).to eq 'foo' => 'hello'

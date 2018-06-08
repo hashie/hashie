@@ -154,7 +154,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Array' do
       subject.coerce_key :foo, Array[Coercable]
 
-      instance[:foo] = %w('bar', 'bar2')
+      instance[:foo] = %w[bar bar2]
       expect(instance[:foo]).to all(be_coerced)
       expect(instance[:foo]).to be_a(Array)
     end
@@ -162,7 +162,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Set' do
       subject.coerce_key :foo, Set[Coercable]
 
-      instance[:foo] = Set.new(%w('bar', 'bar2'))
+      instance[:foo] = Set.new(%w[bar bar2])
       expect(instance[:foo]).to all(be_coerced)
       expect(instance[:foo]).to be_a(Set)
     end
@@ -170,7 +170,7 @@ describe Hashie::Extensions::Coercion do
     it 'supports coercion for Set of primitive' do
       subject.coerce_key :foo, Set[Initializable]
 
-      instance[:foo] = %w('bar', 'bar2')
+      instance[:foo] = %w[bar bar2]
       expect(instance[:foo].map(&:value)).to all(eq 'String')
       expect(instance[:foo]).to be_none(&:coerced?)
       expect(instance[:foo]).to be_a(Set)
@@ -610,8 +610,8 @@ describe Hashie::Extensions::Coercion do
           return !!(v =~ /^(true|t|yes|y|1)$/i)
         end)
 
-        true_values = %w(true t yes y 1)
-        false_values = %w(false f no n 0)
+        true_values = %w[true t yes y 1]
+        false_values = %w[false f no n 0]
 
         true_values.each do |v|
           instance[:foo] = v

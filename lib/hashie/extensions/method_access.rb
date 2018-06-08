@@ -73,9 +73,7 @@ module Hashie
       end
 
       def method_missing(name, *args)
-        if args.size == 1 && name.to_s =~ /(.*)=$/
-          return self[convert_key(Regexp.last_match[1])] = args.first
-        end
+        return self[convert_key(Regexp.last_match[1])] = args.first if args.size == 1 && name.to_s =~ /(.*)=$/
 
         super
       end

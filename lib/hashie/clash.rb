@@ -75,7 +75,7 @@ module Hashie
         when Hash
           self[key] = self.class.new(self[key], self)
         else
-          fail ChainError, 'Tried to chain into a non-hash key.'
+          raise ChainError, 'Tried to chain into a non-hash key.'
         end
       elsif args.any?
         merge_store(name, *args)

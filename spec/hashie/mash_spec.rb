@@ -184,7 +184,8 @@ describe Hashie::Mash do
         details: {
           email: 'michael@asf.com',
           address: 'Nowhere road'
-        })
+        }
+      )
     end
 
     describe '#deep_update' do
@@ -284,7 +285,7 @@ describe Hashie::Mash do
       end
 
       it 'leaves only specified keys' do
-        expect(subject.keys.sort).to eq %w(details middle_name)
+        expect(subject.keys.sort).to eq %w[details middle_name]
         expect(subject.first_name?).to be_falsy
         expect(subject).not_to respond_to(:first_name)
         expect(subject.last_name?).to be_falsy
@@ -386,28 +387,28 @@ describe Hashie::Mash do
     end
 
     it 'responds to a set key with a suffix' do
-      %w(= ? ! _).each do |suffix|
+      %w[= ? ! _].each do |suffix|
         expect(subject).to be_respond_to(:"abc#{suffix}")
       end
     end
 
     it 'is able to access the suffixed key as a method' do
-      %w(= ? ! _).each do |suffix|
+      %w[= ? ! _].each do |suffix|
         expect(subject.method(:"abc#{suffix}")).to_not be_nil
       end
     end
 
     it 'responds to an unknown key with a suffix' do
-      %w(= ? ! _).each do |suffix|
+      %w[= ? ! _].each do |suffix|
         expect(subject).to be_respond_to(:"xyz#{suffix}")
       end
     end
 
     it 'is able to access an unknown suffixed key as a method' do
       # See https://github.com/intridea/hashie/pull/285 for more information
-      pending_for(engine: 'ruby', versions: %w(2.2.0 2.2.1 2.2.2))
+      pending_for(engine: 'ruby', versions: %w[2.2.0 2.2.1 2.2.2])
 
-      %w(= ? ! _).each do |suffix|
+      %w[= ? ! _].each do |suffix|
         expect(subject.method(:"xyz#{suffix}")).to_not be_nil
       end
     end
@@ -560,7 +561,7 @@ describe Hashie::Mash do
     end
 
     it 'includes all keys' do
-      expect(mash.to_hash.keys).to eql(%w(outer testing))
+      expect(mash.to_hash.keys).to eql(%w[outer testing])
     end
 
     it 'converts keys to symbols when symbolize_keys option is true' do

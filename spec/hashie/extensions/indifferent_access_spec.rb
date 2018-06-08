@@ -6,7 +6,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :new
+      alias build new
     end
   end
 
@@ -14,7 +14,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :[]
+      alias build []
     end
   end
 
@@ -22,7 +22,7 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IndifferentAccess
 
     class << self
-      alias_method :build, :try_convert
+      alias build try_convert
     end
   end
 
@@ -44,7 +44,7 @@ describe Hashie::Extensions::IndifferentAccess do
         include Hashie::Extensions::IndifferentAccess
       end.new
 
-      merged_hash = indifferent_hash.merge(:cat => 'meow')
+      merged_hash = indifferent_hash.merge(cat: 'meow')
 
       expect(merged_hash[:cat]).to eq('meow')
       expect(merged_hash['cat']).to eq('meow')
@@ -70,7 +70,7 @@ describe Hashie::Extensions::IndifferentAccess do
         include Hashie::Extensions::IndifferentAccess
       end.new
 
-      indifferent_hash.merge!(:cat => 'meow')
+      indifferent_hash[:cat] = 'meow'
 
       expect(indifferent_hash[:cat]).to eq('meow')
       expect(indifferent_hash['cat']).to eq('meow')
@@ -126,7 +126,7 @@ describe Hashie::Extensions::IndifferentAccess do
     describe '#values_at' do
       it 'indifferently finds values' do
         h = subject.build(:foo => 'bar', 'baz' => 'qux')
-        expect(h.values_at('foo', :baz)).to eq %w(bar qux)
+        expect(h.values_at('foo', :baz)).to eq %w[bar qux]
       end
 
       it 'returns the same instance of the hash that was set' do
@@ -208,7 +208,7 @@ describe Hashie::Extensions::IndifferentAccess do
         expect(h).to be_key('foo')
       end
 
-      %w(include? member? has_key?).each do |key_alias|
+      %w[include? member? has_key?].each do |key_alias|
         it "is aliased as #{key_alias}" do
           expect(h.send(key_alias.to_sym, :foo)).to be(true)
           expect(h.send(key_alias.to_sym, 'foo')).to be(true)
