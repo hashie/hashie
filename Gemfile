@@ -4,12 +4,17 @@ gemspec
 
 group :development do
   gem 'benchmark-ips'
+  gem 'inch'
   gem 'pry'
   gem 'pry-stack_explorer', platforms: [:ruby_19, :ruby_20, :ruby_21]
   gem 'rubocop', '0.34.2'
-  gem 'guard', '~> 2.6.1'
+  gem 'guard', '~> 2.14'
+  gem 'guard-inch'
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-yield', '~> 0.1.0', require: false
+  gem 'yard'
+  gem 'yardstick'
+  gem 'yard-doctest'
 end
 
 group :test do

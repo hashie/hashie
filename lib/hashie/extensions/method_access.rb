@@ -11,11 +11,11 @@ module Hashie
     # key methods.
     #
     # @example
-    #   class User < Hash
+    #   class UserWithProperties < Hash
     #     include Hashie::Extensions::MethodReader
     #   end
     #
-    #   user = User.new
+    #   user = UserWithProperties.new
     #   user['first_name'] = 'Michael'
     #   user.first_name # => 'Michael'
     #
@@ -24,8 +24,6 @@ module Hashie
     #
     #   user[:birthday] = nil
     #   user.birthday # => nil
-    #
-    #   user.not_declared # => NoMethodError
     module MethodReader
       def respond_to?(name, include_private = false)
         return true if key?(name.to_s) || key?(name.to_sym)
@@ -57,7 +55,7 @@ module Hashie
     # Note that MethodWriter also overrides #respond_to such
     # that any #method_name= will respond appropriately as true.
     #
-    # @example
+    # @example Write to a key with a method writer
     #   class MyHash < Hash
     #     include Hashie::Extensions::MethodWriter
     #   end
@@ -94,7 +92,7 @@ module Hashie
     # of the method for existing keys. It also patches #respond_to
     # to appropriately detect the query methods.
     #
-    # @example
+    # @example Query a key with a method query
     #   class MyHash < Hash
     #     include Hashie::Extensions::MethodQuery
     #   end
@@ -104,7 +102,6 @@ module Hashie
     #   h.abc? # => true
     #   h['def'] = nil
     #   h.def? # => false
-    #   h.hji? # => NoMethodError
     module MethodQuery
       def respond_to?(name, include_private = false)
         if query_method?(name) && indifferent_key?(key_from_query_method(name))
@@ -178,7 +175,7 @@ module Hashie
     #   h['awesome'] # => 'sauce'
     #   h.zip = 'a-dee-doo-dah'
     #   h.zip # => 'a-dee-doo-dah'
-    #   h.__zip # => [[['awesome', 'sauce'], ['zip', 'a-dee-doo-dah']]]
+    #   h.__zip # => [[['awesome', 'sauce']], [['zip', 'a-dee-doo-dah']]]
     #
     module MethodOverridingWriter
       def convert_key(key)

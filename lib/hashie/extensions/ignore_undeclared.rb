@@ -10,7 +10,7 @@ module Hashie
     # that property was provided at initialization.
     #
     # @example
-    #   class Person < Trash
+    #   class TrashyPerson < Hashie::Trash
     #     include Hashie::Extensions::IgnoreUndeclared
     #
     #     property :first_name
@@ -23,11 +23,11 @@ module Hashie
     #      :email => 'freddy@example.com'
     #   }
     #
-    #   p = Person.new(user_data) # 'email' is silently ignored
+    #   p = TrashyPerson.new(user_data) # 'email' is silently ignored
     #
     #   p.first_name # => 'Freddy'
     #   p.last_name  # => 'Nostrils'
-    #   p.email      # => NoMethodError
+    #   p.email      # => raise NoMethodError, "undefined method `email' for nil:NilClass"
     module IgnoreUndeclared
       def initialize_attributes(attributes)
         return unless attributes
