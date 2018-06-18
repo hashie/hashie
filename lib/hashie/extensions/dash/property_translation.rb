@@ -74,7 +74,7 @@ module Hashie
 
             if options[:from]
               if property_name == options[:from]
-                fail ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
+                raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
               end
 
               translations_hash[options[:from]] ||= {}
@@ -85,10 +85,8 @@ module Hashie
                   self[name] = with.respond_to?(:call) ? with.call(val) : val
                 end
               end
-            else
-              if options[:transform_with].respond_to? :call
-                transforms[property_name] = options[:transform_with]
-              end
+            elsif options[:transform_with].respond_to? :call
+              transforms[property_name] = options[:transform_with]
             end
           end
 
@@ -107,11 +105,11 @@ module Hashie
           def translations
             @translations ||= {}.tap do |h|
               translations_hash.each do |(property_name, property_translations)|
-                if property_translations.size > 1
-                  h[property_name] = property_translations.keys
-                else
-                  h[property_name] = property_translations.keys.first
-                end
+                h[property_name] = if property_translations.size > 1
+                                     property_translations.keys
+                                   else
+                                     property_translations.keys.first
+                                   end
               end
             end
           end
@@ -119,7 +117,7 @@ module Hashie
           def inverse_translations
             @inverse_translations ||= {}.tap do |h|
               translations_hash.each do |(property_name, property_translations)|
-                property_translations.keys.each do |k|
+                property_translations.each_key do |k|
                   h[k] = property_name
                 end
               end

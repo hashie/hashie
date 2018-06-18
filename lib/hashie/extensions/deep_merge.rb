@@ -20,15 +20,14 @@ module Hashie
 
       def _recursive_merge(hash, other_hash, &block)
         other_hash.each do |k, v|
-          hash[k] = if hash.key?(k) && hash[k].is_a?(::Hash) && v.is_a?(::Hash)
-                      _recursive_merge(hash[k], v, &block)
-                    else
-                      if hash.key?(k) && block_given?
-                        block.call(k, hash[k], v)
-                      else
-                        v.respond_to?(:deep_dup) ? v.deep_dup : v
-                      end
-                    end
+          hash[k] =
+            if hash.key?(k) && hash[k].is_a?(::Hash) && v.is_a?(::Hash)
+              _recursive_merge(hash[k], v, &block)
+            elsif hash.key?(k) && block_given?
+              yield(k, hash[k], v)
+            else
+              v.respond_to?(:deep_dup) ? v.deep_dup : v
+            end
         end
         hash
       end

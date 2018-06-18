@@ -14,13 +14,11 @@ module Hashie
       #   mash['string_key'] == mash[:string_key]  #=> true
       #   mash[:symbol_key] == mash['symbol_key']  #=> true
       module KeepOriginalKeys
-        private
-
         def self.included(descendant)
-          unless descendant <= Hashie::Mash
-            fail ArgumentError, "#{descendant} is not a kind of Hashie::Mash"
-          end
+          raise ArgumentError, "#{descendant} is not a kind of Hashie::Mash" unless descendant <= Hashie::Mash
         end
+
+        private
 
         # Converts the key when necessary to access the correct Mash key.
         #

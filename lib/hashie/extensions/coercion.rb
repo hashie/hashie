@@ -10,14 +10,14 @@ module Hashie
         Rational   => :to_r,
         String     => :to_s,
         Symbol     => :to_sym
-      }
+      }.freeze
 
       ABSTRACT_CORE_TYPES = if RubyVersion.new(RUBY_VERSION) >= RubyVersion.new('2.4.0')
                               { Numeric => [Integer, Float, Complex, Rational] }
                             else
                               {
-                                Integer => [Fixnum, Bignum],
-                                Numeric => [Fixnum, Bignum, Float, Complex, Rational]
+                                Integer => [Fixnum, Bignum], # rubocop:disable Lint/UnifiedInteger
+                                Numeric => [Fixnum, Bignum, Float, Complex, Rational] # rubocop:disable Lint/UnifiedInteger
                               }
                             end
 
@@ -78,7 +78,7 @@ module Hashie
           attrs.each { |key| key_coercions[key] = into }
         end
 
-        alias_method :coerce_keys, :coerce_key
+        alias coerce_keys coerce_key
 
         # Returns a hash of any existing key coercions.
         def key_coercions
@@ -180,7 +180,7 @@ module Hashie
               type.new(value)
             end
           else
-            fail TypeError, "#{type} is not a coercable type"
+            raise TypeError, "#{type} is not a coercable type"
           end
         end
 

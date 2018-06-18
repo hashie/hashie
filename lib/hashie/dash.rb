@@ -15,7 +15,7 @@ module Hashie
   class Dash < Hash
     include Hashie::Extensions::PrettyInspect
 
-    alias_method :to_s, :inspect
+    alias to_s inspect
 
     # Defines a property on the Dash. Options are
     # as follows:
@@ -48,16 +48,14 @@ module Hashie
         define_method(property_assignment) { |value| self.[]=(property_name, value) }
       end
 
-      if defined? @subclasses
-        @subclasses.each { |klass| klass.property(property_name, options) }
-      end
+      @subclasses.each { |klass| klass.property(property_name, options) } if defined? @subclasses
 
       condition = options.delete(:required)
       if condition
         message = options.delete(:message) || "is required for #{name}."
         required_properties[property_name] = { condition: condition, message: message }
-      else
-        fail ArgumentError, 'The :message option should be used with :required option.' if options.key?(:message)
+      elsif options.key?(:message)
+        raise ArgumentError, 'The :message option should be used with :required option.'
       end
     end
 
@@ -111,8 +109,8 @@ module Hashie
       assert_required_attributes_set!
     end
 
-    alias_method :_regular_reader, :[]
-    alias_method :_regular_writer, :[]=
+    alias _regular_reader []
+    alias _regular_writer []=
     private :_regular_reader, :_regular_writer
 
     # Retrieve a value from the Dash (will return the
@@ -163,11 +161,12 @@ module Hashie
       update_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
+        next unless self[prop].nil?
         self[prop] = begin
           value.dup
         rescue TypeError
           value
-        end if self[prop].nil?
+        end
       end
       assert_required_attributes_set!
     end
@@ -208,11 +207,11 @@ module Hashie
     end
 
     def fail_property_required_error!(property)
-      fail ArgumentError, "The property '#{property}' #{self.class.required_properties[property][:message]}"
+      raise ArgumentError, "The property '#{property}' #{self.class.required_properties[property][:message]}"
     end
 
     def fail_no_property_error!(property)
-      fail NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
+      raise NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
     end
 
     def required?(property)
@@ -220,9 +219,9 @@ module Hashie
 
       condition = self.class.required_properties[property][:condition]
       case condition
-      when Proc   then !!(instance_exec(&condition))
-      when Symbol then !!(send(condition))
-      else             !!(condition)
+      when Proc   then !!instance_exec(&condition)
+      when Symbol then !!send(condition)
+      else             !!condition
       end
     end
   end

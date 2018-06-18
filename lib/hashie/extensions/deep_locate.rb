@@ -61,8 +61,6 @@ module Hashie
         Hashie::Extensions::DeepLocate.deep_locate(comparator, self)
       end
 
-      private
-
       def self._construct_key_comparator(search_key, object)
         search_key = search_key.to_s if defined?(::ActiveSupport::HashWithIndifferentAccess) && object.is_a?(::ActiveSupport::HashWithIndifferentAccess)
         search_key = search_key.to_s if object.respond_to?(:indifferent_access?) && object.indifferent_access?
@@ -71,12 +69,11 @@ module Hashie
           ->(key, _, _) { key == non_callable_object }
         end.call(search_key)
       end
+      private_class_method :_construct_key_comparator
 
       def self._deep_locate(comparator, object, result = [])
         if object.is_a?(::Enumerable)
-          if object.any? { |value| _match_comparator?(value, comparator, object) }
-            result.push object
-          end
+          result.push object if object.any? { |value| _match_comparator?(value, comparator, object) }
           (object.respond_to?(:values) ? object.values : object.entries).each do |value|
             _deep_locate(comparator, value, result)
           end
@@ -84,6 +81,7 @@ module Hashie
 
         result
       end
+      private_class_method :_deep_locate
 
       def self._match_comparator?(value, comparator, object)
         if object.is_a?(::Hash)
@@ -94,6 +92,7 @@ module Hashie
 
         comparator.call(key, value, object)
       end
+      private_class_method :_match_comparator?
     end
   end
 end

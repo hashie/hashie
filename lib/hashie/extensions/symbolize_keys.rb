@@ -44,7 +44,7 @@ module Hashie
         #   test # => {:abc => 'def'}
         def symbolize_keys!(hash)
           hash.extend(Hashie::Extensions::SymbolizeKeys) unless hash.respond_to?(:symbolize_keys!)
-          hash.keys.each do |k|
+          hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
             symbolize_keys_recursively!(hash[k])
             hash[k.to_sym] = hash.delete(k)
           end

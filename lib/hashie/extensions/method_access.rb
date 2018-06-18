@@ -27,7 +27,7 @@ module Hashie
     #
     #   user.not_declared # => NoMethodError
     module MethodReader
-      def respond_to?(name, include_private = false)
+      def respond_to_missing?(name, include_private = false)
         return true if key?(name.to_s) || key?(name.to_sym)
         super
       end
@@ -67,15 +67,13 @@ module Hashie
     #   h['awesome'] # => 'sauce'
     #
     module MethodWriter
-      def respond_to?(name, include_private = false)
+      def respond_to_missing?(name, include_private = false)
         return true if name.to_s =~ /=$/
         super
       end
 
       def method_missing(name, *args)
-        if args.size == 1 && name.to_s =~ /(.*)=$/
-          return self[convert_key(Regexp.last_match[1])] = args.first
-        end
+        return self[convert_key(Regexp.last_match[1])] = args.first if args.size == 1 && name.to_s =~ /(.*)=$/
 
         super
       end
@@ -106,7 +104,7 @@ module Hashie
     #   h.def? # => false
     #   h.hji? # => NoMethodError
     module MethodQuery
-      def respond_to?(name, include_private = false)
+      def respond_to_missing?(name, include_private = false)
         if query_method?(name) && indifferent_key?(key_from_query_method(name))
           true
         else

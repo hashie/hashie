@@ -44,7 +44,7 @@ module Hashie
         #   test # => {'abc' => 'def'}
         def stringify_keys!(hash)
           hash.extend(Hashie::Extensions::StringifyKeys) unless hash.respond_to?(:stringify_keys!)
-          hash.keys.each do |k|
+          hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
             stringify_keys_recursively!(hash[k])
             hash[k.to_s] = hash.delete(k)
           end

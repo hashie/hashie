@@ -32,12 +32,12 @@ module Hashie
           alias_method :regular_writer, :[]= unless method_defined?(:regular_writer)
           alias_method :[]=, :indifferent_writer
           alias_method :store, :indifferent_writer
-          %w(default update replace fetch delete key? values_at).each do |m|
+          %w[default update replace fetch delete key? values_at].each do |m|
             alias_method "regular_#{m}", m unless method_defined?("regular_#{m}")
             alias_method m, "indifferent_#{m}"
           end
 
-          %w(include? member? has_key?).each do |key_alias|
+          %w[include? member? has_key?].each do |key_alias|
             alias_method key_alias, :indifferent_key?
           end
 
@@ -75,7 +75,7 @@ module Hashie
       # their proper indifferent state. Used when IndifferentAccess
       # is injecting itself into member hashes.
       def convert!
-        keys.each do |k|
+        keys.each do |k| # rubocop:disable Performance/HashEachMethods
           regular_writer convert_key(k), indifferent_value(regular_delete(k))
         end
         self

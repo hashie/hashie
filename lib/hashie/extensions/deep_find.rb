@@ -19,7 +19,7 @@ module Hashie
         _deep_find(key)
       end
 
-      alias_method :deep_detect, :deep_find
+      alias deep_detect deep_find
 
       # Performs a depth-first search on deeply nested data structures for
       # a key and returns all occurrences of the key.
@@ -40,7 +40,7 @@ module Hashie
         matches.empty? ? nil : matches
       end
 
-      alias_method :deep_select, :deep_find_all
+      alias deep_select deep_find_all
 
       private
 

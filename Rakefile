@@ -24,9 +24,9 @@ task :integration_specs do
   run_all_integration_specs(handler: handler, logger: ->(msg) { puts msg })
 
   if status_codes.any?
-    $stderr.puts "#{status_codes.size} integration test(s) failed"
+    warn "#{status_codes.size} integration test(s) failed"
     exit status_codes.last
   end
 end
 
-task default: [:rubocop, :spec, :integration_specs]
+task default: %i[rubocop spec integration_specs]

@@ -78,7 +78,7 @@ describe Hashie::Extensions::DeepLocate do
         [
           lambda do |_key, _value, object|
             object.is_a?(Array) &&
-            !object.extend(described_class).deep_locate(:match).empty?
+              !object.extend(described_class).deep_locate(:match).empty?
           end,
           [
             hash[:query][:bool][:must],
