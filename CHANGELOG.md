@@ -12,6 +12,7 @@ scheme are considered to be bugs.
 
 ### Added
 
+* [#455](https://github.com/intridea/hashie/pull/455): Allow overriding methods when passing in a hash - [@lnestor](https://github.com/lnestor).
 * Your contribution here.
 
 ### Changed

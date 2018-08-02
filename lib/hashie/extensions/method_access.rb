@@ -223,9 +223,43 @@ module Hashie
     # underscores.
     module MethodAccessWithOverride
       def self.included(base)
-        [MethodReader, MethodOverridingWriter, MethodQuery].each do |mod|
+        [MethodReader, MethodOverridingWriter, MethodQuery, MethodOverridingInitializer].each do |mod|
           base.send :include, mod
         end
+      end
+    end
+
+    # MethodOverridingInitializer allows you to override default hash
+    # methods when passing in values from an existing hash. The overriden
+    # methods are aliased with two leading underscores.
+    #
+    # @example
+    #   class MyHash < Hash
+    #     include Hashie::Extensions::MethodOverridingInitializer
+    #   end
+    #
+    #   h = MyHash.new(zip: 'a-dee-doo-dah')
+    #   h.zip # => 'a-dee-doo-dah'
+    #   h.__zip # => [[['zip', 'a-dee-doo-dah']]]
+    module MethodOverridingInitializer
+      def initialize(hash = {})
+        hash.each do |key, value|
+          skey = key.to_s
+          redefine_method(skey) if method?(skey)
+          self[skey] = value
+        end
+      end
+
+      protected
+
+      def method?(name)
+        methods.map(&:to_s).include?(name)
+      end
+
+      def redefine_method(method_name)
+        eigenclass = class << self; self; end
+        eigenclass.__send__(:alias_method, "__#{method_name}", method_name)
+        eigenclass.__send__(:define_method, method_name, -> { self[method_name] })
       end
     end
   end

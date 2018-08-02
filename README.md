@@ -243,6 +243,26 @@ overriding.zip   #=> 'a-dee-doo-dah'
 overriding.__zip #=> [[['zip', 'a-dee-doo-dah']]]
 ```
 
+### MethodOverridingInitializer
+
+The MethodOverridingInitializer extension will override hash methods if you pass in a normal hash to the constructor. It aliases any overridden method with two leading underscores. To include only this initializing functionality, you can include the single module `Hashie::Extensions::MethodOverridingInitializer`.
+
+```ruby
+class MyHash < Hash
+end
+
+class MyOverridingHash < Hash
+  include Hashie::Extensions::MethodOverridingInitializer
+end
+
+non_overriding = MyHash.new(zip: 'a-dee-doo-dah')
+non_overriding.zip #=> []
+
+overriding = MyOverridingHash.new(zip: 'a-dee-doo-dah')
+overriding.zip   #=> 'a-dee-doo-dah'
+overriding.__zip #=> [[['zip', 'a-dee-doo-dah']]]
+```
+
 ### IndifferentAccess
 
 This extension can be mixed in to your Hash subclass to allow you to use Strings or Symbols interchangeably as keys; similar to the `params` hash in Rails.
