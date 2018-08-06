@@ -220,13 +220,4 @@ describe Hashie::Extensions::MethodOverridingInitializer do
       expect(subject.__zip).to eq [[%w[zip a-dee-doo-dah]]]
     end
   end
-
-  context 'when the original hash has double keys' do
-    let(:original_hash) { { zip: 'a-dee-doo-dah', zip: 'a-dee-day' } } # rubocop:disable DuplicatedKey
-    subject { OverridingHash.new(original_hash) }
-
-    it 'returns the value respected by the original hash' do
-      expect(subject.zip).to eq original_hash[:zip]
-    end
-  end
 end
