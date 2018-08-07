@@ -158,6 +158,7 @@ module Hashie
     # to contained shared logic. This module aids in redefining existing hash methods.
     module RedefineMethod
       protected
+
       def method?(name)
         methods.map(&:to_s).include?(name)
       end
@@ -168,7 +169,6 @@ module Hashie
         eigenclass.__send__(:define_method, method_name, -> { self[method_name] })
       end
     end
-
 
     # MethodOverridingWriter gives you #key_name= shortcuts for
     # writing to your hash. It allows methods to be overridden by
@@ -231,7 +231,11 @@ module Hashie
     # underscores.
     module MethodAccessWithOverride
       def self.included(base)
-        [MethodReader, MethodOverridingWriter, MethodQuery, MethodOverridingInitializer].each do |mod|
+        Hashie.logger.info(
+          'MethodOverridingInitializer will be included in MethodAccessWithOverride' \
+          ' by default in Hashie version 4.0'
+        )
+        [MethodReader, MethodOverridingWriter, MethodQuery].each do |mod|
           base.send :include, mod
         end
       end

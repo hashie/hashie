@@ -186,9 +186,8 @@ describe Hashie::Extensions::MethodAccessWithOverride do
     expect((klass.ancestors &
             [Hashie::Extensions::MethodReader,
              Hashie::Extensions::MethodOverridingWriter,
-             Hashie::Extensions::MethodQuery,
-             Hashie::Extensions::MethodOverridingInitializer]
-           ).size).to eq 4
+             Hashie::Extensions::MethodQuery]
+           ).size).to eq 3
   end
 end
 
