@@ -32,6 +32,7 @@ scheme are considered to be bugs.
 * [#436](https://github.com/intridea/hashie/pull/436): Ensure that `Hashie::Extensions::IndifferentAccess` injects itself after a non-destructive merge - [@michaelherold](https://github.com/michaelherold).
 * [#437](https://github.com/intridea/hashie/pull/437): Allow codependent properties to be set on Dash - [@michaelherold](https://github.com/michaelherold).
 * [#438](https://github.com/intridea/hashie/pull/438): Fix: `NameError (uninitialized constant Hashie::Extensions::Parsers::YamlErbParser::Pathname)` in `Hashie::Mash.load` - [@onk](https://github.com/onk).
+* [#457](https://github.com/intridea/hashie/pull/457): Fix `Trash` to allow it to copy properties from other properties - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security
