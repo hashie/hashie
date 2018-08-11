@@ -265,4 +265,52 @@ describe Hashie::Trash do
       expect(subject.first_name).to eq('Frodo')
     end
   end
+
+  context 'when copying properties from other properties' do
+    it 'retains the original and also sets the copy' do
+      simple = Class.new(Hashie::Trash) do
+        property :id
+        property :copy_of_id, from: :id
+      end
+
+      subject = simple.new(id: 1)
+
+      expect(subject.id).to eq(1)
+      expect(subject.copy_of_id).to eq(1)
+    end
+
+    it 'grabs the default for the original if it is not set' do
+      with_default = Class.new(Hashie::Trash) do
+        property :id, default: 0
+        property :copy_of_id, from: :id
+      end
+
+      subject = with_default.new
+
+      expect(subject.id).to eq(0)
+      expect(subject.copy_of_id).to eq(0)
+    end
+
+    it 'can be a required value' do
+      with_required = Class.new(Hashie::Trash) do
+        property :id
+        property :copy_of_id, from: :id, required: true, message: 'must be set'
+      end
+
+      expect { with_required.new }.to raise_error(ArgumentError, "The property 'copy_of_id' must be set")
+    end
+
+    it 'does not set properties that do not exist' do
+      from_non_property = Class.new(Hashie::Trash) do
+        property :copy_of_value, from: :value
+      end
+
+      subject = from_non_property.new(value: 0)
+
+      expect(subject).not_to respond_to(:value)
+      expect { subject[:value] }.to raise_error(NoMethodError, "The property 'value' is not defined for .")
+      expect(subject.to_h[:value]).to eq(nil)
+      expect(subject.copy_of_value).to eq(0)
+    end
+  end
 end
