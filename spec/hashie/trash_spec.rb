@@ -312,5 +312,17 @@ describe Hashie::Trash do
       expect(subject.to_h[:value]).to eq(nil)
       expect(subject.copy_of_value).to eq(0)
     end
+
+    it 'is not order-dependent in definition' do
+      simple = Class.new(Hashie::Trash) do
+        property :copy_of_id, from: :id
+        property :id
+      end
+
+      subject = simple.new(id: 1)
+
+      expect(subject.id).to eq(1)
+      expect(subject.copy_of_id).to eq(1)
+    end
   end
 end

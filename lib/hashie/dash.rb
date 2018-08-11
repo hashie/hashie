@@ -42,11 +42,8 @@ module Hashie
         defaults.delete property_name
       end
 
-      unless instance_methods.map(&:to_s).include?("#{property_name}=")
-        define_method(property_name) { |&block| self.[](property_name, &block) }
-        property_assignment = "#{property_name}=".to_sym
-        define_method(property_assignment) { |value| self.[]=(property_name, value) }
-      end
+      define_getter_for(property_name)
+      define_setter_for(property_name)
 
       @subclasses.each { |klass| klass.property(property_name, options) } if defined? @subclasses
 
@@ -61,9 +58,11 @@ module Hashie
 
     class << self
       attr_reader :properties, :defaults
+      attr_reader :getters
       attr_reader :required_properties
     end
     instance_variable_set('@properties', Set.new)
+    instance_variable_set('@getters', Set.new)
     instance_variable_set('@defaults', {})
     instance_variable_set('@required_properties', {})
 
@@ -71,6 +70,7 @@ module Hashie
       super
       (@subclasses ||= Set.new) << klass
       klass.instance_variable_set('@properties', properties.dup)
+      klass.instance_variable_set('@getters', getters.dup)
       klass.instance_variable_set('@defaults', defaults.dup)
       klass.instance_variable_set('@required_properties', required_properties.dup)
     end
@@ -85,6 +85,18 @@ module Hashie
     # required.
     def self.required?(name)
       required_properties.key? name
+    end
+
+    private_class_method def self.define_getter_for(property_name)
+      return if getters.include?(property_name)
+      define_method(property_name) { |&block| self.[](property_name, &block) }
+      getters << property_name
+    end
+
+    private_class_method def self.define_setter_for(property_name)
+      setter = :"#{property_name}="
+      return if instance_methods.include?(setter)
+      define_method(setter) { |value| self.[]=(property_name, value) }
     end
 
     # You may initialize a Dash with an attributes hash
