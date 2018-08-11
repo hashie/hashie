@@ -40,7 +40,7 @@ module Hashie
       module PropertyTranslation
         def self.included(base)
           base.instance_variable_set(:@transforms, {})
-          base.instance_variable_set(:@translations_hash, {})
+          base.instance_variable_set(:@translations_hash, ::Hash.new { |hash, key| hash[key] = {} })
           base.extend(ClassMethods)
           base.send(:include, InstanceMethods)
         end
@@ -72,21 +72,16 @@ module Hashie
           def property(property_name, options = {})
             super
 
-            if options[:from]
-              if property_name == options[:from]
-                raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
-              end
+            from = options[:from]
+            converter = options[:with]
+            transformer = options[:transform_with]
 
-              translations_hash[options[:from]] ||= {}
-              translations_hash[options[:from]][property_name] = options[:with] || options[:transform_with]
-
-              define_method "#{options[:from]}=" do |val|
-                self.class.translations_hash[options[:from]].each do |name, with|
-                  self[name] = with.respond_to?(:call) ? with.call(val) : val
-                end
-              end
-            elsif options[:transform_with].respond_to? :call
-              transforms[property_name] = options[:transform_with]
+            if from
+              fail_self_transformation_error!(property_name) if property_name == from
+              define_translation(from, property_name, converter || transformer)
+              define_writer_for_source_property(from)
+            elsif valid_transformer?(transformer)
+              transforms[property_name] = transformer
             end
           end
 
@@ -103,25 +98,48 @@ module Hashie
           end
 
           def translations
-            @translations ||= {}.tap do |h|
+            @translations ||= {}.tap do |translations|
               translations_hash.each do |(property_name, property_translations)|
-                h[property_name] = if property_translations.size > 1
-                                     property_translations.keys
-                                   else
-                                     property_translations.keys.first
-                                   end
+                translations[property_name] =
+                  if property_translations.size > 1
+                    property_translations.keys
+                  else
+                    property_translations.keys.first
+                  end
               end
             end
           end
 
           def inverse_translations
-            @inverse_translations ||= {}.tap do |h|
+            @inverse_translations ||= {}.tap do |translations|
               translations_hash.each do |(property_name, property_translations)|
-                property_translations.each_key do |k|
-                  h[k] = property_name
+                property_translations.each_key do |key|
+                  translations[key] = property_name
                 end
               end
             end
+          end
+
+          private
+
+          def define_translation(from, property_name, translator)
+            translations_hash[from][property_name] = translator
+          end
+
+          def define_writer_for_source_property(property)
+            define_method "#{property}=" do |val|
+              __translations[property].each do |name, with|
+                self[name] = with.respond_to?(:call) ? with.call(val) : val
+              end
+            end
+          end
+
+          def fail_self_transformation_error!(property_name)
+            raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
+          end
+
+          def valid_transformer?(transformer)
+            transformer.respond_to? :call
           end
         end
 
@@ -155,6 +173,12 @@ module Hashie
           def property_exists?(property)
             fail_no_property_error!(property) unless self.class.property?(property)
             true
+          end
+
+          private
+
+          def __translations
+            self.class.translations_hash
           end
         end
       end
