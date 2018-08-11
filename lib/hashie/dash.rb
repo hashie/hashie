@@ -135,6 +135,10 @@ module Hashie
       super(property, value)
     end
 
+    def set_hack_property_value(property, value)
+      super.send('[]=', property, value)
+    end
+
     def merge(other_hash)
       new_dash = dup
       other_hash.each do |k, v|

@@ -88,7 +88,7 @@ describe Hashie::Trash do
     end
   end
 
-  describe ' initializing with a Hash' do
+  describe 'initializing with a Hash' do
     it 'does not initialize non-existent properties' do
       expect { TrashTest.new(bork: 'abc') }.to raise_error(NoMethodError)
     end
@@ -105,6 +105,56 @@ describe Hashie::Trash do
 
     it 'sets the translated properties' do
       expect(TrashTest.new(firstName: 'Michael').first_name).to eq 'Michael'
+    end
+  end
+
+  describe 'translating properties multiple times' do
+    context 'same field' do
+      class TrashTestMultipleSame < Hashie::Trash
+        property :id
+        property :copy_of_id, from: :id
+      end
+
+      subject do
+        TrashTestMultipleSame.new(id: '1')
+      end
+
+      it 'sets the translated properties' do
+        expect(subject.id).to eq '1'
+        expect(subject.copy_of_id).to eq '1'
+      end
+    end
+
+    context 'same field out of order' do
+      class TrashTestMultipleSameOutOfOrder < Hashie::Trash
+        property :copy_of_id, from: :id
+        property :id
+      end
+
+      subject do
+        TrashTestMultipleSameOutOfOrder.new(id: '1')
+      end
+
+      it 'sets the translated properties' do
+        expect(subject.id).to eq '1'
+        expect(subject.copy_of_id).to eq '1'
+      end
+    end
+
+    context 'different field' do
+      class TrashTestMultipleDifferent < Hashie::Trash
+        property :id, from: :someId
+        property :copy_of_id, from: :someId
+      end
+
+      subject do
+        TrashTestMultipleDifferent.new(someId: '1')
+      end
+
+      it 'sets the translated properties' do
+        expect(subject.id).to eq '1'
+        expect(subject.copy_of_id).to eq '1'
+      end
     end
   end
 

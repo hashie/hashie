@@ -72,6 +72,10 @@ module Hashie
           def property(property_name, options = {})
             super
 
+            define_method property_name do
+              _regular_reader property_name
+            end
+
             if options[:from]
               if property_name == options[:from]
                 raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
@@ -82,7 +86,9 @@ module Hashie
 
               define_method "#{options[:from]}=" do |val|
                 self.class.translations_hash[options[:from]].each do |name, with|
-                  self[name] = with.respond_to?(:call) ? with.call(val) : val
+                  with_val = with.respond_to?(:call) ? with.call(val) : val
+                  self[name] = with_val
+                  _regular_writer options[:from], with_val
                 end
               end
             elsif options[:transform_with].respond_to? :call
