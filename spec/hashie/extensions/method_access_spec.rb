@@ -181,8 +181,46 @@ end
 
 describe Hashie::Extensions::MethodAccessWithOverride do
   it 'includes all of the other method mixins' do
+    mod_list = [
+      Hashie::Extensions::MethodReader,
+      Hashie::Extensions::MethodOverridingWriter,
+      Hashie::Extensions::MethodQuery,
+      Hashie::Extensions::MethodOverridingInitializer
+    ]
+
     klass = Class.new(Hash)
     klass.send :include, Hashie::Extensions::MethodAccessWithOverride
-    expect((klass.ancestors & [Hashie::Extensions::MethodReader, Hashie::Extensions::MethodOverridingWriter, Hashie::Extensions::MethodQuery]).size).to eq 3
+
+    expect((klass.ancestors & mod_list).size).to eq 4
+  end
+end
+
+describe Hashie::Extensions::MethodOverridingInitializer do
+  class OverridingHash < Hash
+    include Hashie::Extensions::MethodOverridingInitializer
+  end
+
+  context 'when the key is a string' do
+    subject { OverridingHash.new('zip' => 'a-dee-doo-dah') }
+
+    it 'overrides the original method' do
+      expect(subject.zip).to eq 'a-dee-doo-dah'
+    end
+
+    it 'aliases the method with two leading underscores' do
+      expect(subject.__zip).to eq [[%w[zip a-dee-doo-dah]]]
+    end
+  end
+
+  context 'when the key is a symbol' do
+    subject { OverridingHash.new(zip: 'a-dee-doo-dah') }
+
+    it 'overrides the original method' do
+      expect(subject.zip).to eq 'a-dee-doo-dah'
+    end
+
+    it 'aliases the method with two leading underscores' do
+      expect(subject.__zip).to eq [[%w[zip a-dee-doo-dah]]]
+    end
   end
 end
