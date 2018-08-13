@@ -6,26 +6,13 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [3.6.0] - 2018-08-13
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.5.7...master
+[3.6.0]: https://github.com/intridea/hashie/compare/v3.5.7...v3.6.0
 
 ### Added
 
 * [#455](https://github.com/intridea/hashie/pull/455): Allow overriding methods when passing in a hash - [@lnestor](https://github.com/lnestor).
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
@@ -34,18 +21,12 @@ scheme are considered to be bugs.
 * [#437](https://github.com/intridea/hashie/pull/437): Allow codependent properties to be set on Dash - [@michaelherold](https://github.com/michaelherold).
 * [#438](https://github.com/intridea/hashie/pull/438): Fix: `NameError (uninitialized constant Hashie::Extensions::Parsers::YamlErbParser::Pathname)` in `Hashie::Mash.load` - [@onk](https://github.com/onk).
 * [#457](https://github.com/intridea/hashie/pull/457): Fix `Trash` to allow it to copy properties from other properties - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ### Miscellaneous
 
 * [#433](https://github.com/intridea/hashie/pull/433): Update Rubocop to the most recent version - [@michaelherold](https://github.com/michaelherold).
 * [#434](https://github.com/intridea/hashie/pull/434): Add documentation around Mash sub-Hashes - [@michaelherold](https://github.com/michaelherold).
 * [#439](https://github.com/intridea/hashie/pull/439): Add an integration spec for Elasticsearch - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
 
 ## [3.5.7] - 2017-12-19
 
