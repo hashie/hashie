@@ -1,0 +1,11 @@
+accounts: &base_accounts
+  admin:
+    password: secret
+
+company_a:
+  accounts: &accounts
+    <<: *base_accounts
+
+# company_b:
+#   accounts: &accounts
+#     <<: *base_accounts
