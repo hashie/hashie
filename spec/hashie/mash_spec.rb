@@ -694,6 +694,14 @@ describe Hashie::Mash do
         expect(subject.object_id).to eq subject.object_id
       end
     end
+
+    context 'when the file has aliases in it' do
+      it 'can use the aliases and does not raise an error' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml')
+
+        expect(mash.company_a.accounts.admin.password).to eq('secret')
+      end
+    end
   end
 
   describe '#to_module(mash_method_name)' do

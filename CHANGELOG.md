@@ -28,6 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#459](https://github.com/intridea/hashie/pull/459): Fixed a regression in `Mash.load` that disallowed aliases - [@arekt](https://github.com/arekt) and [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security
