@@ -37,6 +37,7 @@ scheme are considered to be bugs.
 * [#459](https://github.com/intridea/hashie/pull/459): Fixed a regression in `Mash.load` that disallowed aliases - [@arekt](https://github.com/arekt) and [@michaelherold](https://github.com/michaelherold).
 * [#465](https://github.com/intridea/hashie/pull/465): Fixed `deep_update` to call any readers when a key exists - [@laertispappas](https://github.com/laertispappas).
 * [#479](https://github.com/intridea/hashie/pull/479): Fixed an issue with `Hash#except` not returning a `Mash` in Rails 6 - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#489](https://github.com/intridea/hashie/pull/489): Updated the documentation to exlain the behavior of `Mash` and keyword arguments - [@Bhacaz](https://github.com/Bhacaz).
 * Your contribution here.
 
 ### Security
