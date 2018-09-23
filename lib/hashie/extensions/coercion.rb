@@ -159,10 +159,10 @@ module Hashie
 
         def build_coercion(type)
           if type.is_a? Enumerable
-            if type.class <= ::Hash
+            if type.class == ::Hash
               type, key_type, value_type = type.class, *type.first
               build_hash_coercion(type, key_type, value_type)
-            else # Enumerable but not Hash: Array, Set
+            else
               value_type = type.first
               type = type.class
               build_container_coercion(type, value_type)
