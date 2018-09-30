@@ -41,7 +41,8 @@ describe Hashie::Extensions::IgnoreUndeclared do
         property :some_other_key
       end
       hash = ForgivingTrashWithMergeAndProperty.new(some_ignored_key: 17, some_key: 12)
-      expect(hash.deep_merge(some_other_key: 55, some_ignored_key: 18)).to eq(some_key: 12, some_other_key: 55)
+      expect(hash.deep_merge(some_other_key: 55, some_ignored_key: 18))
+        .to eq(some_key: 12, some_other_key: 55)
     end
   end
 end

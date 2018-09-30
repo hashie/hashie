@@ -129,12 +129,14 @@ describe DashTest do
   context 'writing to properties' do
     it 'fails writing a required property to nil' do
       expect { subject.first_name = nil }.to raise_error(*property_required_error('first_name'))
-      expect { required_message.first_name = nil }.to raise_error(*property_required_custom_error('first_name'))
+      expect { required_message.first_name = nil }
+        .to raise_error(*property_required_custom_error('first_name'))
     end
 
     it 'fails writing a required property to nil using []=' do
       expect { subject[:first_name] = nil }.to raise_error(*property_required_error('first_name'))
-      expect { required_message[:first_name] = nil }.to raise_error(*property_required_custom_error('first_name'))
+      expect { required_message[:first_name] = nil }
+        .to raise_error(*property_required_custom_error('first_name'))
     end
 
     it 'fails writing to a non-existent property using []=' do
@@ -505,7 +507,8 @@ end
 
 describe ConditionallyRequiredTest do
   it 'does not allow a conditionally required property to be set to nil if required' do
-    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }.to raise_error(ArgumentError, "The property 'password' must be set, too.")
+    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }
+      .to raise_error(ArgumentError, "The property 'password' must be set, too.")
   end
 
   it 'allows a conditionally required property to be set to nil if not required' do

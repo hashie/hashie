@@ -66,19 +66,43 @@ describe Hash do
     it '#to_hash returns a hash with same keys' do
       hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
       stringified_hash = hash.to_hash
-      expect(stringified_hash).to eq('a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: { 'a' => 'hey', b: 'bar', 123 => 'bob', 'array' => [1, 2, 3] })
+
+      expected = {
+        'a' => 'hey',
+        123 => 'bob',
+        'array' => [1, 2, 3],
+        subhash: { 'a' => 'hey', b: 'bar', 123 => 'bob', 'array' => [1, 2, 3] }
+      }
+
+      expect(stringified_hash).to eq(expected)
     end
 
     it '#to_hash with stringify_keys set to true returns a hash with stringified_keys' do
       hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
       symbolized_hash = hash.to_hash(stringify_keys: true)
-      expect(symbolized_hash).to eq('a' => 'hey', '123' => 'bob', 'array' => [1, 2, 3], 'subhash' => { 'a' => 'hey', 'b' => 'bar', '123' => 'bob', 'array' => [1, 2, 3] })
+
+      expected = {
+        'a' => 'hey',
+        '123' => 'bob',
+        'array' => [1, 2, 3],
+        'subhash' => { 'a' => 'hey', 'b' => 'bar', '123' => 'bob', 'array' => [1, 2, 3] }
+      }
+
+      expect(symbolized_hash).to eq(expected)
     end
 
     it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do
       hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
       symbolized_hash = hash.to_hash(symbolize_keys: true)
-      expect(symbolized_hash).to eq(a: 'hey', :"123" => 'bob', array: [1, 2, 3], subhash: { a: 'hey', b: 'bar', :'123' => 'bob', array: [1, 2, 3] })
+
+      expected = {
+        a: 'hey',
+        :"123" => 'bob',
+        array: [1, 2, 3],
+        subhash: { a: 'hey', b: 'bar', :'123' => 'bob', array: [1, 2, 3] }
+      }
+
+      expect(symbolized_hash).to eq(expected)
     end
   end
 end

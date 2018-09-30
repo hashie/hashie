@@ -64,7 +64,8 @@ describe Hashie::Extensions::DeepFind do
       end
 
       it 'detects all values from a nested hash' do
-        expect(instance.deep_find_all(:title)).to eq([{ type: :string }, 'Call of the Wild', 'Moby Dick', 'Main Library'])
+        expect(instance.deep_find_all(:title))
+          .to eq([{ type: :string }, 'Call of the Wild', 'Moby Dick', 'Main Library'])
       end
     end
   end

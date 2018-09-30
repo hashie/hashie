@@ -15,12 +15,15 @@ module Hashie
     #     >> hash[:cow]
     #       KeyError: key not found: :cow
     #
-    # NOTE: For googlers coming from Python to Ruby, this extension makes a Hash behave more like a "Dictionary".
+    # NOTE: For googlers coming from Python to Ruby, this extension makes a Hash
+    # behave more like a "Dictionary".
     #
     module StrictKeyAccess
       class DefaultError < StandardError
-        def initialize(msg = 'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense', *args)
-          super
+        def initialize
+          super(
+            'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+          )
         end
       end
 

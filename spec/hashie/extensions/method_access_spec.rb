@@ -128,7 +128,14 @@ describe Hashie::Extensions::MethodAccess do
   it 'includes all of the other method mixins' do
     klass = Class.new(Hash)
     klass.send :include, Hashie::Extensions::MethodAccess
-    expect((klass.ancestors & [Hashie::Extensions::MethodReader, Hashie::Extensions::MethodWriter, Hashie::Extensions::MethodQuery]).size).to eq 3
+
+    included_modules = klass.ancestors & [
+      Hashie::Extensions::MethodReader,
+      Hashie::Extensions::MethodWriter,
+      Hashie::Extensions::MethodQuery
+    ]
+
+    expect(included_modules.size).to eq 3
   end
 end
 
