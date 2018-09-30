@@ -29,6 +29,7 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#459](https://github.com/intridea/hashie/pull/459): Fixed a regression in `Mash.load` that disallowed aliases - [@arekt](https://github.com/arekt) and [@michaelherold](https://github.com/michaelherold).
+* [#465](https://github.com/intridea/hashie/pull/465): Fixed `deep_update` to call any readers when a key exists - [@laertispappas](https://github.com/laertispappas).
 * Your contribution here.
 
 ### Security

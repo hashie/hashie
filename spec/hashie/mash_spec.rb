@@ -241,6 +241,15 @@ describe Hashie::Mash do
         expect(duped.details.address).to eq 'Nowhere road'
         expect(duped.details.state).to eq 'West Thoughtleby'
       end
+
+      it 'does not raise an exception when default_proc raises an error' do
+        hash = described_class.new(a: 1) { |_k, _v| raise('Should not be raise I') }
+        other_has = described_class.new(a: 2, b: 2) { |_k, _v| raise('Should not be raise II') }
+        expected_hash = described_class.new(a: 2, b: 2)
+
+        res = hash.merge(other_has)
+        expect(res).to eq(expected_hash)
+      end
     end
 
     describe 'shallow update' do
