@@ -283,7 +283,8 @@ describe Hashie::Extensions::Coercion do
 
       it 'raises errors for non-coercable types' do
         subject.coerce_key :foo, NotInitializable
-        expect { instance[:foo] = 'true' }.to raise_error(Hashie::CoercionError, /NotInitializable is not a coercable type/)
+        expect { instance[:foo] = 'true' }
+          .to raise_error(Hashie::CoercionError, /NotInitializable is not a coercable type/)
       end
 
       it 'can coerce false' do
@@ -566,7 +567,8 @@ describe Hashie::Extensions::Coercion do
           end
 
         subject.coerce_value type, Symbol
-        expect { instance[:hi] = 1 }.to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from #{type} to Symbol/)
+        expect { instance[:hi] = 1 }
+          .to raise_error(Hashie::CoercionError, /Cannot coerce property :hi from #{type} to Symbol/)
       end
 
       it 'coerces Integer to String' do

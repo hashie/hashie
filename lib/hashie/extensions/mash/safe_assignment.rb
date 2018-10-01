@@ -3,7 +3,9 @@ module Hashie
     module Mash
       module SafeAssignment
         def custom_writer(key, *args) #:nodoc:
-          raise ArgumentError, "The property #{key} clashes with an existing method." if !key?(key) && respond_to?(key, true)
+          if !key?(key) && respond_to?(key, true)
+            raise ArgumentError, "The property #{key} clashes with an existing method."
+          end
           super
         end
 

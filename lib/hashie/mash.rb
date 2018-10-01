@@ -16,8 +16,10 @@ module Hashie
   # * No punctuation: Returns the value of the hash for that key, or nil if none exists.
   # * Assignment (<tt>=</tt>): Sets the attribute of the given method name.
   # * Existence (<tt>?</tt>): Returns true or false depending on whether that key has been set.
-  # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it as "touch" for mashes.
-  # * Under Bang (<tt>_</tt>): Like Bang, but returns a new Mash rather than creating a key.  Used to test existance in deep Mashes.
+  # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it
+  #   as "touch" for mashes.
+  # * Under Bang (<tt>_</tt>): Like Bang, but returns a new Mash rather than creating a key.
+  #   Used to test existance in deep Mashes.
   #
   # == Basic Example
   #
@@ -64,8 +66,11 @@ module Hashie
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
 
     class CannotDisableMashWarnings < StandardError
-      def initialize(message = 'You cannot disable warnings on the base Mash class. Please subclass the Mash and disable it in the subclass.')
-        super(message)
+      def initialize
+        super(
+          'You cannot disable warnings on the base Mash class. ' \
+          'Please subclass the Mash and disable it in the subclass.'
+        )
       end
     end
 

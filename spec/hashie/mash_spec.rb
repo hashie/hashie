@@ -234,7 +234,10 @@ describe Hashie::Mash do
       end
 
       it 'copies values for non-duplicate keys when a block is supplied' do
-        duped = subject.merge(details: { address: 'Pasadena CA', state: 'West Thoughtleby' }) { |_, oldv, _| oldv }
+        duped =
+          subject
+          .merge(details: { address: 'Pasadena CA', state: 'West Thoughtleby' }) { |_, oldv, _| oldv }
+
         expect(duped.details.address).to eq 'Nowhere road'
         expect(duped.details.state).to eq 'West Thoughtleby'
       end

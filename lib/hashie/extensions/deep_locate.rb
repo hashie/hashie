@@ -62,7 +62,7 @@ module Hashie
       end
 
       def self._construct_key_comparator(search_key, object)
-        search_key = search_key.to_s if defined?(::ActiveSupport::HashWithIndifferentAccess) && object.is_a?(::ActiveSupport::HashWithIndifferentAccess)
+        search_key = search_key.to_s if activesupport_indifferent?(object)
         search_key = search_key.to_s if object.respond_to?(:indifferent_access?) && object.indifferent_access?
 
         lambda do |non_callable_object|
@@ -93,6 +93,12 @@ module Hashie
         comparator.call(key, value, object)
       end
       private_class_method :_match_comparator?
+
+      def self.activesupport_indifferent?(object)
+        defined?(::ActiveSupport::HashWithIndifferentAccess) &&
+          object.is_a?(::ActiveSupport::HashWithIndifferentAccess)
+      end
+      private_class_method :activesupport_indifferent?
     end
   end
 end

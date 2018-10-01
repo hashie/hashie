@@ -1,5 +1,9 @@
 module Hashie
-  class CoercionError < StandardError; end
+  class CoercionError < StandardError
+    def initialize(key, value, into, message)
+      super("Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{message}")
+    end
+  end
 
   module Extensions
     module Coercion
@@ -12,20 +16,22 @@ module Hashie
         Symbol     => :to_sym
       }.freeze
 
-      ABSTRACT_CORE_TYPES = if RubyVersion.new(RUBY_VERSION) >= RubyVersion.new('2.4.0')
-                              { Numeric => [Integer, Float, Complex, Rational] }
-                            else
-                              {
-                                Integer => [Fixnum, Bignum], # rubocop:disable Lint/UnifiedInteger
-                                Numeric => [Fixnum, Bignum, Float, Complex, Rational] # rubocop:disable Lint/UnifiedInteger
-                              }
-                            end
+      ABSTRACT_CORE_TYPES =
+        if RubyVersion.new(RUBY_VERSION) >= RubyVersion.new('2.4.0')
+          { Numeric => [Integer, Float, Complex, Rational] }
+        else
+          {
+            Integer => [Fixnum, Bignum], # rubocop:disable Lint/UnifiedInteger
+            Numeric => [Fixnum, Bignum, Float, Complex, Rational] # rubocop:disable Lint/UnifiedInteger
+          }
+        end
 
       def self.included(base)
         base.send :include, InstanceMethods
-        base.extend ClassMethods # NOTE: we wanna make sure we first define set_value_with_coercion before extending
-
-        base.send :alias_method, :set_value_without_coercion, :[]= unless base.method_defined?(:set_value_without_coercion)
+        base.extend ClassMethods
+        unless base.method_defined?(:set_value_without_coercion)
+          base.send :alias_method, :set_value_without_coercion, :[]=
+        end
         base.send :alias_method, :[]=, :set_value_with_coercion
       end
 
@@ -37,7 +43,7 @@ module Hashie
             begin
               value = self.class.fetch_coercion(into).call(value)
             rescue NoMethodError, TypeError => e
-              raise CoercionError, "Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{e.message}"
+              raise CoercionError.new(key, value, into, e.message)
             end
           end
 

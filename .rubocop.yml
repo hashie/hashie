@@ -12,6 +12,15 @@ inherit_from: .rubocop_todo.yml
 Layout/IndentHeredoc:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/LineLength:
+  Exclude:
+    - 'Guardfile'
+  Max: 110
+
 Naming/FileName:
   Exclude:
     - 'Dangerfile'

@@ -58,7 +58,9 @@ module Hashie
           end
 
           def permitted_input_keys
-            @permitted_input_keys ||= properties.map { |property| inverse_translations.fetch property, property }
+            @permitted_input_keys ||=
+              properties
+              .map { |property| inverse_translations.fetch property, property }
           end
 
           # Defines a property on the Trash. Options are as follows:

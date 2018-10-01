@@ -37,6 +37,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
+* [#465](https://github.com/intridea/hashie/pull/465): Clean up our RuboCop configuration and fix the outstanding line length violations. This involved some minor refactoring on `Hashie::Extensions::Coercion`, `Hashie::Extensions::Dash::IndifferentAccess`, `Hashie::Extensions::DeepLocate`, `Hashie::Extensions::Mash::SafeAssignment`, and `Hashie::Hash`, but none that were detectable via the test suite - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ## [3.6.0] - 2018-08-13

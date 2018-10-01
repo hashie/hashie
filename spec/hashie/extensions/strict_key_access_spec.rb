@@ -35,34 +35,33 @@ describe Hashie::Extensions::StrictKeyAccess do
     context 'lookup' do
       it('raises an error') do
         # Formatting of the error message does not vary here because raised by StrictKeyAccess
-        expect { instance.key(invalid_value) }.to raise_error KeyError,
-                                                              %(key not found with value of #{invalid_value.inspect})
+        expect { instance.key(invalid_value) }.to raise_error KeyError
       end
     end
   end
   shared_examples_for 'StrictKeyAccess raises KeyError instead of allowing defaults' do
     context '#default' do
       it 'raises an error' do
-        expect { instance.default(invalid_key) }.to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError,
-                                                                'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+        expect { instance.default(invalid_key) }
+          .to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError
       end
     end
     context '#default=' do
       it 'raises an error' do
-        expect { instance.default = invalid_key }.to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError,
-                                                                 'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+        expect { instance.default = invalid_key }
+          .to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError
       end
     end
     context '#default_proc' do
       it 'raises an error' do
-        expect { instance.default_proc }.to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError,
-                                                        'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+        expect { instance.default_proc }
+          .to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError
       end
     end
     context '#default_proc=' do
       it 'raises an error' do
-        expect { instance.default_proc = proc {} }.to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError,
-                                                                  'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+        expect { instance.default_proc = proc {} }
+          .to raise_error Hashie::Extensions::StrictKeyAccess::DefaultError
       end
     end
   end
