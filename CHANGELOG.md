@@ -28,6 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#467](https://github.com/intridea/hashie/pull/467): Fixed `DeepMerge#deep_merge` mutating nested values within the receiver - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security

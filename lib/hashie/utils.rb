@@ -12,5 +12,33 @@ module Hashie
         "defined in #{bound_method.owner}"
       end
     end
+
+    # Duplicates a value or returns the value when it is not duplicable
+    #
+    # @api public
+    #
+    # @param value [Object] the value to safely duplicate
+    # @return [Object] the duplicated value
+    def self.safe_dup(value)
+      case value
+      when Complex, FalseClass, NilClass, Rational, Method, Symbol, TrueClass, *integer_classes
+        value
+      else
+        value.dup
+      end
+    end
+
+    # Lists the classes Ruby uses for integers
+    #
+    # @api private
+    # @return [Array<Class>]
+    def self.integer_classes
+      @integer_classes ||=
+        if const_defined?(:Fixnum)
+          [Fixnum, Bignum] # rubocop:disable Lint/UnifiedInteger
+        else
+          [Integer]
+        end
+    end
   end
 end

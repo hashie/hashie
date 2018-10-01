@@ -14,19 +14,62 @@ describe Hashie::Extensions::DeepMerge do
 
   context 'without &block' do
     let(:h1) do
-      subject.new.merge(a: 'a', a1: 42, b: 'b', c: { c1: 'c1', c2: { a: 'b' }, c3: { d1: 'd1' } })
+      subject.new.merge(
+        a: 'a',
+        a1: 42,
+        b: 'b',
+        c: { c1: 'c1', c2: { a: 'b' }, c3: { d1: 'd1' } },
+        d: nil,
+        d1: false,
+        d2: true,
+        d3: unbound_method,
+        d4: Complex(1),
+        d5: Rational(1)
+      )
     end
     let(:h2) { { a: 1, a1: 1, c: { c1: 2, c2: 'c2', c3: { d2: 'd2' } }, e: { e1: 1 } } }
+    let(:unbound_method) { method(:puts) }
     let(:expected_hash) do
-      { a: 1, a1: 1, b: 'b', c: { c1: 2, c2: 'c2', c3: { d1: 'd1', d2: 'd2' } }, e: { e1: 1 } }
+      {
+        a: 1,
+        a1: 1,
+        b: 'b',
+        c: { c1: 2, c2: 'c2', c3: { d1: 'd1', d2: 'd2' } },
+        d: nil,
+        d1: false,
+        d2: true,
+        d3: unbound_method,
+        d4: Complex(1),
+        d5: Rational(1),
+        e: { e1: 1 }
+      }
     end
 
-    it 'deep merges two hashes' do
-      expect(h1.deep_merge(h2)).to eq expected_hash
+    it 'deep merges two hashes without modifying them' do
+      result = h1.deep_merge(h2)
+
+      expect(result).to eq expected_hash
+      expect(h1).to(
+        eq(
+          a: 'a',
+          a1: 42,
+          b: 'b',
+          c: { c1: 'c1', c2: { a: 'b' }, c3: { d1: 'd1' } },
+          d: nil,
+          d1: false,
+          d2: true,
+          d3: unbound_method,
+          d4: Complex(1),
+          d5: Rational(1)
+        )
+      )
+      expect(h2).to eq(a: 1, a1: 1, c: { c1: 2, c2: 'c2', c3: { d2: 'd2' } }, e: { e1: 1 })
     end
 
     it 'deep merges another hash in place via bang method' do
-      h1.deep_merge!(h2)
+      result = h1.deep_merge!(h2)
+
+      expect(result).to eq expected_hash
       expect(h1).to eq expected_hash
     end
 
