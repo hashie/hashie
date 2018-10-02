@@ -214,7 +214,7 @@ module Hashie
     def deep_update(other_hash, &blk)
       other_hash.each_pair do |k, v|
         key = convert_key(k)
-        if regular_reader(key).is_a?(Mash) && v.is_a?(::Hash)
+        if key?(key) && regular_reader(key).is_a?(Mash) && v.is_a?(::Hash)
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
