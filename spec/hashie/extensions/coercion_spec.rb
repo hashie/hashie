@@ -39,6 +39,8 @@ describe Hashie::Extensions::Coercion do
     context 'on initialization of a new object' do
       class DefaultWithCoercionTest < Hashie::Dash
         include Hashie::Extensions::Coercion
+        include Hashie::Extensions::MergeInitializer
+
         property :first_name
         coerce_key :first_name, String
       end

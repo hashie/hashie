@@ -39,7 +39,7 @@ module Hashie
         def set_value_with_coercion(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
-          unless value.nil? || into.nil?
+          unless into.nil?
             begin
               value = self.class.fetch_coercion(into).call(value)
             rescue NoMethodError, TypeError => e
