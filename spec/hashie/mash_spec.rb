@@ -714,6 +714,13 @@ describe Hashie::Mash do
         expect(mash.company_a.accounts.admin.password).to eq('secret')
       end
     end
+
+    context 'when the file has symbols' do
+      it 'can use symbols and does not raise an error' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml')
+        expect(mash.user_icon.image_size.large.width).to eq(200)
+      end
+    end
   end
 
   describe '#to_module(mash_method_name)' do
