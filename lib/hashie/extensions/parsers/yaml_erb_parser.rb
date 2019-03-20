@@ -14,11 +14,17 @@ module Hashie
         def perform
           template = ERB.new(@content)
           template.filename = @file_path
-          YAML.safe_load template.result, [Symbol], [], true
+          YAML.safe_load template.result, whitelist_classes, [], true
         end
 
         def self.perform(file_path)
           new(file_path).perform
+        end
+
+        private
+
+        def whitelist_classes
+          %w(Symbol)
         end
       end
     end
