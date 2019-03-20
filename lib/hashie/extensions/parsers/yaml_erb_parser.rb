@@ -24,7 +24,7 @@ module Hashie
         private
 
         def whitelist_classes
-          %w(Symbol)
+          %w[Symbol]
         end
       end
     end
