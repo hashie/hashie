@@ -566,7 +566,7 @@ Twitter.extend mash.to_module # NOTE: if you want another name than settings, ca
 Twitter.settings.api_key # => 'abcd'
 ```
 
-You can use another parser (by default: YamlErbParser):
+You can use another parser (by default: [YamlErbParser](lib/hashie/extensions/parsers/yaml_erb_parser.rb)):
 
 ```
 #/etc/data/user.csv
@@ -580,6 +580,14 @@ id | name          | lastname
 mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 # => { 1 => { name: 'John', lastname: 'Doe'}, 2 => { name: 'Laurent', lastname: 'Garnier' } }
 mash[1] #=> { name: 'John', lastname: 'Doe' }
+```
+
+The `Mash#load` method calls `YAML.safe_load(path, [], [], true)`.
+
+Specify `whitelist_symbols`, `whitelist_classes` and `aliases` options as needed.
+
+```ruby
+Mash.load('data/user.csv', whitelist_classes: [Symbol], whitelist_symbols: [], aliases: false)
 ```
 
 ### Mash Extension: KeepOriginalKeys

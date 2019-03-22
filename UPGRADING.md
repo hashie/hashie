@@ -1,6 +1,41 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.7.0
+
+#### Mash#load takes options
+
+The `Hashie::Mash#load` method now accepts options, changing the interface of `Parser#initialize`. If you have a custom parser, you must update its `initialize` method.
+
+For example, `Hashie::Extensions::Parsers::YamlErbParser` now accepts `whitelist_classes`, `whitelist_symbols` and `aliases` options.
+
+Before:
+
+```ruby
+class Hashie::Extensions::Parsers::YamlErbParser
+  def initialize(file_path)
+    @file_path = file_path
+  end
+end
+```
+
+After:
+
+```ruby
+class Hashie::Extensions::Parsers::YamlErbParser
+  def initialize(file_path, options = {})
+    @file_path = file_path
+    @options = options
+  end
+end
+```
+
+Options can now be passed into `Mash#load`.
+
+```ruby
+Mash.load(filename, whitelist_classes: [])
+```
+
 ### Upgrading to 3.5.2
 
 #### Disable logging in Mash subclasses

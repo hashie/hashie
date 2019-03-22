@@ -13,6 +13,7 @@ scheme are considered to be bugs.
 ### Added
 
 * [#323](https://github.com/intridea/hashie/pull/323): Added `Hashie::Extensions::Mash::DefineAccessors` - [@marshall-lee](https://github.com/marshall-lee).
+* [#474](https://github.com/intridea/hashie/pull/474): Expose `YAML#safe_load` options in `Mash#load` - [@riouruma](https://github.com/riouruma), [@dblock](https://github.com/dblock).
 
 ### Changed
 

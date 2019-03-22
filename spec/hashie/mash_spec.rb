@@ -645,7 +645,7 @@ describe Hashie::Mash do
     context 'if the file exists' do
       before do
         expect(File).to receive(:file?).with(path).and_return(true)
-        expect(parser).to receive(:perform).with(path).and_return(config)
+        expect(parser).to receive(:perform).with(path, {}).and_return(config)
       end
 
       it { is_expected.to be_a(Hashie::Mash) }
@@ -677,7 +677,7 @@ describe Hashie::Mash do
 
       before do
         expect(File).to receive(:file?).with(path).and_return(true)
-        expect(parser).to receive(:perform).with(path).and_return(config)
+        expect(parser).to receive(:perform).with(path, {}).and_return(config)
       end
 
       it 'return a Mash from a file' do
@@ -693,8 +693,8 @@ describe Hashie::Mash do
       before do
         expect(File).to receive(:file?).with(path).and_return(true)
         expect(File).to receive(:file?).with("#{path}+1").and_return(true)
-        expect(parser).to receive(:perform).once.with(path).and_return(config)
-        expect(parser).to receive(:perform).once.with("#{path}+1").and_return(config)
+        expect(parser).to receive(:perform).once.with(path, {}).and_return(config)
+        expect(parser).to receive(:perform).once.with("#{path}+1", {}).and_return(config)
       end
 
       it 'cache the loaded yml file', :test_cache do
@@ -710,8 +710,44 @@ describe Hashie::Mash do
     context 'when the file has aliases in it' do
       it 'can use the aliases and does not raise an error' do
         mash = Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml')
-
         expect(mash.company_a.accounts.admin.password).to eq('secret')
+      end
+      it 'can override the value of aliases' do
+        expect do
+          Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
+        end.to raise_error Psych::BadAlias, /base_accounts/
+      end
+    end
+
+    context 'when the file has symbols' do
+      it 'can override the value of whitelist_classes' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', whitelist_classes: [Symbol])
+        expect(mash.user_icon.width).to eq(200)
+      end
+      it 'uses defaults for whitelist_classes' do
+        expect do
+          Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml')
+        end.to raise_error Psych::DisallowedClass, /Symbol/
+      end
+      it 'can override the value of whitelist_symbols' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
+                                 whitelist_classes: [Symbol],
+                                 whitelist_symbols: %i[
+                                   user_icon
+                                   width
+                                   height
+                                 ])
+        expect(mash.user_icon.width).to eq(200)
+      end
+      it 'raises an error on insufficient whitelist_symbols' do
+        expect do
+          Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
+                            whitelist_classes: [Symbol],
+                            whitelist_symbols: %i[
+                              user_icon
+                              width
+                            ])
+        end.to raise_error Psych::DisallowedClass, /Symbol/
       end
     end
   end

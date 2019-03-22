@@ -6,19 +6,23 @@ module Hashie
   module Extensions
     module Parsers
       class YamlErbParser
-        def initialize(file_path)
+        def initialize(file_path, options = {})
           @content = File.read(file_path)
           @file_path = file_path.is_a?(Pathname) ? file_path.to_s : file_path
+          @options = options
         end
 
         def perform
           template = ERB.new(@content)
           template.filename = @file_path
-          YAML.safe_load template.result, [], [], true
+          whitelist_classes = @options.fetch(:whitelist_classes) { [] }
+          whitelist_symbols = @options.fetch(:whitelist_symbols) { [] }
+          aliases = @options.fetch(:aliases) { true }
+          YAML.safe_load template.result, whitelist_classes, whitelist_symbols, aliases
         end
 
-        def self.perform(file_path)
-          new(file_path).perform
+        def self.perform(file_path, options = {})
+          new(file_path, options).perform
         end
       end
     end
