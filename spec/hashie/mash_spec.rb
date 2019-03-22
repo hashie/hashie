@@ -722,11 +722,31 @@ describe Hashie::Mash do
     context 'when the file has symbols' do
       it 'can override the value of whitelist_classes' do
         mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', whitelist_classes: [Symbol])
-        expect(mash.user_icon.image_size.large.width).to eq(200)
+        expect(mash.user_icon.width).to eq(200)
       end
       it 'uses defaults for whitelist_classes' do
         expect do
           Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml')
+        end.to raise_error Psych::DisallowedClass, /Symbol/
+      end
+      it 'can override the value of whitelist_symbols' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
+                                 whitelist_classes: [Symbol],
+                                 whitelist_symbols: %i[
+                                   user_icon
+                                   width
+                                   height
+                                 ])
+        expect(mash.user_icon.width).to eq(200)
+      end
+      it 'raises an error on insufficient whitelist_symbols' do
+        expect do
+          Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
+                            whitelist_classes: [Symbol],
+                            whitelist_symbols: %i[
+                              user_icon
+                              width
+                            ])
         end.to raise_error Psych::DisallowedClass, /Symbol/
       end
     end

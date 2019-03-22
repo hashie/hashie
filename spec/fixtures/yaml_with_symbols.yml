@@ -1,18 +1,3 @@
 :user_icon:
-  :record: profile_image_url
-  :path: users
-  :filename: icon
-  :quality: 60
-  :image_size:
-    :tmp:
-      :width: 100
-      :height: 100
-    :large:
-      :width: 200
-      :height: 200
-    :medium:
-      :width: 100
-      :height: 100
-    :small:
-      :width: 50
-      :height: 50
+  :width: 200
+  :height: 200
