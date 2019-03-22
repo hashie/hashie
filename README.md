@@ -582,6 +582,33 @@ mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 mash[1] #=> { name: 'John', lastname: 'Doe' }
 ```
 
+`Mash.load` calls `YAML.safe_load(path)`, and the default allowed classes are:
+- TrueClass
+- FalseClass
+- NilClass
+- Numeric
+- String
+- Array 
+- Hash
+
+you can customize whitelist classes.
+
+```ruby
+# /lib/hashie/extensions/parser/yaml_erb_parser.rb
+ 
+def perform
+  template = ERB.new(@content)
+  template.filename = @file_path
+  YAML.safe_load template.result, whitelist_classes, [], true
+end
+
+private
+
+def whitelist_classes
+  %w[Symbol]
+end
+```
+  
 ### Mash Extension: KeepOriginalKeys
 
 This extension can be mixed into a Mash to keep the form of any keys passed directly into the Mash. By default, Mash converts keys to strings to give indifferent access. This extension still allows indifferent access, but keeps the form of the keys to eliminate confusion when you're not expecting the keys to change.

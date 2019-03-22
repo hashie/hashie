@@ -1,6 +1,38 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 3.6.1
+
+#### Enable load Symbol class 
+
+If you need to allow loading classes in `Hashie::Mash.load(path)`, you can customize 
+whitelist classes.  
+By default, `safe_load` only allows the following classes:
+
+- TrueClass
+- FalseClass
+- NilClass
+- Numeric
+- String
+- Array 
+- Hash
+
+```ruby
+# /lib/hashie/extensions/parser/yaml_erb_parser.rb
+ 
+def perform
+  template = ERB.new(@content)
+  template.filename = @file_path
+  YAML.safe_load template.result, whitelist_classes, [], true
+end
+
+private
+
+def whitelist_classes
+  %w[Symbol]
+end
+```
+
 ### Upgrading to 3.5.2
 
 #### Disable logging in Mash subclasses
