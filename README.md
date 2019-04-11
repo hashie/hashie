@@ -316,8 +316,8 @@ p.email      # => NoMethodError
 
 ### DeepMerge
 
-This extension allow you to easily include a recursive merging
-system to any Hash descendant:
+This extension allows you to easily include a recursive merging
+system into any Hash descendant:
 
 ```ruby
 class MyHash < Hash
