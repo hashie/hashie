@@ -19,6 +19,11 @@ RSpec.describe 'rails', type: :request do
     expect(Hashie.logger).to eq(Rails.logger)
   end
 
+  it 'works with #except' do
+    mash = Hashie::Mash.new(x: 1, y: 2)
+    expect(mash.except(:x)).to be_a(Hashie::Mash)
+  end
+
   it 'works' do
     get '/'
     assert_select 'h1', 'Hello, world!'
