@@ -78,8 +78,14 @@ module Hashie
     #
     # @api semipublic
     # @return [void]
-    def self.disable_warnings
+    def self.disable_warnings(*method_keys)
       raise CannotDisableMashWarnings if self == Hashie::Mash
+      if method_keys.any?
+        disable_warnings_blacklist.concat(method_keys).tap(&:flatten!).uniq!
+      else
+        disable_warnings_blacklist.clear
+      end
+
       @disable_warnings = true
     end
 
@@ -87,8 +93,17 @@ module Hashie
     #
     # @api semipublic
     # @return [Boolean]
-    def self.disable_warnings?
+    def self.disable_warnings?(method_key = nil)
+      return disable_warnings_blacklist.include?(method_key) if disable_warnings_blacklist.any? && method_key
       @disable_warnings ||= false
+    end
+
+    # Returns an array of blacklisted methods that this class disables warnings for.
+    #
+    # @api semipublic
+    # @return [Boolean]
+    def self.disable_warnings_blacklist
+      @_disable_warnings_blacklist ||= []
     end
 
     # Inheritance hook that sets class configuration when inherited.
@@ -97,7 +112,7 @@ module Hashie
     # @return [void]
     def self.inherited(subclass)
       super
-      subclass.disable_warnings if disable_warnings?
+      subclass.disable_warnings(disable_warnings_blacklist) if disable_warnings?
     end
 
     def self.load(path, options = {})
@@ -346,7 +361,7 @@ module Hashie
     private
 
     def log_built_in_message(method_key)
-      return if self.class.disable_warnings?
+      return if self.class.disable_warnings?(method_key)
 
       method_information = Hashie::Utils.method_information(method(method_key))
 
@@ -359,7 +374,7 @@ module Hashie
     end
 
     def log_collision?(method_key)
-      respond_to?(method_key) && !self.class.disable_warnings? &&
+      respond_to?(method_key) && !self.class.disable_warnings?(method_key) &&
         !(regular_key?(method_key) || regular_key?(method_key.to_s))
     end
   end

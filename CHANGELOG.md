@@ -14,6 +14,7 @@ scheme are considered to be bugs.
 
 * [#323](https://github.com/intridea/hashie/pull/323): Added `Hashie::Extensions::Mash::DefineAccessors` - [@marshall-lee](https://github.com/marshall-lee).
 * [#474](https://github.com/intridea/hashie/pull/474): Expose `YAML#safe_load` options in `Mash#load` - [@riouruma](https://github.com/riouruma), [@dblock](https://github.com/dblock).
+* [#478](https://github.com/intridea/hashie/pull/478): Added optional array parameter to `Hashie::Mash.disable_warnings` - [@bobbymcwho](https://github.com/bobbymcwho).
 
 ### Changed
 
