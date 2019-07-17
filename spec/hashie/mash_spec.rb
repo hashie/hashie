@@ -1071,6 +1071,7 @@ describe Hashie::Mash do
         klass_mash = KlassMash.new('a' => 'apple', 'b' => 'banana')
 
         expect(klass_mash.slice('a')).to be_a(KlassMash)
+        expect(klass_mash.slice(:a)).to be_a(KlassMash)
       end
     end
   end
