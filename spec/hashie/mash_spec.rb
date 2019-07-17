@@ -1070,7 +1070,7 @@ describe Hashie::Mash do
         class KlassMash < Hashie::Mash; end
         klass_mash = KlassMash.new('a' => 'apple', 'b' => 'banana')
 
-        expect(klass_mash.slice('a').class).to eq(KlassMash)
+        expect(klass_mash.slice('a')).to be_a(KlassMash)
       end
     end
   end
