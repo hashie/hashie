@@ -1,5 +1,6 @@
 begin
   require 'rails/railtie'
+  require_relative 'railties/mash'
 
   module Hashie
     class Railtie < Rails::Railtie

@@ -19,9 +19,22 @@ RSpec.describe 'rails', type: :request do
     expect(Hashie.logger).to eq(Rails.logger)
   end
 
-  it 'works with #except' do
-    mash = Hashie::Mash.new(x: 1, y: 2)
-    expect(mash.except(:x)).to be_a(Hashie::Mash)
+  context '#except' do
+    subject { Hashie::Mash.new(x: 1, y: 2) }
+
+    it 'returns an instance of the class it was called on' do
+      class HashieKlass < Hashie::Mash; end
+      hashie_klass = HashieKlass.new(subject)
+      expect(hashie_klass.except('x')).to be_a HashieKlass
+    end
+
+    it 'works with string keys' do
+      expect(subject.except('x')).to eq Hashie::Mash.new(y: 2)
+    end
+
+    it 'works with symbol keys' do
+      expect(subject.except(:x)).to eq Hashie::Mash.new(y: 2)
+    end
   end
 
   it 'works' do
