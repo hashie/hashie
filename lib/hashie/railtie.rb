@@ -9,7 +9,10 @@ begin
       end
 
       initializer 'hashie.patch_hash_except', after: 'load_active_support' do
-        require 'hashie/railties/mash'
+        if Rails::VERSION::MAJOR >= 6
+          require 'hashie/extensions/active_support/core_ext/hash'
+          Hashie::Mash.send(:include, Hashie::Extensions::ActiveSupport::CoreExt::Hash)
+        end
       end
     end
   end
