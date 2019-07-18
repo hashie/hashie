@@ -516,6 +516,7 @@ end
 ```
 
 The default is to disable logging for all methods that conflict. If you would like to only disable the logging for specific methods, you can include an array of method keys:
+
 ```ruby
 class Response < Hashie::Mash
   disable_warnings :zip, :zap
@@ -532,6 +533,7 @@ end
 ```
 
 Disable warnings will honor the last `disable_warnings` call. Calling without parameters will override the blacklist, and calling with parameters will create a new blacklist. This includes child classes that inherit from a class that disables warnings.
+
 ```ruby
 class Message < Hashie::Mash
   disable_warnings :zip, :zap
@@ -541,6 +543,7 @@ end
 # No errors will be logged
 Message.new(merge: 'true', compact: true)
 ```
+
 ```ruby
 class Message < Hashie::Mash
   disable_warnings
@@ -553,8 +556,6 @@ end
 # 2 errors will be logged
 Response.new(merge: 'true', compact: true, zip: '90210', zap: 'electric')
 ```
-
-
 
 ### How does the wrapping of Mash sub-Hashes work?
 
