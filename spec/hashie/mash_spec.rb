@@ -154,7 +154,6 @@ describe Hashie::Mash do
       mash_class = Class.new(Hashie::Mash) do
         disable_warnings
       end
-
       mash_class.new('trust' => { 'two' => 2 })
 
       expect(logger_output).to be_blank
@@ -173,6 +172,78 @@ describe Hashie::Mash do
       grandchild_class.new('trust' => { 'two' => 2 })
 
       expect(logger_output).to be_blank
+    end
+
+    it 'writes to logger when a key is overridden that is not blacklisted' do
+      mash_class = Class.new(Hashie::Mash) do
+        disable_warnings :merge
+      end
+
+      mash_class.new('address' => { 'zip' => '90210' })
+      expect(logger_output).not_to be_blank
+    end
+
+    it 'does not write to logger when a key is overridden that is blacklisted' do
+      mash_class = Class.new(Hashie::Mash) do
+        disable_warnings :zip
+      end
+
+      mash_class.new('address' => { 'zip' => '90210' })
+      expect(logger_output).to be_blank
+    end
+
+    it 'carries over the disabled blacklist for warnings on grandchild classes' do
+      child_class = Class.new(Hashie::Mash) do
+        disable_warnings :zip, :merge
+      end
+      grandchild_class = Class.new(child_class)
+
+      grandchild_class.new('address' => { 'zip' => '90210' }, 'merge' => true)
+
+      expect(grandchild_class.disable_warnings_blacklist).to eq(%i[zip merge])
+      expect(logger_output).to be_blank
+    end
+
+    context 'multiple disable_warnings calls' do
+      context 'calling disable_warnings multiple times with parameters' do
+        it 'appends each new parameter to the blacklist' do
+          child_class = Class.new(Hashie::Mash) do
+            disable_warnings :zip
+            disable_warnings :merge
+            disable_warnings :cycle
+          end
+
+          expect(child_class.disable_warnings_blacklist).to eq(%i[zip merge cycle])
+        end
+      end
+
+      context 'calling disable_warnings without keys after calling with keys' do
+        it 'uses the last call to ignore the blacklist' do
+          child_class = Class.new(Hashie::Mash) do
+            disable_warnings :zip
+            disable_warnings
+          end
+
+          child_class.new('address' => { 'zip' => '90210' }, 'merge' => true, 'cycle' => 'bi')
+
+          expect(child_class.disable_warnings_blacklist).to eq([])
+          expect(logger_output).to be_blank
+        end
+      end
+
+      context 'calling disable_parameters with keys after calling without keys' do
+        it 'only ignores logging for the blacklisted methods' do
+          child_class = Class.new(Hashie::Mash) do
+            disable_warnings
+            disable_warnings :zip
+          end
+
+          child_class.new('address' => { 'zip' => '90210' }, 'merge' => true)
+
+          expect(logger_output).to match(/#{child_class}#merge/)
+          expect(logger_output).not_to match(/#{child_class}#zip/)
+        end
+      end
     end
   end
 

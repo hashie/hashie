@@ -515,6 +515,48 @@ class Response < Hashie::Mash
 end
 ```
 
+The default is to disable logging for all methods that conflict. If you would like to only disable the logging for specific methods, you can include an array of method keys:
+
+```ruby
+class Response < Hashie::Mash
+  disable_warnings :zip, :zap
+end
+```
+
+This behavior is cumulative. The examples above and below behave identically.
+
+```ruby
+class Response < Hashie::Mash
+  disable_warnings :zip
+  disable_warnings :zap
+end
+```
+
+Disable warnings will honor the last `disable_warnings` call. Calling without parameters will override the blacklist, and calling with parameters will create a new blacklist. This includes child classes that inherit from a class that disables warnings.
+
+```ruby
+class Message < Hashie::Mash
+  disable_warnings :zip, :zap
+  disable_warnings
+end
+
+# No errors will be logged
+Message.new(merge: 'true', compact: true)
+```
+
+```ruby
+class Message < Hashie::Mash
+  disable_warnings
+end
+
+class Response < Message
+  disable_warnings :zip, :zap
+end
+
+# 2 errors will be logged
+Response.new(merge: 'true', compact: true, zip: '90210', zap: 'electric')
+```
+
 ### How does the wrapping of Mash sub-Hashes work?
 
 Mash duplicates any sub-Hashes that you add to it and wraps them in a Mash. This allows for infinite chaining of nested Hashes within a Mash without modifying the object(s) that are passed into the Mash. When you subclass Mash, the subclass wraps any sub-Hashes in its own class. This preserves any extensions that you mixed into the Mash subclass and allows them to work within the sub-Hashes, in addition to the main containing Mash.
