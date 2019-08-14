@@ -1046,4 +1046,15 @@ describe Hashie::Mash do
       end
     end
   end
+
+  with_minimum_ruby('2.6.0') do
+    context 'ruby 2.6 merging' do
+      subject(:mash) { Hashie::Mash.new(model: 'Honda') }
+      it 'merges multiple hashes and mashes passeed to #merge' do
+        first_hash = { model: 'Ford' }
+        second_hash = { model: 'DeLorean' }
+        expect(mash.merge(first_hash, second_hash)).to eq('model' => 'DeLorean')
+      end
+    end
+  end
 end
