@@ -878,6 +878,90 @@ describe Hashie::Mash do
     end
   end
 
+  describe '#compact' do
+    subject(:mash) { described_class.new(a: 1, b: nil) }
+
+    it 'returns a Hashie::Mash' do
+      expect(mash.compact).to be_kind_of(described_class)
+    end
+
+    it 'removes keys with nil values' do
+      expect(mash.compact).to eq('a' => 1)
+    end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+
+      it 'creates an instance of subclass' do
+        expect(sub_mash.compact).to be_kind_of(subclass)
+      end
+    end
+  end
+
+  describe '#invert' do
+    subject(:mash) { described_class.new(a: 'apple', b: 4) }
+
+    it 'returns a Hashie::Mash' do
+      expect(mash.invert).to be_kind_of(described_class)
+    end
+
+    it 'returns a mash with the keys and values inverted' do
+      expect(mash.invert).to eq('apple' => 'a', '4' => 'b')
+    end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+
+      it 'creates an instance of subclass' do
+        expect(sub_mash.invert).to be_kind_of(subclass)
+      end
+    end
+  end
+
+  describe '#reject' do
+    subject(:mash) { described_class.new(a: 1, b: nil) }
+
+    it 'returns a Hashie::Mash' do
+      expect(mash.reject { |_k, v| v.nil? }).to be_kind_of(described_class)
+    end
+
+    it 'rejects keys for which the block returns true' do
+      expect(mash.reject { |_k, v| v.nil? }).to eq('a' => 1)
+    end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+
+      it 'creates an instance of subclass' do
+        expect(sub_mash.reject { |_k, v| v.nil? }).to be_kind_of(subclass)
+      end
+    end
+  end
+
+  describe '#select' do
+    subject(:mash) { described_class.new(a: 'apple', b: 4) }
+
+    it 'returns a Hashie::Mash' do
+      expect(mash.select { |_k, v| v.is_a? String }).to be_kind_of(described_class)
+    end
+
+    it 'selects keys for which the block returns true' do
+      expect(mash.select { |_k, v| v.is_a? String }).to eq('a' => 'apple')
+    end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+
+      it 'creates an instance of subclass' do
+        expect(sub_mash.select { |_k, v| v.is_a? String }).to be_kind_of(subclass)
+      end
+    end
+  end
+
   with_minimum_ruby('2.3.0') do
     describe '#dig' do
       subject { described_class.new(a: { b: 1 }) }
@@ -891,6 +975,73 @@ describe Hashie::Mash do
         it 'accepts a numeric value as key' do
           expect(subject.dig(1, :b)).to eq(1)
           expect(subject.dig('1', :b)).to eq(1)
+        end
+      end
+    end
+  end
+
+  with_minimum_ruby('2.4.0') do
+    describe '#transform_values' do
+      subject(:mash) { described_class.new(a: 1) }
+
+      it 'returns a Hashie::Mash' do
+        expect(mash.transform_values(&:to_s)).to be_kind_of(described_class)
+      end
+
+      it 'transforms the value' do
+        expect(mash.transform_values(&:to_s).a).to eql('1')
+      end
+
+      context 'when using with subclass' do
+        let(:subclass) { Class.new(Hashie::Mash) }
+        subject(:sub_mash) { subclass.new(a: 1).transform_values { |a| a + 2 } }
+
+        it 'creates an instance of subclass' do
+          expect(sub_mash).to be_kind_of(subclass)
+        end
+      end
+    end
+  end
+
+  with_minimum_ruby('2.5.0') do
+    describe '#slice' do
+      subject(:mash) { described_class.new(a: 1, b: 2) }
+
+      it 'returns a Hashie::Mash' do
+        expect(mash.slice(:a)).to be_kind_of(described_class)
+      end
+
+      it 'returns a Mash with only the keys passed' do
+        expect(mash.slice(:a).to_hash).to eq('a' => 1)
+      end
+
+      context 'when using with subclass' do
+        let(:subclass) { Class.new(Hashie::Mash) }
+        subject(:sub_mash) { subclass.new(a: 1, b: 2) }
+
+        it 'creates an instance of subclass' do
+          expect(sub_mash.slice(:a)).to be_kind_of(subclass)
+        end
+      end
+    end
+
+    describe '#transform_keys' do
+      subject(:mash) { described_class.new(a: 1, b: 2) }
+
+      it 'returns a Hashie::Mash' do
+        expect(mash.transform_keys { |k| k + k }).to be_kind_of(described_class)
+      end
+
+      it 'returns a Mash with transformed keys' do
+        expect(mash.transform_keys { |k| k + k }).to eq('aa' => 1, 'bb' => 2)
+      end
+
+      context 'when using with subclass' do
+        let(:subclass) { Class.new(Hashie::Mash) }
+        subject(:sub_mash) { subclass.new(a: 1, b: 2) }
+
+        it 'creates an instance of subclass' do
+          expect(sub_mash.transform_keys { |k| k + k }).to be_kind_of(subclass)
         end
       end
     end

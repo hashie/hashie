@@ -207,6 +207,31 @@ module Hashie
       super(*keys.map { |key| convert_key(key) })
     end
 
+    # Returns a new instance of the class it was called on, with nil values
+    # removed.
+    def compact
+      self.class.new(super)
+    end
+
+    # Returns a new instance of the class it was called on, using its keys as
+    # values, and its values as keys. The new values and keys will always be
+    # strings.
+    def invert
+      self.class.new(super)
+    end
+
+    # Returns a new instance of the class it was called on, containing elements
+    # for which the given block returns false.
+    def reject(&blk)
+      self.class.new(super(&blk))
+    end
+
+    # Returns a new instance of the class it was called on, containing elements
+    # for which the given block returns true.
+    def select(&blk)
+      self.class.new(super(&blk))
+    end
+
     alias regular_dup dup
     # Duplicates the current mash as a new mash.
     def dup
@@ -317,6 +342,23 @@ module Hashie
     with_minimum_ruby('2.3.0') do
       def dig(*keys)
         super(*keys.map { |key| convert_key(key) })
+      end
+    end
+
+    with_minimum_ruby('2.4.0') do
+      def transform_values(&blk)
+        self.class.new(super(&blk))
+      end
+    end
+
+    with_minimum_ruby('2.5.0') do
+      def slice(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        self.class.new(super(*string_keys))
+      end
+
+      def transform_keys(&blk)
+        self.class.new(super(&blk))
       end
     end
 
