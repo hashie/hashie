@@ -1,6 +1,45 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 4.0.0
+
+#### Non-destructive Hash methods called on Mash
+
+The following non-destructive Hash methods called on Mash will now return an instance of the class it was called on.
+
+| method            | ruby |
+| ----------------- | ---- |
+| #compact          |      |
+| #invert           |      |
+| #reject           |      |
+| #select           |      |
+| #slice            | 2.5  |
+| #transform_keys   | 2.5  |
+| #transform_values | 2.4  |
+
+```ruby
+class Parents < Hashie::Mash; end
+
+parents = Parents.new(father: 'Dad', mother: 'Mom')
+cool_parents = parents.transform_values { |v| v + v[-1] + 'io'}
+
+p cool_parents
+
+# before:
+{"father"=>"Daddio", "mother"=>"Mommio"}
+ => {"father"=>"Daddio", "mother"=>"Mommio"}
+
+# after:
+#<Parents father="Daddio" mother="Mommio">
+=> {"father"=>"Dad", "mother"=>"Mom"}
+```
+
+This may make places where you had to re-make the Mash redundant, and may cause unintended side effects if your application was expecting a plain old ruby Hash.
+
+### Ruby 2.6: Mash#merge and Mash#merge!
+
+In Ruby > 2.6.0, Hashie now supports passing multiple hash and Mash objects to Mash#merge and Mash#merge!.
+
 ### Upgrading to 3.7.0
 
 #### Mash#load takes options
@@ -200,5 +239,3 @@ instance.to_hash # => { :first => 'First', "last" => 'Last' }
 The behavior with `symbolize_keys` and `stringify_keys` is unchanged.
 
 See [#152](https://github.com/intridea/hashie/pull/152) for more information.
-
-
