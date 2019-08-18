@@ -207,6 +207,31 @@ module Hashie
       super(*keys.map { |key| convert_key(key) })
     end
 
+    # Returns a new instance of the class it was called on, with nil values
+    # removed.
+    def compact
+      self.class.new(super)
+    end
+
+    # Returns a new instance of the class it was called on, using its keys as
+    # values, and its values as keys. The new values and keys will always be
+    # strings.
+    def invert
+      self.class.new(super)
+    end
+
+    # Returns a new instance of the class it was called on, containing elements
+    # for which the given block returns false.
+    def reject(&blk)
+      self.class.new(super(&blk))
+    end
+
+    # Returns a new instance of the class it was called on, containing elements
+    # for which the given block returns true.
+    def select(&blk)
+      self.class.new(super(&blk))
+    end
+
     alias regular_dup dup
     # Duplicates the current mash as a new mash.
     def dup
@@ -226,11 +251,39 @@ module Hashie
     def deep_merge(other_hash, &blk)
       dup.deep_update(other_hash, &blk)
     end
-    alias merge deep_merge
 
     # Recursively merges this mash with the passed
     # in hash, merging each hash in the hierarchy.
     def deep_update(other_hash, &blk)
+      _deep_update(other_hash, &blk)
+      self
+    end
+
+    with_minimum_ruby('2.6.0') do
+      # Performs a deep_update on a duplicate of the
+      # current mash.
+      def deep_merge(*other_hashes, &blk)
+        dup.deep_update(*other_hashes, &blk)
+      end
+
+      # Recursively merges this mash with the passed
+      # in hash, merging each hash in the hierarchy.
+      def deep_update(*other_hashes, &blk)
+        other_hashes.each do |other_hash|
+          _deep_update(other_hash, &blk)
+        end
+        self
+      end
+    end
+
+    # Alias these lexically so they get the correctly defined
+    # #deep_merge and #deep_update based on ruby version.
+    alias merge deep_merge
+    alias deep_merge! deep_update
+    alias update deep_update
+    alias merge! update
+
+    def _deep_update(other_hash, &blk)
       other_hash.each_pair do |k, v|
         key = convert_key(k)
         if v.is_a?(::Hash) && key?(key) && regular_reader(key).is_a?(Mash)
@@ -241,11 +294,8 @@ module Hashie
           custom_writer(key, value, false)
         end
       end
-      self
     end
-    alias deep_merge! deep_update
-    alias update deep_update
-    alias merge! update
+    private :_deep_update
 
     # Assigns a value to a key
     def assign_property(name, value)
@@ -317,6 +367,23 @@ module Hashie
     with_minimum_ruby('2.3.0') do
       def dig(*keys)
         super(*keys.map { |key| convert_key(key) })
+      end
+    end
+
+    with_minimum_ruby('2.4.0') do
+      def transform_values(&blk)
+        self.class.new(super(&blk))
+      end
+    end
+
+    with_minimum_ruby('2.5.0') do
+      def slice(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        self.class.new(super(*string_keys))
+      end
+
+      def transform_keys(&blk)
+        self.class.new(super(&blk))
       end
     end
 
