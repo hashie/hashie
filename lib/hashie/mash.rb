@@ -387,13 +387,6 @@ module Hashie
       end
     end
 
-    with_minimum_ruby('2.5.0') do
-      def slice(*keys)
-        string_keys = keys.map { |key| convert_key(key) }
-        self.class.new(super(*string_keys))
-      end
-    end
-
     protected
 
     def method_name_and_suffix(method_name)

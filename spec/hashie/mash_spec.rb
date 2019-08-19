@@ -1057,22 +1057,4 @@ describe Hashie::Mash do
       end
     end
   end
-
-  with_minimum_ruby('2.5.0') do
-    describe '#slice' do
-      subject { described_class.new(a: 'apple', b: 'banana') }
-      it 'accepts both string and symbol as key' do
-        expect(subject.slice(:a)).to eq('a' => 'apple')
-        expect(subject.slice('a')).to eq('a' => 'apple')
-      end
-
-      it 'returns an instance of the class it was called on' do
-        class KlassMash < Hashie::Mash; end
-        klass_mash = KlassMash.new('a' => 'apple', 'b' => 'banana')
-
-        expect(klass_mash.slice('a')).to be_a(KlassMash)
-        expect(klass_mash.slice(:a)).to be_a(KlassMash)
-      end
-    end
-  end
 end
