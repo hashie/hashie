@@ -12,6 +12,11 @@ inherit_from: .rubocop_todo.yml
 Layout/IndentHeredoc:
   Enabled: false
 
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/hashie/mash.rb'
+    - 'lib/hashie/dash.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
