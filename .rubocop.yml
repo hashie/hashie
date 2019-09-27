@@ -13,9 +13,7 @@ Layout/IndentHeredoc:
   Enabled: false
 
 Metrics/ClassLength:
-  Exclude:
-    - 'lib/hashie/mash.rb'
-    - 'lib/hashie/dash.rb'
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:
