@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'elasticsearch-model'
+gem 'elasticsearch-model', '~> 7.0'
 gem 'hashie', path: '../../..'
 gem 'rake'
 gem 'rspec', '~> 3.5.0'
