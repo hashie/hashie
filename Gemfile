@@ -24,13 +24,14 @@ group :test do
 
   if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.3.0')
     # gem 'faraday', '~> 0.16.0', require: false
-    gem 'faraday', git: 'https://github.com/BobbyMcWho/faraday.git', branch: 'fix-subclassing-deprecated-classes'
+    gem 'faraday',
+        git: 'https://github.com/BobbyMcWho/faraday.git',
+        branch: 'fix-subclassing-deprecated-classes'
   else
     gem 'faraday', '~> 0.15.0', require: false
   end
   # rubocop:enable Bundler/DuplicatedGem
   gem 'codeclimate-test-reporter', '~> 1.0', require: false
   gem 'danger-changelog', '~> 0.1.0', require: false
-  gem 'faraday', git: 'https://github.com/BobbyMcWho/faraday.git', branch: 'Fix-constant-namespacing'
   gem 'rspec-core', '~> 3.1.7'
 end
