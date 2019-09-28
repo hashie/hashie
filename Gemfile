@@ -31,5 +31,6 @@ group :test do
   # rubocop:enable Bundler/DuplicatedGem
   gem 'codeclimate-test-reporter', '~> 1.0', require: false
   gem 'danger-changelog', '~> 0.1.0', require: false
+  gem 'faraday', git: 'https://github.com/BobbyMcWho/faraday.git', branch: 'Fix-constant-namespacing'
   gem 'rspec-core', '~> 3.1.7'
 end
