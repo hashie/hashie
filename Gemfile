@@ -21,7 +21,14 @@ group :test do
   else
     gem 'activesupport', '~> 4.x', require: false
   end
+
+  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.3.0')
+    gem 'faraday', '~> 0.16.0', require: false
+  else
+    gem 'faraday', '~> 0.15.0', require: false
+  end
   # rubocop:enable Bundler/DuplicatedGem
+
   gem 'codeclimate-test-reporter', '~> 1.0', require: false
   gem 'danger-changelog', '~> 0.1.0', require: false
   gem 'rspec-core', '~> 3.1.7'
