@@ -23,7 +23,7 @@ RSpec.describe 'elaasticsearch-model' do
     object = MyModel.new
     stub_elasticsearch_client
 
-    expect { object.__elasticsearch__.index_document }.to raise_error(NoMethodError)
+    expect { object.__elasticsearch__.index_document }.to raise_error(NameError)
   end
 
   it 'does not raise an error when the model has an id' do

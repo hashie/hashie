@@ -14,7 +14,7 @@ module RailsApp
   end
 end
 
-LAYOUT = <<-HTML.freeze
+PAGE = <<-HTML.freeze
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,24 +22,17 @@ LAYOUT = <<-HTML.freeze
   <%= csrf_meta_tags %>
 </head>
 <body>
-<%= yield %>
+  <h1>Hello, world!</h1>
 </body>
 </html>
 HTML
 
-INDEX = '<h1>Hello, world!</h1>'.freeze
-
 class ApplicationController < ActionController::Base
   include Rails.application.routes.url_helpers
 
-  layout 'application'
-
-  self.view_paths = [ActionView::FixtureResolver.new(
-    'layouts/application.html.erb' => LAYOUT,
-    'application/index.html.erb'   => INDEX
-  )]
-
-  def index; end
+  def index
+    render inline: PAGE
+  end
 end
 
 Bundler.require(:default, Rails.env)

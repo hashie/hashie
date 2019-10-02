@@ -12,6 +12,9 @@ inherit_from: .rubocop_todo.yml
 Layout/IndentHeredoc:
   Enabled: false
 
+Metrics/ClassLength:
+  Enabled: false
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
