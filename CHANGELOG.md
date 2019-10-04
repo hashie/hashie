@@ -16,6 +16,7 @@ scheme are considered to be bugs.
 * [#474](https://github.com/intridea/hashie/pull/474): Expose `YAML#safe_load` options in `Mash#load` - [@riouruma](https://github.com/riouruma), [@dblock](https://github.com/dblock).
 * [#478](https://github.com/intridea/hashie/pull/478): Added optional array parameter to `Hashie::Mash.disable_warnings` - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#481](https://github.com/intridea/hashie/pull/481): Ruby 2.6 - Support Hash#merge and #merge! called with multiple Hashes/Mashes - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#487](https://github.com/intridea/hashie/pull/487): Allow forcing the disabling of Mash warnings with `Hashie::Mash.disable_warnings force: true` - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Changed

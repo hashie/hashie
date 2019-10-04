@@ -78,8 +78,8 @@ module Hashie
     #
     # @api semipublic
     # @return [void]
-    def self.disable_warnings(*method_keys)
-      raise CannotDisableMashWarnings if self == Hashie::Mash
+    def self.disable_warnings(*method_keys, force: false)
+      raise CannotDisableMashWarnings if !force && self == Hashie::Mash
       if method_keys.any?
         disable_warnings_blacklist.concat(method_keys).tap(&:flatten!).uniq!
       else

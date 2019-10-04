@@ -557,6 +557,12 @@ end
 Response.new(merge: 'true', compact: true, zip: '90210', zap: 'electric')
 ```
 
+If you really, truly need to globally disable this warning, you can force the disable using the following:
+
+```ruby
+Hashie::Mash.disable_warnings force: true
+```
+
 ### How does the wrapping of Mash sub-Hashes work?
 
 Mash duplicates any sub-Hashes that you add to it and wraps them in a Mash. This allows for infinite chaining of nested Hashes within a Mash without modifying the object(s) that are passed into the Mash. When you subclass Mash, the subclass wraps any sub-Hashes in its own class. This preserves any extensions that you mixed into the Mash subclass and allows them to work within the sub-Hashes, in addition to the main containing Mash.

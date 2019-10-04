@@ -159,8 +159,21 @@ describe Hashie::Mash do
       expect(logger_output).to be_blank
     end
 
-    it 'cannot disable logging on the base Mash' do
-      expect { Hashie::Mash.disable_warnings }.to raise_error(Hashie::Mash::CannotDisableMashWarnings)
+    context 'globally disabling logging on Mash' do
+      it 'cannot disable logging on the base Mash by default' do
+        expect { Hashie::Mash.disable_warnings }.to raise_error(Hashie::Mash::CannotDisableMashWarnings)
+      end
+
+      it 'can be forced off if you really, really want to' do
+        begin
+          expect { Hashie::Mash.disable_warnings(force: true) }.not_to raise_error
+          Hashie::Mash.new('trust' => { 'two' => 2 })
+          expect(logger_output).to be_empty
+        ensure
+          Hashie::Mash.instance_variable_get(:@_disable_warnings_blacklist).clear
+          Hashie::Mash.remove_instance_variable :@disable_warnings
+        end
+      end
     end
 
     it 'carries over the disable for warnings on grandchild classes' do
