@@ -962,6 +962,12 @@ describe Hashie::Mash do
     end
   end
 
+  describe '.quiet' do
+    it 'returns a subclass of the calling class' do
+      expect(Hashie::Mash.quiet.new).to be_a(Hashie::Mash)
+    end
+  end
+
   with_minimum_ruby('2.3.0') do
     describe '#dig' do
       subject { described_class.new(a: { b: 1 }) }
