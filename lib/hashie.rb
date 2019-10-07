@@ -15,6 +15,7 @@ module Hashie
     autoload :Coercion,          'hashie/extensions/coercion'
     autoload :DeepMerge,         'hashie/extensions/deep_merge'
     autoload :IgnoreUndeclared,  'hashie/extensions/ignore_undeclared'
+    autoload :IgnoreRequired,    'hashie/extensions/ignore_required'
     autoload :IndifferentAccess, 'hashie/extensions/indifferent_access'
     autoload :MergeInitializer,  'hashie/extensions/merge_initializer'
     autoload :MethodAccess,      'hashie/extensions/method_access'
