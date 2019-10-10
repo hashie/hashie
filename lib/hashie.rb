@@ -32,7 +32,6 @@ module Hashie
     autoload :StrictKeyAccess,    'hashie/extensions/strict_key_access'
     autoload :RubyVersion,        'hashie/extensions/ruby_version'
     autoload :RubyVersionCheck,   'hashie/extensions/ruby_version_check'
-    autoload :KeyConflictWarning, 'hashie/extensions/key_conflict_warning'
 
     module Parsers
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
