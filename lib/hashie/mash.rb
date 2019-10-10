@@ -63,8 +63,6 @@ module Hashie
     include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::RubyVersionCheck
     extend Hashie::Extensions::KeyConflictWarning
-    const_set :CannotDisableMashWarnings,
-              Hashie::Extensions::KeyConflictWarning::CannotDisableMashWarnings
 
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
 
