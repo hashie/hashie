@@ -202,7 +202,7 @@ describe Hashie::Mash do
 
       grandchild_class.new('address' => { 'zip' => '90210' }, 'merge' => true)
 
-      expect(grandchild_class.disable_warnings_blacklist).to eq(%i[zip merge])
+      expect(grandchild_class.disabled_warnings).to eq(%i[zip merge])
       expect(logger_output).to be_blank
     end
 
@@ -215,7 +215,7 @@ describe Hashie::Mash do
             disable_warnings :cycle
           end
 
-          expect(child_class.disable_warnings_blacklist).to eq(%i[zip merge cycle])
+          expect(child_class.disabled_warnings).to eq(%i[zip merge cycle])
         end
       end
 
@@ -228,7 +228,7 @@ describe Hashie::Mash do
 
           child_class.new('address' => { 'zip' => '90210' }, 'merge' => true, 'cycle' => 'bi')
 
-          expect(child_class.disable_warnings_blacklist).to eq([])
+          expect(child_class.disabled_warnings).to eq([])
           expect(logger_output).to be_blank
         end
       end

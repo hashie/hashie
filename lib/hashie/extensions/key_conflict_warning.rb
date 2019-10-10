@@ -17,9 +17,9 @@ module Hashie
       def disable_warnings(*method_keys)
         raise CannotDisableMashWarnings if self == Hashie::Mash
         if method_keys.any?
-          disable_warnings_blacklist.concat(method_keys).tap(&:flatten!).uniq!
+          disabled_warnings.concat(method_keys).tap(&:flatten!).uniq!
         else
-          disable_warnings_blacklist.clear
+          disabled_warnings.clear
         end
 
         @disable_warnings = true
@@ -30,7 +30,7 @@ module Hashie
       # @api semipublic
       # @return [Boolean]
       def disable_warnings?(method_key = nil)
-        return disable_warnings_blacklist.include?(method_key) if disable_warnings_blacklist.any? && method_key
+        return disabled_warnings.include?(method_key) if disabled_warnings.any? && method_key
         @disable_warnings ||= false
       end
 
@@ -38,8 +38,8 @@ module Hashie
       #
       # @api semipublic
       # @return [Boolean]
-      def disable_warnings_blacklist
-        @_disable_warnings_blacklist ||= []
+      def disabled_warnings
+        @_disabled_warnings ||= []
       end
 
       # Inheritance hook that sets class configuration when inherited.
@@ -48,7 +48,7 @@ module Hashie
       # @return [void]
       def inherited(subclass)
         super
-        subclass.disable_warnings(disable_warnings_blacklist) if disable_warnings?
+        subclass.disable_warnings(disabled_warnings) if disable_warnings?
       end
     end
   end
