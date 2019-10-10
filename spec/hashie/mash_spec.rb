@@ -966,6 +966,13 @@ describe Hashie::Mash do
     it 'returns a subclass of the calling class' do
       expect(Hashie::Mash.quiet.new).to be_a(Hashie::Mash)
     end
+
+    it 'memoizes and returns classes' do
+      call_one = Hashie::Mash.quiet
+      call_two = Hashie::Mash.quiet
+      expect(Hashie::Mash.instance_variable_get('@memoized_classes').count).to eq(1)
+      expect(call_one).to eq(call_two)
+    end
   end
 
   with_minimum_ruby('2.3.0') do
