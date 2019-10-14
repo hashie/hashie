@@ -160,7 +160,9 @@ describe Hashie::Mash do
     end
 
     it 'cannot disable logging on the base Mash' do
-      expect { Hashie::Mash.disable_warnings }.to raise_error(Hashie::Mash::CannotDisableMashWarnings)
+      expected_error = Hashie::Extensions::KeyConflictWarning::CannotDisableMashWarnings
+
+      expect { Hashie::Mash.disable_warnings }.to raise_error(expected_error)
     end
 
     it 'carries over the disable for warnings on grandchild classes' do
@@ -200,7 +202,7 @@ describe Hashie::Mash do
 
       grandchild_class.new('address' => { 'zip' => '90210' }, 'merge' => true)
 
-      expect(grandchild_class.disable_warnings_blacklist).to eq(%i[zip merge])
+      expect(grandchild_class.disabled_warnings).to eq(%i[zip merge])
       expect(logger_output).to be_blank
     end
 
@@ -213,7 +215,7 @@ describe Hashie::Mash do
             disable_warnings :cycle
           end
 
-          expect(child_class.disable_warnings_blacklist).to eq(%i[zip merge cycle])
+          expect(child_class.disabled_warnings).to eq(%i[zip merge cycle])
         end
       end
 
@@ -226,7 +228,7 @@ describe Hashie::Mash do
 
           child_class.new('address' => { 'zip' => '90210' }, 'merge' => true, 'cycle' => 'bi')
 
-          expect(child_class.disable_warnings_blacklist).to eq([])
+          expect(child_class.disabled_warnings).to eq([])
           expect(logger_output).to be_blank
         end
       end
@@ -959,6 +961,19 @@ describe Hashie::Mash do
       it 'creates an instance of subclass' do
         expect(sub_mash.select { |_k, v| v.is_a? String }).to be_kind_of(subclass)
       end
+    end
+  end
+
+  describe '.quiet' do
+    it 'returns a subclass of the calling class' do
+      expect(Hashie::Mash.quiet.new).to be_a(Hashie::Mash)
+    end
+
+    it 'memoizes and returns classes' do
+      call_one = Hashie::Mash.quiet
+      call_two = Hashie::Mash.quiet
+      expect(Hashie::Mash.instance_variable_get('@memoized_classes').count).to eq(1)
+      expect(call_one).to eq(call_two)
     end
   end
 

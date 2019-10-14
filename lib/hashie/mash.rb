@@ -2,6 +2,7 @@ require 'hashie/hash'
 require 'hashie/array'
 require 'hashie/utils'
 require 'hashie/logger'
+require 'hashie/extensions/key_conflict_warning'
 
 module Hashie
   # Mash allows you to create pseudo-objects that have method-like
@@ -62,58 +63,9 @@ module Hashie
   class Mash < Hash
     include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::RubyVersionCheck
+    extend Hashie::Extensions::KeyConflictWarning
 
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
-
-    class CannotDisableMashWarnings < StandardError
-      def initialize
-        super(
-          'You cannot disable warnings on the base Mash class. ' \
-          'Please subclass the Mash and disable it in the subclass.'
-        )
-      end
-    end
-
-    # Disable the logging of warnings based on keys conflicting keys/methods
-    #
-    # @api semipublic
-    # @return [void]
-    def self.disable_warnings(*method_keys)
-      raise CannotDisableMashWarnings if self == Hashie::Mash
-      if method_keys.any?
-        disable_warnings_blacklist.concat(method_keys).tap(&:flatten!).uniq!
-      else
-        disable_warnings_blacklist.clear
-      end
-
-      @disable_warnings = true
-    end
-
-    # Checks whether this class disables warnings for conflicting keys/methods
-    #
-    # @api semipublic
-    # @return [Boolean]
-    def self.disable_warnings?(method_key = nil)
-      return disable_warnings_blacklist.include?(method_key) if disable_warnings_blacklist.any? && method_key
-      @disable_warnings ||= false
-    end
-
-    # Returns an array of blacklisted methods that this class disables warnings for.
-    #
-    # @api semipublic
-    # @return [Boolean]
-    def self.disable_warnings_blacklist
-      @_disable_warnings_blacklist ||= []
-    end
-
-    # Inheritance hook that sets class configuration when inherited.
-    #
-    # @api semipublic
-    # @return [void]
-    def self.inherited(subclass)
-      super
-      subclass.disable_warnings(disable_warnings_blacklist) if disable_warnings?
-    end
 
     def self.load(path, options = {})
       @_mashes ||= new
@@ -147,6 +99,20 @@ module Hashie
     def initialize(source_hash = nil, default = nil, &blk)
       deep_update(source_hash) if source_hash
       default ? super(default) : super(&blk)
+    end
+
+    # Creates a new anonymous subclass with key conflict
+    # warnings disabled. You may pass an array of method
+    # symbols to restrict the warnings blacklist to.
+    # Hashie::Mash.quiet.new(hash) all warnings disabled.
+    # Hashie::Mash.quiet(:zip).new(hash) only zip warning
+    # is disabled.
+    def self.quiet(*method_keys)
+      (@memoized_classes ||= {})[method_keys] ||
+        Class.new(self).tap do |k|
+          k.send(:disable_warnings, *method_keys)
+          @memoized_classes[method_keys] = k
+        end
     end
 
     class << self; alias [] new; end

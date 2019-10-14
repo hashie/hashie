@@ -15,7 +15,8 @@ scheme are considered to be bugs.
 * [#323](https://github.com/intridea/hashie/pull/323): Added `Hashie::Extensions::Mash::DefineAccessors` - [@marshall-lee](https://github.com/marshall-lee).
 * [#474](https://github.com/intridea/hashie/pull/474): Expose `YAML#safe_load` options in `Mash#load` - [@riouruma](https://github.com/riouruma), [@dblock](https://github.com/dblock).
 * [#478](https://github.com/intridea/hashie/pull/478): Added optional array parameter to `Hashie::Mash.disable_warnings` - [@bobbymcwho](https://github.com/bobbymcwho).
-* [#481](https://github.com/intridea/hashie/pull/481): Ruby 2.6 - Support Hash#merge and #merge! called with multiple Hashes/Mashes - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#481](https://github.com/intridea/hashie/pull/481): Ruby 2.6 - Support `Hash#merge` and `#merge!` called with multiple Hashes/Mashes - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#488](https://github.com/intridea/hashie/pull/488): Added ability to create an anonymous `Hashie::Mash` subclass with key conflict errors silenced using `Hashie::Mash.quiet.new` - [@bobbymcwho](https://github.com/bobbymcwho).
 * Your contribution here.
 
 ### Changed

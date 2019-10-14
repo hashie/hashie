@@ -557,6 +557,13 @@ end
 Response.new(merge: 'true', compact: true, zip: '90210', zap: 'electric')
 ```
 
+If you would like to create an anonymous subclass of a Hashie::Mash with key conflict warnings disabled:
+
+```ruby
+Hashie::Mash.quiet.new(zip: '90210', compact: true) # no errors logged
+Hashie::Mash.quiet(:zip).new(zip: '90210', compact: true) # error logged for compact
+```
+
 ### How does the wrapping of Mash sub-Hashes work?
 
 Mash duplicates any sub-Hashes that you add to it and wraps them in a Mash. This allows for infinite chaining of nested Hashes within a Mash without modifying the object(s) that are passed into the Mash. When you subclass Mash, the subclass wraps any sub-Hashes in its own class. This preserves any extensions that you mixed into the Mash subclass and allows them to work within the sub-Hashes, in addition to the main containing Mash.

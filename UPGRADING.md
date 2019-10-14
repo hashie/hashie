@@ -36,9 +36,13 @@ p cool_parents
 
 This may make places where you had to re-make the Mash redundant, and may cause unintended side effects if your application was expecting a plain old ruby Hash.
 
-### Ruby 2.6: Mash#merge and Mash#merge!
+#### Ruby 2.6: Mash#merge and Mash#merge!
 
 In Ruby > 2.6.0, Hashie now supports passing multiple hash and Mash objects to Mash#merge and Mash#merge!.
+
+#### Hashie::Mash::CannotDisableMashWarnings error class is removed
+
+There shouldn't really be a case that anyone was relying on catching this specific error, but if so, they should change it to rescue Hashie::Extensions::KeyConflictWarning::CannotDisableMashWarnings
 
 ### Upgrading to 3.7.0
 
