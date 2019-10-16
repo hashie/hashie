@@ -190,7 +190,7 @@ end
 
 ### KeyConversion
 
-The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
+The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or [`Hashie::Extensions::SymbolizeKeys`](#mash-extension-symbolizekeys).
 
 Hashie also has a utility method for converting keys on a Hash without a mixin:
 
@@ -674,9 +674,9 @@ safe_mash.zip   = 'Test' # => ArgumentError
 safe_mash[:zip] = 'test' # => still ArgumentError
 ```
 
-### Mash Extension:: SymbolizeKeys
+### Mash Extension: SymbolizeKeys
 
-This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all keys to symbols.
+This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all keys to symbols. It can be useful to use with keywords argument, which required symbol keys.
 
 ```ruby
 class SymbolizedMash < ::Hashie::Mash
@@ -687,6 +687,12 @@ symbol_mash = SymbolizedMash.new
 symbol_mash['test'] = 'value'
 symbol_mash.test  #=> 'value'
 symbol_mash.to_h  #=> {test: 'value'}
+
+def example(test:)
+  puts test
+end
+
+example(symbol_mash) #=> value
 ```
 
 There is a major benefit and coupled with a major trade-off to this decision (at least on older Rubies). As a benefit, by using symbols as keys, you will be able to use the implicit conversion of a Mash via the `#to_hash` method to destructure (or splat) the contents of a Mash out to a block. This can be handy for doing iterations through the Mash's keys and values, as follows:
@@ -701,7 +707,7 @@ end
 
 However, on Rubies less than 2.0, this means that every key you send to the Mash will generate a symbol. Since symbols are not garbage-collected on older versions of Ruby, this can cause a slow memory leak when using a symbolized Mash with data generated from user input.
 
-### Mash Extension:: DefineAccessors
+### Mash Extension: DefineAccessors
 
 This extension can be mixed into a Mash so it makes it behave like `OpenStruct`. It reduces the overhead of `method_missing?` magic by lazily defining field accessors when they're requested.
 
