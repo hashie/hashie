@@ -14,8 +14,11 @@ RSpec.describe 'rails', type: :request do
     $stdout = original_stdout
   end
 
-  it 'does not log anything to STDOUT when initializing and sets the Hashie logger to the Rails logger' do
+  it 'does not log anything to STDOUT when initializing' do
     expect(stdout.string).to eq('')
+  end
+
+  it 'sets the Hashie logger to the Rails logger' do
     expect(Hashie.logger).to eq(Rails.logger)
   end
 

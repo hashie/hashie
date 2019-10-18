@@ -1,3 +1,4 @@
+require 'hashie/extensions/deep_locate'
 module Hashie
   module Extensions
     module DeepFind
@@ -24,7 +25,12 @@ module Hashie
       # Performs a depth-first search on deeply nested data structures for
       # a key and returns all occurrences of the key.
       #
-      #  options = {users: [{location: {address: '123 Street'}}, {location: {address: '234 Street'}}]}
+      #  options = {
+      #    users: [
+      #      { location: {address: '123 Street'} },
+      #      { location: {address: '234 Street'}}
+      #    ]
+      #  }
       #  options.extend(Hashie::Extensions::DeepFind)
       #  options.deep_find_all(:address) # => ['123 Street', '234 Street']
       #
@@ -33,7 +39,10 @@ module Hashie
       #  end
       #
       #  my_hash = MyHash.new
-      #  my_hash[:users] = [{location: {address: '123 Street'}}, {location: {address: '234 Street'}}]
+      #  my_hash[:users] = [
+      #    {location: {address: '123 Street'}},
+      #    {location: {address: '234 Street'}}
+      #  ]
       #  my_hash.deep_find_all(:address) # => ['123 Street', '234 Street']
       def deep_find_all(key)
         matches = _deep_find_all(key)
@@ -49,7 +58,7 @@ module Hashie
       end
 
       def _deep_find_all(key, object = self, matches = [])
-        deep_locate_result = Hashie::Extensions::DeepLocate.deep_locate(key, object).tap do |result|
+        deep_locate_result = DeepLocate.deep_locate(key, object).tap do |result|
           result.map! { |element| element[key] }
         end
 

@@ -188,7 +188,9 @@ describe Hashie::Trash do
     end
 
     it 'transforms the value when given in constructor' do
-      expect(TrashLambdaTestWithProperties.new(first_name: 'Michael').first_name).to eq 'Michael'.reverse
+      expect(
+        TrashLambdaTestWithProperties.new(first_name: 'Michael').first_name
+      ).to eq 'Michael'.reverse
     end
 
     context 'when :from option is given' do
@@ -297,7 +299,9 @@ describe Hashie::Trash do
         property :copy_of_id, from: :id, required: true, message: 'must be set'
       end
 
-      expect { with_required.new }.to raise_error(ArgumentError, "The property 'copy_of_id' must be set")
+      expect { with_required.new }.to raise_error(
+        ArgumentError, "The property 'copy_of_id' must be set"
+      )
     end
 
     it 'does not set properties that do not exist' do
@@ -308,7 +312,9 @@ describe Hashie::Trash do
       subject = from_non_property.new(value: 0)
 
       expect(subject).not_to respond_to(:value)
-      expect { subject[:value] }.to raise_error(NoMethodError, "The property 'value' is not defined for .")
+      expect { subject[:value] }.to raise_error(
+        NoMethodError, "The property 'value' is not defined for ."
+      )
       expect(subject.to_h[:value]).to eq(nil)
       expect(subject.copy_of_value).to eq(0)
     end

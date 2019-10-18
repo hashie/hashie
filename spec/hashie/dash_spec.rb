@@ -265,11 +265,13 @@ describe DashTest do
     end
 
     it 'fails with non-existent properties' do
-      expect { subject.merge(middle_name: 'James') }.to raise_error(*no_property_error('middle_name'))
+      expect { subject.merge(middle_name: 'James') }
+        .to raise_error(*no_property_error('middle_name'))
     end
 
     it 'errors out when attempting to set a required property to nil' do
-      expect { subject.merge(first_name: nil) }.to raise_error(*property_required_error('first_name'))
+      expect { subject.merge(first_name: nil) }
+        .to raise_error(*property_required_error('first_name'))
     end
 
     context 'given a block' do
@@ -368,8 +370,12 @@ describe DashTest do
     let(:params) { { first_name: 'Alice', email: 'alice@example.com' } }
 
     context 'when there is coercion' do
-      let(:params_before) { { city: 'nyc', person: { first_name: 'Bob', email: 'bob@example.com' } } }
-      let(:params_after) { { city: 'sfo', person: { first_name: 'Alice', email: 'alice@example.com' } } }
+      let(:params_before) do
+        { city: 'nyc', person: { first_name: 'Bob', email: 'bob@example.com' } }
+      end
+      let(:params_after) do
+        { city: 'sfo', person: { first_name: 'Alice', email: 'alice@example.com' } }
+      end
 
       subject { DashWithCoercion.new(params_before) }
 
@@ -516,7 +522,8 @@ describe ConditionallyRequiredTest do
   end
 
   it 'allows a conditionally required property to be set if required' do
-    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: '$ecure!') }.not_to raise_error
+    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: '$ecure!') }
+      .not_to raise_error
   end
 end
 

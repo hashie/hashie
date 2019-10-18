@@ -219,7 +219,8 @@ module Hashie
     end
 
     def fail_property_required_error!(property)
-      raise ArgumentError, "The property '#{property}' #{self.class.required_properties[property][:message]}"
+      raise ArgumentError,
+            "The property '#{property}' #{self.class.required_properties[property][:message]}"
     end
 
     def fail_no_property_error!(property)

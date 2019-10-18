@@ -14,10 +14,12 @@ module Hashie
       #     ...
       #   ]
       #
-      #   Hashie::Extensions::DeepLocate.deep_locate -> (key, value, object) { key == :title }, books
+      #   DeepLocate.deep_locate -> (key, value, object) { key == :title }, books
       #   # => [{:title=>"Ruby for beginners", :pages=>120}, ...]
       def self.deep_locate(comparator, object)
-        comparator = _construct_key_comparator(comparator, object) unless comparator.respond_to?(:call)
+        unless comparator.respond_to?(:call)
+          comparator = _construct_key_comparator(comparator, object)
+        end
 
         _deep_locate(comparator, object)
       end
@@ -53,17 +55,21 @@ module Hashie
       #   # http://ruby-journal.com/becareful-with-space-in-lambda-hash-rocket-syntax-between-ruby-1-dot-9-and-2-dot-0/
       #
       #   books.deep_locate -> (key, value, object) { key == :title && value.include?("Ruby") }
-      #   # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"Ruby for the rest of us", :pages=>576}]
+      #   # => [{:title=>"Ruby for beginners", :pages=>120},
+      #   #     {:title=>"Ruby for the rest of us", :pages=>576}]
       #
       #   books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
-      #   # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"CSS for intermediates", :pages=>80}]
+      #   # => [{:title=>"Ruby for beginners", :pages=>120},
+      #   #     {:title=>"CSS for intermediates", :pages=>80}]
       def deep_locate(comparator)
         Hashie::Extensions::DeepLocate.deep_locate(comparator, self)
       end
 
       def self._construct_key_comparator(search_key, object)
-        search_key = search_key.to_s if activesupport_indifferent?(object)
-        search_key = search_key.to_s if object.respond_to?(:indifferent_access?) && object.indifferent_access?
+        if object.respond_to?(:indifferent_access?) && object.indifferent_access? ||
+           activesupport_indifferent?(object)
+          search_key = search_key.to_s
+        end
 
         lambda do |non_callable_object|
           ->(key, _, _) { key == non_callable_object }
@@ -73,7 +79,10 @@ module Hashie
 
       def self._deep_locate(comparator, object, result = [])
         if object.is_a?(::Enumerable)
-          result.push object if object.any? { |value| _match_comparator?(value, comparator, object) }
+          if object.any? { |value| _match_comparator?(value, comparator, object) }
+            result.push object
+          end
+
           (object.respond_to?(:values) ? object.values : object.entries).each do |value|
             _deep_locate(comparator, value, result)
           end

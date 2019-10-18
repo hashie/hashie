@@ -22,7 +22,12 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Exclude:
     - 'Guardfile'
-  Max: 110
+  Max: 100
+
+Lint/UnifiedInteger:
+  Exclude:
+    - 'lib/hashie/extensions/coercion.rb'
+    - 'spec/hashie/extensions/coercion_spec.rb'
 
 Naming/FileName:
   Exclude:

@@ -56,7 +56,8 @@ describe Hashie::Extensions::DeepLocate do
   describe '.deep_locate' do
     context 'if called with a non-callable comparator' do
       it 'creates a key comparator on-th-fly' do
-        expect(described_class.deep_locate(:lsr10, hash)).to eq([hash[:query][:bool][:must_not][0][:range]])
+        expect(described_class.deep_locate(:lsr10, hash))
+          .to eq([hash[:query][:bool][:must_not][0][:range]])
       end
     end
 

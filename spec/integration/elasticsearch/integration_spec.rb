@@ -35,6 +35,7 @@ RSpec.describe 'elaasticsearch-model' do
 
   def stub_elasticsearch_client
     response = double('Response', body: '{}')
-    allow_any_instance_of(Elasticsearch::Transport::Client).to receive(:perform_request) { response }
+    allow_any_instance_of(Elasticsearch::Transport::Client).to\
+      receive(:perform_request) { response }
   end
 end
