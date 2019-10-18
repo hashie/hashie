@@ -87,6 +87,10 @@ module Hashie
             end
           end
 
+          def property?(name)
+            properties.include?(name) || transforms.key?(name)
+          end
+
           def transformed_property(property_name, value)
             transforms[property_name].call(value)
           end
@@ -163,6 +167,17 @@ module Hashie
 
           # Deletes any keys that have a translation
           def initialize_attributes(attributes)
+            return unless attributes
+            attributes_copy = attributes.dup.delete_if do |k, v|
+              if self.class.translations_hash.include?(k)
+                _regular_writer(k, v)
+                true
+              end
+            end
+            super attributes_copy
+          end
+
+          def update_attributes(attributes)
             return unless attributes
             attributes_copy = attributes.dup.delete_if do |k, v|
               if self.class.translations_hash.include?(k)

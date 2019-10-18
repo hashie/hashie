@@ -35,6 +35,16 @@ module Hashie
         translations = klass.respond_to?(:translations) && klass.translations
         attributes.each_pair do |att, value|
           next unless klass.property?(att) || (translations && translations.include?(att))
+          _regular_writer(att, value)
+        end
+      end
+
+      def update_attributes(attributes)
+        return unless attributes
+        klass = self.class
+        translations = klass.respond_to?(:translations) && klass.translations
+        attributes.each_pair do |att, value|
+          next unless klass.property?(att) || (translations && translations.include?(att))
           self[att] = value
         end
       end

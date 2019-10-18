@@ -103,6 +103,7 @@ module Hashie
     # just like you would many other kinds of data objects.
     def initialize(attributes = {}, &block)
       super(&block)
+      update_attributes!(attributes)
 
       self.class.defaults.each_pair do |prop, value|
         self[prop] = begin
@@ -117,7 +118,6 @@ module Hashie
         end
       end
 
-      initialize_attributes(attributes)
       assert_required_attributes_set!
     end
 
@@ -170,6 +170,7 @@ module Hashie
     end
 
     def update_attributes!(attributes)
+      initialize_attributes(attributes)
       update_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
@@ -188,14 +189,17 @@ module Hashie
     def initialize_attributes(attributes)
       return unless attributes
 
-      cleaned_attributes = attributes.reject { |_attr, value| value.nil? }
-      update_attributes(cleaned_attributes)
+      attributes.each_pair do |att, value|
+        assert_property_exists!(att)
+        _regular_writer(att, value)
+      end
     end
 
     def update_attributes(attributes)
       return unless attributes
 
       attributes.each_pair do |att, value|
+        assert_property_exists!(att)
         self[att] = value
       end
     end
@@ -205,9 +209,15 @@ module Hashie
     end
 
     def assert_required_attributes_set!
+      property_errors = []
       self.class.required_properties.each_key do |required_property|
-        assert_property_set!(required_property)
+        begin
+          assert_property_set!(required_property)
+        rescue ArgumentError => e
+          property_errors << e
+        end
       end
+      raise ArgumentError, property_errors.join(' ') if property_errors.any?
     end
 
     def assert_property_set!(property)

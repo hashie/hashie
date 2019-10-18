@@ -222,7 +222,9 @@ describe DashTest do
 
   describe '#new' do
     it 'fails with non-existent properties' do
-      expect { described_class.new(bork: '') }.to raise_error(*no_property_error('bork'))
+      expect { DashNoRequiredTest.new(bork: '') }.to raise_error(
+        NoMethodError, "The property 'bork' is not defined for DashNoRequiredTest."
+      )
     end
 
     it 'sets properties that it is able to' do
