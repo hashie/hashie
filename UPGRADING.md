@@ -50,7 +50,7 @@ There shouldn't really be a case that anyone was relying on catching this specif
 
 The `Hashie::Mash#load` method now accepts options, changing the interface of `Parser#initialize`. If you have a custom parser, you must update its `initialize` method.
 
-For example, `Hashie::Extensions::Parsers::YamlErbParser` now accepts `whitelist_classes`, `whitelist_symbols` and `aliases` options.
+For example, `Hashie::Extensions::Parsers::YamlErbParser` now accepts `permitted_classes`, `permitted_symbols` and `aliases` options.
 
 Before:
 
@@ -76,7 +76,7 @@ end
 Options can now be passed into `Mash#load`.
 
 ```ruby
-Mash.load(filename, whitelist_classes: [])
+Mash.load(filename, permitted_classes: [])
 ```
 
 ### Upgrading to 3.5.2

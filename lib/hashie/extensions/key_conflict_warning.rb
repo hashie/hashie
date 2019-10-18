@@ -34,7 +34,7 @@ module Hashie
         @disable_warnings ||= false
       end
 
-      # Returns an array of blacklisted methods that this class disables warnings for.
+      # Returns an array of methods that this class disables warnings for.
       #
       # @api semipublic
       # @return [Boolean]

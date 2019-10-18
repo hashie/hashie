@@ -176,7 +176,7 @@ describe Hashie::Mash do
       expect(logger_output).to be_blank
     end
 
-    it 'writes to logger when a key is overridden that is not blacklisted' do
+    it 'writes to logger when a key is overridden that is not ignored' do
       mash_class = Class.new(Hashie::Mash) do
         disable_warnings :merge
       end
@@ -185,7 +185,7 @@ describe Hashie::Mash do
       expect(logger_output).not_to be_blank
     end
 
-    it 'does not write to logger when a key is overridden that is blacklisted' do
+    it 'does not write to logger when a key is overridden that is ignored' do
       mash_class = Class.new(Hashie::Mash) do
         disable_warnings :zip
       end
@@ -194,7 +194,7 @@ describe Hashie::Mash do
       expect(logger_output).to be_blank
     end
 
-    it 'carries over the disabled blacklist for warnings on grandchild classes' do
+    it 'carries over the ignored warnings list for warnings on grandchild classes' do
       child_class = Class.new(Hashie::Mash) do
         disable_warnings :zip, :merge
       end
@@ -208,7 +208,7 @@ describe Hashie::Mash do
 
     context 'multiple disable_warnings calls' do
       context 'calling disable_warnings multiple times with parameters' do
-        it 'appends each new parameter to the blacklist' do
+        it 'appends each new parameter to the ignore list' do
           child_class = Class.new(Hashie::Mash) do
             disable_warnings :zip
             disable_warnings :merge
@@ -220,7 +220,7 @@ describe Hashie::Mash do
       end
 
       context 'calling disable_warnings without keys after calling with keys' do
-        it 'uses the last call to ignore the blacklist' do
+        it 'uses the last call to determine the ignore list' do
           child_class = Class.new(Hashie::Mash) do
             disable_warnings :zip
             disable_warnings
@@ -234,7 +234,7 @@ describe Hashie::Mash do
       end
 
       context 'calling disable_parameters with keys after calling without keys' do
-        it 'only ignores logging for the blacklisted methods' do
+        it 'only ignores logging for ignored methods' do
           child_class = Class.new(Hashie::Mash) do
             disable_warnings
             disable_warnings :zip
@@ -793,30 +793,30 @@ describe Hashie::Mash do
     end
 
     context 'when the file has symbols' do
-      it 'can override the value of whitelist_classes' do
-        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', whitelist_classes: [Symbol])
+      it 'can override the value of permitted_classes' do
+        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', permitted_classes: [Symbol])
         expect(mash.user_icon.width).to eq(200)
       end
-      it 'uses defaults for whitelist_classes' do
+      it 'uses defaults for permitted_classes' do
         expect do
           Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml')
         end.to raise_error Psych::DisallowedClass, /Symbol/
       end
-      it 'can override the value of whitelist_symbols' do
+      it 'can override the value of permitted_symbols' do
         mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
-                                 whitelist_classes: [Symbol],
-                                 whitelist_symbols: %i[
+                                 permitted_classes: [Symbol],
+                                 permitted_symbols: %i[
                                    user_icon
                                    width
                                    height
                                  ])
         expect(mash.user_icon.width).to eq(200)
       end
-      it 'raises an error on insufficient whitelist_symbols' do
+      it 'raises an error on insufficient permitted_symbols' do
         expect do
           Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
-                            whitelist_classes: [Symbol],
-                            whitelist_symbols: %i[
+                            permitted_classes: [Symbol],
+                            permitted_symbols: %i[
                               user_icon
                               width
                             ])

@@ -15,10 +15,11 @@ module Hashie
         def perform
           template = ERB.new(@content)
           template.filename = @file_path
-          whitelist_classes = @options.fetch(:whitelist_classes) { [] }
-          whitelist_symbols = @options.fetch(:whitelist_symbols) { [] }
+          permitted_classes = @options.fetch(:permitted_classes) { [] }
+          permitted_symbols = @options.fetch(:permitted_symbols) { [] }
           aliases = @options.fetch(:aliases) { true }
-          YAML.safe_load template.result, whitelist_classes, whitelist_symbols, aliases
+          # TODO: Psych in newer rubies expects these args to be keyword args.
+          YAML.safe_load template.result, permitted_classes, permitted_symbols, aliases
         end
 
         def self.perform(file_path, options = {})

@@ -532,7 +532,7 @@ class Response < Hashie::Mash
 end
 ```
 
-Disable warnings will honor the last `disable_warnings` call. Calling without parameters will override the blacklist, and calling with parameters will create a new blacklist. This includes child classes that inherit from a class that disables warnings.
+Disable warnings will honor the last `disable_warnings` call. Calling without parameters will override the ignored methods list, and calling with parameters will create a new ignored methods list. This includes child classes that inherit from a class that disables warnings.
 
 ```ruby
 class Message < Hashie::Mash
@@ -633,10 +633,10 @@ mash[1] #=> { name: 'John', lastname: 'Doe' }
 
 The `Mash#load` method calls `YAML.safe_load(path, [], [], true)`.
 
-Specify `whitelist_symbols`, `whitelist_classes` and `aliases` options as needed.
+Specify `permitted_symbols`, `permitted_classes` and `aliases` options as needed.
 
 ```ruby
-Mash.load('data/user.csv', whitelist_classes: [Symbol], whitelist_symbols: [], aliases: false)
+Mash.load('data/user.csv', permitted_classes: [Symbol], permitted_symbols: [], aliases: false)
 ```
 
 ### Mash Extension: KeepOriginalKeys

@@ -103,7 +103,7 @@ module Hashie
 
     # Creates a new anonymous subclass with key conflict
     # warnings disabled. You may pass an array of method
-    # symbols to restrict the warnings blacklist to.
+    # symbols to restrict the disabled warnings to.
     # Hashie::Mash.quiet.new(hash) all warnings disabled.
     # Hashie::Mash.quiet(:zip).new(hash) only zip warning
     # is disabled.
