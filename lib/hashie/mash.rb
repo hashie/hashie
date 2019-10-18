@@ -108,11 +108,10 @@ module Hashie
     # Hashie::Mash.quiet(:zip).new(hash) only zip warning
     # is disabled.
     def self.quiet(*method_keys)
-      (@memoized_classes ||= {})[method_keys] ||
-        Class.new(self).tap do |k|
-          k.send(:disable_warnings, *method_keys)
-          @memoized_classes[method_keys] = k
-        end
+      @memoized_classes ||= {}
+      @memoized_classes[method_keys] ||= Class.new(self) do
+        disable_warnings(*method_keys)
+      end
     end
 
     class << self; alias [] new; end
