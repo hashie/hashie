@@ -64,7 +64,12 @@ describe Hash do
     end
 
     it '#to_hash returns a hash with same keys' do
-      hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
+      hash = Hashie::Hash[
+        'a' => 'hey',
+        123 => 'bob',
+        'array' => [1, 2, 3],
+        subhash: ClassRespondsToHash.new
+      ]
       stringified_hash = hash.to_hash
 
       expected = {
@@ -78,7 +83,12 @@ describe Hash do
     end
 
     it '#to_hash with stringify_keys set to true returns a hash with stringified_keys' do
-      hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
+      hash = Hashie::Hash[
+        'a' => 'hey',
+        123 => 'bob',
+        'array' => [1, 2, 3],
+        subhash: ClassRespondsToHash.new
+      ]
       symbolized_hash = hash.to_hash(stringify_keys: true)
 
       expected = {
@@ -92,7 +102,12 @@ describe Hash do
     end
 
     it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do
-      hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3], subhash: ClassRespondsToHash.new]
+      hash = Hashie::Hash[
+        'a' => 'hey',
+        123 => 'bob',
+        'array' => [1, 2, 3],
+        subhash: ClassRespondsToHash.new
+      ]
       symbolized_hash = hash.to_hash(symbolize_keys: true)
 
       expected = {

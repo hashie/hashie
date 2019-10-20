@@ -73,7 +73,9 @@ module Hashie
       end
 
       def method_missing(name, *args)
-        return self[convert_key(Regexp.last_match[1])] = args.first if args.size == 1 && name.to_s =~ /(.*)=$/
+        if args.size == 1 && name.to_s =~ /(.*)=$/
+          return self[convert_key(Regexp.last_match[1])] = args.first
+        end
 
         super
       end
@@ -231,7 +233,8 @@ module Hashie
     # underscores.
     module MethodAccessWithOverride
       def self.included(base)
-        [MethodReader, MethodOverridingWriter, MethodQuery, MethodOverridingInitializer].each do |mod|
+        [MethodReader, MethodOverridingWriter,
+         MethodQuery, MethodOverridingInitializer].each do |mod|
           base.send :include, mod
         end
       end

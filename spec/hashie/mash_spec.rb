@@ -302,14 +302,16 @@ describe Hashie::Mash do
 
       # http://www.ruby-doc.org/core-1.9.3/Hash.html#method-i-update
       it 'accepts a block' do
-        duped = subject.merge(details: { address: 'Pasadena CA' }) { |_, oldv, newv| [oldv, newv].join(', ') }
+        duped = subject.merge(details: { address: 'Pasadena CA' }) do |_, oldv, newv|
+          [oldv, newv].join(', ')
+        end
+
         expect(duped.details.address).to eq 'Nowhere road, Pasadena CA'
       end
 
       it 'copies values for non-duplicate keys when a block is supplied' do
-        duped =
-          subject
-          .merge(details: { address: 'Pasadena CA', state: 'West Thoughtleby' }) { |_, oldv, _| oldv }
+        m_hash = { details: { address: 'Pasadena CA', state: 'West Thoughtleby' } }
+        duped = subject.merge(m_hash) { |_, oldv, _| oldv }
 
         expect(duped.details.address).to eq 'Nowhere road'
         expect(duped.details.state).to eq 'West Thoughtleby'

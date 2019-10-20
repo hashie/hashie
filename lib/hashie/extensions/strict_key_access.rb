@@ -1,6 +1,7 @@
 module Hashie
   module Extensions
-    # SRP: This extension will fail an error whenever a key is accessed that does not exist in the hash.
+    # SRP: This extension will fail an error whenever a key is accessed
+    #   that does not exist in the hash.
     #
     #   EXAMPLE:
     #
@@ -21,8 +22,8 @@ module Hashie
     module StrictKeyAccess
       class DefaultError < StandardError
         def initialize
-          super(
-            'Setting or using a default with Hashie::Extensions::StrictKeyAccess does not make sense'
+          super('Setting or using a default with Hashie::Extensions::StrictKeyAccess'\
+                ' does not make sense'
           )
         end
       end

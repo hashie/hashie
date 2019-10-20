@@ -137,7 +137,8 @@ module Hashie
           end
 
           def fail_self_transformation_error!(property_name)
-            raise ArgumentError, "Property name (#{property_name}) and :from option must not be the same"
+            raise ArgumentError,
+                  "Property name (#{property_name}) and :from option must not be the same"
           end
 
           def valid_transformer?(transformer)

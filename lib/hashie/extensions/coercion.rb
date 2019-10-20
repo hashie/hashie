@@ -21,8 +21,8 @@ module Hashie
           { Numeric => [Integer, Float, Complex, Rational] }
         else
           {
-            Integer => [Fixnum, Bignum], # rubocop:disable Lint/UnifiedInteger
-            Numeric => [Fixnum, Bignum, Float, Complex, Rational] # rubocop:disable Lint/UnifiedInteger
+            Integer => [Fixnum, Bignum],
+            Numeric => [Fixnum, Bignum, Float, Complex, Rational]
           }
         end
 
@@ -103,7 +103,8 @@ module Hashie
         #
         # @param [Class] from the type you would like coerced.
         # @param [Class] into the class into which you would like the value coerced.
-        # @option options [Boolean] :strict (true) whether use exact source class only or include ancestors
+        # @option options [Boolean] :strict (true) whether use exact source class
+        #   only or include ancestors
         #
         # @example Coerce all hashes into this special type of hash
         #   class SpecialHash < Hash

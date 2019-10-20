@@ -117,7 +117,7 @@ module Hashie
         end
 
       when Regexp
-        # Reverse operation: `rash[/regexp/]` returns all the hash's string keys which match the regexp
+        # Reverse operation: `rash[/regexp/]` returns all string keys matching the regexp
         @hash.each do |key, val|
           yield val if key.is_a?(String) && query =~ key
         end

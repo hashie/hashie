@@ -9,7 +9,8 @@ module Hashie
     #
     #  options.deep_fetch(:user, :non_existent_key) { 'a value' } #=> 'a value'
     #
-    # This is particularly useful for fetching values from deeply nested api responses or params hashes.
+    # This is particularly useful for fetching values from deeply nested api responses
+    #   or params hashes.
     module DeepFetch
       class UndefinedPathError < StandardError; end
 
@@ -20,7 +21,8 @@ module Hashie
             obj.fetch(arg)
           rescue ArgumentError, IndexError, NoMethodError => e
             break yield(arg) if block
-            raise UndefinedPathError, "Could not fetch path (#{args.join(' > ')}) at #{arg}", e.backtrace
+            raise UndefinedPathError,
+                  "Could not fetch path (#{args.join(' > ')}) at #{arg}", e.backtrace
           end
         end
       end

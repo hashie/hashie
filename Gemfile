@@ -16,7 +16,8 @@ group :test do
   # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
   # rubocop:disable Bundler/DuplicatedGem
   require File.expand_path('../lib/hashie/extensions/ruby_version', __FILE__)
-  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >= Hashie::Extensions::RubyVersion.new('2.4.0')
+  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
+     Hashie::Extensions::RubyVersion.new('2.4.0')
     gem 'activesupport', '~> 5.x', require: false
   else
     gem 'activesupport', '~> 4.x', require: false
