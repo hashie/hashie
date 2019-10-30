@@ -6,9 +6,9 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [4.0.0] - 2019-10-30
 
-[unreleased]: https://github.com/intridea/hashie/compare/v3.6.0...master
+[4.0.0]: https://github.com/intridea/hashie/compare/v3.6.0...v4.0.0
 
 ### Added
 
@@ -17,20 +17,10 @@ scheme are considered to be bugs.
 * [#478](https://github.com/intridea/hashie/pull/478): Added optional array parameter to `Hashie::Mash.disable_warnings` - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#481](https://github.com/intridea/hashie/pull/481): Ruby 2.6 - Support `Hash#merge` and `#merge!` called with multiple Hashes/Mashes - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#488](https://github.com/intridea/hashie/pull/488): Added ability to create an anonymous `Hashie::Mash` subclass with key conflict errors silenced using `Hashie::Mash.quiet.new` - [@bobbymcwho](https://github.com/bobbymcwho).
-* Your contribution here.
 
 ### Changed
 
 * [#481](https://github.com/intridea/hashie/pull/481): Implement non-destructive standard Hash methods - [@bobbymcwho](https://github.com/bobbymcwho).
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
@@ -38,17 +28,11 @@ scheme are considered to be bugs.
 * [#465](https://github.com/intridea/hashie/pull/465): Fixed `deep_update` to call any readers when a key exists - [@laertispappas](https://github.com/laertispappas).
 * [#479](https://github.com/intridea/hashie/pull/479): Fixed an issue with `Hash#except` not returning a `Mash` in Rails 6 - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#489](https://github.com/intridea/hashie/pull/489): Updated the documentation to exlain the behavior of `Mash` and keyword arguments - [@Bhacaz](https://github.com/Bhacaz).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ### Miscellaneous
 
 * [#465](https://github.com/intridea/hashie/pull/465): Clean up our RuboCop configuration and fix the outstanding line length violations. This involved some minor refactoring on `Hashie::Extensions::Coercion`, `Hashie::Extensions::Dash::IndifferentAccess`, `Hashie::Extensions::DeepLocate`, `Hashie::Extensions::Mash::SafeAssignment`, and `Hashie::Hash`, but none that were detectable via the test suite - [@michaelherold](https://github.com/michaelherold).
 * [#482](https://github.com/intridea/hashie/pull/482): Update Travis configs to make jruby builds run on trusty dist. - [@BobbyMcWho](https://github.com/BobbyMcWho).
-* Your contribution here.
 
 ## [3.6.0] - 2018-08-13
 
