@@ -312,6 +312,7 @@ describe Hashie::Trash do
       subject = from_non_property.new(value: 0)
 
       expect(subject).not_to respond_to(:value)
+
       expect { subject[:value] }.to raise_error(
         NoMethodError, "The property 'value' is not defined for ."
       )

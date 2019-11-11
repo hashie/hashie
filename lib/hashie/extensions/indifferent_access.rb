@@ -29,6 +29,7 @@ module Hashie
         base.class_eval do
           alias_method :regular_writer, :[]= unless method_defined?(:regular_writer)
           alias_method :[]=, :indifferent_writer
+          alias_method :_regular_writer, :[]=
           alias_method :store, :indifferent_writer
           %w[default update replace fetch delete key? values_at].each do |m|
             alias_method "regular_#{m}", m unless method_defined?("regular_#{m}")

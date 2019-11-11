@@ -88,7 +88,7 @@ module Hashie
           end
 
           def property?(name)
-            properties.include?(name) || transforms.key?(name)
+            properties.include?(name)
           end
 
           def transformed_property(property_name, value)
@@ -151,6 +151,20 @@ module Hashie
         end
 
         module InstanceMethods
+
+          def _regular_writer(property, value)
+            if self.class.translation_exists? property
+              __translations[property].each do |name, with|
+                val = with.respond_to?(:call) ? with.call(value) : value
+                _regular_writer(name, val)
+              end
+              super(property, value) if self.class.properties.include?(property)
+            elsif self.class.transformation_exists? property
+              super property, self.class.transformed_property(property, value)
+            else
+              super
+            end
+          end
           # Sets a value on the Dash in a Hash-like way.
           #
           # Note: Only works on pre-existing properties.
@@ -168,6 +182,7 @@ module Hashie
           # Deletes any keys that have a translation
           def initialize_attributes(attributes)
             return unless attributes
+
             attributes_copy = attributes.dup.delete_if do |k, v|
               if self.class.translations_hash.include?(k)
                 _regular_writer(k, v)
