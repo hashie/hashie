@@ -446,6 +446,15 @@ describe DashTest do
       )
     end
   end
+
+  describe '#to_hash' do
+    it 'does not write out keys with nil values' do
+      expect(DashTest.new(first_name: 'Bob', email: nil).to_hash).to eq(
+        first_name: 'Bob',
+        count: 0
+      )
+    end
+  end
 end
 
 describe Hashie::Dash, 'inheritance' do
