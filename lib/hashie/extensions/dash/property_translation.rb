@@ -147,7 +147,6 @@ module Hashie
         end
 
         module InstanceMethods
-
           def _regular_writer(property, value)
             if self.class.translation_exists? property
               __translations[property].each do |name, with|
@@ -161,6 +160,7 @@ module Hashie
               super
             end
           end
+
           # Sets a value on the Dash in a Hash-like way.
           #
           # Note: Only works on pre-existing properties.

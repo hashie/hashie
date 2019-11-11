@@ -442,9 +442,9 @@ describe DashTest do
   describe '#to_h' do
     it 'writes out keys with nil values' do
       expect(DashTest.new(first_name: 'Bob', email: nil).to_h).to eq(
-        first_name: "Bob",
+        first_name: 'Bob',
         email: nil,
-        count: 0,
+        count: 0
       )
     end
   end

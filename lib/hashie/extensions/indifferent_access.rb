@@ -146,8 +146,7 @@ module Hashie
 
       def hash_lacking_indifference?(other)
         other.is_a?(::Hash) &&
-          !(other.respond_to?(:indifferent_access?) &&
-            other.indifferent_access?)
+          !(other.respond_to?(:indifferent_access?) && other.indifferent_access?)
       end
 
       def hash_with_indifference?(other)
