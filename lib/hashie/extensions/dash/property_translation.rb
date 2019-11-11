@@ -87,10 +87,6 @@ module Hashie
             end
           end
 
-          def property?(name)
-            properties.include?(name)
-          end
-
           def transformed_property(property_name, value)
             transforms[property_name].call(value)
           end
