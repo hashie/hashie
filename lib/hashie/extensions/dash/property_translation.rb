@@ -179,7 +179,7 @@ module Hashie
           def initialize_attributes(attributes)
             return unless attributes
 
-            attributes_copy = attributes.dup.delete_if do |k, v|
+            attributes_copy = attributes.reject do |k, v|
               if self.class.translations_hash.include?(k)
                 _regular_writer(k, v)
                 true
