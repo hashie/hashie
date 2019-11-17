@@ -9,7 +9,7 @@ jobs:
     
     strategy:
       matrix:
-        ruby-version: [ '2.1.x', '2.2.x', '2.3.x', '2.4.x', '2.5.x', '2.6.x']
+        ruby-version: [ '2.1.10', '2.2.9', '2.3.8', '2.4.5', '2.5.3', '2.6.3']
     steps:
     - uses: actions/checkout@v1
     - uses: actions/cache@preview
