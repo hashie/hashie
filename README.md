@@ -658,6 +658,30 @@ mash['string_key']  #=> 'string'
 mash[:string_key]  #=> 'string'
 ```
 
+### Mash Extension: PermissiveRespondTo
+
+By default, Mash only states that it responds to built-in methods, affixed methods (e.g. setters, underbangs, etc.), and keys that it currently contains. That means it won't state that it responds to a getter for an unset key, as in the following example:
+
+```ruby
+mash = Hashie::Mash.new(a: 1)
+mash.respond_to? :b  #=> false
+```
+
+This means that by default Mash is not a perfect match for use with a SimpleDelegator since the delegator will not forward messages for unset keys to the Mash even though it can handle them.
+
+In order to have a SimpleDelegator-compatible Mash, you can use the `PermissiveRespondTo` extension to make Mash respond to anything.
+
+```ruby
+class PermissiveMash < Hashie::Mash
+  include Hashie::Extensions::Mash::PermissiveRespondTo
+end
+
+mash = PermissiveMash.new(a: 1)
+mash.respond_to? :b  #=> true
+```
+
+This comes at the cost of approximately 20% performance for initialization and setters and 19KB of permanent memory growth for each such class that you create.
+
 ### Mash Extension: SafeAssignment
 
 This extension can be mixed into a Mash to guard the attempted overwriting of methods by property setters. When mixed in, the Mash will raise an `ArgumentError` if you attempt to write a property with the same name as an existing method.
