@@ -11,7 +11,7 @@ bundle install
 bundle exec rake
 ```
 
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/intridea/hashie) for all supported platforms.
+Check that the last build succeeded in [Travis CI](https://travis-ci.org/hashie/hashie) for all supported platforms.
 
 ### Check Next Version
 
@@ -38,7 +38,7 @@ Change "Unreleased" in [CHANGELOG.md](CHANGELOG.md) to the new version.
 ```markdown
 ## [3.3.0] - 2014-08-25
 
-[3.3.0]: https://github.com/intridea/hashie/compare/v<LAST_VERSION>..v<THIS_VERSION>
+[3.3.0]: https://github.com/hashie/hashie/compare/v<LAST_VERSION>..v<THIS_VERSION>
 ```
 
 Replace `<LAST_VERSION>` and `<THIS_VERSION>` with the last and new-to-be-released versions to set up the compare view on Github.
@@ -74,7 +74,7 @@ Modify the "Stable Release" section in [README.md](README.md). Change the text t
 ## Stable Release
 
 You're reading the documentation for the next release of Hashie, which should be 3.3.1.
-The current stable release is [3.3.0](https://github.com/intridea/hashie/blob/v3.3.0/README.md).
+The current stable release is [3.3.0](https://github.com/hashie/hashie/blob/v3.3.0/README.md).
 ```
 
 Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template:
@@ -82,7 +82,7 @@ Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template
 ```markdown
 ## [Unreleased][unreleased]
 
-[unreleased]: https://github.com/intridea/hashie/compare/v<THIS_VERSION>...master
+[unreleased]: https://github.com/hashie/hashie/compare/v<THIS_VERSION>...master
 
 ### Added
 

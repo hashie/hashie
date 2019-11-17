@@ -75,7 +75,7 @@ describe Hashie::Mash do
   # Added due to downstream gems assuming indifferent access to be true for Mash
   # When this is not, bump major version so that downstream gems can target
   # correct version and fix accordingly.
-  # See https://github.com/intridea/hashie/pull/197
+  # See https://github.com/hashie/hashie/pull/197
   it 'maintains indifferent access when nested' do
     subject[:a] = { b: 'c' }
     expect(subject[:a][:b]).to eq 'c'

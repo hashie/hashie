@@ -1,16 +1,16 @@
 Contributing to Hashie
 ======================
 
-Hashie is work of [many contributors](https://github.com/intridea/hashie/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/intridea/hashie/pulls), [propose features and discuss issues](https://github.com/intridea/hashie/issues).
+Hashie is work of [many contributors](https://github.com/hashie/hashie/graphs/contributors). You're encouraged to submit [pull requests](https://github.com/hashie/hashie/pulls), [propose features and discuss issues](https://github.com/hashie/hashie/issues).
 
 #### Fork the Project
 
-Fork the [project on Github](https://github.com/intridea/hashie) and check out your copy.
+Fork the [project on Github](https://github.com/hashie/hashie) and check out your copy.
 
 ```
 git clone https://github.com/contributor/hashie.git
 cd hashie
-git remote add upstream https://github.com/intridea/hashie.git
+git remote add upstream https://github.com/hashie/hashie.git
 ```
 
 #### Create a Topic Branch
@@ -105,7 +105,7 @@ git push origin my-feature-branch -f
 Update the [CHANGELOG](CHANGELOG.md) with the pull request number. A typical entry looks as follows.
 
 ```
-* [#123](https://github.com/intridea/hashie/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
+* [#123](https://github.com/hashie/hashie/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
 ```
 
 Amend your previous commit and force push the changes.
