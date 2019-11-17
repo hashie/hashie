@@ -1,10 +1,10 @@
 # Hashie
 
-[![Join the chat at https://gitter.im/intridea/hashie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/intridea/hashie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/hashie/hashie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hashie/hashie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Gem Version](http://img.shields.io/gem/v/hashie.svg)](http://badge.fury.io/rb/hashie)
-[![Build Status](http://img.shields.io/travis/intridea/hashie.svg)](https://travis-ci.org/intridea/hashie)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/test_coverage)](https://codeclimate.com/github/intridea/hashie/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/maintainability)](https://codeclimate.com/github/intridea/hashie/maintainability)
+[![Build Status](http://img.shields.io/travis/hashie/hashie.svg)](https://travis-ci.org/hashie/hashie)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/test_coverage)](https://codeclimate.com/github/hashie/hashie/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/maintainability)](https://codeclimate.com/github/hashie/hashie/maintainability)
 
 Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
@@ -18,7 +18,7 @@ $ gem install hashie
 
 ## Upgrading
 
-You're reading the documentation for the next release of Hashie, which should be 4.0.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [4.0.0](https://github.com/intridea/hashie/blob/v4.0.0/README.md).
+You're reading the documentation for the next release of Hashie, which should be 4.0.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [4.0.0](https://github.com/hashie/hashie/blob/v4.0.0/README.md).
 
 ## Hash Extensions
 
@@ -1009,6 +1009,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Copyright
 
-Copyright (c) 2009-2014 Intridea, Inc. (http://intridea.com/) and [contributors](https://github.com/intridea/hashie/graphs/contributors).
+Copyright (c) 2009-2014 Intridea, Inc. (http://intridea.com/) and [contributors](https://github.com/hashie/hashie/graphs/contributors).
 
 MIT License. See [LICENSE](LICENSE) for details.
