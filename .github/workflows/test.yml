@@ -12,10 +12,16 @@ jobs:
         ruby-version: [ '2.1.x', '2.2.x', '2.3.x', '2.4.x', '2.5.x', '2.6.x']
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby ${{ matrix.ruby-version }}
-      uses: actions/setup-ruby@v1
+    - uses: actions/cache@preview
+      id: cache
+      with:
+        path: ~/local/rubies
+        key: ruby-${{ matrix.ruby-version }}
+    - uses: clupprich/ruby-build-action@master
+      id: ruby
       with:
         ruby-version: ${{ matrix.ruby-version }}
+        cache-available: ${{ steps.cache.outputs.cache-hit == 'true' }}
     - name: Build and test with Rake
       env:
         CI: 'true'
