@@ -17,7 +17,7 @@ class MyModel < Hashie::Mash
 end
 
 RSpec.describe 'elaasticsearch-model' do
-  # See https://github.com/intridea/hashie/issues/354#issuecomment-363306114
+  # See https://github.com/hashie/hashie/issues/354#issuecomment-363306114
   # for the reason why this doesn't work as you would expect
   it 'raises an error when the model does has an id' do
     object = MyModel.new

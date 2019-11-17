@@ -143,7 +143,7 @@ h.abb? # => false
 
 #### Possible coercion changes
 
-The improvements made to coercions in version 3.2.1 [issue #200](https://github.com/intridea/hashie/pull/200) do not break the documented API, but are significant enough that changes may effect undocumented side-effects. Applications that depended on those side-effects will need to be updated.
+The improvements made to coercions in version 3.2.1 [issue #200](https://github.com/hashie/hashie/pull/200) do not break the documented API, but are significant enough that changes may effect undocumented side-effects. Applications that depended on those side-effects will need to be updated.
 
 **Change**: Type coercion no longer creates new objects if the input matches the target type. Previously coerced properties always resulted in the creation of a new object, even when it wasn't necessary. This had the effect of a `dup` or `clone` on coerced properties but not uncoerced ones.
 
@@ -159,7 +159,7 @@ Applications that were attempting to rescuing the internal errors should be upda
 
 #### Compatibility with Rails 4 Strong Parameters
 
-Version 2.1 introduced support to prevent default Rails 4 mass-assignment protection behavior. This was [issue #89](https://github.com/intridea/hashie/issues/89), resolved in [#104](https://github.com/intridea/hashie/pull/104). In version 2.2 this behavior has been removed in [#147](https://github.com/intridea/hashie/pull/147) in favor of a mixin and finally extracted into a separate gem in Hashie 3.0.
+Version 2.1 introduced support to prevent default Rails 4 mass-assignment protection behavior. This was [issue #89](https://github.com/hashie/hashie/issues/89), resolved in [#104](https://github.com/hashie/hashie/pull/104). In version 2.2 this behavior has been removed in [#147](https://github.com/hashie/hashie/pull/147) in favor of a mixin and finally extracted into a separate gem in Hashie 3.0.
 
 To enable 2.1 compatible behavior with Rails 4, use the [hashie_rails](http://rubygems.org/gems/hashie_rails) gem.
 
@@ -167,7 +167,7 @@ To enable 2.1 compatible behavior with Rails 4, use the [hashie_rails](http://ru
 gem 'hashie_rails'
 ```
 
-See [#154](https://github.com/intridea/hashie/pull/154) and [Mash and Rails 4 Strong Parameters](README.md#mash-and-rails-4-strong-parameters) for more details.
+See [#154](https://github.com/hashie/hashie/pull/154) and [Mash and Rails 4 Strong Parameters](README.md#mash-and-rails-4-strong-parameters) for more details.
 
 #### Key Conversions in Hashie::Dash and Hashie::Trash
 
@@ -195,7 +195,7 @@ p.inspect # => { 'name' => 'dB.' }
 p.to_hash # => { 'name' => 'dB.' }
 ```
 
-It was not possible to achieve the behavior of preserving keys, as described in [issue #151](https://github.com/intridea/hashie/issues/151).
+It was not possible to achieve the behavior of preserving keys, as described in [issue #151](https://github.com/hashie/hashie/issues/151).
 
 Version 2.2 does not perform this conversion by default.
 
@@ -242,4 +242,4 @@ instance.to_hash # => { :first => 'First', "last" => 'Last' }
 
 The behavior with `symbolize_keys` and `stringify_keys` is unchanged.
 
-See [#152](https://github.com/intridea/hashie/pull/152) for more information.
+See [#152](https://github.com/hashie/hashie/pull/152) for more information.
