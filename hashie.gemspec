@@ -4,7 +4,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'hashie'
   gem.version       = Hashie::VERSION
   gem.authors       = ['Michael Bleigh', 'Jerry Cheung']
-  gem.email         = ['michael@hashie.com', 'jollyjerry@gmail.com']
+  gem.email         = ['michael@intridea.com', 'jollyjerry@gmail.com']
   gem.description   = 'Hashie is a collection of classes and mixins that make hashes more powerful.'
   gem.summary       = 'Your friendly neighborhood hash library.'
   gem.homepage      = 'https://github.com/hashie/hashie'
