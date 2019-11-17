@@ -17,6 +17,15 @@ Gem::Specification.new do |gem|
   gem.files += Dir['spec/**/*.rb']
   gem.test_files = Dir['spec/**/*.rb']
 
+  if gem.respond_to?(:metadata)
+    gem.metadata = {
+      'bug_tracker_uri'   => 'https://github.com/hashie/hashie/issues',
+      'changelog_uri'     => 'https://github.com/hashie/hashie/blob/master/CHANGELOG.md',
+      'documentation_uri' => 'https://www.rubydoc.info/gems/hashie',
+      'source_code_uri'   => 'https://github.com/hashie/hashie'
+    }
+  end
+
   gem.add_development_dependency 'rake', '< 11'
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'rspec-pending_for', '~> 0.1'
