@@ -23,10 +23,3 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec rake
-
-    - name: Cache Primes
-      id: cache-primes
-      uses: actions/cache@v1
-      with:
-        path: prime-numbers
-        key: ${{ runner.os }}-primes
