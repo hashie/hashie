@@ -9,7 +9,7 @@ jobs:
     
     strategy:
       matrix:
-        ruby-version: [2.1.x, 2.2.x, 2.3.x, 2.4.x, 2.5.x, ruby-head]
+        ruby-version: [ '2.1.x', '2.2.x', '2.3.x', '2.4.x', '2.5.x', '2.6.x']
     steps:
     - uses: actions/checkout@v1
     - name: Set up Ruby ${{ matrix.ruby-version }}
@@ -23,3 +23,10 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec rake
+
+    - name: Cache Primes
+      id: cache-primes
+      uses: actions/cache@v1
+      with:
+        path: prime-numbers
+        key: ${{ runner.os }}-primes
