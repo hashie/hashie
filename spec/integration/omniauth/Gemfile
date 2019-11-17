@@ -2,7 +2,9 @@ source 'http://rubygems.org'
 
 gem 'benchmark-ips'
 gem 'hashie', path: '../../..'
-gem 'omniauth', '~> 1.4.1'
+# Update omniauth to a pessimistic minor once omniauth releases changes in
+# https://github.com/omniauth/omniauth/pull/977
+gem 'omniauth', git: 'https://github.com/omniauth/omniauth.git', branch:'master'
 gem 'rack-test', '~> 0.6.3'
 gem 'rake'
 gem 'rspec', '~> 3.5.0'
