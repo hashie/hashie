@@ -14,8 +14,6 @@ Gem::Specification.new do |gem|
   gem.files = %w[.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md]
   gem.files += %w[Rakefile hashie.gemspec]
   gem.files += Dir['lib/**/*.rb']
-  gem.files += Dir['spec/**/*.rb']
-  gem.test_files = Dir['spec/**/*.rb']
 
   if gem.respond_to?(:metadata)
     gem.metadata = {
