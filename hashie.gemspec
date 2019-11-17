@@ -24,7 +24,5 @@ Gem::Specification.new do |gem|
     }
   end
 
-  gem.add_development_dependency 'rake', '< 11'
-  gem.add_development_dependency 'rspec', '~> 3.0'
-  gem.add_development_dependency 'rspec-pending_for', '~> 0.1'
+  gem.add_development_dependency 'bundler'
 end
