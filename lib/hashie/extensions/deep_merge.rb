@@ -3,7 +3,7 @@ module Hashie
     module DeepMerge
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
       def deep_merge(other_hash, &block)
-        copy = dup
+        copy = _deep_dup(self)
         copy.extend(Hashie::Extensions::DeepMerge) unless copy.respond_to?(:deep_merge!)
         copy.deep_merge!(other_hash, &block)
       end
@@ -17,6 +17,21 @@ module Hashie
       end
 
       private
+
+      def _deep_dup(hash)
+        copy = hash.dup
+
+        copy.each do |key, value|
+          copy[key] =
+            if value.is_a?(::Hash)
+              _deep_dup(value)
+            else
+              Hashie::Utils.safe_dup(value)
+            end
+        end
+
+        copy
+      end
 
       def _recursive_merge(hash, other_hash, &block)
         other_hash.each do |k, v|
