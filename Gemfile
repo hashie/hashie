@@ -4,6 +4,7 @@ gemspec
 
 group :development do
   gem 'benchmark-ips'
+  gem 'benchmark-memory'
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-yield', '~> 0.1.0', require: false
