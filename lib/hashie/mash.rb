@@ -406,7 +406,12 @@ module Hashie
     end
 
     def log_collision?(method_key)
-      respond_to?(method_key) && !self.class.disable_warnings?(method_key) &&
+      return unless respond_to?(method_key)
+
+      _, suffix = method_name_and_suffix(method_key)
+
+      (!suffix || suffix == '='.freeze) &&
+        !self.class.disable_warnings?(method_key) &&
         !(regular_key?(method_key) || regular_key?(method_key.to_s))
     end
   end
