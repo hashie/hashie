@@ -23,12 +23,19 @@ git pull upstream master
 git checkout -b my-feature-branch
 ```
 
-#### Bundle Install and Test
+#### Install dependencies
+
+You can use the setup script to install dependencies for the gem and its integration tests.
+
+```
+bin/setup
+```
+
+#### Test
 
 Ensure that you can build the project and run tests.
 
 ```
-bundle install
 bundle exec rake
 ```
 

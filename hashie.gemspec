@@ -14,10 +14,15 @@ Gem::Specification.new do |gem|
   gem.files = %w[.yardopts CHANGELOG.md CONTRIBUTING.md LICENSE README.md UPGRADING.md]
   gem.files += %w[Rakefile hashie.gemspec]
   gem.files += Dir['lib/**/*.rb']
-  gem.files += Dir['spec/**/*.rb']
-  gem.test_files = Dir['spec/**/*.rb']
 
-  gem.add_development_dependency 'rake', '< 11'
-  gem.add_development_dependency 'rspec', '~> 3.0'
-  gem.add_development_dependency 'rspec-pending_for', '~> 0.1'
+  if gem.respond_to?(:metadata)
+    gem.metadata = {
+      'bug_tracker_uri'   => 'https://github.com/hashie/hashie/issues',
+      'changelog_uri'     => 'https://github.com/hashie/hashie/blob/master/CHANGELOG.md',
+      'documentation_uri' => 'https://www.rubydoc.info/gems/hashie',
+      'source_code_uri'   => 'https://github.com/hashie/hashie'
+    }
+  end
+
+  gem.add_development_dependency 'bundler'
 end
