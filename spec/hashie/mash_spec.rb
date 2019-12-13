@@ -982,6 +982,7 @@ describe Hashie::Mash do
   with_minimum_ruby('2.3.0') do
     describe '#dig' do
       subject { described_class.new(a: { b: 1 }) }
+
       it 'accepts both string and symbol as key' do
         expect(subject.dig(:a, :b)).to eq(1)
         expect(subject.dig('a', 'b')).to eq(1)
@@ -992,6 +993,14 @@ describe Hashie::Mash do
         it 'accepts a numeric value as key' do
           expect(subject.dig(1, :b)).to eq(1)
           expect(subject.dig('1', :b)).to eq(1)
+        end
+      end
+
+      context 'when the Mash wraps a Hashie::Array' do
+        it 'handles digging into an array' do
+          mash = described_class.new(alphabet: { first_three: Hashie::Array['a', 'b', 'c'] })
+
+          expect(mash.dig(:alphabet, :first_three, 0)).to eq 'a'
         end
       end
     end
