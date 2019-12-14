@@ -30,6 +30,7 @@ scheme are considered to be bugs.
 ### Fixed
 
 * [#467](https://github.com/intridea/hashie/pull/467): Fixed `DeepMerge#deep_merge` mutating nested values within the receiver - [@michaelherold](https://github.com/michaelherold).
+* [#505](https://github.com/hashie/hashie/pull/505): Ensure that `Hashie::Array`s are not deconverted within `Hashie::Mash`es to make `Mash#dig` work properly - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Security

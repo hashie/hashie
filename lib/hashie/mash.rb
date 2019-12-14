@@ -382,8 +382,6 @@ module Hashie
       when ::Hash
         val = val.dup if duping
         self.class.new(val)
-      when Array
-        val.map { |e| convert_value(e) }
       when ::Array
         Array.new(val.map { |e| convert_value(e) })
       else
