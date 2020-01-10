@@ -18,12 +18,29 @@ module Hashie
           permitted_classes = @options.fetch(:permitted_classes) { [] }
           permitted_symbols = @options.fetch(:permitted_symbols) { [] }
           aliases = @options.fetch(:aliases) { true }
-          # TODO: Psych in newer rubies expects these args to be keyword args.
-          YAML.safe_load template.result, permitted_classes, permitted_symbols, aliases
+
+          yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
         end
 
         def self.perform(file_path, options = {})
           new(file_path, options).perform
+        end
+
+        private
+
+        if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0') # Ruby 2.6+
+          def yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
+            YAML.safe_load(
+              template.result,
+              permitted_classes: permitted_classes,
+              permitted_symbols: permitted_symbols,
+              aliases: aliases
+            )
+          end
+        else
+          def yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
+            YAML.safe_load(template.result, permitted_classes, permitted_symbols, aliases)
+          end
         end
       end
     end
