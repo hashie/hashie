@@ -173,12 +173,6 @@ module Hashie
       super(*keys.map { |key| convert_key(key) })
     end
 
-    # Returns a new instance of the class it was called on, with nil values
-    # removed.
-    def compact
-      self.class.new(super)
-    end
-
     # Returns a new instance of the class it was called on, using its keys as
     # values, and its values as keys. The new values and keys will always be
     # strings.
@@ -339,6 +333,12 @@ module Hashie
     with_minimum_ruby('2.4.0') do
       def transform_values(&blk)
         self.class.new(super(&blk))
+      end
+
+      # Returns a new instance of the class it was called on, with nil values
+      # removed.
+      def compact
+        self.class.new(super)
       end
     end
 

@@ -32,6 +32,7 @@ scheme are considered to be bugs.
 * [#467](https://github.com/intridea/hashie/pull/467): Fixed `DeepMerge#deep_merge` mutating nested values within the receiver - [@michaelherold](https://github.com/michaelherold).
 * [#505](https://github.com/hashie/hashie/pull/505): Ensure that `Hashie::Array`s are not deconverted within `Hashie::Mash`es to make `Mash#dig` work properly - [@michaelherold](https://github.com/michaelherold).
 * [#507](https://github.com/hashie/hashie/pull/507): Suppress `Psych.safe_load` arg warn when using Psych 3.1.0+ - [@koic](https://github.com/koic).
+* [#510](https://github.com/hashie/hashie/pull/510): Ensure that `Hashie::Mash#compact` is only defined on Ruby version >= 2.4.0 - [@bobbymcwho](https://github.com/bobbymcwho).
 * Your contribution here.
 
 ### Security

@@ -882,27 +882,6 @@ describe Hashie::Mash do
     end
   end
 
-  describe '#compact' do
-    subject(:mash) { described_class.new(a: 1, b: nil) }
-
-    it 'returns a Hashie::Mash' do
-      expect(mash.compact).to be_kind_of(described_class)
-    end
-
-    it 'removes keys with nil values' do
-      expect(mash.compact).to eq('a' => 1)
-    end
-
-    context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
-      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
-
-      it 'creates an instance of subclass' do
-        expect(sub_mash.compact).to be_kind_of(subclass)
-      end
-    end
-  end
-
   describe '#invert' do
     subject(:mash) { described_class.new(a: 'apple', b: 4) }
 
@@ -1024,6 +1003,27 @@ describe Hashie::Mash do
 
         it 'creates an instance of subclass' do
           expect(sub_mash).to be_kind_of(subclass)
+        end
+      end
+    end
+
+    describe '#compact' do
+      subject(:mash) { described_class.new(a: 1, b: nil) }
+
+      it 'returns a Hashie::Mash' do
+        expect(mash.compact).to be_kind_of(described_class)
+      end
+
+      it 'removes keys with nil values' do
+        expect(mash.compact).to eq('a' => 1)
+      end
+
+      context 'when using with subclass' do
+        let(:subclass) { Class.new(Hashie::Mash) }
+        subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+
+        it 'creates an instance of subclass' do
+          expect(sub_mash.compact).to be_kind_of(subclass)
         end
       end
     end
