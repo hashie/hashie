@@ -11,9 +11,6 @@ require 'rspec/pending_for'
 require './spec/support/ruby_version_check'
 require './spec/support/logger'
 
-require 'active_support'
-require 'active_support/core_ext'
-
 RSpec.configure do |config|
   config.extend RubyVersionCheck
   config.expect_with :rspec do |expect|

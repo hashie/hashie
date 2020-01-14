@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'active_support/core_ext/hash/indifferent_access'
 
 describe Hashie::Extensions::DeepLocate do
   let(:hash) do
@@ -121,18 +120,6 @@ describe Hashie::Extensions::DeepLocate do
 
     it 'adds #deep_locate' do
       expect(instance.deep_locate(:bool)).to eq([hash[:query]])
-    end
-  end
-
-  context 'on an ActiveSupport::HashWithIndifferentAccess' do
-    let(:instance) { hash.dup.with_indifferent_access }
-
-    it 'can locate symbolic keys' do
-      expect(described_class.deep_locate(:lsr10, instance)).to eq ['lsr10' => { 'gte' => 2014 }]
-    end
-
-    it 'can locate string keys' do
-      expect(described_class.deep_locate('lsr10', instance)).to eq ['lsr10' => { 'gte' => 2014 }]
     end
   end
 end

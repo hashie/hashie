@@ -147,7 +147,7 @@ describe Hashie::Mash do
       mash[:test_key] = 'Test value'
 
       expect { mash[:test_key] = 'A new value' }.not_to raise_error
-      expect(logger_output).to be_blank
+      expect(logger_output).to be_empty
     end
 
     it 'does not write to the logger when warnings are disabled' do
@@ -156,7 +156,7 @@ describe Hashie::Mash do
       end
       mash_class.new('trust' => { 'two' => 2 })
 
-      expect(logger_output).to be_blank
+      expect(logger_output).to be_empty
     end
 
     it 'cannot disable logging on the base Mash' do
@@ -173,7 +173,7 @@ describe Hashie::Mash do
 
       grandchild_class.new('trust' => { 'two' => 2 })
 
-      expect(logger_output).to be_blank
+      expect(logger_output).to be_empty
     end
 
     it 'writes to logger when a key is overridden that is not ignored' do
@@ -182,7 +182,7 @@ describe Hashie::Mash do
       end
 
       mash_class.new('address' => { 'zip' => '90210' })
-      expect(logger_output).not_to be_blank
+      expect(logger_output).not_to be_empty
     end
 
     it 'does not write to logger when a key is overridden that is ignored' do
@@ -191,7 +191,7 @@ describe Hashie::Mash do
       end
 
       mash_class.new('address' => { 'zip' => '90210' })
-      expect(logger_output).to be_blank
+      expect(logger_output).to be_empty
     end
 
     it 'carries over the ignored warnings list for warnings on grandchild classes' do
@@ -203,7 +203,7 @@ describe Hashie::Mash do
       grandchild_class.new('address' => { 'zip' => '90210' }, 'merge' => true)
 
       expect(grandchild_class.disabled_warnings).to eq(%i[zip merge])
-      expect(logger_output).to be_blank
+      expect(logger_output).to be_empty
     end
 
     context 'multiple disable_warnings calls' do
@@ -229,7 +229,7 @@ describe Hashie::Mash do
           child_class.new('address' => { 'zip' => '90210' }, 'merge' => true, 'cycle' => 'bi')
 
           expect(child_class.disabled_warnings).to eq([])
-          expect(logger_output).to be_blank
+          expect(logger_output).to be_empty
         end
       end
 
@@ -845,18 +845,6 @@ describe Hashie::Mash do
         expect(subject).to respond_to(mash_method_name.to_sym)
         expect(subject.send(mash_method_name.to_sym)).to eq mash
       end
-    end
-  end
-
-  describe '#extractable_options?' do
-    require 'active_support'
-
-    subject { described_class.new(name: 'foo') }
-    let(:args) { [101, 'bar', subject] }
-
-    it 'can be extracted from an array' do
-      expect(args.extract_options!).to eq subject
-      expect(args).to eq [101, 'bar']
     end
   end
 

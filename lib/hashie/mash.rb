@@ -74,8 +74,9 @@ module Hashie
       return @_mashes[path] if @_mashes.key?(path)
       raise ArgumentError, "The following file doesn't exist: #{path}" unless File.file?(path)
 
-      parser = options.fetch(:parser) { Hashie::Extensions::Parsers::YamlErbParser }
-      @_mashes[path] = new(parser.perform(path, options.except(:parser))).freeze
+      options = options.dup
+      parser = options.delete(:parser) { Hashie::Extensions::Parsers::YamlErbParser }
+      @_mashes[path] = new(parser.perform(path, options)).freeze
     end
 
     def to_module(mash_method_name = :settings)
