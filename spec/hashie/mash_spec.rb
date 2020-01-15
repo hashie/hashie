@@ -159,6 +159,28 @@ describe Hashie::Mash do
       expect(logger_output).to be_empty
     end
 
+    it 'does not write to the logger when setting most affixed keys' do
+      underbang = Hashie::Mash.new('foo_' => 'foo')
+      bang = Hashie::Mash.new('foo!' => 'foo')
+      query = Hashie::Mash.new('foo?' => 'foo')
+
+      expect(logger_output).to be_empty
+      expect(underbang.foo_).to eq 'foo'
+      expect(bang.foo!).to eq 'foo'
+      expect(query.foo?).to eq 'foo'
+    end
+
+    it 'warns when setting a key that looks like a setter' do
+      setter = Hashie::Mash.new('foo=' => 'foo')
+
+      expect(logger_output).to match 'Hashie::Mash#foo='
+      expect('setter.foo=').not_to parse_as_valid_ruby
+
+      setter.foo = 'bar'
+
+      expect(setter.to_h).to eq 'foo=' => 'foo'
+    end
+
     it 'cannot disable logging on the base Mash' do
       expected_error = Hashie::Extensions::KeyConflictWarning::CannotDisableMashWarnings
 

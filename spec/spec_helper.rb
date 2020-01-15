@@ -10,6 +10,7 @@ require 'hashie'
 require 'rspec/pending_for'
 require './spec/support/ruby_version_check'
 require './spec/support/logger'
+require './spec/support/matchers'
 
 RSpec.configure do |config|
   config.extend RubyVersionCheck
