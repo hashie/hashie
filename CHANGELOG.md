@@ -36,6 +36,7 @@ scheme are considered to be bugs.
 * [#508](https://github.com/hashie/hashie/pull/508): Fixed `Hashie::Extensions::DeepMerge` `#deep_merge` not correctly dup'ing sub-hashes if active_support hash extensions were not present - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#500](https://github.com/hashie/hashie/pull/500): Do not warn when setting Mash keys that look like underbang, bang, and query methods - [@michaelherold](https://github.com/michaelherold).
 * [#510](https://github.com/hashie/hashie/pull/510): Ensure that `Hashie::Mash#compact` is only defined on Ruby version >= 2.4.0 - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#511](https://github.com/hashie/hashie/pull/511): Suppress keyword arguments warning for Ruby 2.7.0 - [@koic](https://github.com/koic).
 * Your contribution here.
 
 ### Security

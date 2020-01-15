@@ -26,7 +26,7 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
     end
     let(:instance) { my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3]) }
 
-    subject { destructure.call(instance) }
+    subject { destructure.call(**instance) }
 
     it 'is converted on method calls' do
       expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
