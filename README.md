@@ -897,7 +897,7 @@ class DataModelHash < Hashie::Dash
 end
 
 model = DataModelHash.new(id: '123', created: '2014-04-25 22:35:28')
-model.id.class          #=> Fixnum
+model.id.class          #=> Integer (Fixnum if you are using Ruby 2.3 or lower)
 model.created_at.class  #=> Time
 ```
 
@@ -966,7 +966,7 @@ this will produce the following
 
 ```ruby
 result = Result.new(id: '123', creation_date: '2012-03-30 17:23:28')
-result.id.class         # => Fixnum
+result.id.class         # => Integer (Fixnum if you are using Ruby 2.3 or lower)
 result.created_at.class # => Time
 ```
 

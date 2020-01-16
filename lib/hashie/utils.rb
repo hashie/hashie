@@ -34,10 +34,10 @@ module Hashie
     # @return [Array<Class>]
     def self.integer_classes
       @integer_classes ||=
-        if const_defined?(:Fixnum)
-          [Fixnum, Bignum] # rubocop:disable Lint/UnifiedInteger
-        else
+        if 0.class == Integer
           [Integer]
+        else
+          [Fixnum, Bignum] # rubocop:disable Lint/UnifiedInteger
         end
     end
   end

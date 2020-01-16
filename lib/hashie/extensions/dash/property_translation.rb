@@ -35,7 +35,7 @@ module Hashie
       #   end
       #
       #   model = DataModelHash.new(id: '123', created: '2014-04-25 22:35:28')
-      #   model.id.class          #=> Fixnum
+      #   model.id.class          #=> Integer (Fixnum if you are using Ruby 2.3 or lower)
       #   model.created_at.class  #=> Time
       module PropertyTranslation
         def self.included(base)
