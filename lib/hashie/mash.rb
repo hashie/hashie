@@ -207,20 +207,7 @@ module Hashie
     alias include? key?
     alias member? key?
 
-    # Performs a deep_update on a duplicate of the
-    # current mash.
-    def deep_merge(other_hash, &blk)
-      dup.deep_update(other_hash, &blk)
-    end
-
-    # Recursively merges this mash with the passed
-    # in hash, merging each hash in the hierarchy.
-    def deep_update(other_hash, &blk)
-      _deep_update(other_hash, &blk)
-      self
-    end
-
-    with_minimum_ruby('2.6.0') do
+    if with_minimum_ruby?('2.6.0')
       # Performs a deep_update on a duplicate of the
       # current mash.
       def deep_merge(*other_hashes, &blk)
@@ -233,6 +220,19 @@ module Hashie
         other_hashes.each do |other_hash|
           _deep_update(other_hash, &blk)
         end
+        self
+      end
+    else
+      # Performs a deep_update on a duplicate of the
+      # current mash.
+      def deep_merge(other_hash, &blk)
+        dup.deep_update(other_hash, &blk)
+      end
+
+      # Recursively merges this mash with the passed
+      # in hash, merging each hash in the hierarchy.
+      def deep_update(other_hash, &blk)
+        _deep_update(other_hash, &blk)
         self
       end
     end
