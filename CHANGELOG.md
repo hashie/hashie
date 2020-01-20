@@ -38,6 +38,7 @@ scheme are considered to be bugs.
 * [#510](https://github.com/hashie/hashie/pull/510): Ensure that `Hashie::Mash#compact` is only defined on Ruby version >= 2.4.0 - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#511](https://github.com/hashie/hashie/pull/511): Suppress keyword arguments warning for Ruby 2.7.0 - [@koic](https://github.com/koic).
 * [#512](https://github.com/hashie/hashie/pull/512): Suppress an integer unification warning for using Ruby 2.4.0+ - [@koic](https://github.com/koic).
+* [#513](https://github.com/hashie/hashie/pull/513): Suppress a Ruby's warning when using Ruby 2.6.0+ - [@koic](https://github.com/koic).
 * Your contribution here.
 
 ### Security

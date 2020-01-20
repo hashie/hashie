@@ -9,7 +9,11 @@ module Hashie
 
       module ClassMethods
         def with_minimum_ruby(version)
-          yield if RubyVersion.new(RUBY_VERSION) >= RubyVersion.new(version)
+          yield if with_minimum_ruby?(version)
+        end
+
+        def with_minimum_ruby?(version)
+          RubyVersion.new(RUBY_VERSION) >= RubyVersion.new(version)
         end
       end
     end
