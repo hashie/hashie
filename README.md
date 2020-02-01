@@ -18,7 +18,8 @@ $ gem install hashie
 
 ## Stable Release
 
-You're reading the documentation for the stable release of Hashie, 4.1.0.(https://github.com/hashie/hashie/blob/v4.1.0/README.md).
+You're reading the documentation for the next release of Hashie, which should be 4.1.1.
+The current stable release is [4.1.0](https://github.com/hashie/hashie/blob/v4.1.0/README.md).
 
 ## Hash Extensions
 
