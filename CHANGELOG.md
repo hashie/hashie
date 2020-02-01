@@ -6,26 +6,13 @@ scheme are considered to be bugs.
 
 [semver]: http://semver.org/spec/v2.0.0.html
 
-## [Unreleased][unreleased]
+## [4.1.0] - 2020-02-01
 
-[unreleased]: https://github.com/hashie/hashie/compare/v4.0.0...master
+[4.1.0]: https://github.com/hashie/hashie/compare/v4.0.0...v4.1.0
 
 ### Added
 
 * [#499](https://github.com/hashie/hashie/pull/499): Add `Hashie::Extensions::Mash::PermissiveRespondTo` to make specific subclasses of Mash fully respond to messages for use with `SimpleDelegator` - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
@@ -39,11 +26,6 @@ scheme are considered to be bugs.
 * [#511](https://github.com/hashie/hashie/pull/511): Suppress keyword arguments warning for Ruby 2.7.0 - [@koic](https://github.com/koic).
 * [#512](https://github.com/hashie/hashie/pull/512): Suppress an integer unification warning for using Ruby 2.4.0+ - [@koic](https://github.com/koic).
 * [#513](https://github.com/hashie/hashie/pull/513): Suppress a Ruby's warning when using Ruby 2.6.0+ - [@koic](https://github.com/koic).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ### Miscellaneous
 

@@ -16,9 +16,9 @@ Hashie is available as a RubyGem:
 $ gem install hashie
 ```
 
-## Upgrading
+## Stable Release
 
-You're reading the documentation for the next release of Hashie, which should be 4.0.1. Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [4.0.0](https://github.com/hashie/hashie/blob/v4.0.0/README.md).
+You're reading the documentation for the stable release of Hashie, 4.1.0.(https://github.com/hashie/hashie/blob/v4.1.0/README.md).
 
 ## Hash Extensions
 
