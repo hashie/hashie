@@ -61,7 +61,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
-* [#981](https://github.com/hashie/hashie/pull/981): Exclude tests from the gem release to reduce installation size and improve installation speed - [@michaelherold](https://github.com/michaelherold).
+* [#498](https://github.com/hashie/hashie/pull/498): Exclude tests from the gem release to reduce installation size and improve installation speed - [@michaelherold](https://github.com/michaelherold).
 
 ## [4.0.0] - 2019-10-30
 
