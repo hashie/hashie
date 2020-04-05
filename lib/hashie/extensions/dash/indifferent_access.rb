@@ -24,8 +24,11 @@ module Hashie
           # defined.
           def property?(name)
             name = translations[name.to_sym] if translation_for?(name)
-            name = name.to_s
-            !!properties.find { |property| property.to_s == name }
+            if name.is_a? ::Array
+              name.all? { |att| !!properties.find { |property| property.to_s == att.to_s } }
+            else
+              !!properties.find { |property| property.to_s == name.to_s }
+            end
           end
 
           def translation_exists?(name)
