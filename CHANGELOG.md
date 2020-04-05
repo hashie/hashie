@@ -28,7 +28,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
-* Your contribution here.
+* [#518](https://github.com/hashie/hashie/pull/518): fixed issue in translating nested hash with multiple string keys - [@jitendra1998](https://github.com/jitendra1998).
 
 ### Security
 
