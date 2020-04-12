@@ -15,8 +15,8 @@ class MyModel < Hashie::Mash
   index_name 'model'
   document_type 'model'
 
-  def as_indexed_json(options={})
-    { body: '{}' }
+  def as_indexed_json(options = {})
+    { body: '{}' }.merge(options)
   end
 end
 
