@@ -14,12 +14,16 @@ class MyModel < Hashie::Mash
 
   index_name 'model'
   document_type 'model'
+
+  def as_indexed_json(options = {})
+    { body: '{}' }.merge(options)
+  end
 end
 
 RSpec.describe 'elaasticsearch-model' do
   # See https://github.com/hashie/hashie/issues/354#issuecomment-363306114
   # for the reason why this doesn't work as you would expect
-  it 'raises an error when the model does has an id' do
+  it 'raises an error when the model does not have an id' do
     object = MyModel.new
     stub_elasticsearch_client
 
