@@ -46,7 +46,7 @@ module Hashie
           hash.extend(Hashie::Extensions::SymbolizeKeys) unless hash.respond_to?(:symbolize_keys!)
           hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
             symbolize_keys_recursively!(hash[k])
-            hash[k.to_sym] = hash.delete(k)
+            hash[convert_key(k)] = hash.delete(k)
           end
           hash
         end
@@ -60,6 +60,14 @@ module Hashie
           copy.tap do |new_hash|
             symbolize_keys!(new_hash)
           end
+        end
+
+        private
+
+        def convert_key(key)
+          key.to_sym
+        rescue NoMethodError
+          key
         end
       end
 

@@ -31,6 +31,8 @@ module Hashie
         # @return [void]
         def convert_key(key)
           key.to_sym
+        rescue NoMethodError
+          key
         end
       end
     end
