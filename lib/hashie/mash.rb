@@ -134,7 +134,7 @@ module Hashie
     # a string before it is set, and Hashes will be converted
     # into Mashes for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
-      key_as_symbol = (key = convert_key(key)).to_sym
+      key_as_symbol = (key = convert_key(key)).respond_to?(:to_sym) ? key.to_sym : key
 
       log_built_in_message(key_as_symbol) if log_collision?(key_as_symbol)
       regular_writer(key, convert ? convert_value(value) : value)
@@ -371,7 +371,7 @@ module Hashie
     end
 
     def convert_key(key) #:nodoc:
-      key.to_s
+      key.respond_to?(:to_sym) ? key.to_s : key
     end
 
     def convert_value(val, duping = false) #:nodoc:
@@ -406,6 +406,7 @@ module Hashie
     end
 
     def log_collision?(method_key)
+      return unless method_key.is_a?(String) || method_key.is_a?(Symbol)
       return unless respond_to?(method_key)
 
       _, suffix = method_name_and_suffix(method_key)
