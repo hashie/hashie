@@ -24,16 +24,18 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
         include Hashie::Extensions::Mash::SymbolizeKeys
       end
     end
-    let(:instance) { my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3]) }
+    let(:instance) do
+      my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3], 1 => 'numeric key')
+    end
 
     subject { destructure.call(**instance) }
 
     it 'is converted on method calls' do
-      expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
+      expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3], 1 => 'numeric key')
     end
 
     it 'is converted on explicit operator call' do
-      expect(**instance).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
+      expect(**instance).to eq(outer: { inner: 42 }, testing: [1, 2, 3], 1 => 'numeric key')
     end
   end
 end

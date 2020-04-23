@@ -89,9 +89,10 @@ describe Hashie::Extensions::SymbolizeKeys do
   context 'singleton methods' do
     subject { Hash }
     let(:object) do
-      subject.new.merge('a' => 1, 'b' => { 'c' => 2 }).extend(Hashie::Extensions::SymbolizeKeys)
+      subject.new.merge('a' => 1, 'b' => { 'c' => 2 }, 1 => 'numeric key')
+             .extend(Hashie::Extensions::SymbolizeKeys)
     end
-    let(:expected_hash) { { a: 1, b: { c: 2 } } }
+    let(:expected_hash) { { a: 1, b: { c: 2 }, 1 => 'numeric key' } }
 
     describe '.symbolize_keys' do
       it 'does not raise error' do
