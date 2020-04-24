@@ -17,6 +17,14 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
     expect(my_mash.new('test' => 'value').to_h).to eq(test: 'value')
   end
 
+  it 'preserves keys which cannot be symbolized' do
+    my_mash = Class.new(Hashie::Mash) do
+      include Hashie::Extensions::Mash::SymbolizeKeys
+    end
+
+    expect(my_mash.new(1 => 'one').to_h).to eq(1 => 'one')
+  end
+
   context 'implicit to_hash on double splat' do
     let(:destructure) { ->(**opts) { opts } }
     let(:my_mash) do
