@@ -9,7 +9,7 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
     end.to raise_error(ArgumentError)
   end
 
-  it 'symbolizes all keys in the Mash' do
+  it 'symbolizes all string keys in the Mash' do
     my_mash = Class.new(Hashie::Mash) do
       include Hashie::Extensions::Mash::SymbolizeKeys
     end
