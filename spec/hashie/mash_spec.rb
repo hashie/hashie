@@ -619,6 +619,12 @@ describe Hashie::Mash do
       converted = Hashie::Mash.new(initial_hash)
       expect(converted).to eq(1 => 'a', ['b'] => 2, 'c' => 3, 'd' => 4)
     end
+
+    it 'preserves keys which cannot be converted to symbols' do
+      initial_hash = { 1 => 'a', '1' => 'b', :'1' => 'c' }
+      converted = Hashie::Mash.new(initial_hash)
+      expect(converted).to eq(1 => 'a', '1' => 'c')
+    end
   end
 
   describe '#fetch' do
