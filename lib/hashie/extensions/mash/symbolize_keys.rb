@@ -24,15 +24,13 @@ module Hashie
 
         private
 
-        # Converts a key to a symbol
+        # Converts a key to a symbol, if possible
         #
         # @api private
-        # @param [String, Symbol] key the key to convert to a symbol
-        # @return [void]
+        # @param [<K>] key the key to attempt convert to a symbol
+        # @return [Symbol, K]
         def convert_key(key)
-          key.to_sym
-        rescue NoMethodError
-          key
+          key.respond_to?(:to_sym) ? key.to_sym : key
         end
       end
     end
