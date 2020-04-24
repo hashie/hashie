@@ -36,7 +36,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
-* Your contribution here.
+* Fixed typo in module name for `Hashie::Extensions::Mash::SymbolizeKeys` example documentation. - [@carolineartz](https://github.com/carolineartz)
 
 ## [4.1.0] - 2020-02-01
 
