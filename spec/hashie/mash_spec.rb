@@ -617,7 +617,7 @@ describe Hashie::Mash do
     it 'only stringifies keys which can be converted to symbols' do
       initial_hash = { 1 => 'a', ['b'] => 2, 'c' => 3, d: 4 }
       converted = Hashie::Mash.new(initial_hash)
-      expect(converted).to eq({ 1 => 'a', ['b']=> 2, 'c' => 3, 'd' => 4 })
+      expect(converted).to eq(1 => 'a', ['b'] => 2, 'c' => 3, 'd' => 4)
     end
   end
 

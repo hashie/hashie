@@ -121,8 +121,8 @@ module Hashie
     alias regular_reader []
     alias regular_writer []=
 
-    # Retrieves an attribute set in the Mash. Will convert
-    # any key passed in to a string before retrieving.
+    # Retrieves an attribute set in the Mash. Will convert a key passed in
+    # as a symbol to a string before retrieving.
     def custom_reader(key)
       default_proc.call(self, key) if default_proc && !key?(key)
       value = regular_reader(convert_key(key))
@@ -130,9 +130,9 @@ module Hashie
       value
     end
 
-    # Sets an attribute in the Mash. Key will be converted to
-    # a string before it is set, and Hashes will be converted
-    # into Mashes for nesting purposes.
+    # Sets an attribute in the Mash. Symbol keys will be converted to
+    # strings before being set, and Hashes will be converted into Mashes
+    # for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
       key_as_symbol = (key = convert_key(key)).respond_to?(:to_sym) ? key.to_sym : key
 
