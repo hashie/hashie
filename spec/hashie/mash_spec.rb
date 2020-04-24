@@ -983,14 +983,6 @@ describe Hashie::Mash do
         expect(subject.dig('a', 'b')).to eq(1)
       end
 
-      context 'with numeric key' do
-        subject { described_class.new('1' => { b: 1 }) }
-        it 'accepts a numeric value as key' do
-          expect(subject.dig(1, :b)).to eq(1)
-          expect(subject.dig('1', :b)).to eq(1)
-        end
-      end
-
       context 'when the Mash wraps a Hashie::Array' do
         it 'handles digging into an array' do
           mash = described_class.new(alphabet: { first_three: Hashie::Array['a', 'b', 'c'] })
