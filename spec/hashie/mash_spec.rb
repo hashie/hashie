@@ -900,7 +900,7 @@ describe Hashie::Mash do
     end
 
     it 'returns a mash with the keys and values inverted' do
-      expect(mash.invert).to eq('apple' => 'a', '4' => 'b')
+      expect(mash.invert).to eq('apple' => 'a', 4 => 'b')
     end
 
     context 'when using with subclass' do
