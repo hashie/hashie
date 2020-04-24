@@ -5,7 +5,7 @@ module Hashie
       #
       # @example
       #   class LazyResponse < Hashie::Mash
-      #     include Hashie::Extensions::Mash::SymbolizedKeys
+      #     include Hashie::Extensions::Mash::SymbolizeKeys
       #   end
       #
       #   response = LazyResponse.new("id" => 123, "name" => "Rey").to_h
