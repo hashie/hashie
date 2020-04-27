@@ -9,20 +9,30 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
     end.to raise_error(ArgumentError)
   end
 
-  it 'symbolizes all string keys in the Mash' do
-    my_mash = Class.new(Hashie::Mash) do
+  context 'when included in a Mash' do
+    class SymbolizedMash < Hashie::Mash
       include Hashie::Extensions::Mash::SymbolizeKeys
     end
 
-    expect(my_mash.new('test' => 'value').to_h).to eq(test: 'value')
-  end
-
-  it 'preserves keys which cannot be symbolized' do
-    my_mash = Class.new(Hashie::Mash) do
-      include Hashie::Extensions::Mash::SymbolizeKeys
+    it 'symbolizes string keys in the Mash' do
+      my_mash = SymbolizedMash.new('test' => 'value')
+      expect(my_mash.to_h).to eq(test: 'value')
     end
 
-    expect(my_mash.new(1 => 'one').to_h).to eq(1 => 'one')
+    it 'preserves keys which cannot be symbolized' do
+      my_mash = SymbolizedMash.new(
+        '1' => 'symbolizable one',
+        1 => 'one',
+        [1, 2, 3] => 'testing',
+        { 'test' => 'value' } => 'value'
+      )
+      expect(my_mash.to_h).to eq(
+        :'1' => 'symbolizable one',
+        1 => 'one',
+        [1, 2, 3] => 'testing',
+        { 'test' => 'value' } => 'value'
+      )
+    end
   end
 
   context 'implicit to_hash on double splat' do
@@ -33,17 +43,17 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
       end
     end
     let(:instance) do
-      my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3], 1 => 'numeric key')
+      my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3])
     end
 
     subject { destructure.call(**instance) }
 
     it 'is converted on method calls' do
-      expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3], 1 => 'numeric key')
+      expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
     end
 
     it 'is converted on explicit operator call' do
-      expect(**instance).to eq(outer: { inner: 42 }, testing: [1, 2, 3], 1 => 'numeric key')
+      expect(**instance).to eq(outer: { inner: 42 }, testing: [1, 2, 3])
     end
   end
 end
