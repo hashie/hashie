@@ -42,9 +42,7 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
         include Hashie::Extensions::Mash::SymbolizeKeys
       end
     end
-    let(:instance) do
-      my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3])
-    end
+    let(:instance) { my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3]) }
 
     subject { destructure.call(**instance) }
 
