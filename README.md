@@ -580,7 +580,7 @@ my_gem = MyGem.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0"
 my_gem.dependencies.class #=> MyGem
 ```
 
-### How does a Mash handle key types which cannot be symbolized?
+### How does Mash handle key types which cannot be symbolized?
 
 Mash preserves keys which cannot be converted *directly* to both a string and a symbol, such as numeric keys. Since Mash is conceived to provide psuedo-object functionality, handling keys which cannot represent a method call falls outside its scope of value.
 
