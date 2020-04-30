@@ -41,7 +41,7 @@ describe Hash do
   it '#to_hash with symbolize_keys set to true returns a hash with symbolized keys' do
     hash = Hashie::Hash['a' => 'hey', 123 => 'bob', 'array' => [1, 2, 3]]
     symbolized_hash = hash.to_hash(symbolize_keys: true)
-    expect(symbolized_hash).to eq(a: 'hey', :"123" => 'bob', array: [1, 2, 3])
+    expect(symbolized_hash).to eq(a: 'hey', 123 => 'bob', array: [1, 2, 3])
   end
 
   it "#to_hash should not blow up when #to_hash doesn't accept arguments" do
@@ -112,9 +112,9 @@ describe Hash do
 
       expected = {
         a: 'hey',
-        :"123" => 'bob',
+        123 => 'bob',
         array: [1, 2, 3],
-        subhash: { a: 'hey', b: 'bar', :'123' => 'bob', array: [1, 2, 3] }
+        subhash: { a: 'hey', b: 'bar', 123 => 'bob', array: [1, 2, 3] }
       }
 
       expect(symbolized_hash).to eq(expected)
