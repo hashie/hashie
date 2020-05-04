@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/test_coverage)](https://codeclimate.com/github/hashie/hashie/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/maintainability)](https://codeclimate.com/github/hashie/hashie/maintainability)
 
-[![eierlegende Wollmilchsau](./hashie-mascot-eierlegende-wollmilchsau.svg)](#mascot) Hashie is a growing collection of tools that extend Hashes and make them more useful.
+[![eierlegende Wollmilchsau](./mascot)](#mascot) Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
 ## Installation
 
@@ -1029,7 +1029,7 @@ mapper["Get off my lawn!"]      # => "Forget your lawn, old man!"
 If this value is too low or too high for your needs, you can tune it by setting: `rash.optimize_every = n`.
 
 ## Mascot
-[![eierlegende Wollmilchsau](./hashie-mascot-eierlegende-wollmilchsau.svg)](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau) Meet Hashie's "offical" mascot, the [eierlegende Wollmilchsau](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau)!
+[![eierlegende Wollmilchsau](./mascot)](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau) Meet Hashie's "offical" mascot, the [eierlegende Wollmilchsau](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau)!
 
 ## Contributing
 
