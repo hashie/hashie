@@ -16,7 +16,7 @@ scheme are considered to be bugs.
 
 ### Changed
 
-* [#521](https://github.com/hashie/hashie/pull/499): Do not convert keys that cannot be represented as symbols to String in Mash initialization - [@carolineartz](https://github.com/carolineartz).
+* [#521](https://github.com/hashie/hashie/pull/499): Do not convert keys that cannot be represented as symbols to `String` in `Mash` initialization - [@carolineartz](https://github.com/carolineartz).
 * Your contribution here.
 
 ### Deprecated
