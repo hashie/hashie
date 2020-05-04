@@ -17,6 +17,7 @@ scheme are considered to be bugs.
 ### Changed
 
 * [#521](https://github.com/hashie/hashie/pull/499): Do not convert keys that cannot be represented as symbols to String in Mash initialization - [@carolineartz](https://github.com/carolineartz).
+* Your contribution here.
 
 ### Deprecated
 
@@ -37,6 +38,7 @@ scheme are considered to be bugs.
 ### Miscellaneous
 
 * [#521](https://github.com/hashie/hashie/pull/499): Fixed typo in module name for `Hashie::Extensions::Mash::SymbolizeKeys` example documentation - [@carolineartz](https://github.com/carolineartz).
+* Your contribution here.
 
 ## [4.1.0] - 2020-02-01
 
