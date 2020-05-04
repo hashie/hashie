@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/test_coverage)](https://codeclimate.com/github/hashie/hashie/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7a0b42c8a22c945571fd/maintainability)](https://codeclimate.com/github/hashie/hashie/maintainability)
 
-Hashie is a growing collection of tools that extend Hashes and make them more useful.
+![eierlegende Wollmilchsau](mascot.svg) Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
 ## Installation
 
