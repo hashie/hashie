@@ -613,6 +613,18 @@ describe Hashie::Mash do
       expect(converted.to_hash['a'].first.is_a?(Hash)).to be_truthy
       expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_falsy
     end
+
+    it 'only stringifies keys which can be converted to symbols' do
+      initial_hash = { 1 => 'a', ['b'] => 2, 'c' => 3, d: 4 }
+      converted = Hashie::Mash.new(initial_hash)
+      expect(converted).to eq(1 => 'a', ['b'] => 2, 'c' => 3, 'd' => 4)
+    end
+
+    it 'preserves keys which cannot be converted to symbols' do
+      initial_hash = { 1 => 'a', '1' => 'b', :'1' => 'c' }
+      converted = Hashie::Mash.new(initial_hash)
+      expect(converted).to eq(1 => 'a', '1' => 'c')
+    end
   end
 
   describe '#fetch' do
@@ -900,7 +912,7 @@ describe Hashie::Mash do
     end
 
     it 'returns a mash with the keys and values inverted' do
-      expect(mash.invert).to eq('apple' => 'a', '4' => 'b')
+      expect(mash.invert).to eq('apple' => 'a', 4 => 'b')
     end
 
     context 'when using with subclass' do
@@ -975,14 +987,6 @@ describe Hashie::Mash do
       it 'accepts both string and symbol as key' do
         expect(subject.dig(:a, :b)).to eq(1)
         expect(subject.dig('a', 'b')).to eq(1)
-      end
-
-      context 'with numeric key' do
-        subject { described_class.new('1' => { b: 1 }) }
-        it 'accepts a numeric value as key' do
-          expect(subject.dig(1, :b)).to eq(1)
-          expect(subject.dig('1', :b)).to eq(1)
-        end
       end
 
       context 'when the Mash wraps a Hashie::Array' do

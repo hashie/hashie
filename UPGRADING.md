@@ -1,6 +1,44 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 5.0.0
+
+#### Mash initialization key conversion
+
+Mash initialization now only converts to string keys which can be represented as symbols.
+
+```ruby
+Hashie::Mash.new(
+  {foo: "bar"} => "baz",
+  "1" => "one string",
+  :"1" => "one sym",
+  1 => "one num"
+)
+
+# Before
+{"{:foo=>\"bar\"}"=>"baz", "1"=>"one num"}
+
+# After
+{{:foo=>"bar"}=>"baz", "1"=>"one sym", 1=>"one num"}
+```
+
+#### Mash#dig with numeric keys
+
+`Hashie::Mash#dig` no longer considers numeric keys for indifferent access.
+
+```ruby
+my_mash = Hashie::Mash.new("1" => "a") # => {"1"=>"a"}
+
+my_mash.dig("1") # => "a"
+my_mash.dig(:"1") # => "a"
+
+# Before
+my_mash.dig(1) # => "a"
+
+# After
+my_mash.dig(1) # => nil
+```
+
 ### Upgrading to 4.0.0
 
 #### Non-destructive Hash methods called on Mash

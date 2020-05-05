@@ -21,8 +21,8 @@ module Hashie
         assignment_key =
           if options[:stringify_keys]
             k.to_s
-          elsif options[:symbolize_keys]
-            k.to_s.to_sym
+          elsif options[:symbolize_keys] && k.respond_to?(:to_sym)
+            k.to_sym
           else
             k
           end

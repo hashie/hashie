@@ -16,6 +16,7 @@ scheme are considered to be bugs.
 
 ### Changed
 
+* [#521](https://github.com/hashie/hashie/pull/499): Do not convert keys that cannot be represented as symbols to `String` in `Mash` initialization - [@carolineartz](https://github.com/carolineartz).
 * Your contribution here.
 
 ### Deprecated
@@ -28,6 +29,7 @@ scheme are considered to be bugs.
 
 ### Fixed
 
+* [#516](https://github.com/hashie/hashie/issues/516): Fixed `NoMethodError` raised when including `Hashie::Extensions::Mash::SymbolizeKeys` and `Hashie::Extensions::SymbolizeKeys` in mashes/hashes with non string or symbol keys - [@carolineartz](https://github.com/carolineartz).
 * Your contribution here.
 
 ### Security

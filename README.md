@@ -191,13 +191,13 @@ end
 
 ### KeyConversion
 
-The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or [`Hashie::Extensions::SymbolizeKeys`](#mash-extension-symbolizekeys).
+The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
 
 Hashie also has a utility method for converting keys on a Hash without a mixin:
 
 ```ruby
-Hashie.symbolize_keys! hash # => Symbolizes keys of hash.
-Hashie.symbolize_keys hash # => Returns a copy of hash with keys symbolized.
+Hashie.symbolize_keys! hash # => Symbolizes all string keys of hash.
+Hashie.symbolize_keys hash # => Returns a copy of hash with string keys symbolized.
 Hashie.stringify_keys! hash # => Stringifies keys of hash.
 Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 ```
@@ -580,6 +580,19 @@ my_gem = MyGem.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0"
 my_gem.dependencies.class #=> MyGem
 ```
 
+### How does Mash handle key types which cannot be symbolized?
+
+Mash preserves keys which cannot be converted *directly* to both a string and a symbol, such as numeric keys. Since Mash is conceived to provide psuedo-object functionality, handling keys which cannot represent a method call falls outside its scope of value.
+
+#### Example
+
+```ruby
+Hashie::Mash.new('1' => 'one string', :'1' => 'one sym', 1 => 'one num')
+# => {"1"=>"one sym", 1=>"one num"}
+```
+
+The symbol key `:'1'` is converted the string `'1'` to support indifferent access and consequently its value `'one sym'` will override the previously set `'one string'`. However, the subsequent key of `1` cannot directly convert to a symbol and therefore **not** converted to the string `'1'` that would otherwise override the previously set value of `'one sym'`.
+
 ### What else can Mash do?
 
 Mash allows you also to transform any files into a Mash objects.
@@ -642,7 +655,7 @@ Mash.load('data/user.csv', permitted_classes: [Symbol], permitted_symbols: [], a
 
 ### Mash Extension: KeepOriginalKeys
 
-This extension can be mixed into a Mash to keep the form of any keys passed directly into the Mash. By default, Mash converts keys to strings to give indifferent access. This extension still allows indifferent access, but keeps the form of the keys to eliminate confusion when you're not expecting the keys to change.
+This extension can be mixed into a Mash to keep the form of any keys passed directly into the Mash. By default, Mash converts symbol keys to strings to give indifferent access. This extension still allows indifferent access, but keeps the form of the keys to eliminate confusion when you're not expecting the keys to change.
 
 ```ruby
 class KeepingMash < ::Hashie::Mash
@@ -701,7 +714,7 @@ safe_mash[:zip] = 'test' # => still ArgumentError
 
 ### Mash Extension: SymbolizeKeys
 
-This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all keys to symbols. It can be useful to use with keywords argument, which required symbol keys.
+This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all string keys to symbols. It can be useful to use with keywords argument, which required symbol keys.
 
 ```ruby
 class SymbolizedMash < ::Hashie::Mash

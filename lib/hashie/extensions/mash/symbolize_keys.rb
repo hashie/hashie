@@ -5,7 +5,7 @@ module Hashie
       #
       # @example
       #   class LazyResponse < Hashie::Mash
-      #     include Hashie::Extensions::Mash::SymbolizedKeys
+      #     include Hashie::Extensions::Mash::SymbolizeKeys
       #   end
       #
       #   response = LazyResponse.new("id" => 123, "name" => "Rey").to_h
@@ -24,13 +24,13 @@ module Hashie
 
         private
 
-        # Converts a key to a symbol
+        # Converts a key to a symbol, if possible
         #
         # @api private
-        # @param [String, Symbol] key the key to convert to a symbol
-        # @return [void]
+        # @param [<K>] key the key to attempt convert to a symbol
+        # @return [Symbol, K]
         def convert_key(key)
-          key.to_sym
+          key.respond_to?(:to_sym) ? key.to_sym : key
         end
       end
     end

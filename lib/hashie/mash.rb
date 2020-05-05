@@ -121,8 +121,8 @@ module Hashie
     alias regular_reader []
     alias regular_writer []=
 
-    # Retrieves an attribute set in the Mash. Will convert
-    # any key passed in to a string before retrieving.
+    # Retrieves an attribute set in the Mash. Will convert a key passed in
+    # as a symbol to a string before retrieving.
     def custom_reader(key)
       default_proc.call(self, key) if default_proc && !key?(key)
       value = regular_reader(convert_key(key))
@@ -130,14 +130,12 @@ module Hashie
       value
     end
 
-    # Sets an attribute in the Mash. Key will be converted to
-    # a string before it is set, and Hashes will be converted
-    # into Mashes for nesting purposes.
+    # Sets an attribute in the Mash. Symbol keys will be converted to
+    # strings before being set, and Hashes will be converted into Mashes
+    # for nesting purposes.
     def custom_writer(key, value, convert = true) #:nodoc:
-      key_as_symbol = (key = convert_key(key)).to_sym
-
-      log_built_in_message(key_as_symbol) if log_collision?(key_as_symbol)
-      regular_writer(key, convert ? convert_value(value) : value)
+      log_built_in_message(key) if key.respond_to?(:to_sym) && log_collision?(key.to_sym)
+      regular_writer(convert_key(key), convert ? convert_value(value) : value)
     end
 
     alias [] custom_reader
@@ -371,7 +369,7 @@ module Hashie
     end
 
     def convert_key(key) #:nodoc:
-      key.to_s
+      key.respond_to?(:to_sym) ? key.to_s : key
     end
 
     def convert_value(val, duping = false) #:nodoc:
@@ -406,6 +404,7 @@ module Hashie
     end
 
     def log_collision?(method_key)
+      return unless method_key.is_a?(String) || method_key.is_a?(Symbol)
       return unless respond_to?(method_key)
 
       _, suffix = method_name_and_suffix(method_key)
