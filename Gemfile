@@ -31,5 +31,6 @@ end
 
 group :test do
   gem 'codeclimate-test-reporter', '~> 1.0', require: false
-  gem 'danger-changelog', '~> 0.1.0', require: false
+  gem 'danger-changelog', '~> 0.6.1', require: false
+  gem 'danger-toc', '~> 0.2.0', require: false
 end

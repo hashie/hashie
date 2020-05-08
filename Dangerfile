@@ -1,3 +1,6 @@
 # see http://danger.systems
 
-changelog.check
+changelog.format = :keep_a_changelog
+changelog.check!
+
+toc.check!

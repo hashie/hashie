@@ -8,6 +8,49 @@
 
 [![eierlegende Wollmilchsau](./mascot.svg)](#mascot) Hashie is a growing collection of tools that extend Hashes and make them more useful.
 
+# Table of Contents
+
+- [Installation](#installation)
+- [Stable Release](#stable-release)
+- [Hash Extensions](#hash-extensions)
+- [Logging](#logging)
+  - [Coercion](#coercion)
+  - [Coercing Collections](#coercing-collections)
+  - [Coercing Hashes](#coercing-hashes)
+  - [Coercing Core Types](#coercing-core-types)
+  - [Coercion Proc](#coercion-proc)
+    - [A note on circular coercion](#a-note-on-circular-coercion)
+  - [KeyConversion](#keyconversion)
+  - [MergeInitializer](#mergeinitializer)
+  - [MethodAccess](#methodaccess)
+  - [MethodAccessWithOverride](#methodaccesswithoverride)
+  - [MethodOverridingInitializer](#methodoverridinginitializer)
+  - [IndifferentAccess](#indifferentaccess)
+  - [IgnoreUndeclared](#ignoreundeclared)
+  - [DeepMerge](#deepmerge)
+  - [DeepFetch](#deepfetch)
+  - [DeepFind](#deepfind)
+  - [DeepLocate](#deeplocate)
+- [StrictKeyAccess](#strictkeyaccess)
+- [Mash](#mash)
+  - [KeepOriginalKeys](#keeporiginalkeys)
+  - [PermissiveRespondTo](#permissiverespondto)
+  - [SafeAssignment](#safeassignment)
+  - [SymbolizeKeys](#symbolizekeys)
+  - [DefineAccessors](#defineaccessors)
+- [Dash](#dash)
+  - [Potential Gotchas](#potential-gotchas)
+  - [PropertyTranslation](#propertytranslation)
+  - [Mash and Rails 4 Strong Parameters](#mash-and-rails-4-strong-parameters)
+  - [Coercion](#coercion-1)
+- [Trash](#trash)
+- [Clash](#clash)
+- [Rash](#rash)
+  - [Auto-Optimized](#auto-optimized)
+- [Mascot](#mascot)
+- [Contributing](#contributing)
+- [Copyright](#copyright)
+
 ## Installation
 
 Hashie is available as a RubyGem:
@@ -270,8 +313,6 @@ This extension can be mixed in to your Hash subclass to allow you to use Strings
 
 In addition, IndifferentAccess will also inject itself into sub-hashes so they behave the same.
 
-Example:
-
 ```ruby
 class MyHash < Hash
   include Hashie::Extensions::MergeInitializer
@@ -446,8 +487,6 @@ books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
 
 This extension can be mixed in to allow a Hash to raise an error when attempting to extract a value using a non-existent key.
 
-### Example:
-
 ```ruby
 class StrictKeyAccessHash < Hash
   include Hashie::Extensions::StrictKeyAccess
@@ -464,8 +503,6 @@ end
 ## Mash
 
 Mash is an extended Hash that gives simple pseudo-object functionality that can be built from hashes and easily extended. It is intended to give the user easier access to the objects within the Mash through a property-like syntax, while still retaining all Hash functionality.
-
-### Example:
 
 ```ruby
 mash = Hashie::Mash.new
@@ -489,11 +526,9 @@ mash.inspect # => <Hashie::Mash>
 
 **Note:** The `?` method will return false if a key has been set to false or nil. In order to check if a key has been set at all, use the `mash.key?('some_key')` method instead.
 
-### How does Mash handle conflicts with pre-existing methods?
+_How does Mash handle conflicts with pre-existing methods?_
 
 Please note that a Mash will not override methods through the use of the property-like syntax. This can lead to confusion if you expect to be able to access a Mash value through the property-like syntax for a key that conflicts with a method name. However, it protects users of your library from the unexpected behavior of those methods being overridden behind the scenes.
-
-#### Example:
 
 ```ruby
 mash = Hashie::Mash.new
@@ -565,11 +600,9 @@ Hashie::Mash.quiet.new(zip: '90210', compact: true) # no errors logged
 Hashie::Mash.quiet(:zip).new(zip: '90210', compact: true) # error logged for compact
 ```
 
-### How does the wrapping of Mash sub-Hashes work?
+_How does the wrapping of Mash sub-Hashes work?_
 
 Mash duplicates any sub-Hashes that you add to it and wraps them in a Mash. This allows for infinite chaining of nested Hashes within a Mash without modifying the object(s) that are passed into the Mash. When you subclass Mash, the subclass wraps any sub-Hashes in its own class. This preserves any extensions that you mixed into the Mash subclass and allows them to work within the sub-Hashes, in addition to the main containing Mash.
-
-#### Example:
 
 ```ruby
 mash = Hashie::Mash.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0" })
@@ -580,11 +613,9 @@ my_gem = MyGem.new(name: "Hashie", dependencies: { rake: "< 11", rspec: "~> 3.0"
 my_gem.dependencies.class #=> MyGem
 ```
 
-### How does Mash handle key types which cannot be symbolized?
+_How does Mash handle key types which cannot be symbolized?_
 
 Mash preserves keys which cannot be converted *directly* to both a string and a symbol, such as numeric keys. Since Mash is conceived to provide psuedo-object functionality, handling keys which cannot represent a method call falls outside its scope of value.
-
-#### Example
 
 ```ruby
 Hashie::Mash.new('1' => 'one string', :'1' => 'one sym', 1 => 'one num')
@@ -593,11 +624,9 @@ Hashie::Mash.new('1' => 'one string', :'1' => 'one sym', 1 => 'one num')
 
 The symbol key `:'1'` is converted the string `'1'` to support indifferent access and consequently its value `'one sym'` will override the previously set `'one string'`. However, the subsequent key of `1` cannot directly convert to a symbol and therefore **not** converted to the string `'1'` that would otherwise override the previously set value of `'one sym'`.
 
-### What else can Mash do?
+_What else can Mash do?_
 
 Mash allows you also to transform any files into a Mash objects.
-
-#### Example:
 
 ```yml
 #/etc/config/settings/twitter.yml
@@ -653,7 +682,7 @@ Specify `permitted_symbols`, `permitted_classes` and `aliases` options as needed
 Mash.load('data/user.csv', permitted_classes: [Symbol], permitted_symbols: [], aliases: false)
 ```
 
-### Mash Extension: KeepOriginalKeys
+### KeepOriginalKeys
 
 This extension can be mixed into a Mash to keep the form of any keys passed directly into the Mash. By default, Mash converts symbol keys to strings to give indifferent access. This extension still allows indifferent access, but keeps the form of the keys to eliminate confusion when you're not expecting the keys to change.
 
@@ -672,7 +701,7 @@ mash['string_key']  #=> 'string'
 mash[:string_key]  #=> 'string'
 ```
 
-### Mash Extension: PermissiveRespondTo
+### PermissiveRespondTo
 
 By default, Mash only states that it responds to built-in methods, affixed methods (e.g. setters, underbangs, etc.), and keys that it currently contains. That means it won't state that it responds to a getter for an unset key, as in the following example:
 
@@ -696,11 +725,9 @@ mash.respond_to? :b  #=> true
 
 This comes at the cost of approximately 20% performance for initialization and setters and 19KB of permanent memory growth for each such class that you create.
 
-### Mash Extension: SafeAssignment
+### SafeAssignment
 
 This extension can be mixed into a Mash to guard the attempted overwriting of methods by property setters. When mixed in, the Mash will raise an `ArgumentError` if you attempt to write a property with the same name as an existing method.
-
-#### Example:
 
 ```ruby
 class SafeMash < ::Hashie::Mash
@@ -712,7 +739,7 @@ safe_mash.zip   = 'Test' # => ArgumentError
 safe_mash[:zip] = 'test' # => still ArgumentError
 ```
 
-### Mash Extension: SymbolizeKeys
+### SymbolizeKeys
 
 This extension can be mixed into a Mash to change the default behavior of converting keys to strings. After mixing this extension into a Mash, the Mash will convert all string keys to symbols. It can be useful to use with keywords argument, which required symbol keys.
 
@@ -745,7 +772,7 @@ end
 
 However, on Rubies less than 2.0, this means that every key you send to the Mash will generate a symbol. Since symbols are not garbage-collected on older versions of Ruby, this can cause a slow memory leak when using a symbolized Mash with data generated from user input.
 
-### Mash Extension: DefineAccessors
+### DefineAccessors
 
 This extension can be mixed into a Mash so it makes it behave like `OpenStruct`. It reduces the overhead of `method_missing?` magic by lazily defining field accessors when they're requested.
 
@@ -775,8 +802,6 @@ mash = ::Hashie::Mash.new.with_accessors!
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.
 
 You can also conditionally require certain properties by passing a Proc or Symbol. If a Proc is provided, it will be run in the context of the Dash instance. If a Symbol is provided, the value returned for the property or method of the same name will be evaluated. The property will be required if the result of the conditional is truthy.
-
-### Example:
 
 ```ruby
 class Person < Hashie::Dash
@@ -814,8 +839,6 @@ p.occupation   # => 'Rubyist'
 
 Properties defined as symbols are not the same thing as properties defined as strings.
 
-### Example:
-
 ```ruby
 class Tricky < Hashie::Dash
   property :trick
@@ -839,7 +862,7 @@ p = Tricky.new('trick' => 'two')
 p.trick # => NoMethodError
 ```
 
-### Potential gotchas
+### Potential Gotchas
 
 Because Dashes are subclasses of the built-in Ruby Hash class, the double-splat operator takes the Dash as-is without any conversion. This can lead to strange behavior when you use the double-splat operator on a Dash as the first part of a keyword list or built Hash. For example:
 
@@ -871,12 +894,10 @@ qux.is_a?(Hash)                #=> true
 qux[:quux]                     #=> "corge"
 ```
 
-### Dash Extension: PropertyTranslation
+### PropertyTranslation
 
 The `Hashie::Extensions::Dash::PropertyTranslation` mixin extends a Dash with
 the ability to remap keys from a source hash.
-
-### Example from inconsistent APIs
 
 Property translation is useful when you need to read data from another
 application -- such as a Java API -- where the keys are named differently from
@@ -896,8 +917,6 @@ person = PersonHash.new(firstName: 'Michael', l_name: 'Bleigh')
 person[:first_name]  #=> 'Michael'
 person[:last_name]   #=> 'Bleigh
 ```
-
-### Example using translation lambdas
 
 You can also use a lambda to translate the value. This is particularly useful
 when you want to ensure the type of data you're wrapping.
@@ -919,7 +938,7 @@ model.created_at.class  #=> Time
 
 To enable compatibility with Rails 4 use the [hashie-forbidden_attributes](https://github.com/Maxim-Filimonov/hashie-forbidden_attributes) gem.
 
-### Dash Extension: Coercion.
+### Coercion
 
 If you want to use `Hashie::Extensions::Coercion` together with `Dash` then
 you may probably want to use `Hashie::Extensions::Dash::Coercion` instead.
@@ -990,8 +1009,6 @@ Clash is a Chainable Lazy Hash that allows you to easily construct complex hashe
 
 Essentially, a Clash is a generalized way to provide much of the same kind of "chainability" that libraries like Arel or Rails 2.x's named_scopes provide.
 
-### Example:
-
 ```ruby
 c = Hashie::Clash.new
 c.where(abc: 'def').order(:created_at)
@@ -1017,8 +1034,6 @@ A good use case for the Rash is an URL router for a web framework, where URLs ne
 
 If the Rash's value is a `proc`, the `proc` will be automatically called with the regexp's MatchData (matched groups) as a block argument.
 
-### Example:
-
 ```ruby
 
 # Mapping names to appropriate greetings
@@ -1035,7 +1050,7 @@ mapper["I like traffic lights"] # => "Who DOESN'T like traffic lights?!"
 mapper["Get off my lawn!"]      # => "Forget your lawn, old man!"
 ```
 
-### Auto-optimized
+### Auto-Optimized
 
 **Note:** The Rash is automatically optimized every 500 accesses (which means that it sorts the list of Regexps, putting the most frequently matched ones at the beginning).
 

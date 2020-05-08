@@ -24,7 +24,7 @@ matrix:
         - for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle; done
       script:
         - set -e ; for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle exec rspec $dir; done
-    - rvm: 2.6.3
+    - rvm: 2.6.6
       dist: bionic
     - rvm: rbx-3
       dist: trusty
