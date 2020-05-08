@@ -38,6 +38,7 @@ scheme are considered to be bugs.
 
 ### Miscellaneous
 
+* [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
 * Your contribution here.
 
 ## [4.1.0] - 2020-02-01
