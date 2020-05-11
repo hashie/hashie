@@ -1,17 +1,19 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file. This
-project adheres to [Semantic Versioning 2.0.0][semver]. Any violations of this
-scheme are considered to be bugs.
+All notable changes to this project will be documented in this file.
 
-[semver]: http://semver.org/spec/v2.0.0.html
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Any violations of this scheme are considered to be bugs.
 
-## [Unreleased][unreleased]
+## [Unreleased]
 
 [unreleased]: https://github.com/hashie/hashie/compare/v4.1.0...master
 
 ### Added
 
+* [#523](https://github.com/hashie/hashie/pull/523): Added TOC, ensure a keep-a-changelog formatted CHANGELOG - [@dblock](https://github.com/dblock).
+* [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
 * Your contribution here.
 
 ### Changed
@@ -36,11 +38,6 @@ scheme are considered to be bugs.
 
 * Your contribution here.
 
-### Miscellaneous
-
-* [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
-* Your contribution here.
-
 ## [4.1.0] - 2020-02-01
 
 [4.1.0]: https://github.com/hashie/hashie/compare/v4.0.0...v4.1.0
@@ -48,6 +45,10 @@ scheme are considered to be bugs.
 ### Added
 
 * [#499](https://github.com/hashie/hashie/pull/499): Add `Hashie::Extensions::Mash::PermissiveRespondTo` to make specific subclasses of Mash fully respond to messages for use with `SimpleDelegator` - [@michaelherold](https://github.com/michaelherold).
+
+### Changed
+
+* [#498](https://github.com/hashie/hashie/pull/498): Exclude tests from the gem release to reduce installation size and improve installation speed - [@michaelherold](https://github.com/michaelherold).
 
 ### Fixed
 
@@ -61,10 +62,6 @@ scheme are considered to be bugs.
 * [#511](https://github.com/hashie/hashie/pull/511): Suppress keyword arguments warning for Ruby 2.7.0 - [@koic](https://github.com/koic).
 * [#512](https://github.com/hashie/hashie/pull/512): Suppress an integer unification warning for using Ruby 2.4.0+ - [@koic](https://github.com/koic).
 * [#513](https://github.com/hashie/hashie/pull/513): Suppress a Ruby's warning when using Ruby 2.6.0+ - [@koic](https://github.com/koic).
-
-### Miscellaneous
-
-* [#498](https://github.com/hashie/hashie/pull/498): Exclude tests from the gem release to reduce installation size and improve installation speed - [@michaelherold](https://github.com/michaelherold).
 
 ## [4.0.0] - 2019-10-30
 
@@ -81,6 +78,7 @@ scheme are considered to be bugs.
 ### Changed
 
 * [#481](https://github.com/hashie/hashie/pull/481): Implement non-destructive standard Hash methods - [@bobbymcwho](https://github.com/bobbymcwho).
+* [#482](https://github.com/hashie/hashie/pull/482): Update Travis configs to make jruby builds run on trusty dist - [@BobbyMcWho](https://github.com/BobbyMcWho).
 
 ### Fixed
 
@@ -88,11 +86,7 @@ scheme are considered to be bugs.
 * [#465](https://github.com/hashie/hashie/pull/465): Fixed `deep_update` to call any readers when a key exists - [@laertispappas](https://github.com/laertispappas).
 * [#479](https://github.com/hashie/hashie/pull/479): Fixed an issue with `Hash#except` not returning a `Mash` in Rails 6 - [@bobbymcwho](https://github.com/bobbymcwho).
 * [#489](https://github.com/hashie/hashie/pull/489): Updated the documentation to exlain the behavior of `Mash` and keyword arguments - [@Bhacaz](https://github.com/Bhacaz).
-
-### Miscellaneous
-
 * [#465](https://github.com/hashie/hashie/pull/465): Clean up our RuboCop configuration and fix the outstanding line length violations. This involved some minor refactoring on `Hashie::Extensions::Coercion`, `Hashie::Extensions::Dash::IndifferentAccess`, `Hashie::Extensions::DeepLocate`, `Hashie::Extensions::Mash::SafeAssignment`, and `Hashie::Hash`, but none that were detectable via the test suite - [@michaelherold](https://github.com/michaelherold).
-* [#482](https://github.com/hashie/hashie/pull/482): Update Travis configs to make jruby builds run on trusty dist. - [@BobbyMcWho](https://github.com/BobbyMcWho).
 
 ## [3.6.0] - 2018-08-13
 
@@ -101,6 +95,12 @@ scheme are considered to be bugs.
 ### Added
 
 * [#455](https://github.com/hashie/hashie/pull/455): Allow overriding methods when passing in a hash - [@lnestor](https://github.com/lnestor).
+* [#434](https://github.com/hashie/hashie/pull/434): Add documentation around Mash sub-Hashes - [@michaelherold](https://github.com/michaelherold).
+* [#439](https://github.com/hashie/hashie/pull/439): Add an integration spec for Elasticsearch - [@michaelherold](https://github.com/michaelherold).
+
+### Changed
+
+* [#433](https://github.com/hashie/hashie/pull/433): Update Rubocop to the most recent version - [@michaelherold](https://github.com/michaelherold).
 
 ### Fixed
 
@@ -110,21 +110,15 @@ scheme are considered to be bugs.
 * [#438](https://github.com/hashie/hashie/pull/438): Fix: `NameError (uninitialized constant Hashie::Extensions::Parsers::YamlErbParser::Pathname)` in `Hashie::Mash.load` - [@onk](https://github.com/onk).
 * [#457](https://github.com/hashie/hashie/pull/457): Fix `Trash` to allow it to copy properties from other properties - [@michaelherold](https://github.com/michaelherold).
 
-### Miscellaneous
-
-* [#433](https://github.com/hashie/hashie/pull/433): Update Rubocop to the most recent version - [@michaelherold](https://github.com/michaelherold).
-* [#434](https://github.com/hashie/hashie/pull/434): Add documentation around Mash sub-Hashes - [@michaelherold](https://github.com/michaelherold).
-* [#439](https://github.com/hashie/hashie/pull/439): Add an integration spec for Elasticsearch - [@michaelherold](https://github.com/michaelherold).
-
 ## [3.5.7] - 2017-12-19
 
 [3.5.7]: https://github.com/hashie/hashie/compare/v3.5.6...v3.5.7
 
 ### Fixed
 
-[#430](https://github.com/hashie/hashie/pull/430): Fix Hashie::Rash randomly losing items - [@Antti](https://github.com/Antti)
+* [#430](https://github.com/hashie/hashie/pull/430): Fix Hashie::Rash randomly losing items - [@Antti](https://github.com/Antti).
 
-### Miscellaneous
+### Changed
 
 * [#425](https://github.com/hashie/hashie/pull/425): Update rubies in CI - [@kachick](https://github.com/kachick).
 
@@ -132,7 +126,7 @@ scheme are considered to be bugs.
 
 [3.5.6]: https://github.com/hashie/hashie/compare/v3.5.5...v3.5.6
 
-### Miscellaneous
+### Fixed
 
 * [#416](https://github.com/hashie/hashie/pull/416): Fix `warning: instance variable @disable_warnings not initialized` - [@axfcampos](https://github.com/axfcampos).
 
@@ -179,15 +173,12 @@ scheme are considered to be bugs.
 
 * [#395](https://github.com/hashie/hashie/pull/395): Add the ability to disable warnings in Mash subclasses - [@michaelherold](https://github.com/michaelherold).
 * [#400](https://github.com/hashie/hashie/pull/400): Fix Hashie.logger load and set the Hashie logger to the Rails logger in a Rails environment - [@michaelherold](https://github.com/michaelherold).
+* [#397](https://github.com/hashie/hashie/pull/397): Add the integration specs harness into the main test tasks - [@michaelherold](https://github.com/michaelherold).
 
 ### Fixed
 
 * [#396](https://github.com/hashie/hashie/pull/396): Fix for specs in #381: Incorrect use of shared context meant example was not being run - [@biinari](https://github.com/biinari).
 * [#399](https://github.com/hashie/hashie/pull/399): Fix passing Pathname object to Hashie::Mesh.load() - [@albb0920](https://github.com/albb0920).
-
-### Miscellanous
-
-* [#397](https://github.com/hashie/hashie/pull/397): Add the integration specs harness into the main test tasks - [@michaelherold](https://github.com/michaelherold).
 
 ## [3.5.1] - 2017-01-31
 
@@ -217,10 +208,7 @@ scheme are considered to be bugs.
 * [#377](https://github.com/hashie/hashie/pull/377): Dont use Rubygems to check ruby version - [@sazor](https://github.com/sazor).
 * [#378](https://github.com/hashie/hashie/pull/378): Deep find all searches inside all nested hashes - [@sazor](https://github.com/sazor).
 * [#380](https://github.com/hashie/hashie/pull/380): Evaluate procs default values of Dash in object initialization - [@sazor](https://github.com/sazor).
-
-### Miscellanous
-
-* [#387](https://github.com/hashie/hashie/pull/387): Fix builds failing due to Rake 11 having a breaking change - [@michaelherold](https://github.com/michaelherold).
+* [#387](https://github.com/hashie/hashie/pull/387): Fixed builds failing due to Rake 11 having a breaking change - [@michaelherold](https://github.com/michaelherold).
 
 ## [3.4.6] - 2016-09-16
 
@@ -237,6 +225,7 @@ scheme are considered to be bugs.
 ### Added
 
 * [#337](https://github.com/hashie/hashie/pull/337), [#331](https://github.com/hashie/hashie/issues/331): `Hashie::Mash#load` accepts a `Pathname` object - [@gipcompany](https://github.com/gipcompany).
+* [#366](https://github.com/hashie/hashie/pull/366): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 
 ### Deprecated
 
@@ -246,10 +235,6 @@ scheme are considered to be bugs.
 
 * [#358](https://github.com/hashie/hashie/pull/358): Fixed support for Array#dig - [@modosc](https://github.com/modosc).
 * [#365](https://github.com/hashie/hashie/pull/365): Ensured ActiveSupport::HashWithIndifferentAccess is defined before use in #deep_locate  - [@mikejarema](https://github.com/mikejarema).
-
-### Miscellanous
-
-* [#366](https://github.com/hashie/hashie/pull/366): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 
 ## [3.4.4] - 2016-04-29
 
@@ -282,7 +267,7 @@ scheme are considered to be bugs.
 * [#304](https://github.com/hashie/hashie/pull/304): Ensured compatibility of `Hash` extensions with singleton objects - [@regexident](https://github.com/regexident).
 * [#310](https://github.com/hashie/hashie/pull/310): Fixed `Hashie::Extensions::SafeAssignment` bug with private methods - [@marshall-lee](https://github.com/marshall-lee).
 
-### Miscellaneous
+### Changed
 
 * [#313](https://github.com/hashie/hashie/pull/313): Restrict pending spec to only Ruby versions 2.2.0-2.2.2 - [@pboling](https://github.com/pboling).
 * [#315](https://github.com/hashie/hashie/pull/315): Default `bin/` scripts: `console` and `setup` - [@pboling](https://github.com/pboling).
@@ -417,8 +402,6 @@ scheme are considered to be bugs.
 
 [3.0.0]: https://github.com/hashie/hashie/compare/v2.1.2...v3.0.0
 
-Note: This version introduces several backward incompatible API changes. See [UPGRADING](UPGRADING.md) for details.
-
 ### Added
 
 * [#149](https://github.com/hashie/hashie/issues/149): Allow IgnoreUndeclared and DeepMerge to be used with undeclared properties - [@jhaesus](https://github.com/jhaesus).
@@ -463,6 +446,7 @@ Note: This version introduces several backward incompatible API changes. See [UP
 ### Changed
 
 * [#89](https://github.com/hashie/hashie/issues/89): Do not respond to every method with suffix in Hashie::Mash, fixes Rails strong_parameters - [@Maxim-Filimonov](https://github.com/Maxim-Filimonov).
+* Ruby style now enforced with Rubocop - [@dblock](https://github.com/dblock).
 
 ### Removed
 
@@ -484,10 +468,6 @@ Note: This version introduces several backward incompatible API changes. See [UP
 * [#130](https://github.com/hashie/hashie/pull/130): IndifferentAccess now works without MergeInitializer - [@npj](https://github.com/npj).
 * [#133](https://github.com/hashie/hashie/pull/133): Fixed Hash##to_hash with symbolize_keys - [@mhuggins](https://github.com/mhuggins).
 
-### Miscellaneous
-
-* Ruby style now enforced with Rubocop - [@dblock](https://github.com/dblock).
-
 ## [2.0.5] - 2013-05-10
 
 [2.0.5]: https://github.com/hashie/hashie/compare/v2.0.4...v2.0.5
@@ -504,7 +484,7 @@ Note: This version introduces several backward incompatible API changes. See [UP
 
 * [#94](https://github.com/hashie/hashie/pull/94): Made #fetch method consistent with normal Hash - [@markiz](https://github.com/markiz).
 
-### Miscellaneous
+### Changed
 
 * [#90](https://github.com/hashie/hashie/pull/90): Various doc tweaks - [@craiglittle](https://github.com/craiglittle).
 
@@ -532,10 +512,7 @@ Note: This version introduces several backward incompatible API changes. See [UP
 ### Removed
 
 * [#81](https://github.com/hashie/hashie/pull/81): Removed Mash#object_id override - [@matschaffer](https://github.com/matschaffer).
-
-### Miscellaneous
-
-* Gem cleanup: removed VERSION, Gemfile.lock - [@jch](https://github.com/jch), [@mbleigh](https://github.com/mbleigh).
+* Removed VERSION and Gemfile.lock - [@jch](https://github.com/jch), [@mbleigh](https://github.com/mbleigh).
 
 ## [2.0.0] - 2013-02-16
 
@@ -545,6 +522,7 @@ Note: This version introduces several backward incompatible API changes. See [UP
 
 * [#41](https://github.com/hashie/hashie/pull/41): DeepMerge extension - [@nashby](https://github.com/nashby).
 * [#78](https://github.com/hashie/hashie/pull/78): Merge and update accepts a block - [@jch](https://github.com/jch).
+* [#72](https://github.com/hashie/hashie/pull/72): Updated gemspec with license info - [@jordimassaguerpla](https://github.com/jordimassaguerpla).
 
 ### Changed
 
@@ -559,7 +537,3 @@ Note: This version introduces several backward incompatible API changes. See [UP
 * [#62](https://github.com/hashie/hashie/pull/62): Updated respond_to? method signature to match ruby core definition - [@dlupu](https://github.com/dlupu).
 * [#63](https://github.com/hashie/hashie/pull/63): Dash defaults are dup'ed before assigned - [@ohrite](https://github.com/ohrite).
 * [#66](https://github.com/hashie/hashie/pull/66): Mash#fetch works with symbol or string keys - [@arthwood](https://github.com/arthwood).
-
-### Miscellaneous
-
-* [#72](https://github.com/hashie/hashie/pull/72): Updated gemspec with license info - [@jordimassaguerpla](https://github.com/jordimassaguerpla).
