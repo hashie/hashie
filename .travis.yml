@@ -17,13 +17,13 @@ rvm:
 
 matrix:
   include:
-    - rvm: 2.5
+    - rvm: 2.7
       name: "Run Danger and Code Climate"
       before_script:
         - bundle exec danger
       after_script:
         - bundle exec codeclimate-test-reporter
-    - rvm: 2.5
+    - rvm: 2.7
       name: "Integration Tests"
       install:
         - for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle; done
