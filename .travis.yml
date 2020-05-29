@@ -16,6 +16,7 @@ rvm:
   - truffleruby
 
 matrix:
+  fast_finish: true
   include:
     - rvm: 2.7
       name: "Run Danger and Code Climate"
