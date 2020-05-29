@@ -19,6 +19,7 @@ Any violations of this scheme are considered to be bugs.
 ### Changed
 
 * [#521](https://github.com/hashie/hashie/pull/499): Do not convert keys that cannot be represented as symbols to `String` in `Mash` initialization - [@carolineartz](https://github.com/carolineartz).
+* [#524](https://github.com/hashie/hashie/pull/524): Test with Ruby 2.7 - [@aried3r](https://github.com/aried3r).
 * Your contribution here.
 
 ### Deprecated
