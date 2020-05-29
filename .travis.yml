@@ -1,31 +1,30 @@
 language: ruby
-sudo: false
 cache: bundler
 
 rvm:
-  - 2.5.3
-  - 2.4.5
-  - 2.3.8
-  - 2.2.9
-  - 2.1.10
+  - 2.7
+  - 2.6
+  - 2.5
+  - 2.4
+  - 2.3
+  - 2.2
+  - 2.1
   - ruby-head
 
 matrix:
   include:
-    - rvm: 2.5.3
+    - rvm: 2.5
       name: "Run Danger and Code Climate"
       before_script:
         - bundle exec danger
       after_script:
         - bundle exec codeclimate-test-reporter
-    - rvm: 2.5.3
+    - rvm: 2.5
       name: "Integration Tests"
       install:
         - for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle; done
       script:
         - set -e ; for dir in spec/integration/*; do BUNDLE_GEMFILE=$dir/Gemfile bundle exec rspec $dir; done
-    - rvm: 2.6.6
-      dist: bionic
     - rvm: rbx-3
       dist: trusty
       bundler_args: --retry 0
