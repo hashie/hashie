@@ -11,6 +11,7 @@ rvm:
   - 2.1
   - ruby-head
   - jruby-9.2.11.1
+  - jruby-9.0.5.0
   - jruby-head
 
 matrix:
@@ -30,8 +31,6 @@ matrix:
     - rvm: rbx-3
       dist: trusty
       bundler_args: --retry 0
-    - rvm: jruby-9.0.5.0
-      dist: trusty
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
