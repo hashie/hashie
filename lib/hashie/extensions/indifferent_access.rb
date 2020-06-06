@@ -74,7 +74,7 @@ module Hashie
       # is injecting itself into member hashes.
       def convert!
         keys.each do |k| # rubocop:disable Performance/HashEachMethods
-          regular_writer convert_key(k), indifferent_value(regular_delete(k))
+          indifferent_writer k, regular_delete(k)
         end
         self
       end
@@ -133,7 +133,7 @@ module Hashie
 
       def merge(*args)
         result = super
-        IndifferentAccess.inject!(result) if hash_lacking_indifference?(result)
+        return IndifferentAccess.inject!(result) if hash_lacking_indifference?(result)
         result.convert!
       end
 

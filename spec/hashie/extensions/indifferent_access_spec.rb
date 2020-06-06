@@ -86,6 +86,45 @@ describe Hashie::Extensions::IndifferentAccess do
     end
   end
 
+  describe 'when overriding indifferent methods' do
+    let(:indifferent_hash) do
+      Class.new(::Hash) do
+        include Hashie::Extensions::IndifferentAccess
+
+        ALIASES = { cat: :grumpy }.freeze
+
+        # Override writer to maintain alias of the given key
+        def indifferent_writer(key, value)
+          indifferent_value = indifferent_value(value)
+
+          regular_writer convert_key(key),          indifferent_value
+          regular_writer convert_key(ALIASES[key]), indifferent_value
+        end
+        alias_method :[]=, :indifferent_writer
+      end.new
+    end
+
+    it '#indifferent_writer' do
+      indifferent_hash[:cat] = 'meow'
+
+      expect(indifferent_hash[:cat]).to eq('meow')
+      expect(indifferent_hash['cat']).to eq('meow')
+
+      expect(indifferent_hash[:grumpy]).to eq('meow')
+      expect(indifferent_hash['grumpy']).to eq('meow')
+    end
+
+    it '#merge' do
+      merged_hash = indifferent_hash.merge(cat: 'meow')
+
+      expect(merged_hash[:cat]).to eq('meow')
+      expect(merged_hash['cat']).to eq('meow')
+
+      expect(merged_hash[:grumpy]).to eq('meow')
+      expect(merged_hash['grumpy']).to eq('meow')
+    end
+  end
+
   describe 'when translating properties and ignoring undeclared' do
     let(:value) { 'baz' }
 
