@@ -1065,6 +1065,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Copyright
 
-Copyright (c) 2009-2014 Intridea, Inc. (http://intridea.com/) and [contributors](https://github.com/hashie/hashie/graphs/contributors).
+Copyright (c) 2009-2020 [Intridea, Inc.](http://intridea.com), and [contributors](https://github.com/hashie/hashie/graphs/contributors).
 
 MIT License. See [LICENSE](LICENSE) for details.
