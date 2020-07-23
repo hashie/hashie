@@ -26,6 +26,7 @@ module Hashie
     autoload :DeepFetch,          'hashie/extensions/deep_fetch'
     autoload :DeepFind,           'hashie/extensions/deep_find'
     autoload :DeepLocate,         'hashie/extensions/deep_locate'
+    autoload :Grep,               'hashie/extensions/grep'
     autoload :PrettyInspect,      'hashie/extensions/pretty_inspect'
     autoload :KeyConversion,      'hashie/extensions/key_conversion'
     autoload :MethodAccessWithOverride, 'hashie/extensions/method_access'
