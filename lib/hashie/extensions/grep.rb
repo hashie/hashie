@@ -32,7 +32,7 @@ module Hashie
       private
 
       def match_value?(pattern, value)
-        return false unless (value.class == String || value.class == Symbol)
+        return false unless (value.instance_of?(String) || value.instance_of?(Symbol))
 
         !pattern.match(value).nil?
       end
