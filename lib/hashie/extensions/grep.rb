@@ -31,15 +31,15 @@ module Hashie
 
       private
 
-      def match_value?(pattern, value)
-        return false unless (value.instance_of?(String) || value.instance_of?(Symbol))
+      def _match_text?(pattern, text)
+        return false unless (text.instance_of?(String) || text.instance_of?(Symbol))
 
-        !pattern.match(value).nil?
+        !pattern.match(text).nil?
       end
 
       def _grep(pattern, object = self, matches = [])
         grep_result = DeepLocate.deep_locate -> (key, value, object) { 
-          match_value?(pattern, key) || match_value?(pattern, value)
+          _match_text?(pattern, key) || _match_text?(pattern, value)
         }, object
 
         matches.concat(grep_result)
