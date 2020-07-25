@@ -9,6 +9,7 @@ describe Hashie::Extensions::Grep do
           { title: 'Call of the Wild' },
           { title: 'Moby Dick' }
         ],
+        authors: [ 'Herman Melville', 'Jack London' ],
         shelves: nil,
         location: {
           address: '123 Library St.',
@@ -24,85 +25,16 @@ describe Hashie::Extensions::Grep do
       expect(instance.grep(/^t/)).to eq([{:title=>"Call of the Wild"}, {:title=>"Moby Dick"}, {:address=>"123 Library St.", :title=>"Main Library"}])
     end
 
-    # it 'detects a value from a nested array' do
-    #   expect(instance.deep_find(:title)).to eq('Call of the Wild')
-    # end
+    it 'greps a value from a nested hash' do
+      expect(instance.grep(/^M/)).to eq([{:title=>"Moby Dick"}, {:address=>"123 Library St.", :title=>"Main Library"}])
+    end
 
-    # it 'returns nil if it does not find a match' do
-    #   expect(instance.deep_find(:wahoo)).to be_nil
-    # end
+    it 'greps from an array' do
+      expect(instance.grep(/Jack/)).to eq([[ 'Herman Melville', 'Jack London' ]])
+    end
+
+    it 'returns nil if it does not find a match' do
+      expect(instance.grep(/wahoo/)).to be_nil
+    end
   end
-
-  # describe '#deep_find_all' do
-  #   it 'detects all values from a nested hash' do
-  #     expect(instance.deep_find_all(:title))
-  #       .to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
-  #   end
-
-  #   it 'returns nil if it does not find any matches' do
-  #     expect(instance.deep_find_all(:wahoo)).to be_nil
-  #   end
-
-  #   context 'when match value is hash itself' do
-  #     let(:hash) do
-  #       {
-  #         title: {
-  #           type: :string
-  #         },
-  #         library: {
-  #           books: [
-  #             { title: 'Call of the Wild' },
-  #             { title: 'Moby Dick' }
-  #           ],
-  #           shelves: nil,
-  #           location: {
-  #             address: '123 Library St.',
-  #             title: 'Main Library'
-  #           }
-  #         }
-  #       }
-  #     end
-
-  #     it 'detects all values from a nested hash' do
-  #       expect(instance.deep_find_all(:title))
-  #         .to eq([{ type: :string }, 'Call of the Wild', 'Moby Dick', 'Main Library'])
-  #     end
-  #   end
-  # end
-
-  # context 'on a Hash including Hashie::Extensions::IndifferentAccess' do
-  #   let(:klass) { Class.new(Hash) { include Hashie::Extensions::IndifferentAccess } }
-  #   subject(:instance) { klass[hash.dup].extend(Hashie::Extensions::DeepFind) }
-
-  #   describe '#deep_find' do
-  #     it 'indifferently detects a value from a nested hash' do
-  #       expect(instance.deep_find(:address)).to eq('123 Library St.')
-  #       expect(instance.deep_find('address')).to eq('123 Library St.')
-  #     end
-
-  #     it 'indifferently detects a value from a nested array' do
-  #       expect(instance.deep_find(:title)).to eq('Call of the Wild')
-  #       expect(instance.deep_find('title')).to eq('Call of the Wild')
-  #     end
-
-  #     it 'indifferently returns nil if it does not find a match' do
-  #       expect(instance.deep_find(:wahoo)).to be_nil
-  #       expect(instance.deep_find('wahoo')).to be_nil
-  #     end
-  #   end
-
-  #   describe '#deep_find_all' do
-  #     it 'indifferently detects all values from a nested hash' do
-  #       expect(instance.deep_find_all(:title))
-  #         .to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
-  #       expect(instance.deep_find_all('title'))
-  #         .to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
-  #     end
-
-  #     it 'indifferently returns nil if it does not find any matches' do
-  #       expect(instance.deep_find_all(:wahoo)).to be_nil
-  #       expect(instance.deep_find_all('wahoo')).to be_nil
-  #     end
-  #   end
-  # end
 end
