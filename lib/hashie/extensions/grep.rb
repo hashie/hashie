@@ -12,7 +12,7 @@ module Hashie
       #    ]
       #  }
       #  options.extend(Hashie::Extensions::Grep)
-      #  options.grep(/Street/) # => [{address: '123 Street'}, {address: '234 Street'}]
+      #  options.grep(/Street/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
       #
       #  class MyHash < Hash
       #    include Hashie::Extensions::Grep
@@ -23,7 +23,7 @@ module Hashie
       #    {location: {address: '123 Street'}},
       #    {location: {address: '234 Street'}}
       #  ]
-      #  my_hash.grep(/Street/) # => [{address: '123 Street'}, {address: '234 Street'}]
+      #  my_hash.grep(/Street/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
       def grep(pattern)
         matches = _grep(pattern)
         matches.empty? ? nil : matches
