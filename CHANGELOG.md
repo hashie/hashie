@@ -14,7 +14,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#523](https://github.com/hashie/hashie/pull/523): Added TOC, ensure a keep-a-changelog formatted CHANGELOG - [@dblock](https://github.com/dblock).
 * [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
-* [#528](https://github.com/hashie/hashie/pull/528): Hashie::extensions::grep - [@vmarutha](https://github.com/vmarutha).
+* [#528](https://github.com/hashie/hashie/pull/528): Added Hashie::Extensions::Grep - [@vmarutha](https://github.com/vmarutha).
 * Your contribution here.
 
 ### Changed
