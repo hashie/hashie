@@ -25,17 +25,17 @@ describe Hashie::Extensions::DeepGrep do
   describe '#grep' do
     it 'greps a key from a nested hash' do
       expect(instance.deep_grep(/^t/)).to eq([
-                                          { title: 'Call of the Wild' },
-                                          { title: 'Moby Dick' },
-                                          { address: '123 Library St.', title: 'Main Library' }
-                                        ])
+                                               { title: 'Call of the Wild' },
+                                               { title: 'Moby Dick' },
+                                               { address: '123 Library St.', title: 'Main Library' }
+                                             ])
     end
 
     it 'greps a value from a nested hash' do
       expect(instance.deep_grep(/^M/)).to eq([
-                                          { title: 'Moby Dick' },
-                                          { address: '123 Library St.', title: 'Main Library' }
-                                        ])
+                                               { title: 'Moby Dick' },
+                                               { address: '123 Library St.', title: 'Main Library' }
+                                             ])
     end
 
     it 'greps from an array' do
