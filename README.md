@@ -31,6 +31,7 @@
   - [DeepFetch](#deepfetch)
   - [DeepFind](#deepfind)
   - [DeepLocate](#deeplocate)
+  - [DeepGrep](#deepgrep)
 - [StrictKeyAccess](#strictkeyaccess)
 - [Mash](#mash)
   - [KeepOriginalKeys](#keeporiginalkeys)
@@ -481,6 +482,28 @@ books.deep_locate -> (key, value, object) { key == :title && value.include?("Rub
 
 books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
 # => [{:title=>"Ruby for beginners", :pages=>120}, {:title=>"CSS for intermediates", :pages=>80}]
+```
+
+### DeepGrep
+
+This extension can be mixed in to provide a depth first search based search for keys/values matching a given pattern. 
+
+Similarly to DeepLocate, the container objects are returned.
+
+```ruby
+options = {
+  users: [
+    { location: { address: '123 Street' } },
+    { location: { address: '234 Street' } }
+  ]
+}
+
+options.extend(Hashie::Extensions::DeepGrep)
+
+options.deep_grep(/Street/) 
+# => [{:address: '123 Street'}, {:address: '234 Street'}]
+options.deep_grep(/address/)
+# => [{:address: '123 Street'}, {:address: '234 Street'}] 
 ```
 
 ## StrictKeyAccess

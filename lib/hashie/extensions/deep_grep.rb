@@ -16,6 +16,7 @@ module Hashie
       #  }
       #  options.extend(Hashie::Extensions::DeepGrep)
       #  options.deep_grep(/Street/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
+      #  options.deep_grep(/address/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
       #
       #  class MyHash < Hash
       #    include Hashie::Extensions::DeepGrep
@@ -27,6 +28,7 @@ module Hashie
       #    { location: { address: '234 Street' } }
       #  ]
       #  my_hash.deep_grep(/Street/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
+      #  my_hash.deep_grep(/address/) # => [{:address: '123 Street'}, {:address: '234 Street'}]
       def deep_grep(pattern)
         matches = _deep_grep(pattern)
         matches.empty? ? nil : matches
