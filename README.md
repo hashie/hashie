@@ -43,6 +43,7 @@
   - [PropertyTranslation](#propertytranslation)
   - [Mash and Rails 4 Strong Parameters](#mash-and-rails-4-strong-parameters)
   - [Coercion](#coercion-1)
+  - [PredefinedValues](#predefinedvalues)
 - [Trash](#trash)
 - [Clash](#clash)
 - [Rash](#rash)
@@ -965,6 +966,20 @@ class UserHash < Hashie::Dash
 
   property :id
   property :posts, coerce: Array[PostHash]
+end
+```
+
+### PredefinedValues
+
+The `Hashie::Extensions::Dash::PredefinedValues` mixin extends a Dash with
+the ability to accept predefined values on a property.
+
+```ruby
+class UserHash < Hashie::Dash
+  include Hashie::Extensions::PredefinedValues
+
+  property :gender, values: %i[male female prefer_not_to_say]
+  property :age, values: (0..150)
 end
 ```
 

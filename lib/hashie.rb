@@ -41,6 +41,7 @@ module Hashie
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
       autoload :PropertyTranslation, 'hashie/extensions/dash/property_translation'
       autoload :Coercion, 'hashie/extensions/dash/coercion'
+      autoload :PredefinedValues, 'hashie/extensions/dash/predefined_values'
     end
 
     module Mash
