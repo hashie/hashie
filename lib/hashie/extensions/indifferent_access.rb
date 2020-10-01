@@ -141,6 +141,11 @@ module Hashie
         super.convert!
       end
 
+      def slice(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        super(*string_keys)
+      end
+
       protected
 
       def hash_lacking_indifference?(other)
