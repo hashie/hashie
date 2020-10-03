@@ -23,6 +23,8 @@ module Hashie
     #   h['baz'] # => 'blip'
     #
     module IndifferentAccess
+      include Hashie::Extensions::RubyVersionCheck
+
       def self.included(base)
         Hashie::Extensions::Dash::IndifferentAccess.maybe_extend(base)
 
@@ -139,6 +141,13 @@ module Hashie
 
       def merge!(*)
         super.convert!
+      end
+
+      with_minimum_ruby('2.5.0') do
+        def slice(*keys)
+          string_keys = keys.map { |key| convert_key(key) }
+          super(*string_keys)
+        end
       end
 
       protected

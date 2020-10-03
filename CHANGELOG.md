@@ -36,6 +36,7 @@ Any violations of this scheme are considered to be bugs.
 ### Fixed
 
 * [#516](https://github.com/hashie/hashie/issues/516): Fixed `NoMethodError` raised when including `Hashie::Extensions::Mash::SymbolizeKeys` and `Hashie::Extensions::SymbolizeKeys` in mashes/hashes with non string or symbol keys - [@carolineartz](https://github.com/carolineartz).
+* [#531](https://github.com/hashie/hashie/pull/531): Fixed [slice doesn't work using symbols](https://github.com/hashie/hashie/issues/529) using hash with `IndifferentAccess` extension - [@gnomex](https://github.com/gnomex).
 * Your contribution here.
 
 ### Security

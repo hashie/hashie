@@ -315,6 +315,18 @@ describe Hashie::Extensions::IndifferentAccess do
         end
       end
     end
+
+    with_minimum_ruby('2.5.0') do
+      describe '#slice' do
+        let(:h) { subject.build(foo: 'bar', baz: 'qux') }
+
+        it 'indifferently slices the hash' do
+          sliced_h = { 'foo' => 'bar' }
+          expect(h.slice('foo')).to eq sliced_h
+          expect(h.slice(:foo)).to eq sliced_h
+        end
+      end
+    end
   end
 
   describe 'with merge initializer' do
