@@ -7,6 +7,7 @@ require 'pry'
 
 require 'rspec'
 require 'hashie'
+require 'json'
 require 'rspec/pending_for'
 require './spec/support/ruby_version_check'
 require './spec/support/logger'
