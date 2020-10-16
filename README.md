@@ -976,7 +976,7 @@ the ability to accept predefined values on a property.
 
 ```ruby
 class UserHash < Hashie::Dash
-  include Hashie::Extensions::PredefinedValues
+  include Hashie::Extensions::Dash::PredefinedValues
 
   property :gender, values: %i[male female prefer_not_to_say]
   property :age, values: (0..150)
