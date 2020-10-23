@@ -15,6 +15,7 @@ Any violations of this scheme are considered to be bugs.
 * [#523](https://github.com/hashie/hashie/pull/523): Added TOC, ensure a keep-a-changelog formatted CHANGELOG - [@dblock](https://github.com/dblock).
 * [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
 * [#530](https://github.com/hashie/hashie/pull/530): Added Hashie::Extensions::Dash::PredefinedValues - [@caalberts](https://github.com/caalberts).
+* [#536](https://github.com/hashie/hashie/pull/536): Added exporting a normal Hash from an indifferent one through the `#to_hash` method - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Changed

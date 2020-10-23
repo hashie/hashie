@@ -77,6 +77,36 @@ describe Hashie::Extensions::IndifferentAccess do
     end
   end
 
+  describe '#to_hash' do
+    let(:indifferent_hash) { Class.new(::Hash) { include Hashie::Extensions::IndifferentAccess } }
+
+    it 'returns a normal hash without indifference' do
+      indifferent = indifferent_hash.new
+      indifferent['cat'] = 'meow'
+
+      subject = indifferent.to_hash
+
+      expect(subject['cat']).to eq 'meow'
+      expect(subject[:cat]).to be_nil
+    end
+
+    it 'maintains the #default_proc when set' do
+      indifferent = indifferent_hash.new { |_hash, key| "Nothing here: #{key}" }
+
+      subject = indifferent.to_hash
+
+      expect(subject['babble']).to eq 'Nothing here: babble'
+    end
+
+    it 'maintains the #default when set' do
+      indifferent = indifferent_hash.new(0)
+
+      subject = indifferent.to_hash
+
+      expect(subject['babble']).to eq 0
+    end
+  end
+
   describe 'when included in dash' do
     let(:params) { { foo: 'bar' } }
     subject { IndifferentHashWithDash.new(params) }

@@ -333,6 +333,18 @@ myhash['fishes'][:food] = 'flakes'
 myhash['fishes']['food'] # => "flakes"
 ```
 
+To get back a normal, not-indifferent Hash, you can use `#to_hash` on the indifferent hash. It exports the keys as strings, not symbols:
+
+```ruby
+myhash = MyHash.new
+myhash["foo"] = "bar"
+myhash[:foo]  #=> "bar"
+
+normal_hash = myhash.to_hash
+myhash["foo"]  #=> "bar"
+myhash[:foo]  #=> nil
+```
+
 ### IgnoreUndeclared
 
 This extension can be mixed in to silently ignore undeclared properties on initialization instead of raising an error. This is useful when using a Trash to capture a subset of a larger hash.
