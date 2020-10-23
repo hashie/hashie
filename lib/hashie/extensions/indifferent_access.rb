@@ -143,6 +143,18 @@ module Hashie
         super.convert!
       end
 
+      def to_hash
+        {}.tap do |result|
+          each_pair { |key, value| result[key] = value }
+
+          if default_proc
+            result.default_proc = default_proc
+          else
+            result.default = default
+          end
+        end
+      end
+
       with_minimum_ruby('2.5.0') do
         def slice(*keys)
           string_keys = keys.map { |key| convert_key(key) }
