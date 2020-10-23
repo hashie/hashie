@@ -25,6 +25,11 @@ module Hashie
     module IndifferentAccess
       include Hashie::Extensions::RubyVersionCheck
 
+      # @api private
+      def self.convert_key(key)
+        key.to_s
+      end
+
       def self.included(base)
         Hashie::Extensions::Dash::IndifferentAccess.maybe_extend(base)
 
@@ -68,7 +73,7 @@ module Hashie
       end
 
       def convert_key(key)
-        key.to_s
+        IndifferentAccess.convert_key(key)
       end
 
       # Iterates through the keys and values, reconverting them to
