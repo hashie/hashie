@@ -875,6 +875,27 @@ p = Tricky.new('trick' => 'two')
 p.trick # => NoMethodError
 ```
 
+If you would like to update a Dash and use any default values set in the case of a `nil` value, use `#update_attributes!`.
+
+```ruby
+class WithDefaults < Hashie::Dash
+  property :description, default: 'none'
+end
+
+dash = WithDefaults.new
+dash.description  #=> 'none'
+
+dash.description = 'You committed one of the classic blunders!'
+dash.description  #=> 'You committed one of the classic blunders!'
+
+dash.description = nil
+dash.description  #=> nil
+
+dash.description = 'Only slightly less known is ...'
+dash.update_attributes!(description: nil)
+dash.description  #=> 'none'
+```
+
 ### Potential Gotchas
 
 Because Dashes are subclasses of the built-in Ruby Hash class, the double-splat operator takes the Dash as-is without any conversion. This can lead to strange behavior when you use the double-splat operator on a Dash as the first part of a keyword list or built Hash. For example:

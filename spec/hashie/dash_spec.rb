@@ -606,3 +606,13 @@ context 'with method access' do
     it { is_expected.to eq true }
   end
 end
+
+RSpec.describe Hashie::Dash do
+  let(:test) do
+    Class.new(Hashie::Dash) do
+      property :description, default: ''
+    end
+  end
+
+  include_examples 'Dash default handling', :description
+end

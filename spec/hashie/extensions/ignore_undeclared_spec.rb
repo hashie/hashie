@@ -27,6 +27,18 @@ describe Hashie::Extensions::IgnoreUndeclared do
       hash = subject.new(city: 'Toronto')
       expect { hash.country = 'Canada' }.to raise_error(NoMethodError)
     end
+
+    context 'with a default value' do
+      let(:test) do
+        Class.new(Hashie::Trash) do
+          include Hashie::Extensions::IgnoreUndeclared
+
+          property :description, from: :desc, default: ''
+        end
+      end
+
+      include_examples 'Dash default handling', :description, :desc
+    end
   end
 
   context 'combined with DeepMerge' do
