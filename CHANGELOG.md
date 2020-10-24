@@ -32,6 +32,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Removed
 
+* [#538](https://github.com/hashie/hashie/pull/538): Dropped testing for JRuby 9.0, though not support - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
 ### Fixed
