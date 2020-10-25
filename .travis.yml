@@ -2,7 +2,6 @@ language: ruby
 cache: bundler
 
 rvm:
-  - 2.7
   - 2.6
   - 2.5
   - 2.4
@@ -19,7 +18,7 @@ matrix:
   fast_finish: true
   include:
     - rvm: 2.7
-      name: "Run Danger and Code Climate"
+      name: "Ruby: 2.7 (with Danger and Code Climate)"
       before_script:
         - bundle exec danger
       after_script:
