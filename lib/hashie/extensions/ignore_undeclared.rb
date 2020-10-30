@@ -31,12 +31,11 @@ module Hashie
     module IgnoreUndeclared
       def initialize_attributes(attributes)
         return unless attributes
+
         klass = self.class
-        translations = klass.respond_to?(:translations) && klass.translations
-        attributes.each_pair do |att, value|
-          next unless klass.property?(att) || (translations && translations.include?(att))
-          self[att] = value
-        end
+        translations = klass.respond_to?(:translations) && klass.translations || []
+
+        super(attributes.select { |attr, _| klass.property?(attr) || translations.include?(attr) })
       end
 
       def property_exists?(property)

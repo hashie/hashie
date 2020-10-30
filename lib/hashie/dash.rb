@@ -104,19 +104,6 @@ module Hashie
     def initialize(attributes = {}, &block)
       super(&block)
 
-      self.class.defaults.each_pair do |prop, value|
-        self[prop] = begin
-          val = value.dup
-          if val.is_a?(Proc)
-            val.arity == 1 ? val.call(self) : val.call
-          else
-            val
-          end
-        rescue TypeError
-          value
-        end
-      end
-
       initialize_attributes(attributes)
       assert_required_attributes_set!
     end
@@ -173,13 +160,19 @@ module Hashie
       update_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
-        next unless self[prop].nil?
+        next unless fetch(prop, nil).nil?
         self[prop] = begin
-          value.dup
+          val = value.dup
+          if val.is_a?(Proc)
+            val.arity == 1 ? val.call(self) : val.call
+          else
+            val
+          end
         rescue TypeError
           value
         end
       end
+
       assert_required_attributes_set!
     end
 
@@ -189,7 +182,7 @@ module Hashie
       return unless attributes
 
       cleaned_attributes = attributes.reject { |_attr, value| value.nil? }
-      update_attributes(cleaned_attributes)
+      update_attributes!(cleaned_attributes)
     end
 
     def update_attributes(attributes)
