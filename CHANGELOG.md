@@ -16,6 +16,7 @@ Any violations of this scheme are considered to be bugs.
 * [#522](https://github.com/hashie/hashie/pull/522): Added eierlegende Wollmilchsau mascot graphic - [@carolineartz](https://github.com/carolineartz).
 * [#530](https://github.com/hashie/hashie/pull/530): Added Hashie::Extensions::Dash::PredefinedValues - [@caalberts](https://github.com/caalberts).
 * [#536](https://github.com/hashie/hashie/pull/536): Added exporting a normal Hash from an indifferent one through the `#to_hash` method - [@michaelherold](https://github.com/michaelherold).
+* [#539](https://github.com/hashie/hashie/pull/539): Run 2.7 tests once - [@anakinj](https://github.com/anakinj).
 * Your contribution here.
 
 ### Changed
