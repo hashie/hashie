@@ -62,7 +62,6 @@ module Hashie
   #   mash.author # => <Mash>
   #
   class Mash < Hash
-    include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::RubyVersionCheck
     extend Hashie::Extensions::KeyConflictWarning
 
