@@ -292,6 +292,12 @@ describe Hashie::Mash do
         expect(subject.details.city).to eq 'Imagineton'
       end
 
+      it 'make success when value is basic object' do
+        object = BasicObject.new
+        subject.deep_update(basic_obj: object)
+        expect(subject.basic_obj).to equal object
+      end
+
       it 'converts values only once' do
         class ConvertedMash < Hashie::Mash
         end
