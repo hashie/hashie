@@ -357,6 +357,18 @@ describe Hashie::Extensions::IndifferentAccess do
         end
       end
     end
+
+    with_minimum_ruby('3.0.0') do
+      describe '#except' do
+        let(:h) { subject.build(foo: 'bar', baz: 'qux') }
+
+        it 'indifferently excepts keys from the hash' do
+          sliced_h = { 'baz' => 'qux' }
+          expect(h.except('foo')).to eq sliced_h
+          expect(h.except(:foo)).to eq sliced_h
+        end
+      end
+    end
   end
 
   describe 'with merge initializer' do
