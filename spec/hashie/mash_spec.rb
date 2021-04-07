@@ -1097,4 +1097,17 @@ describe Hashie::Mash do
       end
     end
   end
+
+  with_minimum_ruby('3.0.0') do
+    context '#except' do
+      subject(:mash) { described_class.new(a: 'A', b: 'B') }
+      it 'return a Hashie::Mash' do
+        expect(mash.except(:b)).to be_kind_of(described_class)
+      end
+
+      it 'excludes keys' do
+        expect(mash.except(:b)).to eq('a' => 'A')
+      end
+    end
+  end
 end

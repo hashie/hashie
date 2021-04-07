@@ -54,6 +54,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#545](https://github.com/hashie/hashie/pull/545): Add `Hashie::Mash#except` and `Hashie::Extensions::IndifferentAccess#except` when running under Ruby 3 to match newly added Ruby stdlib method - [@jackjennings](https://github.com/jackjennings).
 * [#499](https://github.com/hashie/hashie/pull/499): Add `Hashie::Extensions::Mash::PermissiveRespondTo` to make specific subclasses of Mash fully respond to messages for use with `SimpleDelegator` - [@michaelherold](https://github.com/michaelherold).
 
 ### Changed
