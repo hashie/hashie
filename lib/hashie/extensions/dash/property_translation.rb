@@ -153,7 +153,12 @@ module Hashie
           def []=(property, value)
             if self.class.translation_exists? property
               send("#{property}=", value)
-              super(property, value) if self.class.properties.include?(property)
+
+              if self.class.transformation_exists? property
+                super property, self.class.transformed_property(property, value)
+              elsif self.class.properties.include?(property)
+                super(property, value)
+              end
             elsif self.class.transformation_exists? property
               super property, self.class.transformed_property(property, value)
             elsif property_exists? property
