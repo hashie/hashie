@@ -26,6 +26,23 @@ jobs:
       env:
         DANGER_GITHUB_API_TOKEN: ${{ secrets.github_token }}
 
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        ruby-version: 2.7
+    - name: Run integration tests
+      run: |
+        for dir in spec/integration/*; do
+          echo "testing $dir integration"
+          BUNDLE_GEMFILE=$dir/Gemfile bundle install --jobs 4 --retry 3
+          BUNDLE_GEMFILE=$dir/Gemfile bundle exec rspec $dir
+        done
+
   test:
     runs-on: ubuntu-latest
     strategy:
