@@ -2,9 +2,7 @@ source 'http://rubygems.org'
 
 gem 'benchmark-ips'
 gem 'hashie', path: '../../..'
-# Update omniauth to a pessimistic minor once https://github.com/omniauth/omniauth/issues/980
-# is resolved.
-gem 'omniauth', git: 'https://github.com/omniauth/omniauth.git', branch: 'master'
+gem 'omniauth'
 gem 'rack-test', '~> 0.6.3'
 gem 'rake'
 gem 'rspec', '~> 3.5.0'
