@@ -46,7 +46,7 @@ module Hashie
       #  my_hash.deep_find_all(:address) # => ['123 Street', '234 Street']
       def deep_find_all(key)
         matches = _deep_find_all(key)
-        matches.empty? ? nil : matches
+        matches.empty? ? [] : matches
       end
 
       alias deep_select deep_find_all

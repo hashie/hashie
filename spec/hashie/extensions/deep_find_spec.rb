@@ -39,8 +39,8 @@ describe Hashie::Extensions::DeepFind do
         .to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
     end
 
-    it 'returns nil if it does not find any matches' do
-      expect(instance.deep_find_all(:wahoo)).to be_nil
+    it 'returns empty array if it does not find any matches' do
+      expect(instance.deep_find_all(:wahoo)).to eq([])
     end
 
     context 'when match value is hash itself' do
@@ -99,9 +99,9 @@ describe Hashie::Extensions::DeepFind do
           .to eq(['Call of the Wild', 'Moby Dick', 'Main Library'])
       end
 
-      it 'indifferently returns nil if it does not find any matches' do
-        expect(instance.deep_find_all(:wahoo)).to be_nil
-        expect(instance.deep_find_all('wahoo')).to be_nil
+      it 'indifferently returns empty array if it does not find any matches' do
+        expect(instance.deep_find_all(:wahoo)).to eq([])
+        expect(instance.deep_find_all('wahoo')).to eq([])
       end
     end
   end
