@@ -40,7 +40,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#516](https://github.com/hashie/hashie/issues/516): Fixed `NoMethodError` raised when including `Hashie::Extensions::Mash::SymbolizeKeys` and `Hashie::Extensions::SymbolizeKeys` in mashes/hashes with non string or symbol keys - [@carolineartz](https://github.com/carolineartz).
 * [#531](https://github.com/hashie/hashie/pull/531): Fixed [slice doesn't work using symbols](https://github.com/hashie/hashie/issues/529) using hash with `IndifferentAccess` extension - [@gnomex](https://github.com/gnomex).
-* [#533](https://github.com/hashie/hashie/pull/533): Fixed `NoMethodError: undefined method `to_json'` at `hashie/dash_spec` - [@gnomex](https://github.com/gnomex).
+* [#533](https://github.com/hashie/hashie/pull/533): Fixed `NoMethodError: undefined method 'to_json'` at `hashie/dash_spec` - [@gnomex](https://github.com/gnomex).
 * [#537](https://github.com/hashie/hashie/pull/537): Fixed inconsistencies with handling defaults in `Dash` with and without `IgnoreUnclared` mixed in - [@michaelherold](https://github.com/michaelherold).
 * Your contribution here.
 
