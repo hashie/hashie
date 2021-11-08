@@ -19,6 +19,15 @@ module Hashie
         end
         private_class_method :requires_class_methods?
 
+        def to_h
+          defaults = ::Hash[self.class.properties.map do |prop|
+            [Hashie::Extensions::IndifferentAccess.convert_key(prop), self.class.defaults[prop]]
+          end]
+
+          defaults.merge(self)
+        end
+        alias to_hash to_h
+
         module ClassMethods
           # Check to see if the specified property has already been
           # defined.
