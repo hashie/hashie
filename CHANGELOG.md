@@ -25,6 +25,7 @@ Any violations of this scheme are considered to be bugs.
 * [#524](https://github.com/hashie/hashie/pull/524): Test with Ruby 2.7 - [@aried3r](https://github.com/aried3r).
 * [#525](https://github.com/hashie/hashie/pull/525): Use `indifferent_writer` in `IndifferentAccess#convert!` - [@yogeshjain999](https://github.com/yogeshjain999).
 * [#527](https://github.com/hashie/hashie/pull/527): Updated Copyright to (c) 2009-2020 Intridea, Inc., and Contributors - [@dblock](https://github.com/dblock).
+* [#555](https://github.com/hashie/hashie/pull/555): Test with Ruby 3.0 - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Deprecated
