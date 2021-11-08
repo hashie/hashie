@@ -156,6 +156,13 @@ module Hashie
       self
     end
 
+    def to_h
+      defaults = ::Hash[self.class.properties.map { |prop| [prop, self.class.defaults[prop]] }]
+
+      defaults.merge(self)
+    end
+    alias to_hash to_h
+
     def update_attributes!(attributes)
       update_attributes(attributes)
 

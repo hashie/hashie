@@ -344,7 +344,7 @@ describe DashTest do
     before { subject.replace(first_name: 'Cain') }
 
     it 'return self' do
-      expect(subject.replace(email: 'bar').to_hash).to eq(email: 'bar', count: 0)
+      expect(subject.replace(email: 'bar').object_id).to eq subject.object_id
     end
 
     it 'sets all specified keys to their corresponding values' do
@@ -416,6 +416,7 @@ describe DashTest do
         Class.new(Hashie::Dash) do
           property :a, required: -> { b.nil? }, message: 'is required if b is not set.'
           property :b, required: -> { a.nil? }, message: 'is required if a is not set.'
+          property :c, default: -> { 'c' }
         end
       end
 
@@ -433,6 +434,44 @@ describe DashTest do
 
       it 'raises an error when neither property is set' do
         expect { codependent.new(a: nil, b: nil) }.to raise_error(ArgumentError)
+      end
+
+      context 'exporting nil values' do
+        describe '#to_h' do
+          it 'does not prune nil values' do
+            expect(codependent.new(a: 'hi', b: nil).to_h).to eq(a: 'hi', b: nil, c: 'c')
+            expect(codependent.new(a: 'hi', b: nil, c: nil).to_hash).to eq(a: 'hi', b: nil, c: 'c')
+            expect(codependent.new(a: 'hi', b: nil).merge(c: nil).to_h).to(
+              eq(a: 'hi', b: nil, c: nil)
+            )
+          end
+        end
+
+        describe '#to_hash' do
+          it 'does not prune nil values' do
+            expect(codependent.new(a: 'hi', b: nil).to_hash).to eq(a: 'hi', b: nil, c: 'c')
+            expect(codependent.new(a: 'hi', b: nil, c: nil).to_hash).to eq(a: 'hi', b: nil, c: 'c')
+            expect(codependent.new(a: 'hi', b: nil).merge(c: nil).to_hash).to(
+              eq(a: 'hi', b: nil, c: nil)
+            )
+          end
+        end
+
+        describe '**' do
+          # Note: This test is an implementation detail of MRI and may not hold for
+          # other Ruby interpreters. But it's important to note in the test suite
+          # because it can be surprising for people unfamiliar with the semantics of
+          # double-splatting.
+          #
+          # For more information, see [this link][1]:
+          #
+          # [1]: https://github.com/hashie/hashie/issues/353#issuecomment-363294886
+          it 'prunes nil values because they are not set in the dash' do
+            dash = codependent.new(a: 'hi', b: nil)
+
+            expect(**dash).to eq(a: 'hi', c: 'c')
+          end
+        end
       end
     end
   end
@@ -481,6 +520,43 @@ describe Hashie::Dash, 'inheritance' do
     @bottom.property :echo, default: nil
     expect(@bottom.new).to have_key(:echo)
     expect(@bottom.new).to_not have_key('echo')
+  end
+
+  context 'exporting nil values' do
+    let(:test) do
+      Class.new(Hashie::Dash) do
+        property :foo
+        property :bar
+      end
+    end
+
+    describe '#to_h' do
+      it 'does not prune nil values' do
+        expect(test.new(foo: 'hi', bar: nil).to_h).to eq(foo: 'hi', bar: nil)
+      end
+    end
+
+    describe '#to_hash' do
+      it 'does not prune nil values' do
+        expect(test.new(foo: 'hi', bar: nil).to_hash).to eq(foo: 'hi', bar: nil)
+      end
+    end
+
+    describe '**' do
+      # Note: This test is an implementation detail of MRI and may not hold for
+      # other Ruby interpreters. But it's important to note in the test suite
+      # because it can be surprising for people unfamiliar with the semantics of
+      # double-splatting.
+      #
+      # For more information, see [this link][1]:
+      #
+      # [1]: https://github.com/hashie/hashie/issues/353#issuecomment-363294886
+      it 'prunes nil values because they are not set in the dash' do
+        dash = test.new(foo: 'hi', bar: nil)
+
+        expect(**dash).to eq(foo: 'hi')
+      end
+    end
   end
 end
 
