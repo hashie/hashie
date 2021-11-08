@@ -162,6 +162,13 @@ module Hashie
         end
       end
 
+      with_minimum_ruby('3.0.0') do
+        def except(*keys)
+          string_keys = keys.map { |key| convert_key(key) }
+          super(*string_keys)
+        end
+      end
+
       protected
 
       def hash_lacking_indifference?(other)

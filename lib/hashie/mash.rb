@@ -351,6 +351,13 @@ module Hashie
       end
     end
 
+    with_minimum_ruby('3.0.0') do
+      def except(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        self.class.new(super(*string_keys))
+      end
+    end
+
     protected
 
     def method_name_and_suffix(method_name)

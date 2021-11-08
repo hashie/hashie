@@ -40,7 +40,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#516](https://github.com/hashie/hashie/issues/516): Fixed `NoMethodError` raised when including `Hashie::Extensions::Mash::SymbolizeKeys` and `Hashie::Extensions::SymbolizeKeys` in mashes/hashes with non string or symbol keys - [@carolineartz](https://github.com/carolineartz).
 * [#531](https://github.com/hashie/hashie/pull/531): Fixed [slice doesn't work using symbols](https://github.com/hashie/hashie/issues/529) using hash with `IndifferentAccess` extension - [@gnomex](https://github.com/gnomex).
-* [#533](https://github.com/hashie/hashie/pull/533): Fixed `NoMethodError: undefined method `to_json'` at `hashie/dash_spec` - [@gnomex](https://github.com/gnomex).
+* [#533](https://github.com/hashie/hashie/pull/533): Fixed `NoMethodError: undefined method 'to_json'` at `hashie/dash_spec` - [@gnomex](https://github.com/gnomex).
 * [#537](https://github.com/hashie/hashie/pull/537): Fixed inconsistencies with handling defaults in `Dash` with and without `IgnoreUnclared` mixed in - [@michaelherold](https://github.com/michaelherold).
 * [#547](https://github.com/hashie/hashie/pull/547): Fixed issue where a source hash key can be used in translating multiple properties - [@danwa5](https://github.com/danwa5).
 * Your contribution here.
@@ -55,6 +55,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#545](https://github.com/hashie/hashie/pull/545): Add `Hashie::Mash#except` and `Hashie::Extensions::IndifferentAccess#except` when running under Ruby 3 to match newly added Ruby stdlib method - [@jackjennings](https://github.com/jackjennings).
 * [#499](https://github.com/hashie/hashie/pull/499): Add `Hashie::Extensions::Mash::PermissiveRespondTo` to make specific subclasses of Mash fully respond to messages for use with `SimpleDelegator` - [@michaelherold](https://github.com/michaelherold).
 
 ### Changed
