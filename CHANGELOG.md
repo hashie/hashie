@@ -42,6 +42,7 @@ Any violations of this scheme are considered to be bugs.
 * [#531](https://github.com/hashie/hashie/pull/531): Fixed [slice doesn't work using symbols](https://github.com/hashie/hashie/issues/529) using hash with `IndifferentAccess` extension - [@gnomex](https://github.com/gnomex).
 * [#533](https://github.com/hashie/hashie/pull/533): Fixed `NoMethodError: undefined method `to_json'` at `hashie/dash_spec` - [@gnomex](https://github.com/gnomex).
 * [#537](https://github.com/hashie/hashie/pull/537): Fixed inconsistencies with handling defaults in `Dash` with and without `IgnoreUnclared` mixed in - [@michaelherold](https://github.com/michaelherold).
+* [#547](https://github.com/hashie/hashie/pull/547): Fixed issue where a source hash key can be used in translating multiple properties - [@danwa5](https://github.com/danwa5).
 * Your contribution here.
 
 ### Security

@@ -157,6 +157,23 @@ describe Hashie::Trash do
     end
   end
 
+  describe 'translating multiple properties from the same source hash key' do
+    class AnotherDataModel < Hashie::Trash
+      property :first_name,                          transform_with: ->(n) { n.upcase }
+      property :first_name_short, from: :first_name, transform_with: ->(n) { n[0, 3] }
+    end
+
+    subject { AnotherDataModel.new(first_name: 'Cathy') }
+
+    it 'translates the first key with the given lambda' do
+      expect(subject.first_name).to eq('CATHY')
+    end
+
+    it 'translates the second key with the given lambda and the initial value of the first key' do
+      expect(subject.first_name_short).to eq('Cat')
+    end
+  end
+
   describe 'uses with or transform_with interchangeably' do
     class TrashLambdaTestTransformWith < Hashie::Trash
       property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
