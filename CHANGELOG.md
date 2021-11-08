@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [Unreleased]
+## [5.0.0] - 2021-11-08
 
-[unreleased]: https://github.com/hashie/hashie/compare/v4.1.0...master
+[5.0.0]: https://github.com/hashie/hashie/compare/v4.1.0...v5.0.0
 
 ### Added
 
@@ -17,7 +17,6 @@ Any violations of this scheme are considered to be bugs.
 * [#530](https://github.com/hashie/hashie/pull/530): Added Hashie::Extensions::Dash::PredefinedValues - [@caalberts](https://github.com/caalberts).
 * [#536](https://github.com/hashie/hashie/pull/536): Added exporting a normal Hash from an indifferent one through the `#to_hash` method - [@michaelherold](https://github.com/michaelherold).
 * [#539](https://github.com/hashie/hashie/pull/539): Run 2.7 tests once - [@anakinj](https://github.com/anakinj).
-* Your contribution here.
 
 ### Changed
 
@@ -26,16 +25,10 @@ Any violations of this scheme are considered to be bugs.
 * [#525](https://github.com/hashie/hashie/pull/525): Use `indifferent_writer` in `IndifferentAccess#convert!` - [@yogeshjain999](https://github.com/yogeshjain999).
 * [#527](https://github.com/hashie/hashie/pull/527): Updated Copyright to (c) 2009-2020 Intridea, Inc., and Contributors - [@dblock](https://github.com/dblock).
 * [#555](https://github.com/hashie/hashie/pull/555): Test with Ruby 3.0 - [@dblock](https://github.com/dblock).
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
 
 ### Removed
 
 * [#538](https://github.com/hashie/hashie/pull/538): Dropped testing for JRuby 9.0, though not support - [@michaelherold](https://github.com/michaelherold).
-* Your contribution here.
 
 ### Fixed
 
@@ -45,11 +38,6 @@ Any violations of this scheme are considered to be bugs.
 * [#535](https://github.com/hashie/hashie/pull/535): Restored the exporting of all properties as part of `Dash#to_h` and `Dash#to_hash` - [@michaelherold](https://github.com/michaelherold).
 * [#537](https://github.com/hashie/hashie/pull/537): Fixed inconsistencies with handling defaults in `Dash` with and without `IgnoreUnclared` mixed in - [@michaelherold](https://github.com/michaelherold).
 * [#547](https://github.com/hashie/hashie/pull/547): Fixed issue where a source hash key can be used in translating multiple properties - [@danwa5](https://github.com/danwa5).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ## [4.1.0] - 2020-02-01
 
