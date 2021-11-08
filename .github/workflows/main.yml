@@ -14,9 +14,12 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-ruby@v1
+      with:
+        fetch-depth: 0
+    - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
+        bundler-cache: true
     - uses: MeilCli/danger-action@v5
       with:
         danger_file: Dangerfile
