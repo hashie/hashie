@@ -812,7 +812,7 @@ mash = ::Hashie::Mash.new.with_accessors!
 
 ## Dash
 
-Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property.
+Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property. A property with a proc value will be evaluated lazily upon retrieval.
 
 You can also conditionally require certain properties by passing a Proc or Symbol. If a Proc is provided, it will be run in the context of the Dash instance. If a Symbol is provided, the value returned for the property or method of the same name will be evaluated. The property will be required if the result of the conditional is truthy.
 
@@ -824,6 +824,7 @@ class Person < Hashie::Dash
   property :phone, required: -> { email.nil? }, message: 'is required if email is not set.'
   property :pants, required: :weekday?, message: 'are only required on weekdays.'
   property :occupation, default: 'Rubyist'
+  property :genome
 
   def weekday?
     [ Time.now.saturday?, Time.now.sunday? ].none?
@@ -848,6 +849,8 @@ p.occupation   # => 'Evil'
 p.name         # => 'Trudy'
 p.update_attributes!(occupation: nil)
 p.occupation   # => 'Rubyist'
+p.genome = -> { Genome.sequence } # Some expensive operation
+p.genome       # => 'GATTACA'
 ```
 
 Properties defined as symbols are not the same thing as properties defined as strings.
