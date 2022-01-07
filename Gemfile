@@ -2,6 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
+require File.expand_path('../lib/hashie/extensions/ruby_version', __FILE__)
+
 group :development do
   gem 'benchmark-ips'
   gem 'benchmark-memory'
@@ -10,12 +12,19 @@ group :development do
   gem 'guard-yield', '~> 0.1.0', require: false
   gem 'pry'
   gem 'pry-stack_explorer', platforms: %i[ruby_19 ruby_20 ruby_21]
-  gem 'rubocop', '0.52.1'
+
+  # rubocop:disable Bundler/DuplicatedGem
+  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
+     Hashie::Extensions::RubyVersion.new('2.4.0')
+    gem 'rubocop', '~> 1.0'
+  else
+    gem 'rubocop', '0.52.1'
+  end
+  # rubocop:enable Bundler/DuplicatedGem
 
   group :test do
     # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
     # rubocop:disable Bundler/DuplicatedGem
-    require File.expand_path('../lib/hashie/extensions/ruby_version', __FILE__)
     if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
        Hashie::Extensions::RubyVersion.new('2.4.0')
       gem 'activesupport', '~> 5.x', require: false

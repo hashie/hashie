@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler'
 Bundler.setup
@@ -16,6 +18,7 @@ RuboCop::RakeTask.new(:rubocop)
 require_relative 'spec/support/integration_specs'
 task :integration_specs do
   next if ENV['CI']
+
   status_codes = []
   handler = lambda do |status_code|
     status_codes << status_code unless status_code.zero?
@@ -29,4 +32,10 @@ task :integration_specs do
   end
 end
 
-task default: %i[rubocop spec integration_specs]
+# Disable Rubocop for older versions of Ruby
+if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) <
+   Hashie::Extensions::RubyVersion.new('2.4.0')
+  task default: %i[spec integration_specs]
+else
+  task default: %i[rubocop spec integration_specs]
+end

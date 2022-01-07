@@ -4,7 +4,12 @@
 # @param [String] command the command to run
 # @return [String]
 def integration_command(integration, command)
-  "#{integration_gemfile(integration)} #{command}"
+  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
+     Hashie::Extensions::RubyVersion.new('3.1.0')
+     ruby_opts = "RUBYOPT=--disable-error_highlight "
+  end
+
+  "#{ruby_opts}#{integration_gemfile(integration)} #{command}"
 end
 
 # Generates the Gemfile for an integration

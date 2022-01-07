@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec/support/integration_specs'
 
 run_all = lambda do |*|
