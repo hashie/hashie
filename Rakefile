@@ -32,10 +32,4 @@ task :integration_specs do
   end
 end
 
-# Disable Rubocop for older versions of Ruby
-if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) <
-   Hashie::Extensions::RubyVersion.new('2.4.0')
-  task default: %i[spec integration_specs]
-else
-  task default: %i[rubocop spec integration_specs]
-end
+task default: %i[rubocop spec integration_specs]

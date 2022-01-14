@@ -17,14 +17,7 @@ module Hashie
       }.freeze
 
       ABSTRACT_CORE_TYPES =
-        if RubyVersion.new(RUBY_VERSION) >= RubyVersion.new('2.4.0')
-          { Numeric => [Integer, Float, Complex, Rational] }
-        else
-          {
-            Integer => [Fixnum, Bignum],
-            Numeric => [Fixnum, Bignum, Float, Complex, Rational]
-          }
-        end
+        { Numeric => [Integer, Float, Complex, Rational] }
 
       def self.included(base)
         base.send :include, InstanceMethods

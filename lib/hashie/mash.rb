@@ -322,22 +322,18 @@ module Hashie
       self.class.new(other_hash).merge(self)
     end
 
-    with_minimum_ruby('2.3.0') do
-      def dig(*keys)
-        super(*keys.map { |key| convert_key(key) })
-      end
+    def dig(*keys)
+      super(*keys.map { |key| convert_key(key) })
     end
 
-    with_minimum_ruby('2.4.0') do
-      def transform_values(&blk)
-        self.class.new(super(&blk))
-      end
+    def transform_values(&blk)
+      self.class.new(super(&blk))
+    end
 
-      # Returns a new instance of the class it was called on, with nil values
-      # removed.
-      def compact
-        self.class.new(super)
-      end
+    # Returns a new instance of the class it was called on, with nil values
+    # removed.
+    def compact
+      self.class.new(super)
     end
 
     with_minimum_ruby('2.5.0') do

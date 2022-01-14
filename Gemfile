@@ -13,25 +13,11 @@ group :development do
   gem 'pry'
   gem 'pry-stack_explorer', platforms: %i[ruby_19 ruby_20 ruby_21]
 
-  # rubocop:disable Bundler/DuplicatedGem
-  if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
-     Hashie::Extensions::RubyVersion.new('2.4.0')
-    gem 'rubocop', '~> 1.0'
-  else
-    gem 'rubocop', '0.52.1'
-  end
-  # rubocop:enable Bundler/DuplicatedGem
+  gem 'rubocop', '~> 1.0'
 
   group :test do
     # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
-    # rubocop:disable Bundler/DuplicatedGem
-    if Hashie::Extensions::RubyVersion.new(RUBY_VERSION) >=
-       Hashie::Extensions::RubyVersion.new('2.4.0')
-      gem 'activesupport', '~> 5.x', require: false
-    else
-      gem 'activesupport', '~> 4.x', require: false
-    end
-    # rubocop:enable Bundler/DuplicatedGem
+    gem 'activesupport', '~> 5.x', require: false
     gem 'rake'
     gem 'rspec', '~> 3'
     gem 'rspec-pending_for', '~> 0.1'

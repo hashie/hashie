@@ -649,8 +649,7 @@ describe Hashie::Mash do
 
     context 'when key does not exist' do
       it 'raises KeyError' do
-        error = RUBY_VERSION =~ /1.8/ ? IndexError : KeyError
-        expect { mash.fetch(:two) }.to raise_error(error)
+        expect { mash.fetch(:two) }.to raise_error(KeyError)
       end
 
       context 'with default value given' do
@@ -980,44 +979,40 @@ describe Hashie::Mash do
     end
   end
 
-  with_minimum_ruby('2.3.0') do
-    describe '#dig' do
-      subject { described_class.new(a: { b: 1 }) }
+  describe '#dig' do
+    subject { described_class.new(a: { b: 1 }) }
 
-      it 'accepts both string and symbol as key' do
-        expect(subject.dig(:a, :b)).to eq(1)
-        expect(subject.dig('a', 'b')).to eq(1)
-      end
+    it 'accepts both string and symbol as key' do
+      expect(subject.dig(:a, :b)).to eq(1)
+      expect(subject.dig('a', 'b')).to eq(1)
+    end
 
-      context 'when the Mash wraps a Hashie::Array' do
-        it 'handles digging into an array' do
-          mash = described_class.new(alphabet: { first_three: Hashie::Array['a', 'b', 'c'] })
+    context 'when the Mash wraps a Hashie::Array' do
+      it 'handles digging into an array' do
+        mash = described_class.new(alphabet: { first_three: Hashie::Array['a', 'b', 'c'] })
 
-          expect(mash.dig(:alphabet, :first_three, 0)).to eq 'a'
-        end
+        expect(mash.dig(:alphabet, :first_three, 0)).to eq 'a'
       end
     end
   end
 
-  with_minimum_ruby('2.4.0') do
-    describe '#transform_values' do
-      subject(:mash) { described_class.new(a: 1) }
+  describe '#transform_values' do
+    subject(:mash) { described_class.new(a: 1) }
 
-      it 'returns a Hashie::Mash' do
-        expect(mash.transform_values(&:to_s)).to be_kind_of(described_class)
-      end
+    it 'returns a Hashie::Mash' do
+      expect(mash.transform_values(&:to_s)).to be_kind_of(described_class)
+    end
 
-      it 'transforms the value' do
-        expect(mash.transform_values(&:to_s).a).to eql('1')
-      end
+    it 'transforms the value' do
+      expect(mash.transform_values(&:to_s).a).to eql('1')
+    end
 
-      context 'when using with subclass' do
-        let(:subclass) { Class.new(Hashie::Mash) }
-        subject(:sub_mash) { subclass.new(a: 1).transform_values { |a| a + 2 } }
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1).transform_values { |a| a + 2 } }
 
-        it 'creates an instance of subclass' do
-          expect(sub_mash).to be_kind_of(subclass)
-        end
+      it 'creates an instance of subclass' do
+        expect(sub_mash).to be_kind_of(subclass)
       end
     end
 
