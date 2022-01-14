@@ -1,3 +1,5 @@
+require File.expand_path('../../../lib/hashie/extensions/ruby_version', __FILE__)
+
 # Generates the bundle command for running an integration test
 #
 # @param [String] integration the integration folder to run

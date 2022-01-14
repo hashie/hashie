@@ -2,8 +2,6 @@ source 'http://rubygems.org'
 
 gemspec
 
-require File.expand_path('../lib/hashie/extensions/ruby_version', __FILE__)
-
 group :development do
   gem 'benchmark-ips'
   gem 'benchmark-memory'
@@ -11,7 +9,6 @@ group :development do
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-yield', '~> 0.1.0', require: false
   gem 'pry'
-  gem 'pry-stack_explorer', platforms: %i[ruby_19 ruby_20 ruby_21]
 
   gem 'rubocop', '~> 1.0'
 

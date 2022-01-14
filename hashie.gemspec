@@ -24,5 +24,7 @@ Gem::Specification.new do |gem|
     }
   end
 
+  gem.required_ruby_version = '>= 2.4'
+
   gem.add_development_dependency 'bundler'
 end
