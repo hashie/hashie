@@ -9,7 +9,7 @@ AllCops:
 inherit_from: .rubocop_todo.yml
 
 # Disabled until we can use the squiggly heredoc (after deprecating Ruby <2.3)
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: false
 
 Metrics/ClassLength:
@@ -42,4 +42,7 @@ Naming/FileName:
 # use double negation, there isn't a means that as succinct of doing the type of
 # boolean casting that we do.
 Style/DoubleNegation:
+  Enabled: false
+
+Style/HashSyntax:
   Enabled: false
