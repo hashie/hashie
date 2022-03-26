@@ -1,34 +1,7 @@
 name: CI
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
-  danger:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-        bundler-cache: true
-    - uses: MeilCli/danger-action@v5
-      with:
-        danger_file: Dangerfile
-        danger_id: danger-pr
-        install_path: vendor/bundle
-        plugins_file: Gemfile
-      env:
-        DANGER_GITHUB_API_TOKEN: ${{ secrets.github_token }}
-
   integration-test:
     runs-on: ubuntu-latest
     steps:

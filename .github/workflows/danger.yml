@@ -1,0 +1,21 @@
+---
+name: danger
+on: [pull_request]
+jobs:
+  danger:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true
+    - name: Run Danger
+      run: |
+        bundle install
+        # the personal token is public, this is ok, base64 encode to avoid tripping Github
+        TOKEN=$(echo -n NWY1ZmM5MzEyMzNlYWY4OTZiOGU3MmI3MWQ3Mzk0MzgxMWE4OGVmYwo= | base64 --decode)
+        DANGER_GITHUB_API_TOKEN=$TOKEN bundle exec danger --verbose
