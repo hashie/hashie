@@ -783,6 +783,30 @@ end
 
 However, on Rubies less than 2.0, this means that every key you send to the Mash will generate a symbol. Since symbols are not garbage-collected on older versions of Ruby, this can cause a slow memory leak when using a symbolized Mash with data generated from user input.
 
+### UnderscoreKeys
+This extension can be mixed into a Mash to change the default behavior of converting keys to be underscore. After mixing this extension into a Mash, the Mash will convert all string keys to underscore. It can be useful to use with external source hashes, which maybe contain hyphens or CamelCase.
+
+```ruby
+class UnderscoreMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::UnderscoreKeys
+end
+
+mash = UnderscoreMash.new
+mash.updatedAt = 'Today' #=> 'Today'
+mash.updatedAt #=> 'Today'
+mash[:updated_at] #=> 'Today'
+mash['updated_at'] #=> 'Today'
+mash.updated_at #=> 'Today'
+mash.to_hash #=> {"updated_at"=>true}
+```
+
+The other benefit is hashes that have hyphens can be accessed with methods
+```ruby
+mash = UnderscoreMash.new('created-at': 'tomorrow') #=> {"created_at"=>"tomorrow"}
+
+mash.created_at #=> 'tomorrow'
+```
+
 ### DefineAccessors
 
 This extension can be mixed into a Mash so it makes it behave like `OpenStruct`. It reduces the overhead of `method_missing?` magic by lazily defining field accessors when they're requested.
