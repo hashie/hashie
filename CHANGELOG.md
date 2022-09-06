@@ -13,6 +13,7 @@ Any violations of this scheme are considered to be bugs.
 ### Added
 
 * Your contribution here.
+* [#566](https://github.com/hashie/hashie/pull/566): Added Mash::UnderscoreKeys Extensions for conversion of all keys to underscore - [@arianf](https://github.com/arianf)
 
 ### Changed
 
