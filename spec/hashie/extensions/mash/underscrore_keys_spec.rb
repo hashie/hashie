@@ -77,4 +77,12 @@ RSpec.describe Hashie::Extensions::Mash::UnderscoreKeys, :aggregate_failures do
     expect(mash[:data_source][:GitHub]).to be(true)
     expect(mash['DataSource']['git_hub']).to be(true)
   end
+
+  it 'converts spaces to underscore' do
+    original = { 'hashie mashie': 'mashie hashie' }
+
+    mash = underscore_mash.new(original)
+
+    expect(mash.hashie_mashie).to eq('mashie hashie')
+  end
 end
