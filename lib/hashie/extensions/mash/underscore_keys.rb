@@ -33,7 +33,7 @@ module Hashie
           acronym_regex = ACRONYMS.empty? ? /(?=a)b/ : /#{ACRONYMS.values.join("|")}/
           acronyms_underscore_regex = /(?:(?<=([A-Za-z\d]))|\b)(#{acronym_regex})(?=\b|[^a-z])/
 
-          word = word.gsub(acronyms_underscore_regex) do
+          word = camel_cased_word.gsub(acronyms_underscore_regex) do
             "#{::Regexp.last_match(1) && '_'}#{::Regexp.last_match(2).downcase}"
           end
 
