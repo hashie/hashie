@@ -35,6 +35,7 @@
   - [PermissiveRespondTo](#permissiverespondto)
   - [SafeAssignment](#safeassignment)
   - [SymbolizeKeys](#symbolizekeys)
+  - [UnderscoreKeys](#underscorekeys)
   - [DefineAccessors](#defineaccessors)
 - [Dash](#dash)
   - [Potential Gotchas](#potential-gotchas)
