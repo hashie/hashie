@@ -9,16 +9,16 @@ RSpec.describe Hashie::Extensions::Mash::UnderscoreKeys, :aggregate_failures do
 
   it 'allows access to keys via original name' do
     original = {
-      dataFrom: { java: true, javaScript: true },
+      dataFrom: { swift: true, javaScript: true },
       DataSource: { GitHub: true },
       'created-at': 'today'
     }
 
     mash = underscore_mash.new(original)
 
-    expect(mash.dataFrom.java).to be(true)
-    expect(mash[:dataFrom][:java]).to be(true)
-    expect(mash['dataFrom']['java']).to be(true)
+    expect(mash.dataFrom.swift).to be(true)
+    expect(mash[:dataFrom][:swift]).to be(true)
+    expect(mash['dataFrom']['swift']).to be(true)
 
     expect(mash.dataFrom.javaScript).to be(true)
     expect(mash[:dataFrom][:javaScript]).to be(true)
@@ -35,16 +35,16 @@ RSpec.describe Hashie::Extensions::Mash::UnderscoreKeys, :aggregate_failures do
 
   it 'allows access to underscore key names' do
     original = {
-      dataFrom: { java: true, javaScript: true },
+      dataFrom: { swift: true, javaScript: true },
       DataSource: { GitHub: true },
       'created-at': 'today'
     }
 
     mash = underscore_mash.new(original)
 
-    expect(mash.data_from.java).to be(true)
-    expect(mash[:data_from][:java]).to be(true)
-    expect(mash['data_from']['java']).to be(true)
+    expect(mash.data_from.swift).to be(true)
+    expect(mash[:data_from][:swift]).to be(true)
+    expect(mash['data_from']['swift']).to be(true)
 
     expect(mash.data_from.java_script).to be(true)
     expect(mash[:data_from][:java_script]).to be(true)
