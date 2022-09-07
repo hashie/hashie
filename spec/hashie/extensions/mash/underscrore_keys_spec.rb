@@ -28,8 +28,7 @@ RSpec.describe Hashie::Extensions::Mash::UnderscoreKeys, :aggregate_failures do
     expect(mash[:DataSource][:GitHub]).to be(true)
     expect(mash['DataSource']['GitHub']).to be(true)
 
-    # can't currently call a method with a hyphen
-    # expect(mash.call(:'created-at')).to eq('today')
+    expect(mash.send('created-at')).to eq('today')
     expect(mash[:'created-at']).to eq('today')
     expect(mash['created-at']).to eq('today')
   end
@@ -84,5 +83,28 @@ RSpec.describe Hashie::Extensions::Mash::UnderscoreKeys, :aggregate_failures do
     mash = underscore_mash.new(original)
 
     expect(mash.hashie_mashie).to eq('mashie hashie')
+  end
+
+  it 'converts spaces to underscore' do
+    original = { 'hashie mashie?': true }
+
+    mash = underscore_mash.new(original)
+
+    expect(mash.hashie_mashie?).to be(true)
+  end
+
+  context 'when setting acronyms override' do
+    before do
+      Hashie::Extensions::Mash::UnderscoreKeys::ACRONYMS[:GH] = :GitHub
+    end
+
+    it 'does not break apart with underscore, but does downcase' do
+      original = { GitHub: true }
+
+      mash = underscore_mash.new(original)
+
+      expect(mash.github).to be(true)
+      expect(mash.git_hub).to be(nil)
+    end
   end
 end
