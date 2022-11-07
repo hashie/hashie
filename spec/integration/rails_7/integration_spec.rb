@@ -46,6 +46,7 @@ RSpec.describe 'rails', type: :request do
         property :foo_bar
         property :foo_baz, required: true
       end
+      pending('resolution of https://github.com/hashie/hashie/issues/559')
       dash_klass = HashieDashKlass.new(foo_bar: 'bar', foo_baz: 'baz')
       transformed = dash_klass.deep_transform_keys(&:to_s)
       expect(transformed.keys).to all(be_a(String))
