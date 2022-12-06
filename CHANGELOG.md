@@ -12,12 +12,13 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
 * Your contribution here.
 
 ### Changed
 
-* Your contribution here.
 * [#558](https://github.com/hashie/hashie/pull/558): Test with Ruby 3.1 - [@petergoldstein](https://github.com/petergoldstein).
+* Your contribution here.
 
 ### Deprecated
 
