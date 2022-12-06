@@ -6,18 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [Unreleased][unreleased]
+## [Unreleased]
 
 [unreleased]: https://github.com/hashie/hashie/compare/v5.0.0...master
 
 ### Added
 
+* [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
 * Your contribution here.
 
 ### Changed
 
-* Your contribution here.
 * [#558](https://github.com/hashie/hashie/pull/558): Test with Ruby 3.1 - [@petergoldstein](https://github.com/petergoldstein).
+* Your contribution here.
 
 ### Deprecated
 
@@ -34,12 +35,6 @@ Any violations of this scheme are considered to be bugs.
 ### Security
 
 * Your contribution here.
-
-### Miscellaneous
-
-* Your contribution here.
-
-* [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
 
 ## [5.0.0] - 2021-11-08
 
