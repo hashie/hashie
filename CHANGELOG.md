@@ -37,7 +37,9 @@ Any violations of this scheme are considered to be bugs.
 
 ### Miscellaneous
 
-* [#569](https://github.com/hashie/hashie/pull/569): Added pending spec related to issue [#559](https://github.com/hashie/hashie/issues/559) when calling `#deep_transform_keys` on instance of `Hashie::Dash` w/ Rails 7 - [@aflansburg](https://github.com/aflansburg)
+* Your contribution here.
+
+* [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
 
 ## [5.0.0] - 2021-11-08
 
