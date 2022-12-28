@@ -7,7 +7,7 @@ end
 RSpec.describe Hashie::Utils do
   describe '.method_information' do
     it 'states the module or class that a native method was defined in' do
-      bound_method = method(:trust)
+      bound_method = method(:object_id)
 
       message = Hashie::Utils.method_information(bound_method)
 
