@@ -822,7 +822,7 @@ describe Hashie::Mash do
       end
       it 'can override the value of aliases' do
         require 'psych'
-        if Psych::VERSION >= '5'
+        if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('5')
           expect do
             Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
           end.to raise_error Psych::AliasesNotEnabled, /Alias parsing was not enabled/
