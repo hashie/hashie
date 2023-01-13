@@ -137,9 +137,9 @@ describe Hashie::Mash do
 
   include_context 'with a logger' do
     it 'logs a warning when overriding built-in methods' do
-      Hashie::Mash.new('trust' => { 'two' => 2 })
+      Hashie::Mash.new('object_id' => { 'two' => 2 })
 
-      expect(logger_output).to match('Hashie::Mash#trust')
+      expect(logger_output).to match('Hashie::Mash#object_id')
     end
 
     it 'can set keys more than once and does not warn when doing so' do
@@ -821,9 +821,16 @@ describe Hashie::Mash do
         expect(mash.company_a.accounts.admin.password).to eq('secret')
       end
       it 'can override the value of aliases' do
-        expect do
-          Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
-        end.to raise_error Psych::BadAlias, /base_accounts/
+        require 'psych'
+        if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('5')
+          expect do
+            Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
+          end.to raise_error Psych::AliasesNotEnabled, /Alias parsing was not enabled/
+        else
+          expect do
+            Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
+          end.to raise_error Psych::BadAlias, /base_accounts/
+        end
       end
     end
 
