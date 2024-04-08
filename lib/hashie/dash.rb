@@ -10,7 +10,7 @@ module Hashie
   # lightweight data object that needs even fewer options and
   # resources than something like a DataMapper resource.
   #
-  # It is preferrable to a Struct because of the in-class
+  # It is preferable to a Struct because of the in-class
   # API for defining properties as well as per-property defaults.
   class Dash < Hash
     include Hashie::Extensions::PrettyInspect

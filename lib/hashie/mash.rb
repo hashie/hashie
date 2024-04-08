@@ -21,7 +21,7 @@ module Hashie
   # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it
   #   as "touch" for mashes.
   # * Under Bang (<tt>_</tt>): Like Bang, but returns a new Mash rather than creating a key.
-  #   Used to test existance in deep Mashes.
+  #   Used to test existence in deep Mashes.
   #
   # == Basic Example
   #

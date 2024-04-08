@@ -43,14 +43,14 @@ RSpec.describe 'rails', type: :request do
   context '#deep_transform_keys' do
     let(:klass) do
       Class.new(Hashie::Dash) do
-        property :foo_bar 
+        property :foo_bar
         property :foo_baz, required: true
       end
     end
-    
+
     subject(:hash) { klass.new(foo_bar: 'bar', foo_baz: 'baz') }
 
-    it 'sucessfully deep transforms keys' do
+    it 'successfully deep transforms keys' do
       pending('https://github.com/hashie/hashie/issues/559')
       transformed = hash.deep_transform_keys(&:to_s)
       expect(transformed.keys).to all(be_a(String))

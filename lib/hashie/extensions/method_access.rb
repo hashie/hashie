@@ -241,7 +241,7 @@ module Hashie
     end
 
     # MethodOverridingInitializer allows you to override default hash
-    # methods when passing in values from an existing hash. The overriden
+    # methods when passing in values from an existing hash. The overridden
     # methods are aliased with two leading underscores.
     #
     # @example

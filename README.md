@@ -626,7 +626,7 @@ my_gem.dependencies.class #=> MyGem
 
 _How does Mash handle key types which cannot be symbolized?_
 
-Mash preserves keys which cannot be converted *directly* to both a string and a symbol, such as numeric keys. Since Mash is conceived to provide psuedo-object functionality, handling keys which cannot represent a method call falls outside its scope of value.
+Mash preserves keys which cannot be converted *directly* to both a string and a symbol, such as numeric keys. Since Mash is conceived to provide pseudo-object functionality, handling keys which cannot represent a method call falls outside its scope of value.
 
 ```ruby
 Hashie::Mash.new('1' => 'one string', :'1' => 'one sym', 1 => 'one num')
@@ -1106,7 +1106,7 @@ mapper["Get off my lawn!"]      # => "Forget your lawn, old man!"
 If this value is too low or too high for your needs, you can tune it by setting: `rash.optimize_every = n`.
 
 ## Mascot
-[![eierlegende Wollmilchsau](./mascot.svg)](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau) Meet Hashie's "offical" mascot, the [eierlegende Wollmilchsau](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau)!
+[![eierlegende Wollmilchsau](./mascot.svg)](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau) Meet Hashie's "official" mascot, the [eierlegende Wollmilchsau](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau)!
 
 ## Contributing
 
