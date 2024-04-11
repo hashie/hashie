@@ -55,7 +55,7 @@ describe Hashie::Extensions::Mash::DefineAccessors do
     describe 'this subclass' do
       it_behaves_like 'class with dynamically defined accessors'
 
-      describe 'when accessors are overrided in class' do
+      describe 'when accessors are overridden in class' do
         before do
           subject.class_eval do
             def foo

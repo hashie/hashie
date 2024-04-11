@@ -180,7 +180,7 @@ describe DashTest do
       expect(DeferredTest.new[:created_at]).to be_instance_of(Time)
     end
 
-    it 'does not evalute proc after subsequent reads' do
+    it 'does not evaluate proc after subsequent reads' do
       deferred = DeferredTest.new
       expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
     end

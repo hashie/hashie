@@ -764,12 +764,12 @@ describe Hashie::Mash do
         expect(subject.production.foo).to eq config['production']['foo']
       end
 
-      it 'freeze the attribtues' do
+      it 'freeze the attributes' do
         expect { subject.production = {} }.to raise_exception(RuntimeError, /can't modify frozen/)
       end
     end
 
-    context 'if the fils does not exists' do
+    context 'if the files does not exists' do
       before do
         expect(File).to receive(:file?).with(path).and_return(false)
       end

@@ -1,7 +1,7 @@
 module Hashie
   module Extensions
     module DeepLocate
-      # The module level implementation of #deep_locate, incase you do not want
+      # The module level implementation of #deep_locate, in case you do not want
       # to include/extend the base datastructure. For further examples please
       # see #deep_locate.
       #

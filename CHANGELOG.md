@@ -185,7 +185,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
-* [#409](https://github.com/hashie/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not availble - [@CallumD](https://github.com/callumd).
+* [#409](https://github.com/hashie/hashie/pull/409): Fixed Railtie detection for projects where Rails is defined but Railties are not available - [@CallumD](https://github.com/callumd).
 * [#411](https://github.com/hashie/hashie/pull/411): Fixed a performance regression from 3.4.3 that caused a 10x slowdown in OmniAuth - [@michaelherold](https://github.com/michaelherold).
 
 ## [3.5.3] - 2017-02-11
@@ -464,7 +464,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
-* [#131](https://github.com/hashie/hashie/pull/131): Added IgnoreUndeclared, an extension to silently ignore undeclared properties at intialization - [@righi](https://github.com/righi).
+* [#131](https://github.com/hashie/hashie/pull/131): Added IgnoreUndeclared, an extension to silently ignore undeclared properties at initialization - [@righi](https://github.com/righi).
 * [#138](https://github.com/hashie/hashie/pull/138): Added Hashie::Rash, a hash whose keys can be regular expressions or ranges - [@epitron](https://github.com/epitron).
 * [#144](https://github.com/hashie/hashie/issues/144): Fixed regression invoking `to_hash` with no parameters - [@mbleigh](https://github.com/mbleigh).
 
