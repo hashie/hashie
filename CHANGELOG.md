@@ -19,6 +19,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#571](https://github.com/hashie/hashie/pull/571): Test with Ruby 3.2 - [@petergoldstein](https://github.com/petergoldstein).
 * [#558](https://github.com/hashie/hashie/pull/558): Test with Ruby 3.1 - [@petergoldstein](https://github.com/petergoldstein).
+* [#582](https://github.com/hashie/hashie/pull/582): Test with Ruby 3.3 and 3.4 - [@btalayeminaei](https://github.com/btalayeminaei).
 * Your contribution here.
 
 ### Deprecated
