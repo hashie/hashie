@@ -32,6 +32,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
+* [#583](https://github.com/hashie/hashie/pull/583): Fix a warning about the `logger` gem on Ruby 3.4 - [@earlopain](https://github.com/earlopain).
 * Your contribution here.
 
 ### Security
