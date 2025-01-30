@@ -1,5 +1,6 @@
 ENV['RAILS_ENV'] = 'test'
 
+require 'logger' # https://github.com/rails/rails/issues/54260
 require 'rspec/core'
 
 RSpec.describe 'rails', type: :request do

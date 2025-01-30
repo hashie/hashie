@@ -26,5 +26,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 2.4'
 
+  gem.add_dependency 'logger' # for Ruby >= 3.4
+
   gem.add_development_dependency 'bundler'
 end
