@@ -14,6 +14,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
 * Your contribution here.
+* [#566](https://github.com/hashie/hashie/pull/566): Added `Mash::UnderscoreKeys` extensions for conversion of all keys to underscore - [@arianf](https://github.com/arianf)
 
 ### Changed
 
