@@ -39,7 +39,7 @@ module Hashie
             if hash.key?(k) && hash[k].is_a?(::Hash) && v.is_a?(::Hash)
               _recursive_merge(hash[k], v, &block)
             elsif v.is_a?(::Hash)
-              _recursive_merge({}, v, &block)
+              _recursive_merge(v.class.new, v, &block)
             elsif hash.key?(k) && block_given?
               yield(k, hash[k], v)
             else

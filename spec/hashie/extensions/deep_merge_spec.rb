@@ -44,6 +44,8 @@ describe Hashie::Extensions::DeepMerge do
         e: { e1: 1 }
       }
     end
+    let(:empty_receiver)  { subject.new }
+    let(:subclassed_addition) { subject.new.merge( a: subject.new.merge( {b: 1, c:2} )) }
 
     it 'deep merges two hashes without modifying them' do
       result = h1.deep_merge(h2)
@@ -77,6 +79,18 @@ describe Hashie::Extensions::DeepMerge do
       h1.deep_merge!(h2)
       expect { h1[:e][:e1] = 'changed' }.not_to(change { h2[:e][:e1] })
     end
+
+    it 'considers hash subclassing' do
+      empty_receiver.deep_merge!(subclassed_addition)
+      expect(empty_receiver).to eq subclassed_addition
+      expect(empty_receiver).to be_instance_of(subject)
+<<<<<<< HEAD
+      expect(empty_receiver[:a]).to be_instance_of(subject)
+
+=======
+      expect(empty_receiver[:a]).to be_instance_of(DeepMergeHash)
+    end
+>>>>>>> a9b2eed (Adds test for standard usecase)
   end
 
   context 'with &block' do
@@ -100,6 +114,8 @@ describe Hashie::Extensions::DeepMerge do
     let(:h1) { subject.new.merge(a: 100, c: { c1: 100 }).extend(Hashie::Extensions::DeepMerge) }
     let(:h2) { { b: 250, c: { c1: 200 } } }
     let(:expected_hash) { { a: 100, b: 250, c: { c1: 200 } } }
+    let(:empty_receiver)  { subject.new.extend(Hashie::Extensions::DeepMerge) }
+    let(:subclassed_addition) { DeepMergeHash.new.merge( a: DeepMergeHash.new.merge( {b: 1, c:2} )) }
 
     it 'does not raise error' do
       expect { h1.deep_merge(h2) } .not_to raise_error
@@ -112,6 +128,13 @@ describe Hashie::Extensions::DeepMerge do
     it 'deep merges another hash in place via bang method' do
       h1.deep_merge!(h2)
       expect(h1).to eq expected_hash
+    end
+
+     it 'considers hash subclassing' do
+      empty_receiver.deep_merge!(subclassed_addition)
+      expect(empty_receiver).to eq subclassed_addition
+      expect(empty_receiver).to be_instance_of(subject)
+      expect(empty_receiver[:a]).to be_instance_of(DeepMergeHash)
     end
   end
 end
