@@ -2,6 +2,8 @@ module Hashie
   module Extensions
     module DeepMerge
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
+      # Because we have a real kwarg, we cannot use rubys' magic transformation of unknown kwargs to a hash
+      # we need **options and a little magic
       def deep_merge(other_hash = nil, keep_hash_subclasses: false, **options, &block)
         copy = _deep_dup(self)
         copy.extend(Hashie::Extensions::DeepMerge) unless copy.respond_to?(:deep_merge!)
@@ -10,6 +12,8 @@ module Hashie
 
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
       # Modifies the receiver in place.
+      # Because we have a real kwarg, we cannot use rubys' magic transformation of unknown kwargs to a hash
+      # we need **options and a little magic
       def deep_merge!(other_hash = nil, keep_hash_subclasses: false, **options, &block)
         other_hash = other_hash || options
         return self unless other_hash.is_a?(::Hash)
