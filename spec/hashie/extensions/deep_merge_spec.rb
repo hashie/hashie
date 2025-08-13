@@ -80,17 +80,19 @@ describe Hashie::Extensions::DeepMerge do
       expect { h1[:e][:e1] = 'changed' }.not_to(change { h2[:e][:e1] })
     end
 
-    it 'considers hash subclassing' do
+    it 'without hash subclassing' do
       empty_receiver.deep_merge!(subclassed_addition)
       expect(empty_receiver).to eq subclassed_addition
       expect(empty_receiver).to be_instance_of(subject)
-<<<<<<< HEAD
-      expect(empty_receiver[:a]).to be_instance_of(subject)
-
-=======
-      expect(empty_receiver[:a]).to be_instance_of(DeepMergeHash)
+      expect(empty_receiver[:a]).to be_instance_of(::Hash)
     end
->>>>>>> a9b2eed (Adds test for standard usecase)
+
+    it 'considers hash subclassing' do
+      empty_receiver.deep_merge!(subclassed_addition, keep_hash_subclasses: true)
+      expect(empty_receiver).to eq subclassed_addition
+      expect(empty_receiver).to be_instance_of(subject)
+      expect(empty_receiver[:a]).to be_instance_of(subject)
+    end
   end
 
   context 'with &block' do
@@ -130,8 +132,15 @@ describe Hashie::Extensions::DeepMerge do
       expect(h1).to eq expected_hash
     end
 
-     it 'considers hash subclassing' do
+    it 'without hash subclassing' do
       empty_receiver.deep_merge!(subclassed_addition)
+      expect(empty_receiver).to eq subclassed_addition
+      expect(empty_receiver).to be_instance_of(subject)
+      expect(empty_receiver[:a]).to be_instance_of(::Hash)
+    end
+
+    it 'considers hash subclassing' do
+      empty_receiver.deep_merge!(subclassed_addition, keep_hash_subclasses: true)
       expect(empty_receiver).to eq subclassed_addition
       expect(empty_receiver).to be_instance_of(subject)
       expect(empty_receiver[:a]).to be_instance_of(DeepMergeHash)
