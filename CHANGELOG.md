@@ -39,6 +39,9 @@ Any violations of this scheme are considered to be bugs.
 
 * Your contribution here.
 
+### Miscellaneous
+* [#589](https://github.com/hashie/hashie/pull/589): Fixed build failures on the master branch - [@sue445](https://github.com/sue445)
+
 ## [5.0.0] - 2021-11-08
 
 [5.0.0]: https://github.com/hashie/hashie/compare/v4.1.0...v5.0.0
