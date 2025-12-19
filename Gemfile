@@ -10,7 +10,7 @@ group :development do
   gem 'guard-yield', '~> 0.1.0', require: false
   gem 'pry'
 
-  gem 'rubocop', '~> 1.0'
+  gem 'rubocop', '>= 1.82.0', '< 2'
 
   group :test do
     # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
