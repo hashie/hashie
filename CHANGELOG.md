@@ -20,7 +20,7 @@ Any violations of this scheme are considered to be bugs.
 * [#571](https://github.com/hashie/hashie/pull/571): Test with Ruby 3.2 - [@petergoldstein](https://github.com/petergoldstein).
 * [#558](https://github.com/hashie/hashie/pull/558): Test with Ruby 3.1 - [@petergoldstein](https://github.com/petergoldstein).
 * [#582](https://github.com/hashie/hashie/pull/582): Test with Ruby 3.3 and 3.4 - [@btalayeminaei](https://github.com/btalayeminaei).
-* [#589](https://github.com/hashie/hashie/pull/589): Upgraded Rubocop to 1.82.0 - [@sue445](https://github.com/sue445)
+* [#589](https://github.com/hashie/hashie/pull/589): Requires Ruby 2.7+ and upgraded Rubocop to 1.82.0 - [@sue445](https://github.com/sue445)
 * Your contribution here.
 
 ### Deprecated

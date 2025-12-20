@@ -10,12 +10,7 @@ group :development do
   gem 'guard-yield', '~> 0.1.0', require: false
   gem 'pry'
 
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7.0')
-    # rubocop 1.51.0+ requires Ruby 2.7+
-    gem 'rubocop', '< 1.51.0'
-  else
-    gem 'rubocop', '>= 1.82.0', '< 2'
-  end
+  gem 'rubocop', '>= 1.82.0', '< 2'
 
   group :test do
     # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.
