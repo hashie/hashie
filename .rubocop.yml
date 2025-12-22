@@ -12,6 +12,11 @@ inherit_from: .rubocop_todo.yml
 Layout/HeredocIndentation:
   Enabled: false
 
+Layout/LineLength:
+  Exclude:
+    - 'Guardfile'
+  Max: 100
+
 Metrics/ClassLength:
   Enabled: false
 
@@ -21,11 +26,6 @@ Metrics/ModuleLength:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
-
-Metrics/LineLength:
-  Exclude:
-    - 'Guardfile'
-  Max: 100
 
 Lint/UnifiedInteger:
   Exclude:
