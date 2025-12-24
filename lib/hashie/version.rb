@@ -1,3 +1,3 @@
 module Hashie
-  VERSION = '5.1.0'.freeze
+  VERSION = '5.1.1'.freeze
 end
