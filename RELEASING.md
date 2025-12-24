@@ -1,6 +1,6 @@
 # Releasing Hashie
 
-There're no particular rules about when to release Hashie. Release bug fixes frequenty, features not so frequently and breaking API changes rarely.
+There're no particular rules about when to release Hashie. Release bug fixes frequently, features not so frequently and breaking API changes rarely.
 
 ## Release
 
@@ -8,14 +8,14 @@ Run tests, check that all tests succeed locally.
 
 ```sh
 bundle install
-bundle exec rake
+bundle exec rake spec
 ```
 
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/hashie/hashie) for all supported platforms.
+Check that the last build succeeded in [GHA](https://github.com/hashie/hashie/commits/master) for all supported platforms.
 
 ### Check Next Version
 
-Increment the version, modify [lib/hashie/version.rb](lib/hashie/version.rb). [Changelog](CHANGELOG.md) entries should be helpfully categorized to assist in picking the next version number.
+Check the version number that should have been incremented during the previous release and/or development. If needed, modify [lib/hashie/version.rb](lib/hashie/version.rb). [Changelog](CHANGELOG.md) entries should be helpfully categorized to assist in picking the next version number.
 
 * Increment the third number (minor version) if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`). These should be in the "Fixed", "Security", or "Miscellaneous" categories in the change log.
 * Increment the second number (patch version) if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.6.0`). These should be in the "Added" or "Deprecated" categories in the change log.
