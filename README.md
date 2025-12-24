@@ -60,8 +60,7 @@ $ gem install hashie
 
 ## Stable Release
 
-You're reading the documentation for the next release of Hashie, which should be 5.0.1.
-The current stable release is [5.0.0](https://github.com/hashie/hashie/blob/v5.0.0/README.md).
+You're reading the documentation for the stable release of Hashie, 5.1.0.
 
 ## Hash Extensions
 

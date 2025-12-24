@@ -6,14 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [Unreleased]
+## [5.1.0] - 2025-12-24
 
-[unreleased]: https://github.com/hashie/hashie/compare/v5.0.0...master
+[5.1.0]: https://github.com/hashie/hashie/compare/v5.0.0...v5.1.0
 
 ### Added
 
 * [#569](https://github.com/hashie/hashie/pull/569): Added support for Rails 7 - [@aflansburg](https://github.com/aflansburg).
-* Your contribution here.
 
 ### Changed
 
@@ -21,24 +20,10 @@ Any violations of this scheme are considered to be bugs.
 * [#558](https://github.com/hashie/hashie/pull/558): Test with Ruby 3.1 - [@petergoldstein](https://github.com/petergoldstein).
 * [#582](https://github.com/hashie/hashie/pull/582): Test with Ruby 3.3 and 3.4 - [@btalayeminaei](https://github.com/btalayeminaei).
 * [#589](https://github.com/hashie/hashie/pull/589): Requires Ruby 2.7+ and upgraded Rubocop to 1.82.0 - [@sue445](https://github.com/sue445).
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
 
 ### Fixed
 
 * [#583](https://github.com/hashie/hashie/pull/583): Fix a warning about the `logger` gem on Ruby 3.4 - [@earlopain](https://github.com/earlopain).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ## [5.0.0] - 2021-11-08
 
