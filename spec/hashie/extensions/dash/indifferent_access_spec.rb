@@ -81,4 +81,26 @@ describe Hashie::Extensions::Dash::IndifferentAccess do
       expect(instance.to_hash).to eq('name' => 'First')
     end
   end
+
+  context 'nested hash with string keys' do
+    class NestedHashWithStringKeysTrash < Hashie::Trash
+      include Hashie::Extensions::IgnoreUndeclared
+      include Hashie::Extensions::IndifferentAccess
+
+      property :first_name, from: :name, transform_with: ->(name) { name['first'] }
+      property :last_name, from: :name, transform_with: ->(name) { name['last'] }
+    end
+
+    let(:params) { { 'name' => { 'first' => 'First', 'last' => 'Last' } } }
+
+    subject { NestedHashWithStringKeysTrash.new(params) }
+
+    it 'translates the first key' do
+      expect(subject.first_name).to eq 'First'
+    end
+
+    it 'translates the second key' do
+      expect(subject.last_name).to eq 'Last'
+    end
+  end
 end
