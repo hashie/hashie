@@ -8,6 +8,7 @@ group :development do
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-yield', '~> 0.1.0', require: false
+  gem 'mutex_m'
   gem 'pry'
   gem 'rubocop', '1.82.0'
 
@@ -21,7 +22,8 @@ group :development do
 end
 
 group :test do
-  gem 'danger-changelog', '~> 0.6.1', require: false
-  gem 'danger-toc', '~> 0.2.0', require: false
+  gem 'danger-changelog', require: false
+  gem 'danger-pr-comment', require: false
+  gem 'danger-toc', require: false
   gem 'simplecov'
 end
