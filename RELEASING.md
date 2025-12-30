@@ -80,9 +80,9 @@ The current stable release is [3.3.0](https://github.com/hashie/hashie/blob/v3.3
 Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template:
 
 ```markdown
-## [Unreleased][unreleased]
+## [Unreleased]
 
-[unreleased]: https://github.com/hashie/hashie/compare/v<THIS_VERSION>...master
+[Unreleased]: https://github.com/hashie/hashie/compare/v<THIS_VERSION>...master
 
 ### Added
 
