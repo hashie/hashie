@@ -30,7 +30,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
-* Your contribution here.
+* [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
 
 ### Security
 
