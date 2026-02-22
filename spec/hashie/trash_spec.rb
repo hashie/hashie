@@ -261,6 +261,17 @@ describe Hashie::Trash do
     it 'inherit properties translations' do
       expect(TranslationB.new('someValue' => '123').some_value).to eq(123)
     end
+
+    context 'subclass overwrites translation' do
+      class TranslationC < TranslationA
+        property :some_value, from: 'someValue', with: ->(v) { v.to_s.reverse }
+      end
+
+      it 'subclass get to change translation without affecting baseclass' do
+        expect(TranslationA.new('someValue' => '123').some_value).to eq(123)
+        expect(TranslationC.new('someValue' => '123').some_value).to eq('321')
+      end
+    end
   end
 
   it 'raises an error when :from have the same value as property' do

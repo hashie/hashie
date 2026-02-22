@@ -43,6 +43,7 @@ module Hashie
           base.instance_variable_set(:@translations_hash, ::Hash.new { |hash, key| hash[key] = {} })
           base.extend(ClassMethods)
           base.send(:include, InstanceMethods)
+          base.extend Hashie::Extensions::DeepMerge
         end
 
         module ClassMethods
@@ -54,7 +55,7 @@ module Hashie
           def inherited(klass)
             super
             klass.instance_variable_set(:@transforms, transforms.dup)
-            klass.instance_variable_set(:@translations_hash, translations_hash.dup)
+            klass.instance_variable_set(:@translations_hash, _deep_dup(translations_hash))
           end
 
           def permitted_input_keys
