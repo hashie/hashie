@@ -183,6 +183,15 @@ module Hashie
       assert_required_attributes_set!
     end
 
+    def to_h
+      result = super
+      self.class.properties.each do |property|
+        result[property] ||= nil
+      end
+      yield result if block_given?
+      result
+    end
+
     private
 
     def initialize_attributes(attributes)
