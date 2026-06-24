@@ -36,6 +36,29 @@ describe Hashie::Extensions::Coercion do
   let(:instance) { subject.new }
 
   describe '#coerce_key' do
+    context 'on initialization of a new object' do
+      class DefaultWithCoercionTest < Hashie::Dash
+        include Hashie::Extensions::Coercion
+        include Hashie::Extensions::MergeInitializer
+
+        property :first_name
+        coerce_key :first_name, String
+      end
+
+      class DefaultWithCoercionTestChild < DefaultWithCoercionTest
+      end
+
+      it 'uses the default of the type when passed nil' do
+        obj = DefaultWithCoercionTest.new(first_name: nil)
+        expect(obj.first_name).to eq('')
+      end
+
+      it 'uses the default of the type when passed nil on a child' do
+        obj = DefaultWithCoercionTestChild.new(first_name: nil)
+        expect(obj.first_name).to eq('')
+      end
+    end
+
     context 'nesting' do
       class BaseCoercableHash < Hash
         include Hashie::Extensions::Coercion
