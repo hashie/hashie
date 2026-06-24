@@ -14,6 +14,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * Your contribution here.
+* [#566](https://github.com/hashie/hashie/pull/566): Added `Mash::UnderscoreKeys` extensions for conversion of all keys to underscore - [@arianf](https://github.com/arianf)
 
 ### Changed
 
