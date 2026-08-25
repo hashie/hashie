@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe Array do
+  describe '#inspect' do
+    it 'pretty prints as a Hashie::Array' do
+      array = Hashie::Array.new(%i[a b c])
+      expect(array.inspect).to eq('#<Hashie::Array [:a, :b, :c]>')
+    end
+  end
+
   describe '#dig' do
     let(:array) { Hashie::Array.new(%i[a b c]) }
 

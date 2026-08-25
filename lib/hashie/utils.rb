@@ -33,12 +33,7 @@ module Hashie
     # @api private
     # @return [Array<Class>]
     def self.integer_classes
-      @integer_classes ||=
-        if 0.class == Integer
-          [Integer]
-        else
-          [Fixnum, Bignum] # rubocop:disable Lint/UnifiedInteger
-        end
+      @integer_classes ||= [Integer]
     end
   end
 end

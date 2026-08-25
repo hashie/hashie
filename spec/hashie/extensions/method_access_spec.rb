@@ -111,6 +111,10 @@ describe Hashie::Extensions::MethodQuery do
     expect { subject.new.abc? }.to raise_error(NoMethodError)
   end
 
+  it 'raises a NoMethodError for methods that are not query methods' do
+    expect { subject.new(abc: 123).xyz }.to raise_error(NoMethodError)
+  end
+
   it '#respond_to? for existing string keys' do
     expect(subject.new('abc' => 'def')).to be_respond_to('abc?')
   end

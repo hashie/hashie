@@ -528,6 +528,49 @@ describe Hashie::Mash do
     end
   end
 
+  describe 'accessing a key that is itself suffixed' do
+    it 'reads a key literally ending in ? via the method accessor' do
+      mash = Hashie::Mash.new('foo?' => 'literal')
+      expect(mash.foo?).to eq('literal')
+    end
+
+    it 'ignores a write and returns the literal value when the key ends in =' do
+      mash = Hashie::Mash.new('foo=' => 'literal')
+      mash.foo = 'ignored'
+      expect(mash['foo=']).to eq('literal')
+    end
+
+    it 'reads a key literally ending in ! via the method accessor' do
+      mash = Hashie::Mash.new('foo!' => 'literal')
+      expect(mash.foo!).to eq('literal')
+    end
+
+    it 'reads a key literally ending in _ via the method accessor' do
+      mash = Hashie::Mash.new('foo_' => 'literal')
+      expect(mash.foo_).to eq('literal')
+    end
+  end
+
+  describe '#prefix_method?' do
+    subject do
+      Hashie::Mash.new(abc: 'def')
+    end
+
+    it 'is true for a set key with an allowed suffix' do
+      expect(subject.send(:prefix_method?, 'abc?')).to be true
+    end
+
+    it 'is false for an unset key with an allowed suffix' do
+      expect(subject.send(:prefix_method?, 'xyz?')).to be false
+    end
+  end
+
+  describe '#extractable_options?' do
+    it 'is true, playing nice with ActiveSupport Array#extract_options!' do
+      expect(Hashie::Mash.new.extractable_options?).to be true
+    end
+  end
+
   context '#initialize' do
     it 'converts an existing hash to a Hashie::Mash' do
       converted = Hashie::Mash.new(abc: 123, name: 'Bob')
@@ -821,16 +864,12 @@ describe Hashie::Mash do
         expect(mash.company_a.accounts.admin.password).to eq('secret')
       end
       it 'can override the value of aliases' do
-        require 'psych'
-        if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('5')
-          expect do
-            Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
-          end.to raise_error Psych::AliasesNotEnabled, /Alias parsing was not enabled/
-        else
-          expect do
-            Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
-          end.to raise_error Psych::BadAlias, /base_accounts/
-        end
+        # Psych >= 5 raises Psych::AliasesNotEnabled ("Alias parsing was not
+        # enabled"), a subclass of Psych::BadAlias, which older Psych
+        # versions raise directly (mentioning the unresolved alias name).
+        expect do
+          Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
+        end.to raise_error(Psych::BadAlias, /Alias parsing was not enabled|base_accounts/)
       end
     end
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/module_context'
 
-def invoke(method)
+def invoke_stringify(method)
   if subject == object
     subject.public_send(method)
   else
@@ -13,7 +13,7 @@ shared_examples 'stringify_keys!' do
   it 'converts keys to strings' do
     object[:abc] = 'abc'
     object[123] = '123'
-    invoke :stringify_keys!
+    invoke_stringify :stringify_keys!
     expect((object.keys & %w[abc 123]).size).to eq 2
   end
 
@@ -21,13 +21,13 @@ shared_examples 'stringify_keys!' do
     object[:ab] = dummy_class.new
     object[:ab][:cd] = dummy_class.new
     object[:ab][:cd][:ef] = 'abcdef'
-    invoke :stringify_keys!
+    invoke_stringify :stringify_keys!
     expect(object).to eq('ab' => { 'cd' => { 'ef' => 'abcdef' } })
   end
 
   it 'converts nested hashes' do
     object[:ab] = { cd: { ef: 'abcdef' } }
-    invoke :stringify_keys!
+    invoke_stringify :stringify_keys!
     expect(object).to eq('ab' => { 'cd' => { 'ef' => 'abcdef' } })
   end
 
@@ -37,7 +37,7 @@ shared_examples 'stringify_keys!' do
     object[:ab] << dummy_class.new
     object[:ab][0][:cd] = 'abcd'
     object[:ab][1][:ef] = 'abef'
-    invoke :stringify_keys!
+    invoke_stringify :stringify_keys!
     expect(object).to eq('ab' => [{ 'cd' => 'abcd' }, { 'ef' => 'abef' }])
   end
 end
@@ -45,13 +45,13 @@ end
 shared_examples 'stringify_keys' do
   it 'converts keys to strings' do
     object[:abc] = 'def'
-    copy = invoke :stringify_keys
+    copy = invoke_stringify :stringify_keys
     expect(copy['abc']).to eq 'def'
   end
 
   it 'does not alter the original' do
     object[:abc] = 'def'
-    copy = invoke :stringify_keys
+    copy = invoke_stringify :stringify_keys
     expect(object.keys).to eq [:abc]
     expect(copy.keys).to eq %w[abc]
   end
@@ -88,7 +88,7 @@ describe Hashie::Extensions::StringifyKeys do
 
     describe '.stringify_keys' do
       it 'does not raise error' do
-        expect { object.stringify_keys } .not_to raise_error
+        expect { object.stringify_keys }.not_to raise_error
       end
       it 'produces expected stringified hash' do
         expect(object.stringify_keys).to eq(expected_hash)
@@ -96,7 +96,7 @@ describe Hashie::Extensions::StringifyKeys do
     end
     describe '.stringify_keys!' do
       it 'does not raise error' do
-        expect { object.stringify_keys! } .not_to raise_error
+        expect { object.stringify_keys! }.not_to raise_error
       end
       it 'produces expected stringified hash' do
         expect(object.stringify_keys!).to eq(expected_hash)
