@@ -33,6 +33,7 @@ Any violations of this scheme are considered to be bugs.
 ### Fixed
 
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
+* [#596](https://github.com/hashie/hashie/pull/596): Fixed `Hashie::Extensions::Mash::DefineAccessors` raising an `ArgumentError` when a Mash key literally matched a suffixed accessor name (e.g. `foo=`, `foo?`, `foo!`, `foo_`) - [@dblock](https://github.com/dblock).
 
 ### Security
 

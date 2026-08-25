@@ -28,19 +28,13 @@ module Hashie
 
         private
 
-        if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0') # Ruby 2.6+
-          def yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
-            YAML.safe_load(
-              template.result,
-              permitted_classes: permitted_classes,
-              permitted_symbols: permitted_symbols,
-              aliases: aliases
-            )
-          end
-        else
-          def yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
-            YAML.safe_load(template.result, permitted_classes, permitted_symbols, aliases)
-          end
+        def yaml_safe_load(template, permitted_classes, permitted_symbols, aliases)
+          YAML.safe_load(
+            template.result,
+            permitted_classes: permitted_classes,
+            permitted_symbols: permitted_symbols,
+            aliases: aliases
+          )
         end
       end
     end

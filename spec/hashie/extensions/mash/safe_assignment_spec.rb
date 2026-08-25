@@ -33,6 +33,10 @@ describe Hashie::Extensions::Mash::SafeAssignment do
       it 'raises an error' do
         expect { subject.my_own_private = 'Test' }.to raise_error(ArgumentError)
       end
+
+      it 'calls through to the original private method' do
+        expect(subject.send(:my_own_private)).to eq(:hello!)
+      end
     end
 
     context 'when attempting to initialize with predefined method' do

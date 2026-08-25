@@ -24,8 +24,6 @@ module Hashie
         # @api private
         def symbolize_keys_recursively!(object)
           case object
-          when self.class
-            symbolize_keys!(object)
           when ::Array
             object.each do |i|
               symbolize_keys_recursively!(i)

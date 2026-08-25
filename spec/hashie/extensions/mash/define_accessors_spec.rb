@@ -87,4 +87,34 @@ describe Hashie::Extensions::Mash::DefineAccessors do
       it_behaves_like 'class with dynamically defined accessors'
     end
   end
+
+  context 'when accessing a key that literally matches the generated method name' do
+    subject { Class.new(Hashie::Mash) { include Hashie::Extensions::Mash::DefineAccessors } }
+
+    it 'reuses the already-defined writer for a literal = key' do
+      instance = subject.new('foo=' => 'literal')
+      instance.foo = 'ignored'
+      expect(instance['foo=']).to eq 'literal'
+      instance.foo = 'ignored again'
+      expect(instance['foo=']).to eq 'literal'
+    end
+
+    it 'reuses the already-defined predicate for a literal ? key' do
+      instance = subject.new('foo?' => 'literal')
+      expect(instance.foo?).to eq 'literal'
+      expect(instance.foo?).to eq 'literal'
+    end
+
+    it 'reuses the already-defined initializing reader for a literal ! key' do
+      instance = subject.new('foo!' => 'literal')
+      expect(instance.foo!).to eq 'literal'
+      expect(instance.foo!).to eq 'literal'
+    end
+
+    it 'reuses the already-defined underbang reader for a literal _ key' do
+      instance = subject.new('foo_' => 'literal')
+      expect(instance.foo_).to be_nil
+      expect(instance.foo_).to be_nil
+    end
+  end
 end

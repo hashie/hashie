@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/module_context'
 
-def invoke(method)
+def invoke_symbolize(method)
   if subject == object
     subject.public_send(method)
   else
@@ -13,7 +13,7 @@ shared_examples 'symbolize_keys!' do
   it 'converts keys to symbols' do
     object['abc'] = 'abc'
     object['def'] = 'def'
-    invoke :symbolize_keys!
+    invoke_symbolize :symbolize_keys!
     expect((object.keys & %i[abc def]).size).to eq 2
   end
 
@@ -21,13 +21,13 @@ shared_examples 'symbolize_keys!' do
     object['ab'] = dummy_class.new
     object['ab']['cd'] = dummy_class.new
     object['ab']['cd']['ef'] = 'abcdef'
-    invoke :symbolize_keys!
+    invoke_symbolize :symbolize_keys!
     expect(object).to eq(ab: { cd: { ef: 'abcdef' } })
   end
 
   it 'converts nested hashes' do
     object['ab'] = { 'cd' => { 'ef' => 'abcdef' } }
-    invoke :symbolize_keys!
+    invoke_symbolize :symbolize_keys!
     expect(object).to eq(ab: { cd: { ef: 'abcdef' } })
   end
 
@@ -37,7 +37,7 @@ shared_examples 'symbolize_keys!' do
     object['ab'] << dummy_class.new
     object['ab'][0]['cd'] = 'abcd'
     object['ab'][1]['ef'] = 'abef'
-    new_object = invoke :symbolize_keys
+    new_object = invoke_symbolize :symbolize_keys
     expect(new_object).to eq(ab: [{ cd: 'abcd' }, { ef: 'abef' }])
   end
 end
@@ -45,13 +45,13 @@ end
 shared_examples 'symbolize_keys' do
   it 'converts keys to symbols' do
     object['abc'] = 'def'
-    copy = invoke :symbolize_keys
+    copy = invoke_symbolize :symbolize_keys
     expect(copy[:abc]).to eq 'def'
   end
 
   it 'does not alter the original' do
     object['abc'] = 'def'
-    copy = invoke :symbolize_keys
+    copy = invoke_symbolize :symbolize_keys
     expect(object.keys).to eq ['abc']
     expect(copy.keys).to eq [:abc]
   end

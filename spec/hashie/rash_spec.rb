@@ -6,8 +6,8 @@ describe Hashie::Rash do
       /hello/ => 'hello',
       /world/ => 'world',
       'other' => 'whee',
-      true    => false,
-      1       => 'awesome',
+      true => false,
+      1 => 'awesome',
       1..1000 => 'rangey',
       /(bcd)/ => proc { |m| m[1] }
       # /.+/ => "EVERYTHING"
@@ -19,6 +19,12 @@ describe Hashie::Rash do
     expect(subject['well hello there']).to eq 'hello'
     expect(subject['the world is round']).to eq 'world'
     expect(subject.all('hello world').sort).to eq %w[hello world]
+  end
+
+  it 'yields the exact match and stops when the key exists verbatim' do
+    results = []
+    subject.all('other') { |value| results << value }
+    expect(results).to eq ['whee']
   end
 
   it 'finds regexps' do
@@ -73,6 +79,15 @@ describe Hashie::Rash do
   it 'responds to hash methods' do
     expect(subject.respond_to?(:to_a)).to be true
     expect(subject.methods).to_not include(:to_a)
+  end
+
+  it 'delegates missing methods to the underlying hash' do
+    expect(subject.size).to eq subject.instance_variable_get(:@hash).size
+  end
+
+  it 'raises an ArgumentError when fetch is called with the wrong number of arguments' do
+    expect { subject.fetch }.to raise_error(ArgumentError, 'Expected 1-2 arguments, got 0')
+    expect { subject.fetch(1, 2, 3) }.to raise_error(ArgumentError, 'Expected 1-2 arguments, got 3')
   end
 
   it 'does not lose keys' do

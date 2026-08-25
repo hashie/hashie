@@ -260,11 +260,11 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_key(:foo, lambda do |v|
           case v
           when String
-            return !!(v =~ /^(true|t|yes|y|1)$/i)
+            !!(v =~ /^(true|t|yes|y|1)$/i)
           when Numeric
-            return !v.to_i.zero?
+            !v.to_i.zero?
           else
-            return v == true
+            v == true
           end
         end)
 
@@ -340,6 +340,7 @@ describe Hashie::Extensions::Coercion do
     context 'when used with a Mash' do
       class UserMash < Hashie::Mash
       end
+
       class TweetMash < Hashie::Mash
         include Hashie::Extensions::Coercion
         coerce_key :user, UserMash
@@ -373,6 +374,7 @@ describe Hashie::Extensions::Coercion do
       class UserTrash < Hashie::Trash
         property :email
       end
+
       class TweetTrash < Hashie::Trash
         include Hashie::Extensions::Coercion
 
@@ -446,9 +448,7 @@ describe Hashie::Extensions::Coercion do
           include Hashie::Extensions::MergeInitializer
 
           coerce_key :products, lambda { |value|
-            return value.map { |v| ProductHash.new(v) } if value.respond_to?(:map)
-
-            ProductHash.new(v)
+            value.map { |v| ProductHash.new(v) }
           }
         end
 
@@ -490,13 +490,6 @@ describe Hashie::Extensions::Coercion do
 
               coerce_key :products, Array[AnotherProductHash]
             end
-
-            class AnotherProductHash < Hash
-              include Hashie::Extensions::Coercion
-              include Hashie::Extensions::MergeInitializer
-
-              coerce_key :categories, Array[AnotherCategoryHash]
-            end
           end
 
           expect { attempted_code.call }.to raise_error(NameError)
@@ -533,6 +526,16 @@ describe Hashie::Extensions::Coercion do
 
         instance[:foo] = 'bar'
         expect(instance[:foo]).not_to be_kind_of(Coercable)
+        instance[:foo] = klass.new
+        expect(instance[:foo]).to be_kind_of(Coercable)
+      end
+    end
+
+    context 'with strict: false' do
+      it 'registers a lenient value coercion when the class has a non-Object superclass' do
+        klass = Class.new(String)
+        subject.coerce_value klass, Coercable, strict: false
+
         instance[:foo] = klass.new
         expect(instance[:foo]).to be_kind_of(Coercable)
       end
@@ -612,7 +615,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'can coerce via a proc' do
         subject.coerce_value(String, lambda do |v|
-          return !!(v =~ /^(true|t|yes|y|1)$/i)
+          !!(v =~ /^(true|t|yes|y|1)$/i)
         end)
 
         true_values = %w[true t yes y 1]

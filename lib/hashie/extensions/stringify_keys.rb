@@ -24,8 +24,6 @@ module Hashie
         # @api private
         def stringify_keys_recursively!(object)
           case object
-          when self.class
-            stringify_keys!(object)
           when ::Array
             object.each do |i|
               stringify_keys_recursively!(i)

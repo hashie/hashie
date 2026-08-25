@@ -54,6 +54,43 @@ describe Hashie::Clash do
     expect { subject.boo }.to raise_error(NoMethodError)
   end
 
+  it 'is able to set the id key via method_missing' do
+    subject.id('123')
+    expect(subject[:id]).to eq '123'
+  end
+
+  it 'is able to chain into an existing plain hash value' do
+    subject[:foo] = Hashie::Hash[bar: 'abc']
+    subject.foo!.baz(123)
+    expect(subject).to eq(foo: { bar: 'abc', baz: 123 })
+    expect(subject[:foo]).to be_kind_of(Hashie::Clash)
+  end
+
+  it 'raises a ChainError when chaining into a non-hash key' do
+    subject.foo('bar')
+    expect { subject.foo! }.to raise_error(Hashie::Clash::ChainError, 'Tried to chain into a non-hash key.')
+  end
+
+  describe '#respond_to?' do
+    it 'is true for bang methods when the key is unset' do
+      expect(subject.respond_to?(:foo!)).to be true
+    end
+
+    it 'is true for bang methods when the key is a Hash' do
+      subject[:foo] = Hashie::Hash[bar: 'abc']
+      expect(subject.respond_to?(:foo!)).to be true
+    end
+
+    it 'is false for bang methods when the key is not chainable' do
+      subject.foo('bar')
+      expect(subject.respond_to?(:foo!)).to be false
+    end
+
+    it 'is true for any non-bang method' do
+      expect(subject.respond_to?(:anything)).to be true
+    end
+  end
+
   describe 'when inherited' do
     subject { Class.new(described_class).new }
 

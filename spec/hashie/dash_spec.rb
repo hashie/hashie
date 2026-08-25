@@ -173,6 +173,11 @@ describe DashTest do
       subject.first_name { |v| value = v }
       expect(value).to eq 'Frodo'
     end
+
+    it 'evaluates a Proc value stored directly on a property when read' do
+      subject[:first_name] = proc { 'Zorro' }
+      expect(subject[:first_name]).to eq 'Zorro'
+    end
   end
 
   context 'reading from deferred properties' do
@@ -411,6 +416,20 @@ describe DashTest do
       end
     end
 
+    context 'when a default value cannot be duped' do
+      let(:klass) do
+        Class.new(Hashie::Dash) do
+          property :thing, default: Object.new.singleton_class
+        end
+      end
+
+      it 'falls back to using the original default value' do
+        instance = klass.new(thing: nil)
+        instance.update_attributes!(thing: nil)
+        expect(instance.thing).to eq klass.defaults[:thing]
+      end
+    end
+
     context 'codependent attributes' do
       let(:codependent) do
         Class.new(Hashie::Dash) do
@@ -458,7 +477,7 @@ describe DashTest do
         end
 
         describe '**' do
-          # Note: This test is an implementation detail of MRI and may not hold for
+          # NOTE: This test is an implementation detail of MRI and may not hold for
           # other Ruby interpreters. But it's important to note in the test suite
           # because it can be surprising for people unfamiliar with the semantics of
           # double-splatting.
@@ -543,7 +562,7 @@ describe Hashie::Dash, 'inheritance' do
     end
 
     describe '**' do
-      # Note: This test is an implementation detail of MRI and may not hold for
+      # NOTE: This test is an implementation detail of MRI and may not hold for
       # other Ruby interpreters. But it's important to note in the test suite
       # because it can be surprising for people unfamiliar with the semantics of
       # double-splatting.
@@ -600,6 +619,26 @@ describe ConditionallyRequiredTest do
   it 'allows a conditionally required property to be set if required' do
     expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: '$ecure!') }
       .not_to raise_error
+  end
+end
+
+class SymbolConditionallyRequiredTest < Hashie::Dash
+  property :username
+  property :password, required: :username_present?, message: 'must be set, too.'
+
+  def username_present?
+    !username.nil?
+  end
+end
+
+describe SymbolConditionallyRequiredTest do
+  it 'does not allow a conditionally required property to be set to nil if required via a symbol condition' do
+    expect { SymbolConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }
+      .to raise_error(ArgumentError, "The property 'password' must be set, too.")
+  end
+
+  it 'allows a conditionally required property to be set to nil if not required via a symbol condition' do
+    expect { SymbolConditionallyRequiredTest.new(username: nil, password: nil) }.not_to raise_error
   end
 end
 
