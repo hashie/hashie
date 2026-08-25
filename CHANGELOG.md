@@ -16,6 +16,7 @@ Any violations of this scheme are considered to be bugs.
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
 * [#599](https://github.com/hashie/hashie/pull/599): Added `Hashie::Extensions::Mash::StrictKeyAccess` to raise a `KeyError` for undefined keys, including in nested Mashes - [@dblock](https://github.com/dblock).
+* [#601](https://github.com/hashie/hashie/pull/601): Added `Hashie::Extensions::KernelCoercion` to coerce core types using stricter `Kernel` methods (e.g. `Kernel#Integer`) instead of lenient conversion methods (e.g. `#to_i`) - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
