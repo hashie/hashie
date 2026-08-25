@@ -47,6 +47,18 @@ module Hashie
           self[key] = value
         end
 
+        # Ensures that values are coerced before Mash's own recursive
+        # Hash-to-Mash conversion has a chance to run, since by that point
+        # the value would already be an instance of `self.class` rather
+        # than a plain Hash, and value coercion would never trigger. See
+        # https://github.com/hashie/hashie/issues/265.
+        def convert_value(val, duping = false)
+          into = self.class.value_coercion(val)
+          return self.class.fetch_coercion(into).call(val) if into
+
+          defined?(super) ? super : val
+        end
+
         def replace(other_hash)
           (keys - other_hash.keys).each { |key| delete(key) }
           other_hash.each { |key, value| self[key] = value }

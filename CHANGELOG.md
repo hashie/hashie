@@ -37,6 +37,8 @@ Any violations of this scheme are considered to be bugs.
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
 * [#606](https://github.com/hashie/hashie/pull/606): Fix `Hashie::Mash#dup` for subclasses including `MethodAccessWithOverride`, preserving default values and procs - [@Boulea7](https://github.com/Boulea7).
 * [#596](https://github.com/hashie/hashie/pull/596): Fixed `Hashie::Extensions::Mash::DefineAccessors` raising an `ArgumentError` when a Mash key literally matched a suffixed accessor name (e.g. `foo=`, `foo?`, `foo!`, `foo_`) - [@dblock](https://github.com/dblock).
+* [#602](https://github.com/hashie/hashie/pull/602): Fixed `Hashie::Extensions::Coercion`'s `coerce_value` not triggering for nested Hashes inside a `Mash`, since Mash's own recursive Hash-to-Mash conversion ran first - [@dblock](https://github.com/dblock).
+* Your contribution here.
 
 ### Security
 
