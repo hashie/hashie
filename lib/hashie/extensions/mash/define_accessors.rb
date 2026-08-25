@@ -47,7 +47,7 @@ module Hashie
           def define_writer(key, method_name)
             define_method(method_name) do |value = nil|
               if key? method_name
-                self.[](method_name, &proc)
+                self.[](method_name)
               else
                 assign_property(key, value)
               end
@@ -57,7 +57,7 @@ module Hashie
           def define_predicate(key, method_name)
             define_method(method_name) do
               if key? method_name
-                self.[](method_name, &proc)
+                self.[](method_name)
               else
                 !!self[key]
               end
@@ -67,7 +67,7 @@ module Hashie
           def define_initializing_reader(key, method_name)
             define_method(method_name) do
               if key? method_name
-                self.[](method_name, &proc)
+                self.[](method_name)
               else
                 initializing_reader(key)
               end
@@ -77,7 +77,7 @@ module Hashie
           def define_underbang_reader(key, method_name)
             define_method(method_name) do
               if key? method_name
-                self.[](key, &proc)
+                self.[](key)
               else
                 underbang_reader(key)
               end

@@ -43,4 +43,10 @@ RSpec.describe Hashie::Extensions::Mash::KeepOriginalKeys do
     mash['d'] = 'dog'
     expect(mash.to_hash).to eq(:a => 'apple', 'b' => 'bottle', :c => 'cat', 'd' => 'dog')
   end
+
+  it 'passes through non-string, non-symbol keys unconverted' do
+    mash = keeping_mash.new(1 => 'one')
+
+    expect(mash[1]).to eq('one')
+  end
 end

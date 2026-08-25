@@ -27,7 +27,7 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   class IndifferentHashWithDash < Hashie::Dash
-    include Hashie::Extensions::IndifferentAccess
+    include Hashie::Extensions::Dash::IndifferentAccess
     property :foo
   end
 
@@ -75,6 +75,29 @@ describe Hashie::Extensions::IndifferentAccess do
       expect(indifferent_hash[:cat]).to eq('meow')
       expect(indifferent_hash['cat']).to eq('meow')
     end
+
+    it 'converts the result to be indifferent' do
+      indifferent_hash = Class.new(::Hash) do
+        include Hashie::Extensions::IndifferentAccess
+      end.new
+
+      indifferent_hash.merge!(cat: 'meow')
+
+      expect(indifferent_hash[:cat]).to eq('meow')
+      expect(indifferent_hash['cat']).to eq('meow')
+    end
+  end
+
+  describe '.inject' do
+    it 'injects indifferent access into a duplicate of the hash, leaving the original untouched' do
+      hash = { cat: 'meow' }
+
+      indifferent = Hashie::Extensions::IndifferentAccess.inject(hash)
+
+      expect(indifferent[:cat]).to eq('meow')
+      expect(indifferent['cat']).to eq('meow')
+      expect(hash).not_to respond_to(:regular_writer)
+    end
   end
 
   describe '#to_hash' do
@@ -113,6 +136,11 @@ describe Hashie::Extensions::IndifferentAccess do
 
     it 'initialize with a symbol' do
       expect(subject.foo).to eq params[:foo]
+    end
+
+    it 'converts properties to indifferent keys with #to_h' do
+      expect(subject.to_h['foo']).to eq params[:foo]
+      expect(subject.to_hash['foo']).to eq params[:foo]
     end
   end
 
