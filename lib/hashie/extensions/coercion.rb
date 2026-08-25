@@ -35,7 +35,7 @@ module Hashie
           unless value.nil? || into.nil?
             begin
               value = self.class.fetch_coercion(into).call(value)
-            rescue NoMethodError, TypeError => e
+            rescue NoMethodError, TypeError, ArgumentError => e
               raise CoercionError.new(key, value, into, e.message)
             end
           end
