@@ -33,6 +33,8 @@ Any violations of this scheme are considered to be bugs.
 ### Fixed
 
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
+* [#602](https://github.com/hashie/hashie/pull/602): Fixed `Hashie::Extensions::Coercion`'s `coerce_value` not triggering for nested Hashes inside a `Mash`, since Mash's own recursive Hash-to-Mash conversion ran first - [@dblock](https://github.com/dblock).
+* Your contribution here.
 
 ### Security
 

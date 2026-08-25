@@ -369,6 +369,36 @@ describe Hashie::Extensions::Coercion do
       end
     end
 
+    context 'when used with a Mash and coerce_value' do
+      class ValueUserMash < Hashie::Mash
+      end
+      class ValueCoercedTweetMash < Hashie::Mash
+        include Hashie::Extensions::Coercion
+        coerce_value Hash, ValueUserMash
+      end
+
+      it 'coerces with instance initialization' do
+        tweet = ValueCoercedTweetMash.new(user: { email: 'foo@bar.com' })
+        expect(tweet.user).to be_a(ValueUserMash)
+      end
+
+      it 'preserves the coerced nested values' do
+        tweet = ValueCoercedTweetMash.new(user: { email: 'foo@bar.com' })
+        expect(tweet.user.email).to eq('foo@bar.com')
+      end
+
+      it 'coerces when setting with attribute style' do
+        tweet = ValueCoercedTweetMash.new
+        tweet.user = { email: 'foo@bar.com' }
+        expect(tweet.user).to be_a(ValueUserMash)
+      end
+
+      it 'coerces nested hashes inside an array' do
+        tweet = ValueCoercedTweetMash.new(users: [{ email: 'a@b.com' }, { email: 'c@d.com' }])
+        expect(tweet.users).to all(be_a(ValueUserMash))
+      end
+    end
+
     context 'when used with a Trash' do
       class UserTrash < Hashie::Trash
         property :email
