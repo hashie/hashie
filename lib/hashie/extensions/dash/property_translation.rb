@@ -80,7 +80,7 @@ module Hashie
             transformer = options[:transform_with]
 
             if from
-              fail_self_transformation_error!(property_name) if property_name == from
+              fail_self_transformation_error!(property_name) if property_name.to_s == from.to_s
               define_translation(from, property_name, converter || transformer)
               define_writer_for_source_property(from)
             elsif valid_transformer?(transformer)
