@@ -33,6 +33,7 @@ Any violations of this scheme are considered to be bugs.
 ### Fixed
 
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
+* [#604](https://github.com/hashie/hashie/pull/604): Fixed `Dash#deep_transform_keys` (and `Trash`) raising `ArgumentError` for required properties under Rails 7+, since `ActiveSupport::Hash#deep_transform_keys` builds its result via `self.class.new` - [@dblock](https://github.com/dblock).
 
 ### Security
 

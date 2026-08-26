@@ -558,6 +558,37 @@ describe Hashie::Dash, 'inheritance' do
       end
     end
   end
+
+  describe '#deep_transform_keys' do
+    let(:test) do
+      Class.new(Hashie::Dash) do
+        property :foo_bar
+        property :foo_baz, required: true
+      end
+    end
+
+    subject(:dash) { test.new(foo_bar: 'bar', foo_baz: 'baz') }
+
+    it 'returns a plain Hash with transformed keys' do
+      transformed = dash.deep_transform_keys(&:to_s)
+      expect(transformed).to eq('foo_bar' => 'bar', 'foo_baz' => 'baz')
+    end
+
+    it 'deep transforms keys of nested hash values' do
+      nested_test = Class.new(Hashie::Dash) do
+        property :foo_bar
+        property :foo_baz, required: true
+      end
+      dash = nested_test.new(foo_bar: { nested_key: 'value' }, foo_baz: 'baz')
+
+      transformed = dash.deep_transform_keys(&:to_s)
+      expect(transformed).to eq('foo_bar' => { 'nested_key' => 'value' }, 'foo_baz' => 'baz')
+    end
+
+    it 'does not raise when required properties are present' do
+      expect { dash.deep_transform_keys(&:to_s) }.not_to raise_error
+    end
+  end
 end
 
 describe SubclassedTest do

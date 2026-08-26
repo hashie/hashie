@@ -163,6 +163,19 @@ module Hashie
     end
     alias to_hash to_h
 
+    # ActiveSupport's Hash#deep_transform_keys builds up its result via
+    # `self.class.new`, expecting to be able to start from an empty hash
+    # and fill in keys one at a time. Since Dash enforces required
+    # properties at initialization and restricts which keys may be set,
+    # this breaks for Dash (and Trash) - see
+    # https://github.com/hashie/hashie/issues/559. Deep transforming a
+    # Dash's keys no longer produces a valid Dash anyway (the resulting
+    # keys may not correspond to any defined property), so fall back to
+    # operating on a plain Hash instead.
+    def deep_transform_keys(&block)
+      _deep_transform_keys_in_object(to_h, &block)
+    end
+
     def update_attributes!(attributes)
       update_attributes(attributes)
 
@@ -235,6 +248,19 @@ module Hashie
       when Proc   then !!instance_exec(&condition)
       when Symbol then !!send(condition)
       else             !!condition
+      end
+    end
+
+    def _deep_transform_keys_in_object(object, &block)
+      case object
+      when ::Hash
+        object.each_with_object({}) do |(key, value), result|
+          result[yield(key)] = _deep_transform_keys_in_object(value, &block)
+        end
+      when Array
+        object.map { |e| _deep_transform_keys_in_object(e, &block) }
+      else
+        object
       end
     end
   end
