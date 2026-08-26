@@ -33,6 +33,7 @@ Any violations of this scheme are considered to be bugs.
 ### Fixed
 
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
+* [#603](https://github.com/hashie/hashie/pull/603): Fixed `Trash`/`PropertyTranslation` incorrectly allowing `:from` to match the property name when the types differ (e.g. a symbol property translated `from:` a string of the same name), causing a "method redefined" warning instead of the intended `ArgumentError` - [@dblock](https://github.com/dblock).
 
 ### Security
 

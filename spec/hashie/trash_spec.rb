@@ -282,6 +282,14 @@ describe Hashie::Trash do
     end.to raise_error(ArgumentError)
   end
 
+  it 'raises an error when :from has the same value as property but is a different type' do
+    expect do
+      class WrongStringFromTrash < Hashie::Trash
+        property :first_name, from: 'first_name'
+      end
+    end.to raise_error(ArgumentError)
+  end
+
   context 'when subclassing' do
     class Person < Hashie::Trash
       property :first_name, from: :firstName
