@@ -39,6 +39,7 @@ Any violations of this scheme are considered to be bugs.
 * [#596](https://github.com/hashie/hashie/pull/596): Fixed `Hashie::Extensions::Mash::DefineAccessors` raising an `ArgumentError` when a Mash key literally matched a suffixed accessor name (e.g. `foo=`, `foo?`, `foo!`, `foo_`) - [@dblock](https://github.com/dblock).
 * [#602](https://github.com/hashie/hashie/pull/602): Fixed `Hashie::Extensions::Coercion`'s `coerce_value` not triggering for nested Hashes inside a `Mash`, since Mash's own recursive Hash-to-Mash conversion ran first - [@dblock](https://github.com/dblock).
 * [#603](https://github.com/hashie/hashie/pull/603): Fixed `Trash`/`PropertyTranslation` incorrectly allowing `:from` to match the property name when the types differ (e.g. a symbol property translated `from:` a string of the same name), causing a "method redefined" warning instead of the intended `ArgumentError` - [@dblock](https://github.com/dblock).
+* [#604](https://github.com/hashie/hashie/pull/604): Fixed `Dash#deep_transform_keys` (and `Trash`) raising `ArgumentError` for required properties under Rails 7+, since `ActiveSupport::Hash#deep_transform_keys` builds its result via `self.class.new` - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Security
