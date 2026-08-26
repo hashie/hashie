@@ -15,6 +15,7 @@ Any violations of this scheme are considered to be bugs.
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
+* [#605](https://github.com/hashie/hashie/pull/605): Added `Hashie::Extensions::Mash::RequiredKeys`, allowing a Mash to require specific keys to be set while still allowing arbitrary keys - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
