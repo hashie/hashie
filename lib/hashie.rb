@@ -50,6 +50,7 @@ module Hashie
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
       autoload :SymbolizeKeys, 'hashie/extensions/mash/symbolize_keys'
       autoload :DefineAccessors, 'hashie/extensions/mash/define_accessors'
+      autoload :UnderscoreKeys, 'hashie/extensions/mash/underscore_keys'
     end
 
     module Array
