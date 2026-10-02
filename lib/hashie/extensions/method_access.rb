@@ -255,7 +255,14 @@ module Hashie
     module MethodOverridingInitializer
       include RedefineMethod
 
-      def initialize(hash = {})
+      def initialize(hash = {}, default = nil, &block)
+        if default && block
+          raise ArgumentError, 'cannot specify both a default value and a default block'
+        end
+
+        self.default = default unless default.nil?
+        self.default_proc = block if block
+
         hash.each do |key, value|
           skey = key.to_s
           redefine_method(skey) if method?(skey)

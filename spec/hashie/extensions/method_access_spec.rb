@@ -200,6 +200,110 @@ describe Hashie::Extensions::MethodAccessWithOverride do
 
     expect((klass.ancestors & mod_list).size).to eq 4
   end
+
+  context 'when included in a Mash subclass' do
+    include_context 'with a logger'
+
+    let(:mash_class) do
+      Class.new(Hashie::Mash) do
+        include Hashie::Extensions::MethodAccessWithOverride
+      end
+    end
+
+    subject(:mash) { mash_class.new }
+
+    it 'duplicates an empty Mash' do
+      expect(mash.dup).to be_an_instance_of(mash_class)
+      expect(mash.dup.default).to be_nil
+    end
+
+    it 'duplicates stored values and overridden methods' do
+      source = mash_class.new('zip' => 'stored value', 'nested' => { 'answer' => 42 })
+
+      copy = source.dup
+
+      expect(copy).to be_an_instance_of(mash_class)
+      expect(copy).not_to equal(source)
+      expect(copy.zip).to eq source.zip
+      expect(copy.__zip).to eq source.__zip
+      copy.nested.answer = 43
+      expect(source.nested.answer).to eq 42
+    end
+
+    [false, :fallback].each do |default|
+      it "preserves #{default.inspect} as the default when duplicated" do
+        mash.default = default
+
+        copy = mash.dup
+
+        expect(copy.default).to eq default
+        expect(copy['missing']).to eq default
+      end
+    end
+
+    it 'preserves the default proc and applies it to the copy' do
+      mash.default_proc = proc { |hash, key| hash[key] = [] }
+
+      copy = mash.dup
+
+      expect(copy.default_proc).to equal(mash.default_proc)
+      expect(copy['missing']).to eq []
+      expect(mash).not_to have_key('missing')
+    end
+
+    it 'copies a default proc without invoking it and preserves its errors' do
+      mash.default_proc = proc { raise 'default proc failure' }
+
+      copy = mash.dup
+
+      expect { copy['missing'] }.to raise_error(RuntimeError, 'default proc failure')
+    end
+
+    [nil, false].each do |default|
+      it "uses a default block with a #{default.inspect} default argument" do
+        block = proc { |hash, key| hash[key] = [] }
+
+        initialized = mash_class.new({}, default, &block)
+
+        expect(initialized.default_proc).to equal(block)
+        expect(initialized['missing']).to eq []
+      end
+    end
+
+    it 'rejects a truthy default argument combined with a default block' do
+      expect { mash_class.new({}, :fallback) { [] } }.to raise_error(ArgumentError)
+    end
+
+    it 'keeps the native default when the default method is overridden' do
+      source = mash_class.new('default' => 'stored value')
+
+      copy = source.dup
+
+      expect(copy.default).to eq 'stored value'
+      expect(copy.__default).to eq source.__default
+    end
+
+    it 'keeps a native default value when the default method is overridden' do
+      source = mash_class.new('default' => 'stored value')
+      source.default = :fallback
+
+      copy = source.dup
+
+      expect(copy.default).to eq source.default
+      expect(copy.__default).to eq :fallback
+    end
+
+    it 'keeps a default proc when the default method is overridden' do
+      source = mash_class.new('default' => 'stored value')
+      source.default_proc = proc { |hash, key| hash[key] = [] }
+
+      copy = source.dup
+
+      expect(copy.default).to eq source.default
+      expect(copy.__default).to be_nil
+      expect(copy.default_proc).to equal(source.default_proc)
+    end
+  end
 end
 
 describe Hashie::Extensions::MethodOverridingInitializer do
