@@ -284,7 +284,7 @@ describe Hashie::Extensions::Coercion do
       it 'raises errors for non-coercable types' do
         subject.coerce_key :foo, NotInitializable
         expect { instance[:foo] = 'true' }
-          .to raise_error(Hashie::CoercionError, /`NotInitializable` is not a coercable type/)
+          .to raise_error(Hashie::CoercionError, /no coercion is available for `NotInitializable`/)
       end
 
       it 'can coerce false' do

@@ -180,7 +180,7 @@ module Hashie
               type.new(value)
             end
           else
-            raise TypeError, "`#{type}` is not a coercable type"
+            raise TypeError, "no coercion is available for `#{type}`"
           end
         end
 

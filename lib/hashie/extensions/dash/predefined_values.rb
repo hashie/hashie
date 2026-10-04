@@ -68,14 +68,23 @@ module Hashie
             self.class.values_for_properties.each_key do |property|
               value = send(property)
 
-              if value && !values_for_properties(property).include?(value)
-                fail_property_value_error!(property)
+              allowed_values = values_for_properties(property)
+              if value && !allowed_values.include?(value)
+                fail_property_value_error!(property, value, allowed_values)
               end
             end
           end
 
-          def fail_property_value_error!(property)
-            raise ArgumentError, "invalid value for property `#{property}`"
+          def fail_property_value_error!(property, value, allowed_values)
+            if allowed_values.is_a?(::Range)
+              raise ArgumentError,
+                    "value `#{value.inspect}` is not allowed for `#{property}`; " \
+                    "expected a value in `#{allowed_values}`"
+            end
+
+            raise ArgumentError,
+                  "value `#{value.inspect}` is not allowed for `#{property}`; " \
+                  "expected one of `#{allowed_values.inspect}`"
           end
 
           def values_for_properties(property)
