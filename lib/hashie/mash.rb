@@ -193,6 +193,8 @@ module Hashie
     alias regular_dup dup
     # Duplicates the current mash as a new mash.
     def dup
+      default = ::Hash.instance_method(:default).bind(self).call
+      default_proc = ::Hash.instance_method(:default_proc).bind(self).call
       self.class.new(self, default, &default_proc)
     end
 
