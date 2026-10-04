@@ -19,6 +19,18 @@ jobs:
           BUNDLE_GEMFILE=$dir/Gemfile bundle exec rspec $dir
         done
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        ruby-version: '3.2'
+    - name: Run RuboCop
+      run: bundle exec rake rubocop
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -45,7 +57,7 @@ jobs:
       env:
         RUBYOPT: "--disable-error_highlight"
         CI: true
-      run: bundle exec rake
+      run: bundle exec rake spec
     - name: Report coverage to Coveralls
       uses: coverallsapp/github-action@v2
       with:
@@ -79,7 +91,7 @@ jobs:
       env:
         JRUBY_OPTS: --debug
         CI: true
-      run: bundle exec rake
+      run: bundle exec rake spec
     - name: Report coverage to Coveralls
       if: matrix.os == 'ubuntu'
       uses: coverallsapp/github-action@v2
