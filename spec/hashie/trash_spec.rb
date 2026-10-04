@@ -328,7 +328,7 @@ describe Hashie::Trash do
       end
 
       expect { with_required.new }.to raise_error(
-        ArgumentError, "The property 'copy_of_id' must be set"
+        ArgumentError, 'the property `copy_of_id` must be set'
       )
     end
 
@@ -341,7 +341,7 @@ describe Hashie::Trash do
 
       expect(subject).not_to respond_to(:value)
       expect { subject[:value] }.to raise_error(
-        NoMethodError, "The property 'value' is not defined for ."
+        NoMethodError, 'the property `value` is not defined for `anonymous class`'
       )
       expect(subject.to_h[:value]).to eq(nil)
       expect(subject.copy_of_value).to eq(0)

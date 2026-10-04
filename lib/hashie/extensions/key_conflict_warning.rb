@@ -4,8 +4,8 @@ module Hashie
       class CannotDisableMashWarnings < StandardError
         def initialize
           super(
-            'You cannot disable warnings on the base Mash class. ' \
-            'Please subclass the Mash and disable it in the subclass.'
+            'you cannot disable warnings on the base Mash class; ' \
+            'please subclass the Mash and disable it in the subclass'
           )
         end
       end

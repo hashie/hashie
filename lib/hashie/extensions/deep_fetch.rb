@@ -22,7 +22,7 @@ module Hashie
           rescue ArgumentError, IndexError, NoMethodError => e
             break yield(arg) if block
             raise UndefinedPathError,
-                  "Could not fetch path (#{args.join(' > ')}) at #{arg}", e.backtrace
+                  "could not fetch path (`#{args.join(' > ')}`) at `#{arg}`", e.backtrace
           end
         end
       end

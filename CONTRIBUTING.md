@@ -49,7 +49,7 @@ We definitely appreciate pull requests that highlight or reproduce a problem, ev
 
 Implement your feature or bug fix.
 
-Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop), run `bundle exec rubocop` and fix any style issues highlighted.
+Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop), run `bundle exec rake rubocop` and fix any style issues highlighted. Exception messages should start with a lowercase letter and have no trailing punctuation, matching Ruby's built-in exceptions.
 
 Make sure that `bundle exec rake` completes without errors.
 

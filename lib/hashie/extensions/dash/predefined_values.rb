@@ -43,7 +43,7 @@ module Hashie
           def assert_predefined_values!(predefined_values)
             return if supported_type?(predefined_values)
 
-            raise ArgumentError, %(`values` accepts an Array or a Range.)
+            raise ArgumentError, %(`values` accepts an array or a range)
           end
 
           def supported_type?(predefined_values)
@@ -75,7 +75,7 @@ module Hashie
           end
 
           def fail_property_value_error!(property)
-            raise ArgumentError, "Invalid value for property '#{property}'"
+            raise ArgumentError, "invalid value for property `#{property}`"
           end
 
           def values_for_properties(property)

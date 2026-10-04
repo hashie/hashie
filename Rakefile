@@ -14,6 +14,13 @@ end
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+  RuboCop::RakeTask.new(:rubocop_exception_messages) do |task|
+    task.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
+    task.options = ['--config', '.rubocop_exception_messages.yml']
+  end
+  task rubocop: :rubocop_exception_messages
+end
 
 require_relative 'spec/support/integration_specs'
 task :integration_specs do

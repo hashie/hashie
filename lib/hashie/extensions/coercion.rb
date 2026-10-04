@@ -1,7 +1,7 @@
 module Hashie
   class CoercionError < StandardError
     def initialize(key, value, into, message)
-      super("Cannot coerce property #{key.inspect} from #{value.class} to #{into}: #{message}")
+      super("cannot coerce property `#{key.inspect}` from `#{value.class}` to `#{into}`: #{message}")
     end
   end
 
@@ -180,7 +180,7 @@ module Hashie
               type.new(value)
             end
           else
-            raise TypeError, "#{type} is not a coercable type"
+            raise TypeError, "`#{type}` is not a coercable type"
           end
         end
 

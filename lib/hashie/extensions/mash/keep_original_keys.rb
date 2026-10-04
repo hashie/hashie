@@ -15,7 +15,7 @@ module Hashie
       #   mash[:symbol_key] == mash['symbol_key']  #=> true
       module KeepOriginalKeys
         def self.included(descendant)
-          error_message = "#{descendant} is not a kind of Hashie::Mash"
+          error_message = "`#{descendant}` is not a kind of Hashie::Mash"
           raise ArgumentError, error_message unless descendant <= Hashie::Mash
         end
 

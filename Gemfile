@@ -11,6 +11,9 @@ group :development do
   gem 'mutex_m'
   gem 'pry'
   gem 'rubocop', '1.82.0'
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+    gem 'rubocop-exception_messages'
+  end
 
   group :test do
     # ActiveSupport required to test compatibility with ActiveSupport Core Extensions.

@@ -1,0 +1,21 @@
+AllCops:
+  DisabledByDefault: true
+  Include:
+    - '**/*.rb'
+
+plugins:
+  - rubocop-exception_messages
+
+ExceptionMessages/Casing:
+  Enabled: true
+  EnforcedStyle: lowercase
+
+ExceptionMessages/Punctuation:
+  Enabled: true
+  EnforcedStyle: no_period
+
+ExceptionMessages/QuoteStyle:
+  Enabled: true
+
+ExceptionMessages/RedundantExceptionName:
+  Enabled: true

@@ -39,7 +39,7 @@ class SubclassedTest < DashTest
 end
 
 class RequiredMessageTest < DashTest
-  property :first_name, required: true, message: 'must be set.'
+  property :first_name, required: true, message: 'must be set'
 end
 
 class DashDefaultTest < Hashie::Dash
@@ -64,19 +64,19 @@ end
 
 describe DashTest do
   def property_required_error(property)
-    [ArgumentError, "The property '#{property}' is required for #{subject.class.name}."]
+    [ArgumentError, "the property `#{property}` is required for `#{subject.class.name}`"]
   end
 
   def property_required_custom_error(property)
-    [ArgumentError, "The property '#{property}' must be set."]
+    [ArgumentError, "the property `#{property}` must be set"]
   end
 
   def property_message_without_required_error
-    [ArgumentError, 'The :message option should be used with :required option.']
+    [ArgumentError, 'the :message option should be used with :required option']
   end
 
   def no_property_error(property)
-    [NoMethodError, "The property '#{property}' is not defined for #{subject.class.name}."]
+    [NoMethodError, "the property `#{property}` is not defined for `#{subject.class.name}`"]
   end
 
   subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
@@ -414,8 +414,8 @@ describe DashTest do
     context 'codependent attributes' do
       let(:codependent) do
         Class.new(Hashie::Dash) do
-          property :a, required: -> { b.nil? }, message: 'is required if b is not set.'
-          property :b, required: -> { a.nil? }, message: 'is required if a is not set.'
+          property :a, required: -> { b.nil? }, message: 'is required if b is not set'
+          property :b, required: -> { a.nil? }, message: 'is required if a is not set'
           property :c, default: -> { 'c' }
         end
       end
@@ -584,13 +584,13 @@ end
 
 class ConditionallyRequiredTest < Hashie::Dash
   property :username
-  property :password, required: -> { !username.nil? }, message: 'must be set, too.'
+  property :password, required: -> { !username.nil? }, message: 'must be set, too'
 end
 
 describe ConditionallyRequiredTest do
   it 'does not allow a conditionally required property to be set to nil if required' do
     expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }
-      .to raise_error(ArgumentError, "The property 'password' must be set, too.")
+      .to raise_error(ArgumentError, 'the property `password` must be set, too')
   end
 
   it 'allows a conditionally required property to be set to nil if not required' do

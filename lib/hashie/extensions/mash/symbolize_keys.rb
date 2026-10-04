@@ -19,7 +19,7 @@ module Hashie
         # @return [void]
         # @raise [ArgumentError] when the base class isn't a Mash
         def self.included(base)
-          raise ArgumentError, "#{base} must descent from Hashie::Mash" unless base <= Hashie::Mash
+          raise ArgumentError, "`#{base}` must descend from Hashie::Mash" unless base <= Hashie::Mash
         end
 
         private
