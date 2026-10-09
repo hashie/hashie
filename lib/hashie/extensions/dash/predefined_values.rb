@@ -76,15 +76,15 @@ module Hashie
           end
 
           def fail_property_value_error!(property, value, allowed_values)
-            if allowed_values.is_a?(::Range)
-              raise ArgumentError,
-                    "value `#{value.inspect}` is not allowed for `#{property}`; " \
-                    "expected a value in `#{allowed_values}`"
-            end
+            expected_values = if allowed_values.is_a?(::Range)
+                                "a value in `#{allowed_values}`"
+                              else
+                                "one of `#{allowed_values.inspect}`"
+                              end
 
             raise ArgumentError,
                   "value `#{value.inspect}` is not allowed for `#{property}`; " \
-                  "expected one of `#{allowed_values.inspect}`"
+                  "expected #{expected_values}"
           end
 
           def values_for_properties(property)
