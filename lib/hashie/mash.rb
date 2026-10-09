@@ -71,7 +71,7 @@ module Hashie
       @_mashes ||= new
 
       return @_mashes[path] if @_mashes.key?(path)
-      raise ArgumentError, "The following file doesn't exist: #{path}" unless File.file?(path)
+      raise ArgumentError, "file not found: `#{path}`" unless File.file?(path)
 
       options = options.dup
       parser = options.delete(:parser) { Hashie::Extensions::Parsers::YamlErbParser }

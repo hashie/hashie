@@ -1,6 +1,16 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 5.2.0
+
+#### Exception messages
+
+Exception messages now begin with lowercase words, omit trailing periods, quote interpolated values
+with backticks, and use consistent wording. Exception classes and the conditions under which
+exceptions are raised have not changed.
+
+Applications and tests that compare exact exception message strings must update their expectations.
+
 ### Upgrading to 5.0.0
 
 #### Mash initialization key conversion

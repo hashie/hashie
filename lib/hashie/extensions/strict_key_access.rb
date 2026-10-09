@@ -68,7 +68,7 @@ module Hashie
       def key(value)
         super.tap do |result|
           if result.nil? && (!key?(result) || self[result] != value)
-            raise KeyError, "key not found with value of #{value.inspect}"
+            raise KeyError, "no key found for value `#{value.inspect}`"
           end
         end
       end

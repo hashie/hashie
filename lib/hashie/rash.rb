@@ -64,7 +64,7 @@ module Hashie
     # Raise (or yield) unless something matches the key.
     #
     def fetch(*args)
-      raise ArgumentError, "Expected 1-2 arguments, got #{args.length}" \
+      raise ArgumentError, "expected 1-2 arguments, got `#{args.length}`" \
         unless (1..2).cover?(args.length)
 
       key, default = args
@@ -78,7 +78,7 @@ module Hashie
       elsif default
         default
       else
-        raise KeyError, "key not found: #{key.inspect}"
+        raise KeyError, "key not found: `#{key.inspect}`"
       end
     end
 

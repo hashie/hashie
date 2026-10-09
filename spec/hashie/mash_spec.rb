@@ -775,7 +775,7 @@ describe Hashie::Mash do
       end
 
       it 'raise an ArgumentError' do
-        expect { subject }.to raise_exception(ArgumentError)
+        expect { subject }.to raise_exception(ArgumentError, "file not found: `#{path}`")
       end
     end
 

@@ -17,12 +17,18 @@ describe Hashie::Extensions::Dash::PredefinedValues do
 
   it 'rejects value outside the predefined list' do
     expect { extended_dash.new(gender: :unicorn) }
-      .to raise_error(ArgumentError, %(Invalid value for property 'gender'))
+      .to raise_error(
+        ArgumentError,
+        'value `:unicorn` is not allowed for `gender`; expected one of `[:male, :female, :prefer_not_to_say]`'
+      )
   end
 
   it 'accepts a range for predefined list' do
     expect { extended_dash.new(age: -1) }
-      .to raise_error(ArgumentError, %(Invalid value for property 'age'))
+      .to raise_error(
+        ArgumentError,
+        'value `-1` is not allowed for `age`; expected a value in `0..150`'
+      )
   end
 
   it 'allows property to be nil' do
@@ -37,7 +43,7 @@ describe Hashie::Extensions::Dash::PredefinedValues do
 
         property :name, values: -> { :foo }
       end
-    end.to raise_error(ArgumentError, %(`values` accepts an Array or a Range.))
+    end.to raise_error(ArgumentError, %(`values` accepts an `Array` or a `Range`))
   end
 
   let(:subclass) do
@@ -48,7 +54,10 @@ describe Hashie::Extensions::Dash::PredefinedValues do
 
   it 'passes property predefined list to subclasses' do
     expect { subclass.new(gender: :unicorn) }
-      .to raise_error(ArgumentError, %(Invalid value for property 'gender'))
+      .to raise_error(
+        ArgumentError,
+        'value `:unicorn` is not allowed for `gender`; expected one of `[:male, :female, :prefer_not_to_say]`'
+      )
   end
 
   it 'allows subclass to define predefined list' do

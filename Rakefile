@@ -14,6 +14,17 @@ end
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+  RuboCop::RakeTask.new(:rubocop_exception_messages) do |task|
+    task.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
+    task.options = [
+      '--only',
+      'ExceptionMessages/Casing,ExceptionMessages/Punctuation,' \
+      'ExceptionMessages/QuoteStyle,ExceptionMessages/RedundantExceptionName'
+    ]
+  end
+  task rubocop: :rubocop_exception_messages
+end
 
 require_relative 'spec/support/integration_specs'
 task :integration_specs do
@@ -32,4 +43,8 @@ task :integration_specs do
   end
 end
 
-task default: %i[rubocop spec integration_specs]
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+  task default: %i[rubocop spec integration_specs]
+else
+  task default: %i[spec integration_specs]
+end

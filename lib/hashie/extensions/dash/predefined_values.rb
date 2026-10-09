@@ -43,7 +43,7 @@ module Hashie
           def assert_predefined_values!(predefined_values)
             return if supported_type?(predefined_values)
 
-            raise ArgumentError, %(`values` accepts an Array or a Range.)
+            raise ArgumentError, %(`values` accepts an `Array` or a `Range`)
           end
 
           def supported_type?(predefined_values)
@@ -68,14 +68,23 @@ module Hashie
             self.class.values_for_properties.each_key do |property|
               value = send(property)
 
-              if value && !values_for_properties(property).include?(value)
-                fail_property_value_error!(property)
+              allowed_values = values_for_properties(property)
+              if value && !allowed_values.include?(value)
+                fail_property_value_error!(property, value, allowed_values)
               end
             end
           end
 
-          def fail_property_value_error!(property)
-            raise ArgumentError, "Invalid value for property '#{property}'"
+          def fail_property_value_error!(property, value, allowed_values)
+            expected_values = if allowed_values.is_a?(::Range)
+                                "a value in `#{allowed_values}`"
+                              else
+                                "one of `#{allowed_values.inspect}`"
+                              end
+
+            raise ArgumentError,
+                  "value `#{value.inspect}` is not allowed for `#{property}`; " \
+                  "expected #{expected_values}"
           end
 
           def values_for_properties(property)

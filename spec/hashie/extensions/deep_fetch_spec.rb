@@ -45,7 +45,7 @@ module Hashie
                 end.to(
                   raise_error(
                     DeepFetch::UndefinedPathError,
-                    'Could not fetch path (library > books > 2) at 2'
+                    'could not fetch path (`library > books > 2`) at `2`'
                   )
                 )
               end
@@ -58,7 +58,7 @@ module Hashie
                 end.to(
                   raise_error(
                     DeepFetch::UndefinedPathError,
-                    'Could not fetch path (library > location > unknown_key) at unknown_key'
+                    'could not fetch path (`library > location > unknown_key`) at `unknown_key`'
                   )
                 )
               end
@@ -71,7 +71,7 @@ module Hashie
                 end.to(
                   raise_error(
                     DeepFetch::UndefinedPathError,
-                    'Could not fetch path (library > unknown_key > books) at unknown_key'
+                    'could not fetch path (`library > unknown_key > books`) at `unknown_key`'
                   )
                 )
               end
@@ -84,7 +84,7 @@ module Hashie
                 end.to(
                   raise_error(
                     DeepFetch::UndefinedPathError,
-                    'Could not fetch path (library > shelves > address) at address'
+                    'could not fetch path (`library > shelves > address`) at `address`'
                   )
                 )
               end

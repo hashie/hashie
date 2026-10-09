@@ -35,7 +35,8 @@ describe Hashie::Extensions::StrictKeyAccess do
     context 'lookup' do
       it('raises an error') do
         # Formatting of the error message does not vary here because raised by StrictKeyAccess
-        expect { instance.key(invalid_value) }.to raise_error KeyError
+        expect { instance.key(invalid_value) }
+          .to raise_error(KeyError, "no key found for value `#{invalid_value.inspect}`")
       end
     end
   end

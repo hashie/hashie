@@ -49,10 +49,10 @@ module Hashie
 
       condition = options.delete(:required)
       if condition
-        message = options.delete(:message) || "is required for #{name}."
+        message = options.delete(:message) || "is required for `#{name}`"
         required_properties[property_name] = { condition: condition, message: message }
       elsif options.key?(:message)
-        raise ArgumentError, 'The :message option should be used with :required option.'
+        raise ArgumentError, 'the :message option should be used with :required option'
       end
     end
 
@@ -219,12 +219,14 @@ module Hashie
     end
 
     def fail_property_required_error!(property)
+      message = self.class.required_properties[property][:message]
       raise ArgumentError,
-            "The property '#{property}' #{self.class.required_properties[property][:message]}"
+            "the property `#{property}` " + message
     end
 
     def fail_no_property_error!(property)
-      raise NoMethodError, "The property '#{property}' is not defined for #{self.class.name}."
+      raise NoMethodError,
+            "the property `#{property}` is not defined for `#{self.class.name || 'anonymous class'}`"
     end
 
     def required?(property)
