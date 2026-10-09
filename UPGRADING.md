@@ -1,6 +1,17 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 5.2.0
+
+#### Exception messages
+
+Exception message casing, punctuation, quoting, and wording have been standardized. Exception
+classes and the conditions under which exceptions are raised have not changed.
+
+Applications and tests that compare exact exception message strings must update their expectations.
+Prefer checking exception classes and relevant structured state instead of using message text for
+flow control.
+
 ### Upgrading to 5.0.0
 
 #### Mash initialization key conversion
