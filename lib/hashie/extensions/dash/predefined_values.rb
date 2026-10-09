@@ -43,7 +43,7 @@ module Hashie
           def assert_predefined_values!(predefined_values)
             return if supported_type?(predefined_values)
 
-            raise ArgumentError, %(`values` accepts an array or a range)
+            raise ArgumentError, %(`values` accepts an `Array` or a `Range`)
           end
 
           def supported_type?(predefined_values)

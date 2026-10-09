@@ -43,7 +43,7 @@ describe Hashie::Extensions::Dash::PredefinedValues do
 
         property :name, values: -> { :foo }
       end
-    end.to raise_error(ArgumentError, %(`values` accepts an array or a range))
+    end.to raise_error(ArgumentError, %(`values` accepts an `Array` or a `Range`))
   end
 
   let(:subclass) do
