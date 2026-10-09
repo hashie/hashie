@@ -5,12 +5,11 @@ Upgrading Hashie
 
 #### Exception messages
 
-Exception message casing, punctuation, quoting, and wording have been standardized. Exception
-classes and the conditions under which exceptions are raised have not changed.
+Exception messages now begin with lowercase words, omit trailing periods, quote interpolated values
+with backticks, and use consistent wording. Exception classes and the conditions under which
+exceptions are raised have not changed.
 
 Applications and tests that compare exact exception message strings must update their expectations.
-Prefer checking exception classes and relevant structured state instead of using message text for
-flow control.
 
 ### Upgrading to 5.0.0
 
