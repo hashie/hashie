@@ -37,6 +37,7 @@
   - [SafeAssignment](#safeassignment)
   - [SymbolizeKeys](#symbolizekeys)
   - [DefineAccessors](#defineaccessors)
+  - [StrictKeyAccess](#strictkeyaccess-1)
 - [Dash](#dash)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
@@ -808,6 +809,27 @@ You can also extend the existing mash without defining a class:
 ```ruby
 mash = ::Hashie::Mash.new.with_accessors!
 ```
+
+### StrictKeyAccess
+
+This extension can be mixed into a Mash to raise a `KeyError` for any key that is not set, instead of returning `nil`. It's aware of Mash's special suffixed methods (`?`, `!`, `_` and `=`), which all continue to work as normal. Since nested Hashes are converted into instances of the same Mash class, this behavior automatically applies to nested Mashes as well.
+
+```ruby
+class StrictMash < Hashie::Mash
+  include Hashie::Extensions::Mash::StrictKeyAccess
+end
+
+mash = StrictMash.new(name: 'Bob', address: { city: 'Springfield' })
+mash.name           #=> 'Bob'
+mash.age            #=> KeyError: key not found: "age"
+
+mash.name?          #=> true
+mash.age?           #=> false
+
+mash.address.city   #=> 'Springfield'
+mash.address.zip    #=> KeyError: key not found: "zip"
+```
+
 
 ## Dash
 
