@@ -19,6 +19,7 @@
   - [Coercing Core Types](#coercing-core-types)
   - [Coercion Proc](#coercion-proc)
     - [A note on circular coercion](#a-note-on-circular-coercion)
+  - [KernelCoercion](#kernelcoercion)
   - [KeyConversion](#keyconversion)
   - [MergeInitializer](#mergeinitializer)
   - [MethodAccess](#methodaccess)
@@ -231,6 +232,31 @@ class CategoryHash < Hash
   end
 end
 ```
+
+### KernelCoercion
+
+By default, `Hashie::Extensions::Coercion` coerces core types using lenient methods like `#to_i` and `#to_f`, which can silently produce undesirable results:
+
+```ruby
+'abcd'.to_f # => 0.0
+```
+
+The `Hashie::Extensions::KernelCoercion` mixin extends `Coercion` to use the stricter `Kernel` methods (e.g. `Kernel#Integer`, `Kernel#Float`) instead, which raise an error for invalid input rather than silently coercing it:
+
+```ruby
+class StrictHash < Hash
+  include Hashie::Extensions::Coercion
+  extend Hashie::Extensions::KernelCoercion
+
+  coerce_key :count, Integer
+end
+
+hash = StrictHash.new
+hash[:count] = '5'    # => 5
+hash[:count] = 'abcd' # => Hashie::CoercionError: Cannot coerce property :count from String to Integer: invalid value for Integer(): "abcd"
+```
+
+This applies to `Integer`, `Float`, `Complex`, `Rational` and `String`. There is no strict `Kernel` method equivalent for `Symbol`, so `Symbol` coercion always uses the default, lenient `#to_sym` behavior.
 
 ### KeyConversion
 

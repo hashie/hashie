@@ -15,6 +15,7 @@ Any violations of this scheme are considered to be bugs.
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
+* [#601](https://github.com/hashie/hashie/pull/601): Added `Hashie::Extensions::KernelCoercion` to coerce core types using stricter `Kernel` methods (e.g. `Kernel#Integer`) instead of lenient conversion methods (e.g. `#to_i`) - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
