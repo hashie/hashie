@@ -37,6 +37,7 @@
   - [SafeAssignment](#safeassignment)
   - [SymbolizeKeys](#symbolizekeys)
   - [DefineAccessors](#defineaccessors)
+  - [RequiredKeys](#requiredkeys)
 - [Dash](#dash)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
@@ -807,6 +808,24 @@ You can also extend the existing mash without defining a class:
 
 ```ruby
 mash = ::Hashie::Mash.new.with_accessors!
+```
+
+### RequiredKeys
+
+This extension can be mixed into a Mash to require specific keys to be set (non-nil) when constructing an instance, while still allowing arbitrary, undeclared keys to be assigned - unlike `Hashie::Dash`, which only allows setting pre-declared properties.
+
+```ruby
+class PersonMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::RequiredKeys
+
+  required_keys :name, :email
+end
+
+PersonMash.new(email: 'bob@example.com')
+# => ArgumentError: The following keys are required: name
+
+person = PersonMash.new(name: 'Bob', email: 'bob@example.com')
+person.age = 42 # arbitrary, undeclared keys are still allowed
 ```
 
 ## Dash
