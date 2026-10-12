@@ -24,6 +24,7 @@
   - [MergeInitializer](#mergeinitializer)
   - [MethodAccess](#methodaccess)
   - [BlockAccess](#blockaccess)
+  - [Persistable](#persistable)
   - [MethodAccessWithOverride](#methodaccesswithoverride)
   - [MethodOverridingInitializer](#methodoverridinginitializer)
   - [IndifferentAccess](#indifferentaccess)
@@ -329,6 +330,28 @@ rather than being overwritten.
 Dash properties must be declared, and its constructor and property validations
 still apply. Real methods (such as `each`) and Mash's `?`, `!`, `=`, and `_`
 suffixes keep their existing behavior.
+
+### Persistable
+
+`Hashie::Extensions::Persistable` adds opt-in YAML file persistence to classes whose constructors accept a hash. Plain Hash subclasses can include `MergeInitializer` first.
+
+```ruby
+class Configuration < Hashie::Mash
+  include Hashie::Extensions::Persistable
+end
+
+config = Configuration.new(name: 'example')
+config.save('config.yaml')
+loaded = Configuration.load('config.yaml')
+loaded.name = 'updated'
+loaded.save # writes back to config.yaml
+```
+
+`save` returns and remembers the absolute path only after a successful write. It atomically replaces the destination using a temporary file in the same directory, preserves existing file permissions, and creates new files with private permissions. A failed write leaves the remembered path unchanged.
+
+Files contain plain YAML data, not Ruby class tags or persistence metadata. Loading uses `Psych.safe_load`, permits symbols for declared Dash/Trash properties, rejects aliases and non-hash roots, and never evaluates ERB. String and symbol keys retain their types; Dash/Trash files must use keys accepted by their constructors. Nested Hashie classes are not encoded: constructors such as Mash may reconstruct their own nested types, while Dash retains nested plain hashes. Supported values are hashes, arrays, strings, symbols, numbers, booleans, and `nil`; cycles and unsupported objects are rejected.
+
+Including this extension explicitly replaces an inherited class-level `load` on that subclass. Ordinary `Hashie::Mash.load` retains its existing caching and YAML/ERB behavior. No autosave or other serialization formats are provided.
 
 ### MethodAccessWithOverride
 
