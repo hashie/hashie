@@ -21,6 +21,7 @@ module Hashie
     autoload :MethodQuery,        'hashie/extensions/method_access'
     autoload :MethodReader,       'hashie/extensions/method_access'
     autoload :MethodWriter,       'hashie/extensions/method_access'
+    autoload :Persistable,        'hashie/extensions/persistable'
     autoload :StringifyKeys,      'hashie/extensions/stringify_keys'
     autoload :SymbolizeKeys,      'hashie/extensions/symbolize_keys'
     autoload :DeepFetch,          'hashie/extensions/deep_fetch'
