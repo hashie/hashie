@@ -18,6 +18,7 @@ Any violations of this scheme are considered to be bugs.
 * [#599](https://github.com/hashie/hashie/pull/599): Added `Hashie::Extensions::Mash::StrictKeyAccess` to raise a `KeyError` for undefined keys, including in nested Mashes - [@dblock](https://github.com/dblock).
 * [#601](https://github.com/hashie/hashie/pull/601): Added `Hashie::Extensions::KernelCoercion` to coerce core types using stricter `Kernel` methods (e.g. `Kernel#Integer`) instead of lenient conversion methods (e.g. `#to_i`) - [@dblock](https://github.com/dblock).
 * [#605](https://github.com/hashie/hashie/pull/605): Added `Hashie::Extensions::Mash::RequiredKeys`, allowing a Mash to require specific keys to be set while still allowing arbitrary keys - [@dblock](https://github.com/dblock).
+* [#608](https://github.com/hashie/hashie/pull/608): Added `Hashie::Extensions::BlockAccess` for block-style construction of nested hashes, completing [#109](https://github.com/hashie/hashie/pull/109) as a reusable extension - [@ryansouza](https://github.com/ryansouza), [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
