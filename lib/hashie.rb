@@ -12,6 +12,7 @@ module Hashie
   autoload :Utils,              'hashie/utils'
 
   module Extensions
+    autoload :BlockAccess,        'hashie/extensions/block_access'
     autoload :Coercion,           'hashie/extensions/coercion'
     autoload :DeepMerge,          'hashie/extensions/deep_merge'
     autoload :IgnoreUndeclared,   'hashie/extensions/ignore_undeclared'
