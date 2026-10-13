@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#611](https://github.com/hashie/hashie/pull/611): Added callable coercers, including bound methods and dry-types objects, following [#379](https://github.com/hashie/hashie/pull/379) and [#239](https://github.com/hashie/hashie/issues/239) - [@mkcode](https://github.com/mkcode), [@dblock](https://github.com/dblock).
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
