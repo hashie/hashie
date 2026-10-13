@@ -21,6 +21,7 @@
     - [A note on circular coercion](#a-note-on-circular-coercion)
   - [KeyConversion](#keyconversion)
   - [MergeInitializer](#mergeinitializer)
+  - [DeepMergeInitializer](#deepmergeinitializer)
   - [MethodAccess](#methodaccess)
   - [MethodAccessWithOverride](#methodaccesswithoverride)
   - [MethodOverridingInitializer](#methodoverridinginitializer)
@@ -248,6 +249,36 @@ Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 ### MergeInitializer
 
 The MergeInitializer extension simply makes it possible to initialize a Hash subclass with another Hash, giving you a quick short-hand.
+
+### DeepMergeInitializer
+
+The `DeepMergeInitializer` extension initializes a `Hash` subclass from another hash, like `MergeInitializer`, but also converts nested hashes to the same concrete class. This includes hashes inside arrays, even when arrays are nested.
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::DeepMergeInitializer
+  include Hashie::Extensions::IndifferentAccess
+  include Hashie::Extensions::MethodAccess
+end
+
+hash = MyHash.new(foo: { bar: 1 }, children: [{ name: 'Bob' }])
+hash.foo.bar # => 1
+hash['foo']['bar'] # => 1
+hash.children.first.name # => 'Bob'
+hash.foo.class # => MyHash
+```
+
+Use this extension instead of `MergeInitializer` on plain `Hash` subclasses; Mash already provides recursive conversion, and Dash/Trash have their own property-aware initializers. The subclass must accept the same initializer arguments. Conversion happens only during initialization, not on later assignment or merge, and does not change `MethodAccess` itself.
+
+An optional second argument supplies a default value, including `false`; alternatively, a block supplies a default proc. The same default is passed to every converted hash. As with `Hash`, a non-nil default value cannot be combined with a block.
+
+```ruby
+hash = MyHash.new({ foo: {} }, false)
+hash[:missing] # => false
+hash.foo[:missing] # => false
+```
+
+Input hashes and arrays are rebuilt without modifying the source; keys and non-container values are retained. Use acyclic input data.
 
 ### MethodAccess
 

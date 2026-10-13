@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#612](https://github.com/hashie/hashie/pull/612): Added `Hashie::Extensions::DeepMergeInitializer` to recursively initialize Hash subclasses, including hashes inside arrays, following [#382](https://github.com/hashie/hashie/pull/382) - [@sazor](https://github.com/sazor), [@dblock](https://github.com/dblock).
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
