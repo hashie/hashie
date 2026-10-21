@@ -357,8 +357,18 @@ module Hashie
       method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
 
-    def convert_key(key) #:nodoc:
-      key.respond_to?(:to_sym) ? key.to_s : key
+    if Symbol.method_defined?(:name)
+      # Symbol#name returns the symbol's interned frozen string, where
+      # Symbol#to_s allocates a new one on every read and write.
+      def convert_key(key) #:nodoc:
+        return key.name if key.is_a?(Symbol)
+
+        key.respond_to?(:to_sym) ? key.to_s : key
+      end
+    else
+      def convert_key(key) #:nodoc:
+        key.respond_to?(:to_sym) ? key.to_s : key
+      end
     end
 
     def convert_value(val, duping = false) #:nodoc:
