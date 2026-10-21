@@ -670,6 +670,20 @@ describe Hashie::Mash do
     end
   end
 
+  describe '#dup' do
+    it 'allocates no more than building the copy with new', if: RUBY_ENGINE == 'ruby' do
+      mash = Hashie::Mash.new('abc' => 1)
+      allocations = lambda do |&block|
+        before = GC.stat(:total_allocated_objects)
+        block.call
+        GC.stat(:total_allocated_objects) - before
+      end
+      allocations.call { mash.dup } # warm up
+      copy_with_new = allocations.call { Hashie::Mash.new(mash, nil) }
+      expect(allocations.call { mash.dup }).to be <= copy_with_new
+    end
+  end
+
   describe '#fetch' do
     let(:hash) { { one: 1, other: false } }
     let(:mash) { Hashie::Mash.new(hash) }
