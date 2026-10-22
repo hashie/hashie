@@ -12,8 +12,11 @@ module Hashie
   autoload :Utils,              'hashie/utils'
 
   module Extensions
+    autoload :BlockAccess,        'hashie/extensions/block_access'
     autoload :Coercion,           'hashie/extensions/coercion'
+    autoload :KernelCoercion,     'hashie/extensions/kernel_coercion'
     autoload :DeepMerge,          'hashie/extensions/deep_merge'
+    autoload :DeepMergeInitializer, 'hashie/extensions/deep_merge_initializer'
     autoload :IgnoreUndeclared,   'hashie/extensions/ignore_undeclared'
     autoload :IndifferentAccess,  'hashie/extensions/indifferent_access'
     autoload :MergeInitializer,   'hashie/extensions/merge_initializer'
@@ -21,6 +24,7 @@ module Hashie
     autoload :MethodQuery,        'hashie/extensions/method_access'
     autoload :MethodReader,       'hashie/extensions/method_access'
     autoload :MethodWriter,       'hashie/extensions/method_access'
+    autoload :Persistable,        'hashie/extensions/persistable'
     autoload :StringifyKeys,      'hashie/extensions/stringify_keys'
     autoload :SymbolizeKeys,      'hashie/extensions/symbolize_keys'
     autoload :DeepFetch,          'hashie/extensions/deep_fetch'
@@ -50,6 +54,8 @@ module Hashie
       autoload :SafeAssignment, 'hashie/extensions/mash/safe_assignment'
       autoload :SymbolizeKeys, 'hashie/extensions/mash/symbolize_keys'
       autoload :DefineAccessors, 'hashie/extensions/mash/define_accessors'
+      autoload :StrictKeyAccess, 'hashie/extensions/mash/strict_key_access'
+      autoload :RequiredKeys, 'hashie/extensions/mash/required_keys'
     end
 
     module Array

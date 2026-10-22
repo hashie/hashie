@@ -12,9 +12,16 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#611](https://github.com/hashie/hashie/pull/611): Added callable coercers, including bound methods and dry-types objects, following [#379](https://github.com/hashie/hashie/pull/379) and [#239](https://github.com/hashie/hashie/issues/239) - [@mkcode](https://github.com/mkcode), [@dblock](https://github.com/dblock).
+* [#612](https://github.com/hashie/hashie/pull/612): Added `Hashie::Extensions::DeepMergeInitializer` to recursively initialize Hash subclasses, including hashes inside arrays, following [#382](https://github.com/hashie/hashie/pull/382) - [@sazor](https://github.com/sazor), [@dblock](https://github.com/dblock).
 * [#592](https://github.com/hashie/hashie/pull/592): Added support for Ruby 4.0 - [@dblock](https://github.com/dblock).
 * [#595](https://github.com/hashie/hashie/pull/595): Added test coverage reporting with Coveralls - [@dblock](https://github.com/dblock).
 * [#597](https://github.com/hashie/hashie/pull/597): Fixed coverage reporting to Coveralls to work on pull requests via `GITHUB_TOKEN` - [@dblock](https://github.com/dblock).
+* [#599](https://github.com/hashie/hashie/pull/599): Added `Hashie::Extensions::Mash::StrictKeyAccess` to raise a `KeyError` for undefined keys, including in nested Mashes - [@dblock](https://github.com/dblock).
+* [#601](https://github.com/hashie/hashie/pull/601): Added `Hashie::Extensions::KernelCoercion` to coerce core types using stricter `Kernel` methods (e.g. `Kernel#Integer`) instead of lenient conversion methods (e.g. `#to_i`) - [@dblock](https://github.com/dblock).
+* [#605](https://github.com/hashie/hashie/pull/605): Added `Hashie::Extensions::Mash::RequiredKeys`, allowing a Mash to require specific keys to be set while still allowing arbitrary keys - [@dblock](https://github.com/dblock).
+* [#608](https://github.com/hashie/hashie/pull/608): Added `Hashie::Extensions::BlockAccess` for block-style construction of nested hashes, completing [#109](https://github.com/hashie/hashie/pull/109) as a reusable extension - [@ryansouza](https://github.com/ryansouza), [@dblock](https://github.com/dblock).
+* [#610](https://github.com/hashie/hashie/pull/610): Added opt-in `Hashie::Extensions::Persistable` for safe YAML loading and atomic file saves, following [#262](https://github.com/hashie/hashie/pull/262) - [@maxlinc](https://github.com/maxlinc), [@michaelherold](https://github.com/michaelherold), [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
@@ -22,6 +29,7 @@ Any violations of this scheme are considered to be bugs.
 * [#607](https://github.com/hashie/hashie/pull/607): Standardized exception message casing and punctuation and enforced the convention with RuboCop - [@dblock](https://github.com/dblock).
 * [#607](https://github.com/hashie/hashie/pull/607): Upgraded RuboCop to 1.91.0 and consolidated exception-message checks into one CI lint job - [@dblock](https://github.com/dblock).
 * [#590](https://github.com/hashie/hashie/pull/590): Migrated Danger to use `danger-pr-comment` workflow - [@dblock](https://github.com/dblock).
+* [#613](https://github.com/hashie/hashie/pull/613): `Mash` converts symbol keys with `Symbol#name` on Ruby 3.0+, so reads and writes with a symbol key no longer allocate a string - [@sampokuokkanen](https://github.com/sampokuokkanen).
 * Your contribution here.
 
 ### Deprecated
@@ -34,6 +42,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
+* [#609](https://github.com/hashie/hashie/pull/609): Fixed Clash YAML serialization losing stored keys and values, preserving subclasses and parent links - [@dblock](https://github.com/dblock).
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
 * [#606](https://github.com/hashie/hashie/pull/606): Fix `Hashie::Mash#dup` for subclasses including `MethodAccessWithOverride`, preserving default values and procs - [@Boulea7](https://github.com/Boulea7).
 * [#596](https://github.com/hashie/hashie/pull/596): Fixed `Hashie::Extensions::Mash::DefineAccessors` raising an `ArgumentError` when a Mash key literally matched a suffixed accessor name (e.g. `foo=`, `foo?`, `foo!`, `foo_`) - [@dblock](https://github.com/dblock).

@@ -19,9 +19,16 @@
   - [Coercing Core Types](#coercing-core-types)
   - [Coercion Proc](#coercion-proc)
     - [A note on circular coercion](#a-note-on-circular-coercion)
+  - [KernelCoercion](#kernelcoercion)
+  - [Callable Coercion](#callable-coercion)
+  - [Coercion with dry-types](#coercion-with-dry-types)
+  - [Coercion with ActiveModel](#coercion-with-activemodel)
   - [KeyConversion](#keyconversion)
   - [MergeInitializer](#mergeinitializer)
+  - [DeepMergeInitializer](#deepmergeinitializer)
   - [MethodAccess](#methodaccess)
+  - [BlockAccess](#blockaccess)
+  - [Persistable](#persistable)
   - [MethodAccessWithOverride](#methodaccesswithoverride)
   - [MethodOverridingInitializer](#methodoverridinginitializer)
   - [IndifferentAccess](#indifferentaccess)
@@ -37,6 +44,8 @@
   - [SafeAssignment](#safeassignment)
   - [SymbolizeKeys](#symbolizekeys)
   - [DefineAccessors](#defineaccessors)
+  - [StrictKeyAccess](#strictkeyaccess-1)
+  - [RequiredKeys](#requiredkeys)
 - [Dash](#dash)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
@@ -175,7 +184,7 @@ You can also use coerce from the following supertypes with `coerce_value`:
 - Integer
 - Numeric
 
-Hashie does not have built-in support for coercing boolean values, since Ruby does not have a built-in boolean type or standard method for coercing to a boolean. You can coerce to booleans using a custom proc.
+Hashie does not choose a built-in boolean coercion policy. You can coerce to booleans using a custom proc or an external callable coercer.
 
 ### Coercion Proc
 
@@ -232,6 +241,105 @@ class CategoryHash < Hash
 end
 ```
 
+### KernelCoercion
+
+By default, `Hashie::Extensions::Coercion` coerces core types using lenient methods like `#to_i` and `#to_f`, which can silently produce undesirable results:
+
+```ruby
+'abcd'.to_f # => 0.0
+```
+
+The `Hashie::Extensions::KernelCoercion` mixin extends `Coercion` to use the stricter `Kernel` methods (e.g. `Kernel#Integer`, `Kernel#Float`) instead, which raise an error for invalid input rather than silently coercing it:
+
+```ruby
+class StrictHash < Hash
+  include Hashie::Extensions::Coercion
+  extend Hashie::Extensions::KernelCoercion
+
+  coerce_key :count, Integer
+end
+
+hash = StrictHash.new
+hash[:count] = '5'    # => 5
+hash[:count] = 'abcd' # => Hashie::CoercionError: Cannot coerce property :count from String to Integer: invalid value for Integer(): "abcd"
+```
+
+This applies to `Integer`, `Float`, `Complex`, `Rational` and `String`. There is no strict `Kernel` method equivalent for `Symbol`, so `Symbol` coercion always uses the default, lenient `#to_sym` behavior.
+
+### Callable Coercion
+
+Coercion also accepts bound methods and other objects responding to `call`. Existing collection and class/module dispatch takes precedence over `call` for non-Proc targets; other callable objects use `call` even if they also expose `coerce` or `new`. Callable coercers work with `coerce_key`, `coerce_value`, collection members, and Dash's `coerce:` property option.
+
+Hashie does not load or depend on external type libraries. The callable determines conversion and validation; no additional output validation or empty-string normalization is applied. Hashie preserves its existing `nil` bypass for top-level assignments, even when the callable would reject `nil`; nested collection members are passed to their coercers. As with existing coercers, `TypeError`, `ArgumentError`, and `NoMethodError` during assignment become `Hashie::CoercionError`; other exceptions propagate unchanged.
+
+### Coercion with dry-types
+
+Add `dry-types` to your application's Gemfile:
+
+```ruby
+gem 'dry-types'
+```
+
+Pass a [dry-types](https://dry-rb.org/gems/dry-types/main/) object directly as the coercer:
+
+```ruby
+require 'dry-types'
+require 'hashie'
+
+class Settings < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :enabled, coerce: Dry::Types['params.bool']
+end
+
+Settings.new(enabled: 'false').enabled # => false
+Settings.new(enabled: nil).enabled # => nil (Hashie bypasses coercion)
+Settings.new(enabled: 'unknown') # raises Dry::Types::CoercionError
+```
+
+The `params.bool` type converts recognized boolean representations and rejects unknown values and empty strings. Use `Dry::Types['strict.bool']` for validation without conversion: it accepts `true` and `false`, but rejects strings such as `'false'`. Top-level `nil` assignments still bypass coercion.
+
+The bypass applies only to top-level assignments, not collection members:
+
+```ruby
+class Flags < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :values, coerce: Array[Dry::Types['strict.bool']]
+end
+
+Flags.new(values: nil).values # => nil
+Flags.new(values: [true, nil]) # raises Dry::Types::ConstraintError
+```
+
+### Coercion with ActiveModel
+
+Add `activemodel` to your application's Gemfile if it is not already provided by Rails:
+
+```ruby
+gem 'activemodel'
+```
+
+Pass a bound [ActiveModel type](https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html) `cast` method as the coercer:
+
+```ruby
+require 'active_model'
+require 'hashie'
+
+class Settings < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :enabled, coerce: ActiveModel::Type::Boolean.new.method(:cast)
+end
+
+Settings.new(enabled: 'off').enabled # => false
+Settings.new(enabled: nil).enabled # => nil (Hashie bypasses coercion)
+Settings.new(enabled: '').enabled # => nil
+Settings.new(enabled: 'unknown').enabled # => true
+```
+
+ActiveModel's boolean policy differs from dry-types: it treats an empty string as `nil`, recognized false values as false, and most other values as true. Choose the library whose conversion policy matches your application.
+
 ### KeyConversion
 
 The KeyConversion extension gives you the convenience methods of `symbolize_keys` and `stringify_keys` along with their bang counterparts. You can also include just stringify or just symbolize with `Hashie::Extensions::StringifyKeys` or `Hashie::Extensions::SymbolizeKeys`.
@@ -249,6 +357,36 @@ Hashie.stringify_keys hash # => Returns a copy of hash with keys stringified.
 
 The MergeInitializer extension simply makes it possible to initialize a Hash subclass with another Hash, giving you a quick short-hand.
 
+### DeepMergeInitializer
+
+The `DeepMergeInitializer` extension initializes a `Hash` subclass from another hash, like `MergeInitializer`, but also converts nested hashes to the same concrete class. This includes hashes inside arrays, even when arrays are nested.
+
+```ruby
+class MyHash < Hash
+  include Hashie::Extensions::DeepMergeInitializer
+  include Hashie::Extensions::IndifferentAccess
+  include Hashie::Extensions::MethodAccess
+end
+
+hash = MyHash.new(foo: { bar: 1 }, children: [{ name: 'Bob' }])
+hash.foo.bar # => 1
+hash['foo']['bar'] # => 1
+hash.children.first.name # => 'Bob'
+hash.foo.class # => MyHash
+```
+
+Use this extension instead of `MergeInitializer` on plain `Hash` subclasses; Mash already provides recursive conversion, and Dash/Trash have their own property-aware initializers. The subclass must accept the same initializer arguments. Conversion happens only during initialization, not on later assignment or merge, and does not change `MethodAccess` itself.
+
+An optional second argument supplies a default value, including `false`; alternatively, a block supplies a default proc. The same default is passed to every converted hash. As with `Hash`, a non-nil default value cannot be combined with a block.
+
+```ruby
+hash = MyHash.new({ foo: {} }, false)
+hash[:missing] # => false
+hash.foo[:missing] # => false
+```
+
+Input hashes and arrays are rebuilt without modifying the source; keys and non-container values are retained. Use acyclic input data.
+
 ### MethodAccess
 
 The MethodAccess extension allows you to quickly build method-based reading, writing, and querying into your Hash descendant. It can also be included as individual modules, i.e. `Hashie::Extensions::MethodReader`, `Hashie::Extensions::MethodWriter` and `Hashie::Extensions::MethodQuery`.
@@ -263,6 +401,65 @@ h.abc = 'def'
 h.abc  # => 'def'
 h.abc? # => true
 ```
+
+### BlockAccess
+
+`Hashie::Extensions::BlockAccess` adds block-style construction of nested hashes.
+It works with Hash subclasses, including Mash and Dash, without changing reads
+or writes made without a block. For a plain Hash subclass, include `MethodAccess`
+first if you also want method-style readers and writers.
+
+```ruby
+class Configuration < Hash
+  include Hashie::Extensions::MethodAccess
+  include Hashie::Extensions::BlockAccess
+end
+
+config = Configuration.new
+config.author do |author|
+  author.name = 'Michael Bleigh'
+end
+config.author.name #=> 'Michael Bleigh'
+
+config.test(:one) { |one| one.foo = 'bar' }
+config.test(:two) { |two| two.hurp = 'derp' }
+config.test.one.foo  #=> 'bar'
+config.test.two.hurp #=> 'derp'
+```
+
+Include only `BlockAccess` in a Mash subclass; Mash already supplies method access.
+Bracket calls also accept a block: `config['author'] { |author| author.name = 'Bob' }`.
+Each call returns the child, not the block's result. Existing hashes are reused
+without conversion, while missing children are constructed using the containing
+hash's class and stored before they are yielded. Constructors must accept no
+arguments. Existing non-hash values, including `nil` and `false`, raise `TypeError`
+rather than being overwritten.
+
+Dash properties must be declared, and its constructor and property validations
+still apply. Real methods (such as `each`) and Mash's `?`, `!`, `=`, and `_`
+suffixes keep their existing behavior.
+
+### Persistable
+
+`Hashie::Extensions::Persistable` adds opt-in YAML file persistence to classes whose constructors accept a hash. Plain Hash subclasses can include `MergeInitializer` first.
+
+```ruby
+class Configuration < Hashie::Mash
+  include Hashie::Extensions::Persistable
+end
+
+config = Configuration.new(name: 'example')
+config.save('config.yaml')
+loaded = Configuration.load('config.yaml')
+loaded.name = 'updated'
+loaded.save # writes back to config.yaml
+```
+
+`save` returns and remembers the absolute path only after a successful write. It atomically replaces the destination using a temporary file in the same directory, preserves existing file permissions, and creates new files with private permissions. A failed write leaves the remembered path unchanged.
+
+Files contain plain YAML data, not Ruby class tags or persistence metadata. Loading uses `Psych.safe_load`, permits symbols for declared Dash/Trash properties, rejects aliases and non-hash roots, and never evaluates ERB. String and symbol keys retain their types; Dash/Trash files must use keys accepted by their constructors. Nested Hashie classes are not encoded: constructors such as Mash may reconstruct their own nested types, while Dash retains nested plain hashes. Supported values are hashes, arrays, strings, symbols, numbers, booleans, and `nil`; cycles and unsupported objects are rejected.
+
+Including this extension explicitly replaces an inherited class-level `load` on that subclass. Ordinary `Hashie::Mash.load` retains its existing caching and YAML/ERB behavior. No autosave or other serialization formats are provided.
 
 ### MethodAccessWithOverride
 
@@ -809,6 +1006,45 @@ You can also extend the existing mash without defining a class:
 mash = ::Hashie::Mash.new.with_accessors!
 ```
 
+### StrictKeyAccess
+
+This extension can be mixed into a Mash to raise a `KeyError` for any key that is not set, instead of returning `nil`. It's aware of Mash's special suffixed methods (`?`, `!`, `_` and `=`), which all continue to work as normal. Since nested Hashes are converted into instances of the same Mash class, this behavior automatically applies to nested Mashes as well.
+
+```ruby
+class StrictMash < Hashie::Mash
+  include Hashie::Extensions::Mash::StrictKeyAccess
+end
+
+mash = StrictMash.new(name: 'Bob', address: { city: 'Springfield' })
+mash.name           #=> 'Bob'
+mash.age            #=> KeyError: key not found: `age`
+
+mash.name?          #=> true
+mash.age?           #=> false
+
+mash.address.city   #=> 'Springfield'
+mash.address.zip    #=> KeyError: key not found: `zip`
+```
+
+
+### RequiredKeys
+
+This extension can be mixed into a Mash to require specific keys to be set (non-nil) when constructing an instance, while still allowing arbitrary, undeclared keys to be assigned - unlike `Hashie::Dash`, which only allows setting pre-declared properties.
+
+```ruby
+class PersonMash < ::Hashie::Mash
+  include Hashie::Extensions::Mash::RequiredKeys
+
+  required_keys :name, :email
+end
+
+PersonMash.new(email: 'bob@example.com')
+# => ArgumentError: the following keys are required: `name`
+
+person = PersonMash.new(name: 'Bob', email: 'bob@example.com')
+person.age = 42 # arbitrary, undeclared keys are still allowed
+```
+
 ## Dash
 
 Dash is an extended Hash that has a discrete set of defined properties and only those properties may be set on the hash. Additionally, you can set defaults for each property. You can also flag a property as required. Required properties will raise an exception if unset. Another option is message for required properties, which allow you to add custom messages for required property. A property with a proc value will be evaluated lazily upon retrieval.
@@ -1075,6 +1311,8 @@ c = Hashie::Clash.new
 c.where(abc: 'def').where(hgi: 123)
 c # => { where: { abc: 'def', hgi: 123 } }
 ```
+
+Clash supports YAML round-trips, preserving stored data, named subclasses, and parent links used by `_end!`. Only deserialize trusted YAML with Ruby object loading enabled (`Psych.unsafe_load` on modern Psych); ordinary safe loading does not permit arbitrary Ruby classes.
 
 ## Rash
 

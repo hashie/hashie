@@ -46,6 +46,15 @@ module Hashie
       _parent
     end
 
+    def encode_with(coder)
+      coder['hash'] = to_h
+      coder['parent'] = _parent
+    end
+
+    def init_with(coder)
+      initialize(coder['hash'], coder['parent'])
+    end
+
     def id(*args) #:nodoc:
       method_missing(:id, *args)
     end
