@@ -387,7 +387,7 @@ module Hashie
         val = val.dup if duping
         self.class.new(val)
       when ::Array
-        Array.new(val.map { |e| convert_value(e) })
+        Array.new(val.length) { |index| convert_value(val[index]) }
       else
         val
       end

@@ -26,6 +26,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Changed
 
+* [#615](https://github.com/hashie/hashie/pull/615): Reduced allocations in Mash array conversion while preserving `Hashie::Array` behavior, and reused symbol names in indifferent and original-key access when available - [@dblock](https://github.com/dblock).
 * [#607](https://github.com/hashie/hashie/pull/607): Standardized exception message casing and punctuation and enforced the convention with RuboCop - [@dblock](https://github.com/dblock).
 * [#607](https://github.com/hashie/hashie/pull/607): Upgraded RuboCop to 1.91.0 and consolidated exception-message checks into one CI lint job - [@dblock](https://github.com/dblock).
 * [#590](https://github.com/hashie/hashie/pull/590): Migrated Danger to use `danger-pr-comment` workflow - [@dblock](https://github.com/dblock).
