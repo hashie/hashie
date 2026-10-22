@@ -32,9 +32,14 @@ module Hashie
           # Check to see if the specified property has already been
           # defined.
           def property?(name)
-            name = translations[name.to_sym] if translation_for?(name)
-            name = name.to_s
-            !!properties.find { |property| property.to_s == name }
+            targets = if translation_for?(name)
+                        Array(translations.find { |key, _| key.to_s == name.to_s }.last)
+                      else
+                        [name]
+                      end
+            targets.all? do |target|
+              properties.any? { |property| property.to_s == target.to_s }
+            end
           end
 
           def translation_exists?(name)
