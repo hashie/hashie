@@ -670,6 +670,31 @@ describe Hashie::Mash do
     end
   end
 
+  describe 'symbol keys' do
+    it 'address the same entries as their string names' do
+      mash = Hashie::Mash.new
+      mash[:abc] = 1
+      expect(mash.keys).to eq(['abc'])
+      expect(mash['abc']).to eq(1)
+      expect(mash.key?(:abc)).to be(true)
+      expect(mash.fetch(:abc)).to eq(1)
+      expect(mash.values_at(:abc)).to eq([1])
+      expect(mash.delete(:abc)).to eq(1)
+      expect(mash).to be_empty
+    end
+
+    it 'are read without allocating a string', if: RUBY_ENGINE == 'ruby' && Symbol.method_defined?(:name) do
+      mash = Hashie::Mash.new('abc' => 1)
+      allocations = lambda do |&block|
+        before = GC.stat(:total_allocated_objects)
+        block.call
+        GC.stat(:total_allocated_objects) - before
+      end
+      allocations.call { mash[:abc] } # warm up
+      expect(allocations.call { 100.times { mash[:abc] } }).to eq(0)
+    end
+  end
+
   describe '#fetch' do
     let(:hash) { { one: 1, other: false } }
     let(:mash) { Hashie::Mash.new(hash) }
