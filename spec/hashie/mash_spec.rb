@@ -671,7 +671,9 @@ describe Hashie::Mash do
   end
 
   describe '#dup' do
-    it 'allocates no more than building the copy with new', if: RUBY_ENGINE == 'ruby' do
+    # Ruby 2.7's bind_call still allocates temporary method objects.
+    it 'allocates no more than building the copy with new',
+       if: RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.0') do
       mash = Hashie::Mash.new('abc' => 1)
       allocations = lambda do |&block|
         before = GC.stat(:total_allocated_objects)
