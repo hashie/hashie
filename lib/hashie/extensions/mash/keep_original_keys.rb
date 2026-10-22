@@ -42,7 +42,7 @@ module Hashie
         # @return [Object, String, Symbol] the converted key.
         def __convert(key)
           case key
-          when Symbol then key.to_s
+          when Symbol then key.respond_to?(:name) ? key.name : key.to_s
           when String then key.to_sym
           else key
           end

@@ -591,6 +591,32 @@ describe Hashie::Mash do
       expect(converted.a.last).to eq 23
     end
 
+    it 'copies frozen nested arrays while retaining Hashie array behavior' do
+      hash = { b: 12 }.freeze
+      nested = [hash, 23].freeze
+      source = [nested, [].freeze].freeze
+      converted = Hashie::Mash.new(a: source).a
+
+      expect(converted).to be_an_instance_of(Hashie::Array)
+      expect(converted.first).to be_an_instance_of(Hashie::Array)
+      expect(converted.last).to be_an_instance_of(Hashie::Array)
+      expect(converted.dig('0', '0').b).to eq(12)
+      converted.first.first.b = 42
+      converted.first << 24
+      expect(source).to eq([[{ b: 12 }, 23], []])
+    end
+
+    it 'converts array subclasses to independent Hashie arrays on assignment' do
+      source = Class.new(::Array).new([{ b: 12 }.freeze]).freeze
+      converted = Hashie::Mash.new
+      converted.a = source
+
+      expect(converted.a).to be_an_instance_of(Hashie::Array)
+      expect(converted.a.first).to be_a(Hashie::Mash)
+      converted.a << 23
+      expect(source.length).to eq(1)
+    end
+
     it 'converts an existing Hashie::Mash into a Hashie::Mash' do
       initial = Hashie::Mash.new(name: 'randy', address: { state: 'TX' })
       copy = Hashie::Mash.new(initial)

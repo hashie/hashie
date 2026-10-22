@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
+  it 'reuses frozen symbol names when available without changing other key conversions',
+     if: Symbol.method_defined?(:name) do
+    expect(described_class.convert_key(:example)).to equal(:example.name)
+    expect(described_class.convert_key(123)).to eq('123')
+    key = Object.new
+    def key.to_s
+      'custom'
+    end
+    expect(described_class.convert_key(key)).to eq('custom')
+  end
+
   class IndifferentHashWithMergeInitializer < Hash
     include Hashie::Extensions::MergeInitializer
     include Hashie::Extensions::IndifferentAccess

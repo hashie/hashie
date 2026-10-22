@@ -27,6 +27,8 @@ module Hashie
 
       # @api private
       def self.convert_key(key)
+        return key.name if key.is_a?(Symbol) && key.respond_to?(:name)
+
         key.to_s
       end
 
