@@ -191,10 +191,16 @@ module Hashie
     end
 
     alias regular_dup dup
+
+    # Hash's own readers, since a key like "default" can override them.
+    HASH_DEFAULT = ::Hash.instance_method(:default)
+    HASH_DEFAULT_PROC = ::Hash.instance_method(:default_proc)
+    private_constant :HASH_DEFAULT, :HASH_DEFAULT_PROC
+
     # Duplicates the current mash as a new mash.
     def dup
-      default = ::Hash.instance_method(:default).bind(self).call
-      default_proc = ::Hash.instance_method(:default_proc).bind(self).call
+      default = HASH_DEFAULT.bind_call(self)
+      default_proc = HASH_DEFAULT_PROC.bind_call(self)
       self.class.new(self, default, &default_proc)
     end
 

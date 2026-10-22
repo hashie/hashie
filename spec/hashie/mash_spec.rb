@@ -670,6 +670,22 @@ describe Hashie::Mash do
     end
   end
 
+  describe '#dup' do
+    # Ruby 2.7's bind_call still allocates temporary method objects.
+    it 'allocates no more than building the copy with new',
+       if: RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.0') do
+      mash = Hashie::Mash.new('abc' => 1)
+      allocations = lambda do |&block|
+        before = GC.stat(:total_allocated_objects)
+        block.call
+        GC.stat(:total_allocated_objects) - before
+      end
+      allocations.call { mash.dup } # warm up
+      copy_with_new = allocations.call { Hashie::Mash.new(mash, nil) }
+      expect(allocations.call { mash.dup }).to be <= copy_with_new
+    end
+  end
+
   describe 'symbol keys' do
     it 'address the same entries as their string names' do
       mash = Hashie::Mash.new
