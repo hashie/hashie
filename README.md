@@ -23,6 +23,7 @@
   - [KeyConversion](#keyconversion)
   - [MergeInitializer](#mergeinitializer)
   - [MethodAccess](#methodaccess)
+  - [BlockAccess](#blockaccess)
   - [MethodAccessWithOverride](#methodaccesswithoverride)
   - [MethodOverridingInitializer](#methodoverridinginitializer)
   - [IndifferentAccess](#indifferentaccess)
@@ -291,6 +292,43 @@ h.abc = 'def'
 h.abc  # => 'def'
 h.abc? # => true
 ```
+
+### BlockAccess
+
+`Hashie::Extensions::BlockAccess` adds block-style construction of nested hashes.
+It works with Hash subclasses, including Mash and Dash, without changing reads
+or writes made without a block. For a plain Hash subclass, include `MethodAccess`
+first if you also want method-style readers and writers.
+
+```ruby
+class Configuration < Hash
+  include Hashie::Extensions::MethodAccess
+  include Hashie::Extensions::BlockAccess
+end
+
+config = Configuration.new
+config.author do |author|
+  author.name = 'Michael Bleigh'
+end
+config.author.name #=> 'Michael Bleigh'
+
+config.test(:one) { |one| one.foo = 'bar' }
+config.test(:two) { |two| two.hurp = 'derp' }
+config.test.one.foo  #=> 'bar'
+config.test.two.hurp #=> 'derp'
+```
+
+Include only `BlockAccess` in a Mash subclass; Mash already supplies method access.
+Bracket calls also accept a block: `config['author'] { |author| author.name = 'Bob' }`.
+Each call returns the child, not the block's result. Existing hashes are reused
+without conversion, while missing children are constructed using the containing
+hash's class and stored before they are yielded. Constructors must accept no
+arguments. Existing non-hash values, including `nil` and `false`, raise `TypeError`
+rather than being overwritten.
+
+Dash properties must be declared, and its constructor and property validations
+still apply. Real methods (such as `each`) and Mash's `?`, `!`, `=`, and `_`
+suffixes keep their existing behavior.
 
 ### MethodAccessWithOverride
 
