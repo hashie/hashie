@@ -20,6 +20,9 @@
   - [Coercion Proc](#coercion-proc)
     - [A note on circular coercion](#a-note-on-circular-coercion)
   - [KernelCoercion](#kernelcoercion)
+  - [Callable Coercion](#callable-coercion)
+  - [Coercion with dry-types](#coercion-with-dry-types)
+  - [Coercion with ActiveModel](#coercion-with-activemodel)
   - [KeyConversion](#keyconversion)
   - [MergeInitializer](#mergeinitializer)
   - [MethodAccess](#methodaccess)
@@ -180,7 +183,7 @@ You can also use coerce from the following supertypes with `coerce_value`:
 - Integer
 - Numeric
 
-Hashie does not have built-in support for coercing boolean values, since Ruby does not have a built-in boolean type or standard method for coercing to a boolean. You can coerce to booleans using a custom proc.
+Hashie does not choose a built-in boolean coercion policy. You can coerce to booleans using a custom proc or an external callable coercer.
 
 ### Coercion Proc
 
@@ -261,6 +264,80 @@ hash[:count] = 'abcd' # => Hashie::CoercionError: Cannot coerce property :count 
 ```
 
 This applies to `Integer`, `Float`, `Complex`, `Rational` and `String`. There is no strict `Kernel` method equivalent for `Symbol`, so `Symbol` coercion always uses the default, lenient `#to_sym` behavior.
+
+### Callable Coercion
+
+Coercion also accepts bound methods and other objects responding to `call`. Existing collection and class/module dispatch takes precedence over `call` for non-Proc targets; other callable objects use `call` even if they also expose `coerce` or `new`. Callable coercers work with `coerce_key`, `coerce_value`, collection members, and Dash's `coerce:` property option.
+
+Hashie does not load or depend on external type libraries. The callable determines conversion and validation; no additional output validation or empty-string normalization is applied. Hashie preserves its existing `nil` bypass for top-level assignments, even when the callable would reject `nil`; nested collection members are passed to their coercers. As with existing coercers, `TypeError`, `ArgumentError`, and `NoMethodError` during assignment become `Hashie::CoercionError`; other exceptions propagate unchanged.
+
+### Coercion with dry-types
+
+Add `dry-types` to your application's Gemfile:
+
+```ruby
+gem 'dry-types'
+```
+
+Pass a [dry-types](https://dry-rb.org/gems/dry-types/main/) object directly as the coercer:
+
+```ruby
+require 'dry-types'
+require 'hashie'
+
+class Settings < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :enabled, coerce: Dry::Types['params.bool']
+end
+
+Settings.new(enabled: 'false').enabled # => false
+Settings.new(enabled: nil).enabled # => nil (Hashie bypasses coercion)
+Settings.new(enabled: 'unknown') # raises Dry::Types::CoercionError
+```
+
+The `params.bool` type converts recognized boolean representations and rejects unknown values and empty strings. Use `Dry::Types['strict.bool']` for validation without conversion: it accepts `true` and `false`, but rejects strings such as `'false'`. Top-level `nil` assignments still bypass coercion.
+
+The bypass applies only to top-level assignments, not collection members:
+
+```ruby
+class Flags < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :values, coerce: Array[Dry::Types['strict.bool']]
+end
+
+Flags.new(values: nil).values # => nil
+Flags.new(values: [true, nil]) # raises Dry::Types::ConstraintError
+```
+
+### Coercion with ActiveModel
+
+Add `activemodel` to your application's Gemfile if it is not already provided by Rails:
+
+```ruby
+gem 'activemodel'
+```
+
+Pass a bound [ActiveModel type](https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html) `cast` method as the coercer:
+
+```ruby
+require 'active_model'
+require 'hashie'
+
+class Settings < Hashie::Dash
+  include Hashie::Extensions::Dash::Coercion
+
+  property :enabled, coerce: ActiveModel::Type::Boolean.new.method(:cast)
+end
+
+Settings.new(enabled: 'off').enabled # => false
+Settings.new(enabled: nil).enabled # => nil (Hashie bypasses coercion)
+Settings.new(enabled: '').enabled # => nil
+Settings.new(enabled: 'unknown').enabled # => true
+```
+
+ActiveModel's boolean policy differs from dry-types: it treats an empty string as `nil`, recognized false values as false, and most other values as true. Choose the library whose conversion policy matches your application.
 
 ### KeyConversion
 

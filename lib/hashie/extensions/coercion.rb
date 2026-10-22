@@ -8,12 +8,12 @@ module Hashie
   module Extensions
     module Coercion
       CORE_TYPES = {
-        Integer    => :to_i,
-        Float      => :to_f,
-        Complex    => :to_c,
-        Rational   => :to_r,
-        String     => :to_s,
-        Symbol     => :to_sym
+        Integer => :to_i,
+        Float => :to_f,
+        Complex => :to_c,
+        Rational => :to_r,
+        String => :to_s,
+        Symbol => :to_sym
       }.freeze
 
       ABSTRACT_CORE_TYPES =
@@ -74,10 +74,11 @@ module Hashie
         # key is set it will be coerced into the specified class.
         # Coercion will occur by first attempting to call Class.coerce
         # and then by calling Class.new with the value as an argument
-        # in either case.
+        # in either case. Procs and other objects implementing #call
+        # may also be used.
         #
         # @param [Object] key the key or array of keys you would like to be coerced.
-        # @param [Class] into the class into which you want the key(s) coerced.
+        # @param [Class, #call] into the class or callable used to coerce the key(s).
         #
         # @example Coerce a "user" subhash into a User object
         #   class Tweet < Hash
@@ -107,7 +108,7 @@ module Hashie
         # class.
         #
         # @param [Class] from the type you would like coerced.
-        # @param [Class] into the class into which you would like the value coerced.
+        # @param [Class, #call] into the class or callable used to coerce the value.
         # @option options [Boolean] :strict (true) whether use exact source class
         #   only or include ancestors
         #
@@ -160,6 +161,8 @@ module Hashie
 
         def fetch_coercion(type)
           return type if type.is_a? Proc
+          return type if type.respond_to?(:call) && !type.is_a?(Module) && !type.is_a?(Enumerable)
+
           coercion_cache[type]
         end
 
@@ -184,11 +187,13 @@ module Hashie
           elsif type.respond_to? :coerce
             lambda do |value|
               return value if value.is_a? type
+
               type.coerce(value)
             end
           elsif type.respond_to? :new
             lambda do |value|
               return value if value.is_a? type
+
               type.new(value)
             end
           else
@@ -215,7 +220,8 @@ module Hashie
           name = CORE_TYPES[type]
           lambda do |value|
             return value if value.is_a? type
-            return value.send(name)
+
+            value.send(name)
           end
         end
 

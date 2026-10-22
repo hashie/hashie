@@ -128,6 +128,135 @@ describe Hashie::Extensions::Coercion do
 
     it { expect(subject).to be_respond_to(:coerce_key) }
 
+    context 'with callable coercers' do
+      let(:coercer) do
+        Object.new.tap do |object|
+          def object.call(value)
+            value == 'true'
+          end
+        end
+      end
+
+      it 'coerces during initialization and assignment' do
+        subject.coerce_key :foo, coercer
+        hash = subject.new(foo: 'true')
+        expect(hash[:foo]).to be(true)
+        hash[:foo] = 'false'
+        expect(hash[:foo]).to be(false)
+      end
+
+      it 'passes false to the callable' do
+        subject.coerce_key :foo, coercer
+        expect(coercer).to receive(:call).with(false).and_return(false)
+        instance[:foo] = false
+        expect(instance[:foo]).to be(false)
+      end
+
+      it 'does not pass nil to the callable' do
+        subject.coerce_key :foo, coercer
+        expect(coercer).not_to receive(:call)
+        instance[:foo] = nil
+        expect(instance[:foo]).to be_nil
+      end
+
+      it 'accepts bound methods' do
+        subject.coerce_key :foo, coercer.method(:call)
+        instance[:foo] = 'true'
+        expect(instance[:foo]).to be(true)
+      end
+
+      it 'uses call for callable objects with other construction protocols' do
+        allow(coercer).to receive(:coerce).and_raise('unexpected coerce')
+        allow(coercer).to receive(:new).and_raise('unexpected new')
+        subject.coerce_key :foo, coercer
+        instance[:foo] = 'true'
+        expect(instance[:foo]).to be(true)
+      end
+
+      it 'inherits callable rules without changing the parent' do
+        subject.coerce_key :foo, coercer
+        subclass = Class.new(subject)
+        subclass.coerce_key :bar, coercer
+        expect(subclass.new(foo: 'true', bar: 'false')).to eq(foo: true, bar: false)
+        expect(subject.key_coercion(:bar)).to be_nil
+      end
+
+      it 'coerces values by their source type' do
+        subject.coerce_value String, coercer
+        instance[:foo] = 'false'
+        expect(instance[:foo]).to be(false)
+      end
+
+      it 'coerces nested arrays' do
+        subject.coerce_key :foo, Array[Array[coercer]]
+        input = [%w[true false]].map(&:freeze).freeze
+        instance[:foo] = input
+        expect(instance[:foo]).to eq([[true, false]])
+        expect(input).to eq([%w[true false]])
+      end
+
+      it 'coerces sets' do
+        subject.coerce_key :foo, Set[coercer]
+        instance[:foo] = %w[true false]
+        expect(instance[:foo]).to eq(Set[true, false])
+      end
+
+      it 'coerces hash keys and values' do
+        subject.coerce_key :foo, Hash[coercer => coercer]
+        instance[:foo] = { 'true' => 'false' }.freeze
+        expect(instance[:foo]).to eq(true => false)
+      end
+
+      it 'wraps type errors without replacing the stored value' do
+        subject.coerce_key :foo, coercer
+        instance[:foo] = 'true'
+        allow(coercer).to receive(:call).and_raise(TypeError, 'invalid boolean')
+        expect { instance[:foo] = 'invalid' }
+          .to raise_error(Hashie::CoercionError, /invalid boolean/)
+        expect(instance[:foo]).to be(true)
+      end
+
+      it 'wraps argument errors without replacing the stored value' do
+        subject.coerce_key :foo, coercer
+        instance[:foo] = 'true'
+        allow(coercer).to receive(:call).and_raise(ArgumentError, 'invalid boolean')
+        expect { instance[:foo] = 'invalid' }.to raise_error(Hashie::CoercionError, /invalid boolean/)
+        expect(instance[:foo]).to be(true)
+      end
+
+      it 'wraps missing-method errors using the existing coercion error' do
+        subject.coerce_key :foo, coercer
+        allow(coercer).to receive(:call).and_raise(NoMethodError, 'unsupported input')
+        expect { instance[:foo] = 'invalid' }
+          .to raise_error(Hashie::CoercionError, /unsupported input/)
+      end
+
+      it 'preserves class coercion precedence over call' do
+        type = Class.new(Coercable)
+        allow(type).to receive(:call).and_raise('unexpected call')
+        subject.coerce_key :foo, type
+        instance[:foo] = 'bar'
+        expect(instance[:foo]).to be_coerced
+      end
+
+      it 'preserves constructor precedence over call' do
+        type = Class.new(Initializable)
+        allow(type).to receive(:call).and_raise('unexpected call')
+        subject.coerce_key :foo, type
+        instance[:foo] = 'bar'
+        expect(instance[:foo]).to be_a(type)
+        expect(instance[:foo]).not_to be_coerced
+      end
+
+      it 'preserves collection coercion precedence over call' do
+        type = Array[coercer]
+        allow(type).to receive(:call).and_raise('unexpected call')
+        subject.coerce_key :foo, type
+        instance[:foo] = %w[true false]
+        expect(instance[:foo]).to eq([true, false])
+      end
+    end
+
     it 'runs through coerce on a specified key' do
       subject.coerce_key :foo, Coercable
 

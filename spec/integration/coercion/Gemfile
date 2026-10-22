@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'activemodel', '~> 6.1.0'
+gem 'dry-types', '>= 1.7', '< 2'
+gem 'hashie', path: '../../..'
+gem 'rspec', '~> 3'
