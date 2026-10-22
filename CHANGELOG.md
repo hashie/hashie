@@ -38,6 +38,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
+* [#609](https://github.com/hashie/hashie/pull/609): Fixed Clash YAML serialization losing stored keys and values, preserving subclasses and parent links - [@dblock](https://github.com/dblock).
 * [#593](https://github.com/hashie/hashie/pull/593): Fix trash subclasses changing superclass transformers - [@complex857](https://github.com/complex857).
 * [#606](https://github.com/hashie/hashie/pull/606): Fix `Hashie::Mash#dup` for subclasses including `MethodAccessWithOverride`, preserving default values and procs - [@Boulea7](https://github.com/Boulea7).
 * [#596](https://github.com/hashie/hashie/pull/596): Fixed `Hashie::Extensions::Mash::DefineAccessors` raising an `ArgumentError` when a Mash key literally matched a suffixed accessor name (e.g. `foo=`, `foo?`, `foo!`, `foo_`) - [@dblock](https://github.com/dblock).
