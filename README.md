@@ -1289,6 +1289,22 @@ result.id.class         # => Integer (Fixnum if you are using Ruby 2.3 or lower)
 result.created_at.class # => Time
 ```
 
+Multiple properties can share a source key to flatten a nested hash. Combine indifferent access with `IgnoreUndeclared` to accept string or symbol input keys and ignore unrelated fields:
+
+```ruby
+class FlattenedPerson < Hashie::Trash
+  include Hashie::Extensions::IgnoreUndeclared
+  include Hashie::Extensions::IndifferentAccess
+
+  property :first_name, from: :name, transform_with: ->(name) { name['first'] }
+  property :last_name, from: :name, transform_with: ->(name) { name['last'] }
+end
+
+person = FlattenedPerson.new('name' => { 'first' => 'First', 'last' => 'Last' }, 'extra' => true)
+person.first_name # => 'First'
+person.last_name  # => 'Last'
+```
+
 ## Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct complex hashes using method notation chaining. This will allow you to use a more action-oriented approach to building options hashes.
