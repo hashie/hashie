@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#644](https://github.com/hashie/hashie/pull/644): Added `rubocop-spellcheck` to the lint task for Ruby and documentation, with reviewed project vocabulary - [@dblock](https://github.com/dblock).
 * [#636](https://github.com/hashie/hashie/pull/636): Added opt-in per-property lazy loaders for Dash and Trash, with transformations, coercion, defaults, and required-property validation deferred until access, following [#587](https://github.com/hashie/hashie/issues/587) - [@dblock](https://github.com/dblock).
 * [#635](https://github.com/hashie/hashie/pull/635): Parse README Ruby examples with Kramdown and execute them in CI with isolated optional dependencies - [@dblock](https://github.com/dblock).
 * [#623](https://github.com/hashie/hashie/pull/623): Documented Dash validation with ActiveModel and added integration coverage, following [#300](https://github.com/hashie/hashie/issues/300), reported by [@SkyCrawl](https://github.com/SkyCrawl), with the ActiveModel approach suggested by [@martinstreicher](https://github.com/martinstreicher) and endorsed by [@dblock](https://github.com/dblock).

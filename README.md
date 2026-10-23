@@ -39,7 +39,6 @@
   - [DeepGrep](#deepgrep)
   - [DeepLocate](#deeplocate)
   - [StrictKeyAccess](#strictkeyaccess)
-- [Logging](#logging)
 - [Mash](#mash)
   - [Method Conflicts](#method-conflicts)
   - [Nested Hashes](#nested-hashes)
@@ -66,6 +65,7 @@
 - [Clash](#clash)
 - [Rash](#rash)
   - [Auto-Optimized](#auto-optimized)
+- [Logging](#logging)
 - [Mascot](#mascot)
 - [Contributing](#contributing)
 - [Copyright](#copyright)
@@ -817,19 +817,6 @@ rescue KeyError
   # Expected: KeyError, "key not found: :cow"
 end
 ```
-
-## Logging
-
-Hashie logs to `STDOUT` by default. Assign `Hashie.logger` to use your application's logger:
-
-```ruby
-require 'logger'
-require 'hashie'
-
-Hashie.logger = Logger.new($stdout)
-```
-
-In Rails, use `Hashie.logger = Rails.logger`; Hashie's Railtie sets this automatically during application initialization.
 
 ## Mash
 
@@ -1738,6 +1725,19 @@ mapper["Get off my lawn!"]      # => "Forget your lawn, old man!"
 **Note:** The Rash is automatically optimized every 500 accesses (which means that it sorts the list of Regexps, putting the most frequently matched ones at the beginning).
 
 If this value is too low or too high for your needs, you can tune it by setting: `rash.optimize_every = n`.
+
+## Logging
+
+Hashie logs to `STDOUT` by default. Assign `Hashie.logger` to use your application's logger:
+
+```ruby
+require 'logger'
+require 'hashie'
+
+Hashie.logger = Logger.new($stdout)
+```
+
+In Rails, use `Hashie.logger = Rails.logger`; Hashie's Railtie sets this automatically during application initialization.
 
 ## Mascot
 [![eierlegende Wollmilchsau](./mascot.svg)](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau) Meet Hashie's "official" mascot, the [eierlegende Wollmilchsau](https://en.wiktionary.org/wiki/eierlegende_Wollmilchsau)!

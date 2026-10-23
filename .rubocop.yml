@@ -5,6 +5,9 @@ AllCops:
   TargetRubyVersion: 3.0
   Include:
     - '**/*.rb'
+    - '**/*.md'
+    - '**/*.markdown'
+    - '**/*.txt'
     - '**/*.gemspec'
     - '**/Gemfile'
     - Dangerfile
@@ -19,6 +22,7 @@ plugins:
   - rubocop-exception_messages
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-spellcheck
 
 ExceptionMessages/Casing:
   Enabled: true
@@ -61,3 +65,9 @@ Metrics/BlockLength:
 Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always_true
+
+Spellcheck:
+  DictionaryFiles:
+    en:
+      - gem:rubocop-spellcheck/data/en/en.dic
+      - .spellcheck.txt

@@ -6,7 +6,7 @@ module Hashie
     #   Hashie::Extensions::DeepLocate.deep_locate(:name, { user: { name: 'Ada' } }) # => [{ name: 'Ada' }]
     module DeepLocate
       # The module level implementation of #deep_locate, in case you do not want
-      # to include/extend the base datastructure. For further examples please
+      # to include/extend the base data structure. For further examples please
       # see #deep_locate.
       #
       # @example

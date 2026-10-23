@@ -2,7 +2,7 @@
 
 module Hashie
   module Extensions
-    # Searches a deeply nested datastructure for a key path, and returns the associated value.
+    # Searches a deeply nested data structure for a key path, and returns the associated value.
     #
     #  options = { user: { location: { address: '123 Street' } } }
     #  options.deep_fetch :user, :location, :address #=> '123 Street'

@@ -84,7 +84,7 @@ describe Hashie::Mash do
     expect(subject[:a]['b']).to eq 'c'
   end
 
-  it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
+  it 'returns a Hashie::Mash when passed a bang method to a nonexistent key' do
     expect(subject.abc!).to be_a(described_class)
   end
 
@@ -93,7 +93,7 @@ describe Hashie::Mash do
     expect(subject.name!).to eq 'Bob'
   end
 
-  it 'returns a Hashie::Mash when passed an under bang method to a non-existenct key' do
+  it 'returns a Hashie::Mash when passed an under bang method to a nonexistent key' do
     expect(subject.abc_).to be_a(described_class)
   end
 
@@ -425,7 +425,7 @@ describe Hashie::Mash do
     expect(subject.details.address.state).to eq 'TX'
   end
 
-  it 'does not convert the type of Hashie::Mashes childs to Hashie::Mash' do
+  it 'does not convert the type of nested Mash subclasses to Hashie::Mash' do
     class MyMash < Hashie::Mash
     end
 

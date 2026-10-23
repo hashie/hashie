@@ -157,7 +157,7 @@ describe Hashie::Extensions::MethodOverridingWriter do
     expect(subject['awesome']).to eq 'sauce'
   end
 
-  it 'convertes the key using the #convert_key method' do
+  it 'converts the key using the #convert_key method' do
     allow(subject).to receive(:convert_key).and_return(:awesome)
     subject.awesome = 'sauce'
     expect(subject[:awesome]).to eq 'sauce'
