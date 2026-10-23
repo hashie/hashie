@@ -44,6 +44,7 @@
   - [PermissiveRespondTo](#permissiverespondto)
   - [SafeAssignment](#safeassignment)
   - [TransformKeys](#transformkeys)
+  - [UnderscoreKeys](#underscorekeys)
   - [SymbolizeKeys](#symbolizekeys)
   - [DefineAccessors](#defineaccessors)
   - [StrictKeyAccess](#strictkeyaccess-1)
@@ -1008,6 +1009,24 @@ mash.USER.NAME # => 'Ada'
 ```
 
 Normalization applies to reads and writes, including nested Mashes and hashes inside arrays. Subclasses inherit the callable but can replace it without changing their parent or siblings. Without a callable, ordinary Mash key conversion is retained. Configure the transformer before creating instances, keep it free of side effects, and make it idempotent: transforming an already-normalized key must return the same key. When input keys normalize to the same key, the last assignment wins. Transformer exceptions propagate; non-string results raise `TypeError`.
+
+### UnderscoreKeys
+
+Include `Hashie::Extensions::Mash::UnderscoreKeys` to normalize camelCase, PascalCase, and hyphenated keys to lowercase underscore names. It uses `TransformKeys`, including its nested conversion and subclass configuration behavior.
+
+```ruby
+class UnderscoreMash < Hashie::Mash
+  include Hashie::Extensions::Mash::UnderscoreKeys
+end
+
+mash = UnderscoreMash.new('updatedAt' => 'today', 'created-at' => 'tomorrow')
+mash.updatedAt  # => 'today'
+mash.updated_at # => 'today'
+mash.created_at # => 'tomorrow'
+mash.to_h      # => { 'updated_at' => 'today', 'created_at' => 'tomorrow' }
+```
+
+Acronym boundaries are split: `HTTPServer` becomes `http_server`, and `GitHub` becomes `git_hub`. There is no acronym registry or ActiveSupport dependency. Spaces and punctuation other than hyphens are retained, so this does not guarantee method-safe names. Non-text keys are unchanged. If keys normalize to the same name, the last assignment wins. Use `transform_keys_with` to replace this policy with custom normalization.
 
 ### SymbolizeKeys
 
