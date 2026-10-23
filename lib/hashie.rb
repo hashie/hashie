@@ -56,6 +56,7 @@ module Hashie
       autoload :DefineAccessors, 'hashie/extensions/mash/define_accessors'
       autoload :StrictKeyAccess, 'hashie/extensions/mash/strict_key_access'
       autoload :RequiredKeys, 'hashie/extensions/mash/required_keys'
+      autoload :TransformKeys, 'hashie/extensions/mash/transform_keys'
     end
 
     module Array
