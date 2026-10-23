@@ -359,7 +359,7 @@ module Hashie
         object.each_with_object({}) do |(key, value), result|
           result[yield(key)] = _deep_transform_keys_in_object(value, &block)
         end
-      when Array
+      when ::Array
         object.map { |e| _deep_transform_keys_in_object(e, &block) }
       else
         object

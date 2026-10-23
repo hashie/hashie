@@ -39,6 +39,8 @@ Ensure that you can build the project and run tests.
 bundle exec rake
 ```
 
+CI reports code coverage to Coveralls. Coverage excludes `spec/` and `script/`; their tests and executable examples still run.
+
 #### Write Tests
 
 Try to write a test that reproduces the problem you're trying to fix or describes a feature that you want to build. Add to [spec/hashie](spec/hashie).

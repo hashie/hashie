@@ -55,6 +55,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
+* [#640](https://github.com/hashie/hashie/pull/640): Fixed Dash key transformation skipping hashes inside ordinary Ruby arrays - [@dblock](https://github.com/dblock).
 * [#638](https://github.com/hashie/hashie/pull/638): Fixed Dash and Trash properties named `required?` colliding with required-property validation, following [#276](https://github.com/hashie/hashie/issues/276), reported by [@maxlinc](https://github.com/maxlinc) - [@dblock](https://github.com/dblock).
 * [#616](https://github.com/hashie/hashie/pull/616): Fixed indifferent Trash initialization dropping source keys translated into multiple properties when ignoring undeclared fields, following [#518](https://github.com/hashie/hashie/pull/518) and [#514](https://github.com/hashie/hashie/issues/514) - [@jitendra1998](https://github.com/jitendra1998), [@dblock](https://github.com/dblock).
 * [#609](https://github.com/hashie/hashie/pull/609): Fixed Clash YAML serialization losing stored keys and values, preserving subclasses and parent links - [@dblock](https://github.com/dblock).

@@ -11,7 +11,8 @@ if ENV['CI']
                                                                    SimpleCov::Formatter::LcovFormatter
                                                                  ])
   SimpleCov.start do
-    add_filter '/spec/support/'
+    add_filter '/spec/'
+    add_filter '/script/'
   end
 end
 
