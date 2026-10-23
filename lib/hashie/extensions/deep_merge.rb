@@ -34,19 +34,21 @@ module Hashie
 
       private
 
-      def _deep_dup(hash)
-        copy = hash.dup
-
-        copy.each do |key, value|
-          copy[key] =
-            if value.is_a?(::Hash)
-              _deep_dup(value)
-            else
-              Hashie::Utils.safe_dup(value)
-            end
+      def _deep_dup(value, incoming: false)
+        case value
+        when ::Hash
+          copy = incoming ? value.dup.clear : value.dup
+          value.each do |key, child|
+            copy[key] = _deep_dup(child, incoming: incoming)
+          end
+          copy
+        when ::Array
+          value.dup.map! { |child| _deep_dup(child, incoming: incoming) }
+        when ::String
+          value.dup
+        else
+          value
         end
-
-        copy
       end
 
       def _recursive_merge(hash, other_hash, &block)
@@ -59,7 +61,7 @@ module Hashie
             elsif hash.key?(k) && block_given?
               yield(k, hash[k], v)
             else
-              v.respond_to?(:deep_dup) ? v.deep_dup : v
+              _deep_dup(v, incoming: true)
             end
         end
         hash

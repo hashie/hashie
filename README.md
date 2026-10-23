@@ -676,7 +676,11 @@ h2 = MyHash[{ b: 250, c: { c1: 200 } }]
 h1.deep_merge(h2) { |key, this_val, other_val| this_val + other_val } # => { a: 100, b: 450, c: { c1: 300 } }
 ```
 
-New nested hashes preserve incoming hash subclasses using `source.dup.clear`. This retains their instance state and hash defaults without requiring a zero-argument constructor. Existing destination hashes retain their own types. Both `deep_merge` and `deep_merge!` apply this policy at every incoming nested-hash level; neither clears the source. Hashes inside arrays follow the existing array replacement behavior. Custom subclasses must support duplication, clearing, and assignment into the copied hash.
+New nested hashes preserve incoming hash subclasses using `source.dup.clear`. This retains their instance state and hash defaults without requiring a zero-argument constructor. Existing destination hashes retain their own types. Both `deep_merge` and `deep_merge!` apply this policy at every incoming nested-hash level, including hashes inside replacement arrays; neither clears the source. Custom subclasses must support duplication, clearing, and assignment into the copied hash.
+
+`deep_merge` recursively copies hash and array values and duplicates strings on both sides. Other values retain their identity: it never calls `dup` or `deep_dup` on arbitrary leaf objects, such as ActiveRecord models. Arrays replace rather than merge existing values, but their elements are copied recursively. Hash keys retain the usual Ruby Hash semantics. Inputs must be acyclic; shared references are not preserved between independently copied containers.
+
+`deep_merge!` preserves existing receiver values unless replaced or recursively merged, and applies the same copying policy to incoming values. Conflict blocks receive the original incoming value and, for `deep_merge`, the copied receiver value; their return values are stored unchanged. Mutable leaf objects other than strings remain shared, so this is not a fully independent object-graph clone.
 
 ### DeepFetch
 

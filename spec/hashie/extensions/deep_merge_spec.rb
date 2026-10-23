@@ -14,6 +14,85 @@ describe Hashie::Extensions::DeepMerge do
     expect(hash.deep_merge('abc')).to eq(hash)
   end
 
+  context 'value copying' do
+    let(:value) do
+      Class.new do
+        def dup
+          raise 'unexpected dup'
+        end
+
+        def deep_dup
+          raise 'unexpected deep_dup'
+        end
+      end.new
+    end
+
+    it 'retains arbitrary objects on both sides, including inside arrays and hashes' do
+      receiver = subject[existing: [value, { nested: value }]]
+      incoming = { added: [value, { nested: value }] }
+      result = receiver.deep_merge(incoming)
+
+      expect(result[:existing].first).to equal(value)
+      expect(result[:existing].last[:nested]).to equal(value)
+      expect(result[:added].first).to equal(value)
+      expect(result[:added].last[:nested]).to equal(value)
+    end
+
+    it 'recursively copies receiver containers and strings without changing their types' do
+      array_class = Class.new(Array)
+      original = subject[items: array_class[[{ text: +'original' }]]]
+      result = original.deep_merge({})
+
+      expect(result).to be_instance_of(DeepMergeHash)
+      expect(result[:items]).to be_instance_of(array_class)
+      result[:items].first.first[:text].replace('changed')
+      result[:items].first << :extra
+      result[:items] << :extra
+      expect(original[:items]).to eq([[{ text: 'original' }]])
+    end
+
+    %i[deep_merge deep_merge!].each do |operation|
+      it "copies incoming containers and strings with #{operation}, retaining rich objects" do
+        incoming = { items: [[{ text: +'original', object: value }]], text: +'original' }
+        receiver = subject.new
+        result = receiver.public_send(operation, incoming)
+
+        expect(result[:items].first.first[:object]).to equal(value)
+        result[:items].first.first[:text].replace('changed')
+        result[:items].first << :extra
+        result[:items] << :extra
+        result[:text].replace('changed')
+        expect(incoming).to eq(items: [[{ text: 'original', object: value }]], text: 'original')
+        expect(receiver).to be_empty if operation == :deep_merge
+        expect(result).to equal(receiver) if operation == :deep_merge!
+      end
+    end
+
+    it 'leaves existing values in place for deep_merge!' do
+      array = [value, +'original']
+      receiver = subject[items: array]
+
+      expect(receiver.deep_merge!({})[:items]).to equal(array)
+      expect(receiver[:items].first).to equal(value)
+    end
+
+    it 'passes original incoming conflict values and retains block result identity' do
+      old = [value]
+      incoming = [value]
+      replacement = [value]
+      receiver = subject[items: old]
+      result = receiver.deep_merge(items: incoming) do |key, left, right|
+        expect(key).to eq(:items)
+        expect(left).to eq(old)
+        expect(left).not_to equal(old)
+        expect(right).to equal(incoming)
+        replacement
+      end
+
+      expect(result[:items]).to equal(replacement)
+    end
+  end
+
   context 'without &block' do
     let(:receiver) do
       subject.new.merge(
@@ -163,6 +242,19 @@ describe Hashie::Extensions::DeepMerge do
       it 'keeps keyword-style input hashes as merge data rather than introducing options' do
         result = preserving_class.new.deep_merge(keep_hash_subclasses: { value: 1 })
         expect(result).to eq(keep_hash_subclasses: { value: 1 })
+      end
+
+      it 'preserves incoming hash types inside nested replacement arrays' do
+        %i[deep_merge deep_merge!].each do |operation|
+          result = preserving_class.new.public_send(operation, items: [[addition[:branch]]])
+          branch = result[:items].first.first
+          expect(branch).to be_instance_of(source_class)
+          expect(branch.label).to eq('branch')
+          expect(branch[:child]).to be_instance_of(source_class)
+          expect(branch[:child]).not_to equal(addition[:branch][:child])
+        end
+        result = DeepMergeHash.new.deep_merge(items: [addition[:branch]])
+        expect(result[:items].first).to be_instance_of(source_class)
       end
     end
 

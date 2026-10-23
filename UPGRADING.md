@@ -21,7 +21,15 @@ Do not use `YamlErbParser` with untrusted input: it executes Ruby before parsing
 
 This is a breaking change for code relying on incoming subclasses becoming plain hashes. Preserved subclasses may enforce custom assignment rules or expose different lookup behavior. Applications requiring plain nested hashes must explicitly normalize their input hash values before merging.
 
-The policy applies at every incoming nested-hash level for both `deep_merge` and `deep_merge!`. Array and non-Hash value-copying behavior is unchanged. Custom hashes must support duplication, clearing, and assignment into the copied hash.
+The policy applies at every incoming nested-hash level for both `deep_merge` and `deep_merge!`, including hashes inside arrays. Custom hashes must support duplication, clearing, and assignment into the copied hash.
+
+#### DeepMerge value copying
+
+`Hashie::Extensions::DeepMerge` now recursively copies hashes, arrays, and strings on both sides, but retains other values by identity. It no longer calls `Hashie::Utils.safe_dup` on receiver leaves or `deep_dup` on incoming leaves. ActiveRecord models therefore retain their identity, primary keys, and persistence state without a custom policy.
+
+This is a breaking change: arbitrary receiver objects are now shared, incoming strings are now copied even without ActiveSupport, and receiver arrays are copied recursively rather than shallowly. Arrays still replace conflicting values rather than merging element by element. Incoming hashes inside arrays preserve their subclasses, and existing receiver container subclasses retain their types.
+
+If your application needs independent copies of domain objects, explicitly copy them according to their own APIs before merging. Do not assume `deep_merge` clones an entire object graph. `deep_merge!` keeps existing receiver values in place, and conflict-block results are still stored unchanged. Cyclic inputs are not supported.
 
 ### Upgrading to 5.2.0
 
