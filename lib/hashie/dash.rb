@@ -29,18 +29,18 @@ module Hashie
     # Defines a property on the Dash. Options are
     # as follows:
     #
-    # * <tt>:default</tt> - Specify a default value for this property,
+    # * `:default` - Specify a default value for this property,
     #   to be returned before a value is set on the property in a new
     #   Dash.
     #
-    # * <tt>:required</tt> - Specify the value as required for this
+    # * `:required` - Specify the value as required for this
     #   property, to raise an error if a value is unset in a new or
     #   existing Dash. If a Proc is provided, it will be run in the
     #   context of the Dash instance. If a Symbol is provided, the
     #   property it represents must not be nil. The property is only
     #   required if the value is truthy.
     #
-    # * <tt>:message</tt> - Specify custom error message for required property
+    # * `:message` - Specify custom error message for required property
     #
     # @example Declare a required property and a default
     #   klass = Class.new(Hashie::Dash) do

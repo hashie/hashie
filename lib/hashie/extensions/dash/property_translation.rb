@@ -75,7 +75,7 @@ module Hashie
 
           # Ensures that any inheriting classes maintain their translations.
           #
-          # * <tt>:default</tt> - The class inheriting the translations.
+          # * `:default` - The class inheriting the translations.
           #
           # @example Copy translation settings to subclasses
           #   parent = Class.new(Hashie::Dash) do
@@ -106,11 +106,11 @@ module Hashie
 
           # Defines a property on the Trash. Options are as follows:
           #
-          # * <tt>:default</tt> - Specify a default value for this property, to be
+          # * `:default` - Specify a default value for this property, to be
           # returned before a value is set on the property in a new Dash.
-          # * <tt>:from</tt> - Specify the original key name that will be write only.
-          # * <tt>:with</tt> - Specify a lambda to be used to convert value.
-          # * <tt>:transform_with</tt> - Specify a lambda to be used to convert value
+          # * `:from` - Specify the original key name that will be write only.
+          # * `:with` - Specify a lambda to be used to convert value.
+          # * `:transform_with` - Specify a lambda to be used to convert value
           # without using the :from option. It transform the property itself.
           #
           # @example Declare a translated and converted property

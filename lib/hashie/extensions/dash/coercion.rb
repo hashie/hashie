@@ -35,9 +35,9 @@ module Hashie
         #   klass.new(count: '3').count # => 3
         module ClassMethods
           # Defines a property on the Dash. Options are the standard
-          # <tt>Hashie::Dash#property</tt> options plus:
+          # `Hashie::Dash#property` options plus:
           #
-          # * <tt>:coerce</tt> - The class into which you want the property coerced.
+          # * `:coerce` - The class into which you want the property coerced.
           #
           # @example
           #   klass = Class.new(Hashie::Dash) do
