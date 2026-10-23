@@ -938,6 +938,12 @@ mash = Mash.load(Pathname 'settings/twitter.yml')
 mash.development.api_key # => 'localhost'
 ```
 
+By default, `Mash.load` evaluates ERB before parsing YAML. Only use it with trusted files; `YAML.safe_load` does not make ERB evaluation safe. To parse untrusted or plain YAML without evaluating ERB, explicitly select `YamlParser`:
+
+```ruby
+mash = Mash.load('data.yml', parser: Hashie::Extensions::Parsers::YamlParser)
+```
+
 You can access a Mash from another class:
 
 ```ruby
@@ -946,7 +952,7 @@ Twitter.extend mash.to_module # NOTE: if you want another name than settings, ca
 Twitter.settings.api_key # => 'abcd'
 ```
 
-You can use another parser (by default: [YamlErbParser](lib/hashie/extensions/parsers/yaml_erb_parser.rb)):
+You can use another parser (by default: [YamlErbParser](lib/hashie/extensions/parsers/yaml_erb_parser.rb), which evaluates ERB):
 
 ```
 #/etc/data/user.csv
@@ -962,7 +968,7 @@ mash = Mash.load('data/user.csv', parser: MyCustomCsvParser)
 mash[1] #=> { name: 'John', lastname: 'Doe' }
 ```
 
-The `Mash#load` method calls `YAML.safe_load(path, [], [], true)`.
+Both built-in YAML parsers use `YAML.safe_load`.
 
 Specify `permitted_symbols`, `permitted_classes` and `aliases` options as needed.
 

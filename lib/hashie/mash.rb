@@ -66,6 +66,8 @@ module Hashie
 
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
 
+    # Loads a YAML file. The default parser evaluates ERB templates, so only
+    # use this default with trusted files. Pass YamlParser to avoid ERB.
     def self.load(path, options = {})
       @_mashes ||= new
 

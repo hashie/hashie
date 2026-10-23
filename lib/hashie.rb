@@ -39,6 +39,7 @@ module Hashie
     autoload :RubyVersionCheck,   'hashie/extensions/ruby_version_check'
 
     module Parsers
+      autoload :YamlParser, 'hashie/extensions/parsers/yaml_parser'
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
     end
 

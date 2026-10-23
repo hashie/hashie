@@ -938,6 +938,11 @@ describe Hashie::Mash do
       end
     end
 
+    it 'continues to evaluate ERB with the default parser' do
+      mash = Hashie::Mash.load('spec/fixtures/yaml_with_erb.yml')
+      expect(mash.value).to eq('evaluated')
+    end
+
     context 'when the file has symbols' do
       it 'can override the value of permitted_classes' do
         mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', permitted_classes: [Symbol])

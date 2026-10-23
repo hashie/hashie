@@ -3,6 +3,10 @@ Upgrading Hashie
 
 ### Upgrading to 5.2.0
 
+#### Safer YAML loading
+
+`Hashie::Mash.load` continues to use `YamlErbParser` by default for compatibility, and that parser evaluates ERB. Do not load untrusted input with the default parser. To opt in to YAML parsing without ERB evaluation, pass `parser: Hashie::Extensions::Parsers::YamlParser`.
+
 #### Ruby version
 
 Hashie now requires Ruby 3.0 or newer. Ruby 2.7 is no longer supported; upgrade Ruby before updating Hashie.
