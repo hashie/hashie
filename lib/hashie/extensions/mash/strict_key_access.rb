@@ -20,7 +20,7 @@ module Hashie
       #
       #   mash = StrictMash.new(name: 'Bob')
       #   mash.name  #=> 'Bob'
-      #   mash.age   #=> KeyError: key not found: `age`
+      #   expect { mash.age }.to raise_error(KeyError, 'key not found: `age`')
       #
       #   mash.name? #=> true
       #   mash.age?  #=> false

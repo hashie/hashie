@@ -17,6 +17,7 @@ group :development do
   gem 'rubocop-exception_messages' if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
+  gem 'yard', '~> 0.9.45', require: false
 end
 
 group :test do

@@ -27,14 +27,22 @@ module Hashie
     #   user[:birthday] = nil
     #   user.birthday # => nil
     #
-    #   user.not_declared # => NoMethodError
+    #   expect { user.not_declared }.to raise_error(NoMethodError)
     module MethodReader
+      # @example Advertise readers for existing keys
+      #   hash = { name: 'Ada' }.extend(Hashie::Extensions::MethodReader)
+      #   hash.respond_to?(:name) # => true
+      #   hash.respond_to?(:missing) # => false
       def respond_to_missing?(name, include_private = false)
         return true if key?(name.to_s) || key?(name.to_sym)
 
         super
       end
 
+      # @example Read both symbol and string keys
+      #   hash = { name: 'Ada', 'age' => 42 }.extend(Hashie::Extensions::MethodReader)
+      #   hash.name # => 'Ada'
+      #   hash.age # => 42
       def method_missing(name, *args)
         if key?(name)
           self[name]
@@ -70,18 +78,29 @@ module Hashie
     #   h['awesome'] # => 'sauce'
     #
     module MethodWriter
+      # @example Advertise arbitrary writers
+      #   hash = {}.extend(Hashie::Extensions::MethodWriter)
+      #   hash.respond_to?(:name=) # => true
+      #   hash.respond_to?(:name) # => false
       def respond_to_missing?(name, include_private = false)
         return true if name.to_s =~ /=$/
 
         super
       end
 
+      # @example Write string keys with assignment syntax
+      #   hash = {}.extend(Hashie::Extensions::MethodWriter)
+      #   hash.name = 'Ada'
+      #   hash # => { 'name' => 'Ada' }
       def method_missing(name, *args)
         return self[convert_key(Regexp.last_match[1])] = args.first if args.size == 1 && name.to_s =~ /(.*)=$/
 
         super
       end
 
+      # @example Normalize a writer key
+      #   hash = {}.extend(Hashie::Extensions::MethodWriter)
+      #   hash.convert_key(:name) # => 'name'
       def convert_key(key)
         key.to_s
       end
@@ -106,8 +125,12 @@ module Hashie
     #   h.abc? # => true
     #   h['def'] = nil
     #   h.def? # => false
-    #   h.hji? # => NoMethodError
+    #   expect { h.hji? }.to raise_error(NoMethodError)
     module MethodQuery
+      # @example Advertise queries for present keys, including nil values
+      #   hash = { name: nil }.extend(Hashie::Extensions::MethodQuery)
+      #   hash.respond_to?(:name?) # => true
+      #   hash.respond_to?(:missing?) # => false
       def respond_to_missing?(name, include_private = false)
         if query_method?(name) && indifferent_key?(key_from_query_method(name))
           true
@@ -116,6 +139,10 @@ module Hashie
         end
       end
 
+      # @example Query the truthiness of values
+      #   hash = { active: true, disabled: nil }.extend(Hashie::Extensions::MethodQuery)
+      #   hash.active? # => true
+      #   hash.disabled? # => false
       def method_missing(name, *args)
         return super unless args.empty?
 
@@ -150,6 +177,12 @@ module Hashie
     # A macro module that will automatically include MethodReader,
     # MethodWriter, and MethodQuery, giving you the ability to read,
     # write, and query keys in a hash using method call shortcuts.
+    #
+    # @example Read, write, and query through methods
+    #   hash = {}.extend(Module.new { include Hashie::Extensions::MethodAccess })
+    #   hash.name = 'Ada'
+    #   hash.name # => 'Ada'
+    #   hash.name? # => true
     module MethodAccess
       def self.included(base)
         [MethodReader, MethodWriter, MethodQuery].each do |mod|
@@ -160,6 +193,16 @@ module Hashie
 
     # A module shared between MethodOverridingWriter and MethodOverridingInitializer
     # to contained shared logic. This module aids in redefining existing hash methods.
+    #
+    # @example Preserve an overridden method under a double-underscore alias
+    #   require 'hashie/extensions/method_access'
+    #   class OverridingHash < Hash
+    #     include Hashie::Extensions::MethodOverridingWriter
+    #   end
+    #   hash = OverridingHash.new
+    #   hash.size = 'large'
+    #   hash.size # => 'large'
+    #   hash.__size # => 1
     module RedefineMethod
       protected
 
@@ -187,6 +230,7 @@ module Hashie
     # appropriately as true.
     #
     # @example
+    #   require 'hashie/extensions/method_access'
     #   class MyHash < Hash
     #     include Hashie::Extensions::MethodOverridingWriter
     #   end
@@ -196,15 +240,25 @@ module Hashie
     #   h['awesome'] # => 'sauce'
     #   h.zip = 'a-dee-doo-dah'
     #   h.zip # => 'a-dee-doo-dah'
-    #   h.__zip # => [[['awesome', 'sauce'], ['zip', 'a-dee-doo-dah']]]
+    #   h.__zip # => [[['awesome', 'sauce']], [['zip', 'a-dee-doo-dah']]]
     #
     module MethodOverridingWriter
       include RedefineMethod
 
+      # @example Normalize keys before storage
+      #   require 'hashie/extensions/method_access'
+      #   hash = {}.extend(Hashie::Extensions::MethodOverridingWriter)
+      #   hash.convert_key(:size) # => 'size'
       def convert_key(key)
         key.to_s
       end
 
+      # @example Override a Hash method and keep access to the original
+      #   require 'hashie/extensions/method_access'
+      #   hash = {}.extend(Hashie::Extensions::MethodOverridingWriter)
+      #   hash.size = 'large'
+      #   hash.size # => 'large'
+      #   hash.__size # => 1
       def method_missing(name, *args)
         if args.size == 1 && name.to_s =~ /(.*)=$/
           key = Regexp.last_match[1]
@@ -215,6 +269,10 @@ module Hashie
         super
       end
 
+      # @example Advertise method-overriding writers
+      #   require 'hashie/extensions/method_access'
+      #   hash = {}.extend(Hashie::Extensions::MethodOverridingWriter)
+      #   hash.respond_to?(:size=) # => true
       def respond_to_missing?(name, include_private = false)
         return true if name.to_s.end_with?('=')
 
@@ -234,6 +292,16 @@ module Hashie
     # shortcuts that can override object methods. Any overridden
     # object method is automatically aliased with two leading
     # underscores.
+    #
+    # @example Initialize, read, write, and query a conflicting key
+    #   class OverridingHash < Hash
+    #     include Hashie::Extensions::MethodAccessWithOverride
+    #   end
+    #   hash = OverridingHash.new(size: 'large')
+    #   hash.size # => 'large'
+    #   hash.size = 'small'
+    #   hash.size? # => true
+    #   hash.__size # => 1
     module MethodAccessWithOverride
       def self.included(base)
         [MethodReader, MethodOverridingWriter,
@@ -248,6 +316,7 @@ module Hashie
     # methods are aliased with two leading underscores.
     #
     # @example
+    #   require 'hashie/extensions/method_access'
     #   class MyHash < Hash
     #     include Hashie::Extensions::MethodOverridingInitializer
     #   end
@@ -258,6 +327,15 @@ module Hashie
     module MethodOverridingInitializer
       include RedefineMethod
 
+      # @example Initialize conflicting keys and preserve a default
+      #   require 'hashie/extensions/method_access'
+      #   class OverridingHash < Hash
+      #     include Hashie::Extensions::MethodOverridingInitializer
+      #   end
+      #   hash = OverridingHash.new({ size: 'large' }, false)
+      #   hash.size # => 'large'
+      #   hash.__size # => 1
+      #   hash[:missing] # => false
       def initialize(hash = {}, default = nil, &block)
         raise ArgumentError, 'cannot specify both a default value and a default block' if default && block
 

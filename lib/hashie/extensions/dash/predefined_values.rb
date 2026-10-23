@@ -5,7 +5,7 @@ module Hashie
     module Dash
       # Extends a Dash with the ability to accept only predefined values on a property.
       #
-      # == Example
+      # @example
       #
       #   class PersonHash < Hashie::Dash
       #     include Hashie::Extensions::Dash::PredefinedValues
@@ -14,23 +14,59 @@ module Hashie
       #     property :age, values: (0..150) # a Range
       #   end
       #
-      #   person = PersonHash.new(gender: :male, age: -1)
-      #   # => ArgumentError: The value '-1' is not accepted for property 'age'
+      #   expect { PersonHash.new(gender: :male, age: -1) }
+      #     .to raise_error(ArgumentError, /value `-1` is not allowed for `age`/)
+      #   PersonHash.new(gender: :male, age: 42).age # => 42
       module PredefinedValues
+        # @example Install predefined-value declarations
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PredefinedValues
+        #   end
+        #   klass.values_for_properties # => {}
         def self.included(base)
           base.instance_variable_set(:@values_for_properties, {})
           base.extend(ClassMethods)
           base.include(InstanceMethods)
         end
 
+        # Declares and inherits permitted values for properties.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PredefinedValues
+        #     property :status, values: [:open, :closed]
+        #   end
+        #   klass.values_for_properties # => {status: [:open, :closed]}
         module ClassMethods
+          # @example Read the constraints for declared properties
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PredefinedValues
+          #     property :age, values: (0..150)
+          #   end
+          #   klass.values_for_properties # => {age: (0..150)}
           attr_reader :values_for_properties
 
+          # @example Inherit constraints without sharing the constraint map
+          #   parent = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PredefinedValues
+          #     property :status, values: [:open, :closed]
+          #   end
+          #   child = Class.new(parent) { property :age, values: (0..150) }
+          #   child.values_for_properties.keys # => [:status, :age]
+          #   parent.values_for_properties.keys # => [:status]
           def inherited(klass)
             super
             klass.instance_variable_set(:@values_for_properties, values_for_properties.dup)
           end
 
+          # @example Accept an array or range of values
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PredefinedValues
+          #     property :status, values: [:open, :closed]
+          #     property :age, values: (0..150)
+          #   end
+          #   klass.new(status: :open, age: 42).age # => 42
+          #   expect { klass.new(status: :unknown) }.to raise_error(ArgumentError, /status/)
           def property(property_name, options = {})
             super
 
@@ -57,7 +93,22 @@ module Hashie
           end
         end
 
+        # Validates property constraints when constructing a Dash.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PredefinedValues
+        #     property :status, values: [:open, :closed]
+        #   end
+        #   klass.new(status: :open).status # => :open
         module InstanceMethods
+          # @example Reject values outside the declared set
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PredefinedValues
+          #     property :status, values: [:open, :closed]
+          #   end
+          #   expect { klass.new(status: :unknown) }.to raise_error(ArgumentError, /status/)
+          #   klass.new.status # => nil
           def initialize(*)
             super
 

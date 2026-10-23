@@ -22,9 +22,23 @@ module Hashie
   #       If this is too low or too high, you can tune it by
   #       setting: `rash.optimize_every = n`
   #
+  # @example Match strings and numbers using pattern keys
+  #   rash = Hashie::Rash.new(/^Mr\./ => 'Hello sir!', (1..5) => 'small')
+  #   rash['Mr. Austin'] # => 'Hello sir!'
+  #   rash[3] # => 'small'
   class Rash
+    # @example Configure the interval between regular-expression optimizations
+    #   rash = Hashie::Rash.new
+    #   rash.optimize_every # => 500
+    #   rash.optimize_every = 10
+    #   rash.optimize_every # => 10
     attr_accessor :optimize_every
 
+    # @example Initialize literal, regular-expression, and range keys
+    #   rash = Hashie::Rash.new('home' => 'index', /^user/ => 'profile', (1..5) => 'small')
+    #   rash['home'] # => 'index'
+    #   rash['user/1'] # => 'profile'
+    #   rash[2] # => 'small'
     def initialize(initial = {})
       @hash           = {}
       @regexes        = []
@@ -36,6 +50,11 @@ module Hashie
       update(initial)
     end
 
+    # @example Add patterns and overwrite existing literal keys
+    #   rash = Hashie::Rash.new('home' => 'old')
+    #   rash.update('home' => 'index', /^user/ => 'profile')
+    #   rash['home'] # => 'index'
+    #   rash['user/1'] # => 'profile'
     def update(other)
       other.each do |key, value|
         self[key] = value
@@ -44,6 +63,10 @@ module Hashie
       self
     end
 
+    # @example Assign a pattern with a callable value
+    #   rash = Hashie::Rash.new
+    #   rash[/^hello (.+)$/] = ->(match) { "Hello, #{match[1]}!" }
+    #   rash['hello Ada'] # => 'Hello, Ada!'
     def []=(key, value)
       case key
       when Regexp
@@ -58,6 +81,11 @@ module Hashie
     #
     # Return the first thing that matches the key.
     #
+    # @example Prefer literal matches and return nil for missing keys
+    #   rash = Hashie::Rash.new(/^user/ => 'profile', 'user/admin' => 'admin')
+    #   rash['user/admin'] # => 'admin'
+    #   rash['user/1'] # => 'profile'
+    #   rash['missing'] # => nil
     def [](key)
       all(key).first
     end
@@ -65,6 +93,20 @@ module Hashie
     #
     # Raise (or yield) unless something matches the key.
     #
+    # @example Fetch a match or compute a fallback
+    #   rash = Hashie::Rash.new(/^user/ => 'profile')
+    #   rash.fetch('user/1') # => 'profile'
+    #   rash.fetch('missing', 'fallback') # => 'fallback'
+    #   rash.fetch('missing') { |key| "unknown: #{key}" } # => 'unknown: missing'
+    #
+    # @example Raise for an unmatched key without a fallback
+    #   error = begin
+    #     Hashie::Rash.new.fetch('missing')
+    #   rescue KeyError => exception
+    #     exception
+    #   end
+    #   error.class # => KeyError
+    #   error.message # => 'key not found: `"missing"`'
     def fetch(*args)
       raise ArgumentError, "expected 1-2 arguments, got `#{args.length}`" \
         unless (1..2).cover?(args.length)
@@ -87,6 +129,12 @@ module Hashie
     #
     # Return everything that matches the query.
     #
+    # @example Enumerate all matching patterns
+    #   rash = Hashie::Rash.new(/^user/ => 'profile', /admin$/ => 'admin')
+    #   rash.all('user/admin').to_a # => ['profile', 'admin']
+    #   values = []
+    #   rash.all('user/admin') { |value| values << value }
+    #   values # => ['profile', 'admin']
     def all(query)
       return to_enum(:all, query) unless block_given?
 
@@ -127,10 +175,18 @@ module Hashie
       end
     end
 
+    # @example Delegate ordinary hash operations to stored entries
+    #   rash = Hashie::Rash.new('home' => 'index')
+    #   rash.keys # => ['home']
+    #   rash.size # => 1
     def method_missing(...)
       @hash.send(...) || super
     end
 
+    # @example Advertise delegated hash operations
+    #   rash = Hashie::Rash.new
+    #   rash.respond_to?(:keys) # => true
+    #   rash.respond_to?(:unknown_operation) # => false
     def respond_to_missing?(method_name, _include_private = false)
       @hash.respond_to?(method_name)
     end

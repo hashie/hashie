@@ -3,6 +3,10 @@
 require 'hashie/logger'
 require 'hashie/version'
 
+# Hash-like objects and extensions for structured data.
+#
+# @example Access nested data using a Mash
+#   Hashie::Mash.new(author: { name: 'Ada' }).author.name # => 'Ada'
 module Hashie
   autoload :Clash,              'hashie/clash'
   autoload :Dash,               'hashie/dash'
@@ -13,6 +17,11 @@ module Hashie
   autoload :Array,              'hashie/array'
   autoload :Utils,              'hashie/utils'
 
+  # Optional capabilities for Hash-like objects.
+  #
+  # @example Add recursive string keys to an ordinary hash
+  #   hash = { count: 2 }.extend(Hashie::Extensions::StringifyKeys)
+  #   hash.stringify_keys # => { 'count' => 2 }
   module Extensions
     autoload :BlockAccess,        'hashie/extensions/block_access'
     autoload :Coercion,           'hashie/extensions/coercion'
@@ -40,11 +49,23 @@ module Hashie
     autoload :RubyVersion,        'hashie/extensions/ruby_version'
     autoload :RubyVersionCheck,   'hashie/extensions/ruby_version_check'
 
+    # Parsers used when loading persisted hashes.
+    #
+    # @example Select the YAML parser without ERB evaluation
+    #   Hashie::Extensions::Parsers::YamlParser.respond_to?(:perform) # => true
     module Parsers
       autoload :YamlParser, 'hashie/extensions/parsers/yaml_parser'
       autoload :YamlErbParser, 'hashie/extensions/parsers/yaml_erb_parser'
     end
 
+    # Optional extensions for defined-property hashes.
+    #
+    # @example Allow string access to declared symbol properties
+    #   klass = Class.new(Hashie::Dash) do
+    #     include Hashie::Extensions::Dash::IndifferentAccess
+    #     property :name
+    #   end
+    #   klass.new(name: 'Ada')['name'] # => 'Ada'
     module Dash
       autoload :IndifferentAccess, 'hashie/extensions/dash/indifferent_access'
       autoload :PropertyTranslation, 'hashie/extensions/dash/property_translation'
@@ -52,6 +73,12 @@ module Hashie
       autoload :PredefinedValues, 'hashie/extensions/dash/predefined_values'
     end
 
+    # Optional extensions for method-accessible hashes.
+    #
+    # @example Generate accessors for existing keys
+    #   mash = Hashie::Mash.new(name: 'Ada')
+    #   mash.extend(Hashie::Extensions::Mash::DefineAccessors)
+    #   mash.name # => 'Ada'
     module Mash
       autoload :KeepOriginalKeys, 'hashie/extensions/mash/keep_original_keys'
       autoload :PermissiveRespondTo, 'hashie/extensions/mash/permissive_respond_to'
@@ -64,6 +91,11 @@ module Hashie
       autoload :UnderscoreKeys, 'hashie/extensions/mash/underscore_keys'
     end
 
+    # Optional extensions for arrays.
+    #
+    # @example Add Hashie-style inspection to an array
+    #   klass = Class.new(::Array) { include Hashie::Extensions::Array::PrettyInspect }
+    #   klass.new([1, 2]).inspect # => "#<#{klass} [1, 2]>"
     module Array
       autoload :PrettyInspect, 'hashie/extensions/array/pretty_inspect'
     end

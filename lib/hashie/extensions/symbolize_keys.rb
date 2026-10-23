@@ -2,24 +2,69 @@
 
 module Hashie
   module Extensions
+    # Extends a Hash with the ability to convert its keys to symbols.
+    # Keys that do not respond to #to_sym are preserved.
+    #
+    # @example Extend a pre-existing Hash object
+    #   hash = { 'test' => 'value' }
+    #   hash.extend(Hashie::Extensions::SymbolizeKeys)
+    #   hash.symbolize_keys!
+    #   hash # => { test: 'value' }
+    #
+    # @example Create a Hash class with this capability
+    #   class SymbolizableHash < Hash
+    #     include Hashie::Extensions::SymbolizeKeys
+    #   end
+    #
+    #   hash = SymbolizableHash.new
+    #   hash['test'] = 'value'
+    #   hash.symbolize_keys!
+    #   hash # => { test: 'value' }
+    #
+    # @example Use the module function to symbolize keys in a hash
+    #   hash = { 'test' => 'value', 123 => 'number' }
+    #   Hashie::Extensions::SymbolizeKeys.symbolize_keys!(hash)
+    #   hash # => { test: 'value', 123 => 'number' }
     module SymbolizeKeys
-      # Convert all keys in the hash to symbols.
+      # Converts keys in the hash and nested hashes and arrays to symbols.
       #
-      # @example
-      #   test = {'abc' => 'def'}
+      # @example Convert keys in place
+      #   test = { 'abc' => [{ 'def' => 'value' }] }
+      #   test.extend(Hashie::Extensions::SymbolizeKeys)
       #   test.symbolize_keys!
-      #   test # => {:abc => 'def'}
+      #   test # => { abc: [{ def: 'value' }] }
+      #
+      # @api public
+      # @return [Hash] the receiver with its keys symbolized where possible
       def symbolize_keys!
         SymbolizeKeys.symbolize_keys!(self)
         self
       end
 
-      # Return a new hash with all keys converted
-      # to symbols.
+      # Returns a shallow copy with keys recursively converted to symbols.
+      # Nested hashes and arrays are shared with the original and are modified.
+      #
+      # @example Copy a flat hash without modifying the original
+      #   test = { 'abc' => 'def' }
+      #   test.extend(Hashie::Extensions::SymbolizeKeys)
+      #   test.symbolize_keys # => { abc: 'def' }
+      #   test # => { 'abc' => 'def' }
+      #
+      # @example Nested values are shared, not deep copied
+      #   test = { 'abc' => [{ 'def' => 'value' }] }
+      #   test.extend(Hashie::Extensions::SymbolizeKeys)
+      #   test.symbolize_keys # => { abc: [{ def: 'value' }] }
+      #   test # => { 'abc' => [{ def: 'value' }] }
+      #
+      # @api public
+      # @return [Hash] a shallow copy with symbolized keys
       def symbolize_keys
         SymbolizeKeys.symbolize_keys(self)
       end
 
+      # @example Add recursive conversion functions to an object
+      #   converter = Object.new.extend(Hashie::Extensions::SymbolizeKeys::ClassMethods)
+      #   converter.symbolize_keys('user' => { 'name' => 'Ada' }) # => { user: { name: 'Ada' } }
       module ClassMethods
         # Symbolize all keys recursively within nested
         # hashes and arrays.
@@ -35,13 +80,16 @@ module Hashie
           end
         end
 
-        # Convert all keys in hash to symbols.
+        # Converts keys in a hash recursively to symbols, in place.
         #
+        # @example Convert keys through Hashie's module function
+        #   test = { 'abc' => 'def' }
+        #   Hashie.symbolize_keys!(test)
+        #   test # => { abc: 'def' }
+        #
+        # @api public
         # @param [Hash] hash
-        # @example
-        #   test = {'abc' => 'def'}
-        #   Hashie.symbolize_keys! test
-        #   test # => {:abc => 'def'}
+        # @return [Hash] the passed hash with symbolized keys
         def symbolize_keys!(hash)
           hash.extend(Hashie::Extensions::SymbolizeKeys) unless hash.respond_to?(:symbolize_keys!)
           hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
@@ -51,9 +99,17 @@ module Hashie
           hash
         end
 
-        # Return a copy of hash with all keys converted
-        # to symbols.
-        # @param [::Hash] hash
+        # Returns a shallow copy of a hash with recursively symbolized keys.
+        # Nested hashes and arrays are shared with the original and are modified.
+        #
+        # @example Copy keys through Hashie's module function
+        #   test = { 'abc' => 'def' }
+        #   Hashie.symbolize_keys(test) # => { abc: 'def' }
+        #   test # => { 'abc' => 'def' }
+        #
+        # @api public
+        # @param [Hash] hash
+        # @return [Hash] a shallow copy with symbolized keys
         def symbolize_keys(hash)
           copy = hash.dup
           copy.extend(Hashie::Extensions::SymbolizeKeys) unless copy.respond_to?(:symbolize_keys!)

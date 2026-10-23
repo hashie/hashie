@@ -16,6 +16,11 @@ module Hashie
       #   mash['string_key'] == mash[:string_key]  #=> true
       #   mash[:symbol_key] == mash['symbol_key']  #=> true
       module KeepOriginalKeys
+        # @example Preserve symbol keys when including the extension
+        #   klass = Class.new(Hashie::Mash) do
+        #     include Hashie::Extensions::Mash::KeepOriginalKeys
+        #   end
+        #   klass.new(name: 'Ada').keys # => [:name]
         def self.included(descendant)
           error_message = "`#{descendant}` is not a kind of Hashie::Mash"
           raise ArgumentError, error_message unless descendant <= Hashie::Mash

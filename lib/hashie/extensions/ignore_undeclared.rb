@@ -12,7 +12,7 @@ module Hashie
     # that property was provided at initialization.
     #
     # @example
-    #   class Person < Trash
+    #   class Person < Hashie::Trash
     #     include Hashie::Extensions::IgnoreUndeclared
     #
     #     property :first_name
@@ -29,8 +29,16 @@ module Hashie
     #
     #   p.first_name # => 'Freddy'
     #   p.last_name  # => 'Nostrils'
-    #   p.email      # => NoMethodError
+    #   expect { p.email }.to raise_error(NoMethodError)
     module IgnoreUndeclared
+      # @example Initialize only declared attributes
+      #   class Person < Hashie::Trash
+      #     include Hashie::Extensions::IgnoreUndeclared
+      #     property :name
+      #   end
+      #   person = Person.new
+      #   person.initialize_attributes(name: 'Ada', email: 'ada@example.com')
+      #   person.to_h # => { name: 'Ada' }
       def initialize_attributes(attributes)
         return unless attributes
 
@@ -40,6 +48,14 @@ module Hashie
         super(attributes.select { |attr, _| klass.property?(attr) || translations.include?(attr) })
       end
 
+      # @example Check the declaration rather than the current value
+      #   class Person < Hashie::Trash
+      #     include Hashie::Extensions::IgnoreUndeclared
+      #     property :name
+      #   end
+      #   person = Person.new
+      #   person.property_exists?(:name) # => true
+      #   person.property_exists?(:email) # => false
       def property_exists?(property)
         self.class.property?(property)
       end

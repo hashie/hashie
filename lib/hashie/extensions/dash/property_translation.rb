@@ -9,12 +9,12 @@ module Hashie
       # application -- such as a Java API -- where the keys are named
       # differently from Ruby conventions.
       #
-      # == Example from inconsistent APIs
+      # @example Translate inconsistent API keys
       #
       #   class PersonHash < Hashie::Dash
       #     include Hashie::Extensions::Dash::PropertyTranslation
       #
-      #     property :first_name, from :firstName
+      #     property :first_name, from: :firstName
       #     property :last_name, from: :lastName
       #     property :first_name, from: :f_name
       #     property :last_name, from: :l_name
@@ -27,7 +27,8 @@ module Hashie
       # You can also use a lambda to translate the value. This is particularly
       # useful when you want to ensure the type of data you're wrapping.
       #
-      # == Example using translation lambdas
+      # @example Transform input values
+      #   require 'time'
       #
       #   class DataModelHash < Hashie::Dash
       #     include Hashie::Extensions::Dash::PropertyTranslation
@@ -37,9 +38,15 @@ module Hashie
       #   end
       #
       #   model = DataModelHash.new(id: '123', created: '2014-04-25 22:35:28')
-      #   model.id.class          #=> Integer (Fixnum if you are using Ruby 2.3 or lower)
+      #   model.id.class          #=> Integer
       #   model.created_at.class  #=> Time
       module PropertyTranslation
+        # @example Install translation declarations on a Dash
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PropertyTranslation
+        #     property :name, from: :fullName
+        #   end
+        #   klass.new(fullName: 'Ada').name # => 'Ada'
         def self.included(base)
           base.instance_variable_set(:@transforms, {})
           base.instance_variable_set(:@translations_hash, ::Hash.new { |hash, key| hash[key] = {} })
@@ -48,18 +55,49 @@ module Hashie
           base.extend Hashie::Extensions::DeepMerge
         end
 
+        # Defines input translations and value transformations.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PropertyTranslation
+        #     property :name, from: :fullName
+        #   end
+        #   klass.translations # => {fullName: :name}
         module ClassMethods
+          # @example Inspect value transformers
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :age, transform_with: ->(value) { value.to_i }
+          #   end
+          #   klass.transforms[:age].call('37') # => 37
+          #   klass.translations_hash # => {}
           attr_reader :transforms, :translations_hash
 
           # Ensures that any inheriting classes maintain their translations.
           #
           # * <tt>:default</tt> - The class inheriting the translations.
+          #
+          # @example Copy translation settings to subclasses
+          #   parent = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   child = Class.new(parent) { property :age, from: :years }
+          #   child.new(fullName: 'Ada', years: 37).age # => 37
+          #   parent.translations # => {fullName: :name}
           def inherited(klass)
             super
             klass.instance_variable_set(:@transforms, transforms.dup)
             klass.instance_variable_set(:@translations_hash, _deep_dup(translations_hash))
           end
 
+          # @example List translated input keys alongside untranslated properties
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #     property :age
+          #   end
+          #   klass.permitted_input_keys # => [:fullName, :age]
           def permitted_input_keys
             @permitted_input_keys ||=
               properties
@@ -74,6 +112,13 @@ module Hashie
           # * <tt>:with</tt> - Specify a lambda to be used to convert value.
           # * <tt>:transform_with</tt> - Specify a lambda to be used to convert value
           # without using the :from option. It transform the property itself.
+          #
+          # @example Declare a translated and converted property
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :age, from: :years, with: ->(value) { value.to_i }
+          #   end
+          #   klass.new(years: '37').age # => 37
           def property(property_name, options = {})
             super
 
@@ -90,18 +135,44 @@ module Hashie
             end
           end
 
+          # @example Apply a declared transformer directly
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :age, transform_with: ->(value) { value.to_i }
+          #   end
+          #   klass.transformed_property(:age, '37') # => 37
           def transformed_property(property_name, value)
             transforms[property_name].call(value)
           end
 
+          # @example Check for a property transformer
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :age, transform_with: ->(value) { value.to_i }
+          #   end
+          #   klass.transformation_exists?(:age) # => true
+          #   klass.transformation_exists?(:name) # => false
           def transformation_exists?(name)
             transforms.key? name
           end
 
+          # @example Check for a translated source key
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   klass.translation_exists?(:fullName) # => true
+          #   klass.translation_exists?(:name) # => false
           def translation_exists?(name)
             translations_hash.key? name
           end
 
+          # @example Map source keys to destination properties
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   klass.translations # => {fullName: :name}
           def translations
             @translations ||= {}.tap do |translations|
               translations_hash.each do |(property_name, property_translations)|
@@ -115,6 +186,12 @@ module Hashie
             end
           end
 
+          # @example Map destination properties back to source keys
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   klass.inverse_translations # => {name: :fullName}
           def inverse_translations
             @inverse_translations ||= {}.tap do |translations|
               translations_hash.each do |(property_name, property_translations)|
@@ -149,10 +226,27 @@ module Hashie
           end
         end
 
+        # Applies translations and transformations during assignment.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Dash) do
+        #     include Hashie::Extensions::Dash::PropertyTranslation
+        #     property :name, from: :fullName
+        #   end
+        #   klass.new(fullName: 'Ada').name # => 'Ada'
         module InstanceMethods
           # Sets a value on the Dash in a Hash-like way.
           #
           # Note: Only works on pre-existing properties.
+          #
+          # @example Assign through a translated source key
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   dash = klass.new
+          #   dash[:fullName] = 'Ada'
+          #   dash.name # => 'Ada'
           def []=(property, value)
             if self.class.translation_exists? property
               send("#{property}=", value)
@@ -170,6 +264,17 @@ module Hashie
           end
 
           # Deletes any keys that have a translation
+          #
+          # @example Initialize translated input without modifying the source
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name, from: :fullName
+          #   end
+          #   attributes = {fullName: 'Ada'}
+          #   dash = klass.new
+          #   dash.initialize_attributes(attributes)
+          #   dash.name # => 'Ada'
+          #   attributes # => {fullName: 'Ada'}
           def initialize_attributes(attributes)
             return unless attributes
 
@@ -183,6 +288,15 @@ module Hashie
           end
 
           # Raises an NoMethodError if the property doesn't exist
+          #
+          # @example Check for an existing property
+          #   klass = Class.new(Hashie::Dash) do
+          #     include Hashie::Extensions::Dash::PropertyTranslation
+          #     property :name
+          #   end
+          #   dash = klass.new
+          #   dash.property_exists?(:name) # => true
+          #   expect { dash.property_exists?(:missing) }.to raise_error(NoMethodError)
           def property_exists?(property)
             fail_no_property_error!(property) unless self.class.property?(property)
             true

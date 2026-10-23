@@ -2,6 +2,30 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  documentation-examples:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        ruby-version: '4.0'
+    - name: Test documentation example runner
+      run: bundle exec rspec spec/documentation_examples_spec.rb
+    - name: Validate documentation examples
+      run: bundle exec rake docs:examples
+    - name: Set up Ruby for Rails documentation examples
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+    - name: Validate Rails documentation examples with real dependencies
+      env:
+        BUNDLE_GEMFILE: spec/integration/rails_7/Gemfile
+      run: |
+        bundle install --jobs 4 --retry 3
+        bundle exec ruby -Ilib script/test_documentation_examples.rb --rails
+
   integration-test:
     runs-on: ubuntu-latest
     steps:

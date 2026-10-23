@@ -3,13 +3,23 @@
 module Hashie
   module Extensions
     # Searches nested hashes and arrays for matching string and symbol keys or values.
+    #
+    # @example Search a nested collection
+    #   hash = { people: [{ name: 'Ada' }] }.extend(Hashie::Extensions::DeepGrep)
+    #   hash.deep_grep(/Ada/) # => [{ name: 'Ada' }]
     module DeepGrep
+      # @example Match a key and return its subtree
+      #   hash = { user: { name: 'Ada' } }.extend(Hashie::Extensions::DeepGrep)
+      #   hash.deep_grep(/user/) # => [{ user: { name: 'Ada' } }]
       def deep_grep(pattern)
         DeepGrep.deep_grep(pattern, self)
       end
 
       # Returns key/subtree pairs for matching keys, containing hashes for matching
       # scalar values, and matching scalar array elements. Matching keys stop descent.
+      #
+      # @example Search an array without extending it
+      #   Hashie::Extensions::DeepGrep.deep_grep(/Ada/, ['Ada', 'Grace']) # => ['Ada']
       def self.deep_grep(pattern, object)
         raise ArgumentError, 'pattern must be a Regexp' unless pattern.is_a?(Regexp)
 

@@ -12,6 +12,13 @@ RSpec::Core::RakeTask.new do |spec|
   spec.exclude_pattern = 'spec/integration/**/*_spec.rb'
 end
 
+namespace :docs do
+  desc 'Validate executable YARD examples and public API documentation coverage'
+  task :examples do
+    ruby '-Ilib', 'script/test_documentation_examples.rb'
+  end
+end
+
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')

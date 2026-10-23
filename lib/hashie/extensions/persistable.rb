@@ -6,12 +6,54 @@ require 'tempfile'
 module Hashie
   module Extensions
     # Opt-in YAML file persistence for classes initialized from a hash.
+    #
+    # @example Save and reload a hash subclass
+    #   class Settings < Hash
+    #     include Hashie::Extensions::MergeInitializer
+    #     include Hashie::Extensions::Persistable
+    #   end
+    #   file = Tempfile.new(['hashie-example', '.yaml'], Dir.pwd)
+    #   begin
+    #     settings = Settings.new('theme' => 'dark')
+    #     settings.save(file.path)
+    #     Settings.load(file.path)['theme'] # => 'dark'
+    #   ensure
+    #     file.close!
+    #   end
     module Persistable
       def self.included(base)
         base.extend ClassMethods
       end
 
+      # @example Add a YAML loader by including Persistable
+      #   class Settings < Hash
+      #     include Hashie::Extensions::MergeInitializer
+      #     include Hashie::Extensions::Persistable
+      #   end
+      #   file = Tempfile.new(['hashie-example', '.yaml'], Dir.pwd)
+      #   begin
+      #     file.write("---\ntheme: dark\n")
+      #     file.flush
+      #     Settings.load(file.path) # => { 'theme' => 'dark' }
+      #   ensure
+      #     file.close!
+      #   end
       module ClassMethods
+        # @example Load safe YAML data and remember its path
+        #   class Settings < Hash
+        #     include Hashie::Extensions::MergeInitializer
+        #     include Hashie::Extensions::Persistable
+        #   end
+        #   file = Tempfile.new(['hashie-example', '.yaml'], Dir.pwd)
+        #   begin
+        #     file.write("---\ntheme: dark\n")
+        #     file.flush
+        #     settings = Settings.load(file.path)
+        #     settings['theme'] # => 'dark'
+        #     settings.persistable_path # => File.expand_path(file.path)
+        #   ensure
+        #     file.close!
+        #   end
         def load(path)
           path = File.expand_path(File.path(path))
           data = Psych.safe_load(File.read(path), permitted_classes: [Symbol], aliases: false)
@@ -21,8 +63,37 @@ module Hashie
         end
       end
 
+      # @example Remember the last successful save location
+      #   class Settings < Hash
+      #     include Hashie::Extensions::MergeInitializer
+      #     include Hashie::Extensions::Persistable
+      #   end
+      #   file = Tempfile.new(['hashie-example', '.yaml'], Dir.pwd)
+      #   begin
+      #     settings = Settings.new('theme' => 'dark')
+      #     settings.persistable_path # => nil
+      #     settings.save(file.path)
+      #     settings.persistable_path # => File.expand_path(file.path)
+      #   ensure
+      #     file.close!
+      #   end
       attr_reader :persistable_path
 
+      # @example Save again without repeating the path
+      #   class Settings < Hash
+      #     include Hashie::Extensions::MergeInitializer
+      #     include Hashie::Extensions::Persistable
+      #   end
+      #   file = Tempfile.new(['hashie-example', '.yaml'], Dir.pwd)
+      #   begin
+      #     settings = Settings.new('theme' => 'dark')
+      #     settings.save(file.path)
+      #     settings['theme'] = 'light'
+      #     settings.save
+      #     Settings.load(file.path)['theme'] # => 'light'
+      #   ensure
+      #     file.close!
+      #   end
       def save(path = persistable_path)
         raise ArgumentError, 'a persistence path is required' if path.nil?
 

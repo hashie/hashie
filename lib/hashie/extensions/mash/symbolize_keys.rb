@@ -11,7 +11,7 @@ module Hashie
       #   end
       #
       #   response = LazyResponse.new("id" => 123, "name" => "Rey").to_h
-      #   #=> {id: 123, name: "Rey"}
+      #   response # => {id: 123, name: "Rey"}
       #
       # @api public
       module SymbolizeKeys

@@ -7,16 +7,26 @@ module Hashie
   # A Hashie Hash is simply a Hash that has convenience
   # functions baked in such as stringify_keys that may
   # not be available in all libraries.
+  #
+  # @example Convert keys using the built-in extensions
+  #   Hashie::Hash[name: 'Ada'].stringify_keys # => { 'name' => 'Ada' }
   class Hash < ::Hash
     include Hashie::Extensions::PrettyInspect
     include Hashie::Extensions::StringifyKeys
 
     # Convert this hash into a Mash
+    #
+    # @example Read converted data through methods
+    #   Hashie::Hash[name: 'Ada'].to_mash.name # => 'Ada'
     def to_mash
       ::Hashie::Mash.new(self)
     end
 
     # Converts a mash back to a hash (with stringified or symbolized keys)
+    #
+    # @example Recursively convert nested hashes and their keys
+    #   hash = Hashie::Hash[user: Hashie::Hash[name: 'Ada']]
+    #   hash.to_hash(stringify_keys: true) # => { 'user' => { 'name' => 'Ada' } }
     def to_hash(options = {})
       out = {}
       each_key do |k|
@@ -41,6 +51,10 @@ module Hashie
     end
 
     # The C generator for the json gem doesn't like mashies
+    #
+    # @example Serialize as an ordinary JSON object
+    #   require 'json'
+    #   JSON.parse(Hashie::Hash[name: 'Ada'].to_json) # => { 'name' => 'Ada' }
     def to_json(*args)
       to_hash.to_json(*args)
     end
