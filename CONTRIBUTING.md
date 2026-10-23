@@ -55,6 +55,8 @@ Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop), run `
 
 RuboCop scans Ruby sources, specs, benchmarks, gem manifests, and Ruby scripts across the project, with new cops enabled by default. Ruby files must use `# frozen_string_literal: true`. Existing offenses that cannot be safely corrected are tracked in `.rubocop_todo.yml`.
 
+On MRI Ruby 3.2 or newer, RuboCop also checks spelling in Ruby comments and strings and documentation with `rubocop-spellcheck`. The plugin's native dependencies are not installed on JRuby. Fix typos in the source and add intentional project terms to `.spellcheck.txt`, one word per line. Run only the spelling check with `bundle exec rubocop --only Spellcheck/Spelling`. If regenerating vocabulary with `--auto-gen-config`, review the word list so genuine typos are not accepted and preserve the existing `.rubocop_todo.yml` baseline.
+
 Make sure that `bundle exec rake` completes without errors.
 
 #### Write Documentation

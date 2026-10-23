@@ -434,7 +434,7 @@ describe DashTest do
       expect(described_class).not_to be_required('first_name')
     end
 
-    it 'doesnt include property from subclass' do
+    it 'does not include properties from a subclass' do
       expect(described_class).not_to be_property(:last_name)
     end
 
@@ -616,7 +616,7 @@ describe Hashie::Dash do
     expect(@bottom.properties).to include(:echo)
   end
 
-  it 'doesnt inherit properties upwards' do
+  it 'does not inherit properties upwards' do
     @middle.property :echo
     expect(@top.properties).not_to include(:echo)
     expect(@bottom.properties).to include(:echo)
