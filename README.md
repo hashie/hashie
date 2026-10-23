@@ -646,6 +646,27 @@ end
 
 The hook must return an empty, writable hash. Duplicating and clearing the source preserves its class, instance state, and hash defaults without requiring a zero-argument constructor. It runs for each incoming nested hash that cannot merge into an existing destination hash, including at deeper levels. Existing destination hashes retain their own types. Both `deep_merge` and `deep_merge!` use the hook; neither clears the source. Hashes inside arrays follow the existing array replacement behavior and are not processed by this hook. Custom subclasses with special duplication, clearing, or assignment behavior may need their own factory implementation.
 
+Non-Hash values have a separate protected hook, `deep_merge_copy_value(value)`. By default, `deep_merge` copies receiver values with `Hashie::Utils.safe_dup`; both merge methods copy incoming values with `deep_dup` when available, otherwise retaining them. This can reset an ActiveRecord model's id because its `dup` creates a new record. To retain model identity explicitly in a Rails application:
+
+```ruby
+module RetainRecords
+  protected
+
+  def deep_merge_copy_value(value)
+    value.is_a?(ActiveRecord::Base) ? value : super
+  end
+end
+
+class ContextHash < Hash
+  include Hashie::Extensions::DeepMerge
+  include RetainRecords
+end
+```
+
+Define the policy on the hash class so it is also available on the duplicated receiver. The hook runs for non-Hash values at every nested hash level, both while cloning the receiver for `deep_merge` and while merging incoming values for either method. `deep_merge!` leaves untouched receiver values alone. Calling `super` invokes the supplied default copy block, preserving the different receiver and incoming defaults. Returning the value shares it intentionally; subsequent mutations to retained objects are shared too. Cloned receiver hashes and new incoming hash containers remain independent of their sources. Conflict-block results are used as returned, without this hook.
+
+Arrays are passed to this hook as whole replacement values, not traversed element by element. The default receiver copy is shallow; incoming arrays use their own `deep_dup` if available. Thus the example does not retain records inside incoming arrays under ActiveSupport; override array copying as well if needed. Hashie's runtime does not depend on Rails.
+
 ### DeepFetch
 
 This extension can be mixed in to provide for safe and concise retrieval of deeply nested hash values. In the event that the requested key does not exist a block can be provided and its value will be returned.

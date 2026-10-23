@@ -23,6 +23,14 @@ module Hashie
       end
       protected :deep_merge_new_hash
 
+      # Override to copy or retain a non-Hash value. Calling super uses the
+      # supplied default: safe_dup for receiver values, deep_dup (if available)
+      # for incoming values. Arrays are passed whole, not traversed here.
+      def deep_merge_copy_value(_value)
+        yield
+      end
+      protected :deep_merge_copy_value
+
       private
 
       def _deep_dup(hash)
@@ -33,7 +41,7 @@ module Hashie
             if value.is_a?(::Hash)
               _deep_dup(value)
             else
-              Hashie::Utils.safe_dup(value)
+              deep_merge_copy_value(value) { Hashie::Utils.safe_dup(value) }
             end
         end
 
@@ -50,7 +58,7 @@ module Hashie
             elsif hash.key?(k) && block_given?
               yield(k, hash[k], v)
             else
-              v.respond_to?(:deep_dup) ? v.deep_dup : v
+              deep_merge_copy_value(v) { v.respond_to?(:deep_dup) ? v.deep_dup : v }
             end
         end
         hash

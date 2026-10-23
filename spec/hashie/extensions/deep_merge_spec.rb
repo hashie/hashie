@@ -12,6 +12,96 @@ describe Hashie::Extensions::DeepMerge do
     expect(hash.deep_merge('abc')).to eq(hash)
   end
 
+  context 'value copying' do
+    let(:value_class) do
+      Class.new(Struct.new(:name)) do
+        def deep_dup
+          self.class.new("deep #{name}")
+        end
+      end
+    end
+    let(:value) { value_class.new('original') }
+    let(:preserving_policy) do
+      Module.new do
+        protected
+
+        def deep_merge_copy_value(value)
+          value.is_a?(Struct) ? value : super
+        end
+      end
+    end
+    let(:preserving_class) do
+      policy = preserving_policy
+      Class.new(DeepMergeHash) { include policy }
+    end
+
+    it 'keeps receiver dup and incoming deep_dup behavior distinct by default' do
+      receiver = subject[existing: { value: value }]
+      incoming = { added: { value: value } }
+      result = receiver.deep_merge(incoming)
+
+      expect(result[:existing][:value]).not_to equal(value)
+      expect(result[:existing][:value].name).to eq('original')
+      expect(result[:added][:value].name).to eq('deep original')
+      result[:existing][:value].name.replace('changed')
+      expect(value.name).to eq('changed') # Receiver values are only shallowly duplicated.
+      expect(receiver[:existing][:value]).to equal(value)
+      expect(incoming[:added][:value]).to equal(value)
+    end
+
+    it 'retains incoming values without deep_dup by default' do
+      incoming = Object.new
+      expect(subject.new.deep_merge(value: incoming)[:value]).to equal(incoming)
+    end
+
+    it 'keeps receiver arrays shallowly copied and incoming arrays shared without deep_dup' do
+      array = ['original']
+      result = subject[existing: array].deep_merge(added: array)
+
+      expect(result[:existing]).not_to equal(array)
+      expect(result[:existing].first).to equal(array.first)
+      expect(result[:added]).to equal(array)
+    end
+
+    %i[deep_merge deep_merge!].each do |operation|
+      it "applies an opt-in policy to nested incoming values with #{operation}" do
+        receiver = preserving_class[existing: { text: +'original' }]
+        incoming = { added: { value: value } }
+        result = receiver.public_send(operation, incoming)
+
+        expect(result[:added][:value]).to equal(value)
+        expect(result[:added]).not_to equal(incoming[:added])
+        result[:added][:extra] = true
+        expect(incoming[:added]).to eq(value: value)
+        next if operation == :deep_merge!
+
+        result[:existing][:text].replace('changed')
+        expect(receiver[:existing][:text]).to eq('original')
+      end
+    end
+
+    it 'applies the same policy while copying nested receiver values' do
+      receiver = preserving_class[nested: { value: value }]
+      result = receiver.deep_merge({})
+
+      expect(result[:nested]).not_to equal(receiver[:nested])
+      expect(result[:nested][:value]).to equal(value)
+    end
+
+    it 'does not copy conflict block results or replace incoming block arguments' do
+      replacement = Object.new
+      receiver = preserving_class[nested: { value: value }]
+      result = receiver.deep_merge(nested: { value: value }) do |key, old, incoming|
+        expect(key).to eq(:value)
+        expect(old).to equal(value)
+        expect(incoming).to equal(value)
+        replacement
+      end
+
+      expect(result[:nested][:value]).to equal(replacement)
+    end
+  end
+
   context 'without &block' do
     let(:h1) do
       subject.new.merge(
