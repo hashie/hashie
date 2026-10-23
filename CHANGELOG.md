@@ -58,6 +58,7 @@ Any violations of this scheme are considered to be bugs.
 * [#603](https://github.com/hashie/hashie/pull/603): Fixed `Trash`/`PropertyTranslation` incorrectly allowing `:from` to match the property name when the types differ (e.g. a symbol property translated `from:` a string of the same name), causing a "method redefined" warning instead of the intended `ArgumentError` - [@dblock](https://github.com/dblock).
 * [#604](https://github.com/hashie/hashie/pull/604): Fixed `Dash#deep_transform_keys` (and `Trash`) raising `ArgumentError` for required properties under Rails 7+, since `ActiveSupport::Hash#deep_transform_keys` builds its result via `self.class.new` - [@dblock](https://github.com/dblock).
 * [#614](https://github.com/hashie/hashie/pull/614): Fixed `Hashie::Mash#dup` allocating six extra objects on every call since #606, by looking up `Hash#default` and `Hash#default_proc` once and calling them with `bind_call` - [@sampokuokkanen](https://github.com/sampokuokkanen).
+* [#624](https://github.com/hashie/hashie/pull/624): Prevented `DeepLocate` from consuming IO streams while traversing nested data, following [#450](https://github.com/hashie/hashie/issues/450) - [@magynhard](https://github.com/magynhard).
 * Your contribution here.
 
 ### Security

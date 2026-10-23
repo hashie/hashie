@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'stringio'
 
 describe Hashie::Extensions::DeepLocate do
   let(:hash) do
@@ -94,6 +95,35 @@ describe Hashie::Extensions::DeepLocate do
 
     it 'returns an empty array if nothing was found' do
       expect(described_class.deep_locate(:muff, foo: 'bar')).to eq([])
+    end
+
+    it 'does not consume files that match the comparator' do
+      File.open(__FILE__, 'rb') do |file|
+        file.seek(3)
+        file_position = file.pos
+        remaining_content = file.read
+        file.seek(file_position)
+        hash_with_file = { file: file }
+        comparator = ->(_key, value, _object) { value.is_a?(File) }
+
+        expect(described_class.deep_locate(comparator, hash_with_file)).to eq([hash_with_file])
+        expect(file.pos).to eq(file_position)
+        expect(file.read).to eq(remaining_content)
+      end
+    end
+
+    it 'does not consume StringIO objects that match the comparator' do
+      io = StringIO.new('file content')
+      io.seek(5)
+      io_position = io.pos
+      remaining_content = io.read
+      io.seek(io_position)
+      hash_with_io = { file: io }
+      comparator = ->(_key, value, _object) { value.is_a?(StringIO) }
+
+      expect(described_class.deep_locate(comparator, hash_with_io)).to eq([hash_with_io])
+      expect(io.pos).to eq(io_position)
+      expect(io.read).to eq(remaining_content)
     end
   end
 

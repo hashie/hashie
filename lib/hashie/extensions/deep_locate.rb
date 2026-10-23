@@ -26,7 +26,8 @@ module Hashie
 
       # Performs a depth-first search on deeply nested data structures for a
       # given comparator callable and returns each Enumerable, for which the
-      # callable returns true for at least one the its elements.
+      # callable returns true for at least one of its elements. IO streams and
+      # StringIO objects are treated as leaves and are not traversed.
       #
       # @example
       #   books = [
@@ -78,6 +79,8 @@ module Hashie
       private_class_method :_construct_key_comparator
 
       def self._deep_locate(comparator, object, result = [])
+        return result if _io_object?(object)
+
         if object.is_a?(::Enumerable)
           if object.any? { |value| _match_comparator?(value, comparator, object) }
             result.push object
@@ -91,6 +94,13 @@ module Hashie
         result
       end
       private_class_method :_deep_locate
+
+      def self._io_object?(object)
+        object.is_a?(::IO) ||
+          (defined?(::StringIO) && object.is_a?(::StringIO)) ||
+          object.equal?(::ARGF)
+      end
+      private_class_method :_io_object?
 
       def self._match_comparator?(value, comparator, object)
         if object.is_a?(::Hash)
