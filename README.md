@@ -37,6 +37,7 @@
   - [DeepMerge](#deepmerge)
   - [DeepFetch](#deepfetch)
   - [DeepFind](#deepfind)
+  - [DeepGrep](#deepgrep)
   - [DeepLocate](#deeplocate)
 - [StrictKeyAccess](#strictkeyaccess)
 - [Mash](#mash)
@@ -694,6 +695,36 @@ user.deep_detect(:name) #=> { first: 'Bob', last: 'Boberts' }
 user.deep_find_all(:name) #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
 user.deep_select(:name)   #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
 ```
+
+### DeepGrep
+
+Search nested hashes and arrays for string or symbol keys and values matching a regular expression. Include `Hashie::Extensions::DeepGrep` to call `deep_grep(pattern)`.
+
+```ruby
+class Library < Hash
+  include Hashie::Extensions::DeepGrep
+end
+
+books = Library[
+  'Uncategorized' => [
+    { title: 'Ruby for beginners', pages: 120 },
+    { title: 'CSS for intermediates', pages: 80 }
+  ],
+  'Collection of Ruby books' => [{ title: 'That other language by Matz', pages: 578 }]
+]
+
+books.deep_grep(/ruby/i)
+# => [
+#      { title: 'Ruby for beginners', pages: 120 },
+#      { 'Collection of Ruby books' => [{ title: 'That other language by Matz', pages: 578 }] }
+#    ]
+
+books.deep_grep(/missing/) # => []
+```
+
+For plain hashes or arrays, call `Hashie::Extensions::DeepGrep.deep_grep(pattern, object)` directly.
+
+A matching hash key returns a new one-entry hash containing that key and its original subtree; that subtree is not searched further. A matching scalar hash value returns its containing hash once, preserving sibling context. A matching scalar array element returns just that element, not the whole array. Non-text scalars and container keys are not searched. Results follow depth-first insertion order; shared containers can appear at multiple input locations, and cycles are skipped. Input data is not modified, but returned containers share references with the input.
 
 ### DeepLocate
 
