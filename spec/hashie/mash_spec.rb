@@ -1056,23 +1056,24 @@ describe Hashie::Mash do
   end
 
   describe '#reject' do
-    subject(:mash) { described_class.new(a: 1, b: nil) }
+    subject(:mash) { described_class.new(a: 'apple', b: 4) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.compact).to be_a(described_class)
+      expect(mash.reject { |_key, value| value.is_a?(Integer) }).to be_a(described_class)
     end
 
     it 'rejects keys for which the block returns true' do
-      expect(mash.compact).to eq('a' => 1)
+      expect(mash.reject { |_key, value| value.is_a?(Integer) }).to eq('a' => 'apple')
+      expect(mash).to eq('a' => 'apple', 'b' => 4)
     end
 
     context 'when using with subclass' do
-      subject(:sub_mash) { subclass.new(a: 1, b: nil) }
+      subject(:sub_mash) { subclass.new(a: 'apple', b: 4) }
 
       let(:subclass) { Class.new(described_class) }
 
       it 'creates an instance of subclass' do
-        expect(sub_mash.compact).to be_a(subclass)
+        expect(sub_mash.reject { |_key, value| value.is_a?(Integer) }).to be_a(subclass)
       end
     end
   end

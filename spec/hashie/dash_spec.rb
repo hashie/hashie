@@ -709,6 +709,16 @@ describe Hashie::Dash do
     it 'does not raise when required properties are present' do
       expect { dash.deep_transform_keys(&:to_s) }.not_to raise_error
     end
+
+    it 'transforms hash keys inside nested arrays without changing the source' do
+      nested = [{ nested_key: [{ inner_key: 'value' }, nil, false] }]
+      dash.foo_bar = nested
+
+      expect(dash.deep_transform_keys(&:to_s))
+        .to eq('foo_bar' => [{ 'nested_key' => [{ 'inner_key' => 'value' }, nil, false] }], 'foo_baz' => 'baz')
+      expect(dash.foo_bar).to eq(nested)
+      expect(dash.foo_bar.first).to have_key(:nested_key)
+    end
   end
 end
 
