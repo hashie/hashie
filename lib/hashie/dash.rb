@@ -324,11 +324,11 @@ module Hashie
     end
 
     def assert_property_set!(property)
-      fail_property_required_error!(property) if send(property).nil? && required?(property)
+      fail_property_required_error!(property) if send(property).nil? && _required?(property)
     end
 
     def assert_property_required!(property, value)
-      fail_property_required_error!(property) if value.nil? && required?(property)
+      fail_property_required_error!(property) if value.nil? && _required?(property)
     end
 
     def fail_property_required_error!(property)
@@ -342,7 +342,7 @@ module Hashie
             "the property `#{property}` is not defined for `#{self.class.name || 'anonymous class'}`"
     end
 
-    def required?(property)
+    def _required?(property)
       return false unless self.class.required?(property)
 
       condition = self.class.required_properties[property][:condition]

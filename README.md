@@ -1435,6 +1435,24 @@ dash.update_attributes!(description: nil)
 dash.description  #=> 'none'
 ```
 
+The names `required` and `required?` can themselves be used as properties, for example when modeling a Swagger parameter. Their values are independent of Dash's `required: true` declaration option; `false` is a valid non-nil value even for a required property.
+
+```ruby
+class SwaggerParameter < Hashie::Dash
+  property :name, required: true
+  property :required, default: false
+  property :required?
+end
+
+parameter = SwaggerParameter.new(name: 'limit', required: true, required?: false)
+parameter.required # => true
+parameter.required? # => false
+parameter.required = false
+parameter[:required] # => false
+SwaggerParameter.required?(:name) # => true
+SwaggerParameter.required?(:required) # => false
+```
+
 ### Lazy Property Loading
 
 Include `Hashie::Extensions::Dash::Lazy` after other Dash extensions to load properties on demand. The initializer block receives an input key and runs only when that property is first read. Results are cached, including `nil` and `false`; other properties remain unloaded.

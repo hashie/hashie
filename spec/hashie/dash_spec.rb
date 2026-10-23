@@ -212,6 +212,100 @@ describe DashTest do
       property :property, required: true
     end
 
+    context 'with a property named required?' do
+      let(:parameter_class) do
+        Class.new(Hashie::Dash) do
+          property :required?
+          property :name, required: true
+        end
+      end
+
+      it 'reports missing required values without calling the property getter as a validation helper' do
+        expect { parameter_class.new(required?: true) }.to raise_error(ArgumentError, /the property `name`/)
+        expect { parameter_class.new(name: nil, required?: false) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'reads and writes the property without interfering with assignment validation' do
+        parameter = parameter_class.new(name: 'limit', required?: false)
+        expect(parameter.required?).to be(false)
+        parameter[:required?] = true
+        expect(parameter.required?).to be(true)
+        expect { parameter.name = nil }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'supports a required declaration on the question-mark property itself' do
+        klass = Class.new(Hashie::Dash) { property :required?, required: true }
+        expect(klass.new(required?: false).required?).to be(false)
+        expect { klass.new }.to raise_error(ArgumentError, /the property `required\?`/)
+        expect { klass.new(required?: true)[:required?] = nil }.to raise_error(ArgumentError, /the property `required\?`/)
+      end
+
+      it 'preserves conditional requirements in subclasses' do
+        klass = Class.new(parameter_class) { property :description, required: :required? }
+        expect(klass.new(name: 'limit', required?: false).description).to be_nil
+        expect { klass.new(name: 'limit', required?: true) }.to raise_error(ArgumentError, /the property `description`/)
+      end
+
+      it 'supports translated question-mark properties on Trash' do
+        klass = Class.new(Hashie::Trash) do
+          property :required?, from: :isRequired
+          property :name, required: true
+        end
+        expect(klass.new(name: 'limit', isRequired: true).required?).to be(true)
+        expect { klass.new(isRequired: true) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+    end
+
+    context 'with a property named required' do
+      let(:parameter_class) do
+        Class.new(Hashie::Dash) do
+          property :name, required: true
+          property :required, default: false
+        end
+      end
+
+      it 'keeps the property value separate from required-property declarations' do
+        parameter = parameter_class.new(name: 'limit', required: true)
+        expect(parameter.required).to be(true)
+        expect(parameter[:required]).to be(true)
+        expect(parameter_class.required?(:name)).to be(true)
+        expect(parameter_class.required?(:required)).to be(false)
+        parameter.required = false
+        expect(parameter.required).to be(false)
+        expect { parameter.name = nil }.to raise_error(ArgumentError, /the property `name`/)
+        expect { parameter_class.new(required: true) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'supports a required declaration on the required property itself' do
+        klass = Class.new(Hashie::Dash) { property :required, required: true }
+        expect(klass.new(required: false).required).to be(false)
+        expect(klass.new(required: true).required).to be(true)
+        expect { klass.new }.to raise_error(ArgumentError, /the property `required`/)
+        expect { klass.new(required: true).required = nil }.to raise_error(ArgumentError, /the property `required`/)
+      end
+
+      it 'preserves the property and validation in subclasses' do
+        klass = Class.new(parameter_class)
+        parameter = klass.new(name: 'limit')
+        expect(parameter.required).to be(false)
+        parameter.required = true
+        expect(parameter.required).to be(true)
+        expect { klass.new(required: false) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'supports translated required properties on Trash' do
+        klass = Class.new(Hashie::Trash) do
+          property :name, required: true
+          property :required, from: :isRequired, default: false
+        end
+        parameter = klass.new(name: 'limit', isRequired: true)
+        expect(parameter.required).to be(true)
+        parameter.required = false
+        expect(parameter[:required]).to be(false)
+        expect { klass.new(isRequired: true) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+    end
+
     context 'without keeping the original keys' do
       let(:mash) { Hashie::Mash.new(property: 'test') }
 
