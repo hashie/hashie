@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#627](https://github.com/hashie/hashie/pull/627): Added an opt-in YARD handler for Dash property attributes and source-only default/required documentation, following [#158](https://github.com/hashie/hashie/issues/158) and [@maxlinc's prototype](https://gist.github.com/maxlinc/19354152adf8555b158a) - [@maxlinc](https://github.com/maxlinc), [@dblock](https://github.com/dblock).
 * [#621](https://github.com/hashie/hashie/pull/621): Added `Mash::UnderscoreKeys` on top of `TransformKeys` for camel-case and hyphenated key normalization, following [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
 * [#620](https://github.com/hashie/hashie/pull/620): Added configurable `Mash::TransformKeys` key normalization as a foundation for [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
 * [#619](https://github.com/hashie/hashie/pull/619): Added a protected `deep_merge_new_hash` factory hook for opt-in preservation of incoming nested hash subclasses, following [#586](https://github.com/hashie/hashie/pull/586) and [#585](https://github.com/hashie/hashie/issues/585) - [@addam128](https://github.com/addam128), [@dblock](https://github.com/dblock).

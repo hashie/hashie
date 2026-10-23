@@ -57,6 +57,15 @@ Make sure that `bundle exec rake` completes without errors.
 
 Document any external behavior in the [README](README.md).
 
+The opt-in Dash YARD handler has isolated integration fixtures in `spec/integration/yard`, using YARD only as a development/test dependency. Run its focused tests with:
+
+```sh
+BUNDLE_GEMFILE=spec/integration/yard/Gemfile bundle install
+BUNDLE_GEMFILE=spec/integration/yard/Gemfile bundle exec rspec spec/integration/yard
+```
+
+The fixtures are parsed as source, never required or evaluated; some deliberately contain expressions that raise if executed. Keep coverage focused on generated attributes, documentation, static ancestry, metadata, and loading isolation. The existing integration CI job runs this directory automatically.
+
 #### Update Changelog
 
 Add a line to [CHANGELOG](CHANGELOG.md) under *Unreleased*. Make it look like every other line, including your name and link to your Github account.

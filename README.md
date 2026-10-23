@@ -51,6 +51,7 @@
   - [StrictKeyAccess](#strictkeyaccess-1)
   - [RequiredKeys](#requiredkeys)
 - [Dash](#dash)
+  - [Documenting Dash Properties with YARD](#documenting-dash-properties-with-yard)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
   - [Mash and Rails 4 Strong Parameters](#mash-and-rails-4-strong-parameters)
@@ -1246,6 +1247,39 @@ dash.description = 'Only slightly less known is ...'
 dash.update_attributes!(description: nil)
 dash.description  #=> 'none'
 ```
+
+### Documenting Dash Properties with YARD
+
+Hashie ships an opt-in [YARD](https://yardoc.org/) handler for Dash property declarations. Add YARD to your application's development dependencies; normal Hashie users do not need it:
+
+```ruby
+group :development do
+  gem 'yard', '~> 0.9.38', require: false
+end
+```
+
+Load the handler explicitly when generating documentation:
+
+```sh
+bundle exec yardoc -e hashie/yard.rb 'lib/**/*.rb'
+```
+
+Alternatively, add `-e hashie/yard.rb` to your project's `.yardopts`. For programmatic parsing, use `require 'hashie/yard'` before `YARD.parse`. Neither `require 'hashie'` nor normal Dash usage loads this handler or YARD, and loading the handler does not load Dash itself.
+
+```ruby
+class Person < Hashie::Dash
+  # The person's name.
+  # @return [String] a display name
+  property :name, required: true
+  property :age, default: 3
+end
+```
+
+The handler registers instance readers and writers as YARD attributes, preserves the declaration's documentation and tags on both methods, and provides fallback descriptions for undocumented properties. Explicit `default:` and `required:` options appear as notes. Defaults are displayed as Ruby source, not evaluated values; `required: true`, `false`, and `nil` are described directly, while other required expressions are labeled as conditions. The original option source is also available as `hashie_default` and `hashie_required` metadata on each method object.
+
+Only bare `property` and `self.property` calls in statically discoverable Dash class bodies are handled, including indirect descendants whose ancestors YARD has already parsed. Include ancestor source files before descendants when necessary. Simple literal symbol and string property names, keyword options, and explicit option hashes with symbol keys are supported. Dynamic names, method bodies, singleton-class declarations, calls on other receivers, unresolved ancestry, and unrelated `property` DSLs are ignored. Metadata is omitted for dynamic option hashes or hashes containing splats or nonliteral symbol keys, since their final options cannot be known statically. The handler never evaluates application source, defaults, or conditions; it does not model runtime metaprogramming or changes to the property DSL.
+
+This extension is distributed inside Hashie, not as an automatically discovered `yard-hashie` plugin gem. Hosted documentation services such as rubydoc.info may disable custom script loading; automatic loading there is not promised. The feature follows [@maxlinc's original proposal and handler prototype](https://github.com/hashie/hashie/issues/158), including the [original gist](https://gist.github.com/maxlinc/19354152adf8555b158a).
 
 ### Potential Gotchas
 

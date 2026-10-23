@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'hashie', path: '../../..'
+gem 'rspec', '~> 3'
+gem 'yard', '~> 0.9.38'
