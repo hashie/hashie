@@ -8,7 +8,7 @@ module Hashie
       # undeclared keys to be assigned - unlike Hashie::Dash, which
       # restricts assignment to only pre-declared properties.
       #
-      # == Example
+      # @example
       #
       #   class PersonMash < Hashie::Mash
       #     include Hashie::Extensions::Mash::RequiredKeys
@@ -16,19 +16,42 @@ module Hashie
       #     required_keys :name, :email
       #   end
       #
-      #   PersonMash.new(email: 'bob@example.com')
-      #   # => ArgumentError: the following keys are required: `name`
+      #   expect { PersonMash.new(email: 'bob@example.com') }
+      #     .to raise_error(ArgumentError, 'the following keys are required: `name`')
       #
       #   person = PersonMash.new(name: 'Bob', email: 'bob@example.com')
       #   person.age = 42 # arbitrary, undeclared keys are still allowed
+      #   person.age # => 42
       module RequiredKeys
+        # @example Install required-key declarations
+        #   klass = Class.new(Hashie::Mash) do
+        #     include Hashie::Extensions::Mash::RequiredKeys
+        #   end
+        #   klass.required_keys # => []
         def self.included(base)
           base.instance_variable_set(:@required_keys, [])
           base.extend(ClassMethods)
           base.include(InstanceMethods)
         end
 
+        # Class-level required-key declarations inherited by subclasses.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Mash) do
+        #     include Hashie::Extensions::Mash::RequiredKeys
+        #     required_keys :name
+        #   end
+        #   klass.required_keys # => ['name']
         module ClassMethods
+          # @example Copy required keys when subclassing
+          #   parent = Class.new(Hashie::Mash) do
+          #     include Hashie::Extensions::Mash::RequiredKeys
+          #     required_keys :name
+          #   end
+          #   child = Class.new(parent)
+          #   child.required_keys :email
+          #   child.required_keys # => ['name', 'email']
+          #   parent.required_keys # => ['name']
           def inherited(klass)
             super
             klass.instance_variable_set(:@required_keys, required_keys.dup)
@@ -38,6 +61,13 @@ module Hashie
           # required. With one or more arguments, declares those keys
           # as required. Keys are stored and compared as strings, so
           # both symbol and string keys are accepted.
+          #
+          # @example
+          #   klass = Class.new(Hashie::Mash) do
+          #     include Hashie::Extensions::Mash::RequiredKeys
+          #     required_keys :name, 'email', :name
+          #   end
+          #   klass.required_keys # => ['name', 'email']
           def required_keys(*keys)
             return @required_keys if keys.empty?
 
@@ -45,7 +75,22 @@ module Hashie
           end
         end
 
+        # Checks required values when constructing a Mash.
+        #
+        # @example
+        #   klass = Class.new(Hashie::Mash) do
+        #     include Hashie::Extensions::Mash::RequiredKeys
+        #     required_keys :name
+        #   end
+        #   klass.new(name: 'Ada').name # => 'Ada'
         module InstanceMethods
+          # @example Reject nil or missing required values
+          #   klass = Class.new(Hashie::Mash) do
+          #     include Hashie::Extensions::Mash::RequiredKeys
+          #     required_keys :name
+          #   end
+          #   expect { klass.new(name: nil) }.to raise_error(ArgumentError, /name/)
+          #   klass.new(name: 'Ada', age: 37).age # => 37
           def initialize(*args, &block)
             super
             assert_required_keys_set!

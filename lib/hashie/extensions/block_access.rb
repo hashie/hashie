@@ -12,7 +12,19 @@ module Hashie
     #   config = Configuration.new
     #   config.author { |author| author.name = 'Michael Bleigh' }
     #   config.author.name # => 'Michael Bleigh'
+    #
+    # @example Build a nested configuration
+    #   class Configuration < Hashie::Mash
+    #     include Hashie::Extensions::BlockAccess
+    #   end
+    #   config = Configuration.new
+    #   config.author { |author| author.name = 'Michael' }
+    #   config.author.name # => 'Michael'
     module BlockAccess
+      # @example Build a child through bracket access
+      #   hash = {}.extend(Hashie::Extensions::BlockAccess)
+      #   hash.[](:author) { |author| author[:name] = 'Michael' }
+      #   hash # => { author: { name: 'Michael' } }
       def [](key)
         return super unless block_given?
 
@@ -22,6 +34,11 @@ module Hashie
       end
 
       # A block-only builder does not make a missing reader available to respond_to?.
+      #
+      # @example Build a child through a missing method
+      #   hash = {}.extend(Hashie::Extensions::BlockAccess)
+      #   hash.author { |author| author[:name] = 'Michael' }
+      #   hash['author'] # => { name: 'Michael' }
       def method_missing(name, *args, &block) # rubocop:disable Style/MissingRespondToMissing
         return super unless block && !name.to_s.end_with?('=', '?', '!', '_')
 

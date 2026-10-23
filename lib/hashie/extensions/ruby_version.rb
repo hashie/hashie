@@ -16,15 +16,30 @@
 
 module Hashie
   module Extensions
+    # @example Compare versions numerically
+    #   Hashie::Extensions::RubyVersion.new('3.10') > Hashie::Extensions::RubyVersion.new('3.9') # => true
     class RubyVersion
       include Comparable
 
+      # @example Inspect and replace parsed version segments
+      #   version = Hashie::Extensions::RubyVersion.new('3.2.0.preview1')
+      #   version.segments # => [3, 2, 0, 'preview', 1]
+      #   version.segments = [3, 3, 0]
+      #   version == Hashie::Extensions::RubyVersion.new('3.3') # => true
       attr_accessor :segments
 
+      # @example Parse numeric and prerelease segments
+      #   version = Hashie::Extensions::RubyVersion.new('3.2.0.rc1')
+      #   version.segments # => [3, 2, 0, 'rc', 1]
       def initialize(version)
         @segments = split_to_segments(version)
       end
 
+      # @example Ignore trailing zeros and order prereleases before releases
+      #   version = Hashie::Extensions::RubyVersion
+      #   version.new('3.2') <=> version.new('3.2.0') # => 0
+      #   version.new('3.2.rc1') <=> version.new('3.2') # => -1
+      #   version.new('3.10') <=> version.new('3.9') # => 1
       def <=>(other)
         lhsegments = segments
         rhsegments = other.segments

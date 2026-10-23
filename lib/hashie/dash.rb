@@ -14,9 +14,16 @@ module Hashie
   #
   # It is preferable to a Struct because of the in-class
   # API for defining properties as well as per-property defaults.
+  #
+  # @example Define a lightweight data object
+  #   klass = Class.new(Hashie::Dash) { property :name, default: 'Ada' }
+  #   klass.new.name # => 'Ada'
   class Dash < Hash
     include Hashie::Extensions::PrettyInspect
 
+    # @example Inspect declared properties
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   klass.new(name: 'Ada').to_s.include?('name="Ada"') # => true
     alias to_s inspect
 
     # Defines a property on the Dash. Options are
@@ -35,6 +42,12 @@ module Hashie
     #
     # * <tt>:message</tt> - Specify custom error message for required property
     #
+    # @example Declare a required property and a default
+    #   klass = Class.new(Hashie::Dash) do
+    #     property :name, required: true
+    #     property :active, default: true
+    #   end
+    #   klass.new(name: 'Ada').to_h # => { name: 'Ada', active: true }
     def self.property(property_name, options = {})
       properties << property_name
 
@@ -59,13 +72,36 @@ module Hashie
     end
 
     class << self
-      attr_reader :properties, :defaults, :getters, :required_properties
+      # @example List the declared properties
+      #   klass = Class.new(Hashie::Dash) { property :name }
+      #   klass.properties.to_a # => [:name]
+      attr_reader :properties
+
+      # @example Read declared default values
+      #   klass = Class.new(Hashie::Dash) { property :active, default: true }
+      #   klass.defaults # => { active: true }
+      attr_reader :defaults
+
+      # @example List generated getter names
+      #   klass = Class.new(Hashie::Dash) { property :name }
+      #   klass.getters.to_a # => [:name]
+      attr_reader :getters
+
+      # @example Inspect the requirement configured for a property
+      #   klass = Class.new(Hashie::Dash) { property :name, required: true, message: 'must be supplied' }
+      #   klass.required_properties # => { name: { condition: true, message: 'must be supplied' } }
+      attr_reader :required_properties
     end
     instance_variable_set('@properties', Set.new)
     instance_variable_set('@getters', Set.new)
     instance_variable_set('@defaults', {})
     instance_variable_set('@required_properties', {})
 
+    # @example Subclasses inherit independent property definitions
+    #   parent = Class.new(Hashie::Dash) { property :name, default: 'Ada' }
+    #   child = Class.new(parent) { property :active, default: true }
+    #   child.new.to_h # => { name: 'Ada', active: true }
+    #   parent.properties.to_a # => [:name]
     def self.inherited(klass)
       super
       (@subclasses ||= Set.new) << klass
@@ -77,12 +113,22 @@ module Hashie
 
     # Check to see if the specified property has already been
     # defined.
+    #
+    # @example Check declared and undeclared properties
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   klass.property?(:name) # => true
+    #   klass.property?(:missing) # => false
     def self.property?(name)
       properties.include? name
     end
 
     # Check to see if the specified property is
     # required.
+    #
+    # @example Identify a required declaration
+    #   klass = Class.new(Hashie::Dash) { property :name, required: true }
+    #   klass.required?(:name) # => true
+    #   klass.required?(:missing) # => false
     def self.required?(name)
       required_properties.key? name
     end
@@ -103,6 +149,13 @@ module Hashie
 
     # You may initialize a Dash with an attributes hash
     # just like you would many other kinds of data objects.
+    #
+    # @example Initialize declared attributes and defaults
+    #   klass = Class.new(Hashie::Dash) do
+    #     property :name
+    #     property :active, default: true
+    #   end
+    #   klass.new(name: 'Ada').to_h # => { name: 'Ada', active: true }
     def initialize(attributes = {}, &block)
       super(&block)
 
@@ -116,6 +169,10 @@ module Hashie
 
     # Retrieve a value from the Dash (will return the
     # property's default value if it hasn't been set).
+    #
+    # @example Read a declared value by key
+    #   klass = Class.new(Hashie::Dash) { property :name, default: 'Ada' }
+    #   klass.new[:name] # => 'Ada'
     def [](property)
       assert_property_exists! property
       value = super
@@ -130,12 +187,23 @@ module Hashie
 
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
+    #
+    # @example Assign a declared property
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   dash = klass.new
+    #   dash[:name] = 'Ada'
+    #   dash.name # => 'Ada'
     def []=(property, value)
       assert_property_required! property, value
       assert_property_exists! property
       super
     end
 
+    # @example Merge into a copy with conflict resolution
+    #   klass = Class.new(Hashie::Dash) { property :count }
+    #   dash = klass.new(count: 2)
+    #   dash.merge(count: 3) { |_key, old, new| old + new }.to_h # => { count: 5 }
+    #   dash.count # => 2
     def merge(other_hash)
       new_dash = dup
       other_hash.each do |k, v|
@@ -144,6 +212,11 @@ module Hashie
       new_dash
     end
 
+    # @example Merge declared values in place
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   dash = klass.new(name: 'Ada')
+    #   dash.merge!(name: 'Grace')
+    #   dash.name # => 'Grace'
     def merge!(other_hash)
       other_hash.each do |k, v|
         self[k] = block_given? ? yield(k, self[k], v) : v
@@ -151,6 +224,13 @@ module Hashie
       self
     end
 
+    # @example Restore defaults for omitted attributes
+    #   klass = Class.new(Hashie::Dash) do
+    #     property :name
+    #     property :active, default: true
+    #   end
+    #   dash = klass.new(name: 'Ada', active: false)
+    #   dash.replace(name: 'Grace').to_h # => { name: 'Grace', active: true }
     def replace(other_hash)
       other_hash = self.class.defaults.merge(other_hash)
       (keys - other_hash.keys).each { |key| delete(key) }
@@ -158,11 +238,18 @@ module Hashie
       self
     end
 
+    # @example Include declared but unset properties in a plain hash
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   klass.new.to_h # => { name: nil }
+    #   klass.new.to_h.class # => Hash
     def to_h
       defaults = self.class.properties.to_h { |prop| [prop, self.class.defaults[prop]] }
 
       defaults.merge(self)
     end
+    # @example Convert a Dash to a plain hash
+    #   klass = Class.new(Hashie::Dash) { property :name }
+    #   klass.new(name: 'Ada').to_hash # => { name: 'Ada' }
     alias to_hash to_h
 
     # ActiveSupport's Hash#deep_transform_keys builds up its result via
@@ -174,10 +261,20 @@ module Hashie
     # Dash's keys no longer produces a valid Dash anyway (the resulting
     # keys may not correspond to any defined property), so fall back to
     # operating on a plain Hash instead.
+    #
+    # @example Transform nested keys without Dash's property restrictions
+    #   klass = Class.new(Hashie::Dash) { property :user }
+    #   dash = klass.new(user: { name: 'Ada' })
+    #   dash.deep_transform_keys(&:to_s) # => { 'user' => { 'name' => 'Ada' } }
     def deep_transform_keys(&block)
       _deep_transform_keys_in_object(to_h, &block)
     end
 
+    # @example Update attributes and reapply defaults for nil values
+    #   klass = Class.new(Hashie::Dash) { property :name, default: 'Ada' }
+    #   dash = klass.new(name: 'Grace')
+    #   dash.update_attributes!(name: nil)
+    #   dash.name # => 'Ada'
     def update_attributes!(attributes)
       update_attributes(attributes)
 

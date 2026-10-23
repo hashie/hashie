@@ -1,13 +1,29 @@
 # frozen_string_literal: true
 
 module Hashie
+  # @example Describe a failed conversion
+  #   require 'hashie/extensions/coercion'
+  #   error = Hashie::CoercionError.new(:age, 'bad', Integer, 'invalid number')
+  #   error.message # => 'cannot coerce property `:age` from `String` to `Integer`: invalid number'
   class CoercionError < StandardError
+    # @example Include the key, source class, and destination in the message
+    #   require 'hashie/extensions/coercion'
+    #   error = Hashie::CoercionError.new(:age, 'bad', Integer, 'invalid number')
+    #   error.message # => 'cannot coerce property `:age` from `String` to `Integer`: invalid number'
     def initialize(key, value, into, message)
       super("cannot coerce property `#{key.inspect}` from `#{value.class}` to `#{into}`: #{message}")
     end
   end
 
   module Extensions
+    # @example Coerce assigned values
+    #   class Person < Hash
+    #     include Hashie::Extensions::Coercion
+    #     coerce_key :age, Integer
+    #   end
+    #   person = Person.new
+    #   person[:age] = '42'
+    #   person[:age] # => 42
     module Coercion
       CORE_TYPES = {
         Integer => :to_i,
@@ -28,7 +44,23 @@ module Hashie
         base.send :alias_method, :[]=, :set_value_with_coercion
       end
 
+      # @example Add coercing instance writers through the extension
+      #   class Record < Hash
+      #     include Hashie::Extensions::Coercion
+      #     coerce_key :count, Integer
+      #   end
+      #   record = Record.new
+      #   record[:count] = '3'
+      #   record[:count] # => 3
       module InstanceMethods
+        # @example Write a coerced value
+        #   class Record < Hash
+        #     include Hashie::Extensions::Coercion
+        #     coerce_key :count, Integer
+        #   end
+        #   record = Record.new
+        #   record.set_value_with_coercion(:count, '3')
+        #   record[:count] # => 3
         def set_value_with_coercion(key, value)
           into = self.class.key_coercion(key) || self.class.value_coercion(value)
 
@@ -43,6 +75,14 @@ module Hashie
           set_value_without_coercion(key, value)
         end
 
+        # @example Route a custom write through coercion
+        #   class Record < Hash
+        #     include Hashie::Extensions::Coercion
+        #     coerce_key :count, Integer
+        #   end
+        #   record = Record.new
+        #   record.custom_writer(:count, '3')
+        #   record[:count] # => 3
         def custom_writer(key, value, _convert = true)
           self[key] = value
         end
@@ -52,6 +92,14 @@ module Hashie
         # the value would already be an instance of `self.class` rather
         # than a plain Hash, and value coercion would never trigger. See
         # https://github.com/hashie/hashie/issues/265.
+        #
+        # @example Convert values by their source type
+        #   class Record < Hash
+        #     include Hashie::Extensions::Coercion
+        #     coerce_value String, Integer
+        #   end
+        #   Record.new.convert_value('3') # => 3
+        #   Record.new.convert_value(false) # => false
         def convert_value(val, duping = false)
           into = self.class.value_coercion(val)
           return self.class.fetch_coercion(into).call(val) if into
@@ -59,6 +107,14 @@ module Hashie
           defined?(super) ? super : val
         end
 
+        # @example Remove old keys and coerce incoming values
+        #   class Record < Hash
+        #     include Hashie::Extensions::Coercion
+        #     coerce_key :count, Integer
+        #   end
+        #   record = Record[:old, true]
+        #   record.replace(count: '3')
+        #   record # => { count: 3 }
         def replace(other_hash)
           (keys - other_hash.keys).each { |key| delete(key) }
           other_hash.each { |key, value| self[key] = value }
@@ -66,6 +122,12 @@ module Hashie
         end
       end
 
+      # @example Configure coercion rules on a hash subclass
+      #   class Record < Hash
+      #     include Hashie::Extensions::Coercion
+      #     coerce_key :count, Integer
+      #   end
+      #   Record.key_coercion(:count) # => Integer
       module ClassMethods
         attr_writer :key_coercions
         protected :key_coercions=
@@ -77,28 +139,55 @@ module Hashie
         # in either case. Procs and other objects implementing #call
         # may also be used.
         #
-        # @param [Object] key the key or array of keys you would like to be coerced.
-        # @param [Class, #call] into the class or callable used to coerce the key(s).
+        # @param [Array<Object>] attrs the keys followed by the class or callable used to coerce them.
         #
         # @example Coerce a "user" subhash into a User object
+        #   User = Struct.new(:name) do
+        #     def self.coerce(attributes)
+        #       new(attributes[:name])
+        #     end
+        #   end
         #   class Tweet < Hash
         #     include Hashie::Extensions::Coercion
         #     coerce_key :user, User
         #   end
+        #   tweet = Tweet.new
+        #   tweet[:user] = { name: 'Ada' }
+        #   tweet[:user].name # => 'Ada'
         def coerce_key(*attrs)
           into = attrs.pop
           attrs.each { |key| key_coercions[key] = into }
         end
 
+        # @example Configure multiple keys with one rule
+        #   class Record < Hash
+        #     include Hashie::Extensions::Coercion
+        #     coerce_keys :count, :total, Integer
+        #   end
+        #   record = Record.new
+        #   record[:total] = '12'
+        #   record[:total] # => 12
+        #   Record.key_coercion(:count) # => Integer
         alias coerce_keys coerce_key
 
         # Returns a hash of any existing key coercions.
+        #
+        # @example Inspect configured rules
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.coerce_key(:age, Integer)
+        #   klass.key_coercions # => { age: Integer }
         def key_coercions
           @key_coercions ||= {}
         end
 
         # Returns the specific key coercion for the specified key,
         # if one exists.
+        #
+        # @example Look up symbol and string key names
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.coerce_key(:age, Integer)
+        #   klass.key_coercion('age') # => Integer
+        #   klass.key_coercion(:missing) # => nil
         def key_coercion(key)
           key_coercions[key.to_sym]
         end
@@ -124,6 +213,10 @@ module Hashie
         #       end
         #     end
         #   end
+        #   record = SpecialHash.new
+        #   record[:user] = { name: 'Ada' }
+        #   record[:user].class # => SpecialHash
+        #   record[:user][:name] # => 'Ada'
         def coerce_value(from, into, options = {})
           options = { strict: true }.merge(options)
 
@@ -144,21 +237,41 @@ module Hashie
         end
 
         # Return all value coercions that have the :strict rule as true.
+        #
+        # @example Inspect exact source-type rules
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.coerce_value(String, Integer)
+        #   klass.strict_value_coercions # => { String => Integer }
         def strict_value_coercions
           @strict_value_coercions ||= {}
         end
 
         # Return all value coercions that have the :strict rule as false.
+        #
+        # @example Inspect non-strict source-type rules
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.coerce_value(Integer, String, strict: false)
+        #   klass.lenient_value_coercions # => { Integer => String }
         def lenient_value_coercions
           @lenient_value_coercions ||= {}
         end
 
         # Fetch the value coercion, if any, for the specified object.
+        #
+        # @example Look up a rule from an actual value
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.coerce_value(String, Integer)
+        #   klass.value_coercion('3') # => Integer
+        #   klass.value_coercion(false) # => nil
         def value_coercion(value)
           from = value.class
           strict_value_coercions[from] || lenient_value_coercions[from]
         end
 
+        # @example Retrieve a conversion callable
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.fetch_coercion(Integer).call('3') # => 3
+        #   klass.fetch_coercion(->(value) { value.upcase }).call('ada') # => 'ADA'
         def fetch_coercion(type)
           return type if type.is_a? Proc
           return type if type.respond_to?(:call) && !type.is_a?(Module) && !type.is_a?(Enumerable)
@@ -166,12 +279,22 @@ module Hashie
           coercion_cache[type]
         end
 
+        # @example Lazily cache a working conversion
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   conversion = klass.coercion_cache[Integer]
+        #   conversion.call('3') # => 3
+        #   klass.coercion_cache[Integer].equal?(conversion) # => true
         def coercion_cache
           @coercion_cache ||= ::Hash.new do |hash, type|
             hash[type] = build_coercion(type)
           end
         end
 
+        # @example Build scalar and nested collection conversions
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   klass.build_coercion(Integer).call('3') # => 3
+        #   klass.build_coercion([Integer]).call(['3', '4']) # => [3, 4]
+        #   klass.build_coercion({ Symbol => Integer }).call('age' => '42') # => { age: 42 }
         def build_coercion(type)
           if type.is_a? Enumerable
             if type.instance_of?(::Hash)
@@ -201,6 +324,10 @@ module Hashie
           end
         end
 
+        # @example Convert both hash keys and values
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   conversion = klass.build_hash_coercion(Hash, Symbol, Integer)
+        #   conversion.call('age' => '42') # => { age: 42 }
         def build_hash_coercion(type, key_type, value_type)
           key_coerce = fetch_coercion(key_type)
           value_coerce = fetch_coercion(value_type)
@@ -209,6 +336,10 @@ module Hashie
           end
         end
 
+        # @example Convert each array element
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   conversion = klass.build_container_coercion(Array, Integer)
+        #   conversion.call(['3', '4']) # => [3, 4]
         def build_container_coercion(type, value_type)
           value_coerce = fetch_coercion(value_type)
           lambda do |value|
@@ -216,6 +347,11 @@ module Hashie
           end
         end
 
+        # @example Use the lenient core conversion
+        #   klass = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   conversion = klass.build_core_type_coercion(Integer)
+        #   conversion.call('12 items') # => 12
+        #   conversion.call('not a number') # => 0
         def build_core_type_coercion(type)
           name = CORE_TYPES[type]
           lambda do |value|
@@ -225,6 +361,13 @@ module Hashie
           end
         end
 
+        # @example Copy key rules into subclasses without sharing their rule hashes
+        #   parent = Class.new(Hash) { include Hashie::Extensions::Coercion }
+        #   parent.coerce_key(:age, Integer)
+        #   child = Class.new(parent)
+        #   child.coerce_key(:name, String)
+        #   child.key_coercion(:age) # => Integer
+        #   parent.key_coercion(:name) # => nil
         def inherited(klass)
           super
 

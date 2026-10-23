@@ -2,8 +2,16 @@
 
 module Hashie
   module Extensions
+    # @example Merge nested hashes
+    #   hash = { user: { name: 'Ada' } }.extend(Hashie::Extensions::DeepMerge)
+    #   hash.deep_merge(user: { active: true }) # => { user: { name: 'Ada', active: true } }
     module DeepMerge
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
+      #
+      # @example Merge without changing the receiver
+      #   hash = { settings: { count: 1 } }.extend(Hashie::Extensions::DeepMerge)
+      #   hash.deep_merge(settings: { count: 2 }) # => { settings: { count: 2 } }
+      #   hash # => { settings: { count: 1 } }
       def deep_merge(other_hash, &block)
         copy = _deep_dup(self)
         copy.extend(Hashie::Extensions::DeepMerge) unless copy.respond_to?(:deep_merge!)
@@ -12,6 +20,11 @@ module Hashie
 
       # Returns a new hash with +self+ and +other_hash+ merged recursively.
       # Modifies the receiver in place.
+      #
+      # @example Resolve a nested conflict with a block
+      #   hash = { settings: { count: 1 } }.extend(Hashie::Extensions::DeepMerge)
+      #   hash.deep_merge!({ settings: { count: 2 } }) { |_key, old, new| old + new }
+      #   hash # => { settings: { count: 3 } }
       def deep_merge!(other_hash, &block)
         return self unless other_hash.is_a?(::Hash)
 

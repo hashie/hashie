@@ -13,9 +13,20 @@ module Hashie
     #
     # This is particularly useful for fetching values from deeply nested api responses
     #   or params hashes.
+    #
+    # @example Traverse hashes and arrays
+    #   hash = { users: [{ name: 'Ada' }] }.extend(Hashie::Extensions::DeepFetch)
+    #   hash.deep_fetch(:users, 0, :name) # => 'Ada'
     module DeepFetch
+      # @example Report an undefined path
+      #   error = Hashie::Extensions::DeepFetch::UndefinedPathError.new('missing address')
+      #   error.message # => 'missing address'
       class UndefinedPathError < StandardError; end
 
+      # @example Use a fallback for a missing path
+      #   hash = { user: {} }.extend(Hashie::Extensions::DeepFetch)
+      #   hash.deep_fetch(:user, :name) { |key| "missing #{key}" } # => 'missing name'
+      #   hash.deep_fetch(:user) # => {}
       def deep_fetch(*args, &block)
         args.reduce(self) do |obj, arg|
           arg = Integer(arg) if obj.is_a? Array

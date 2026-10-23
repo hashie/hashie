@@ -59,6 +59,28 @@ Make sure that `bundle exec rake` completes without errors.
 
 Document any external behavior in the [README](README.md).
 
+YARD examples cover every public class, module, and method declared in `lib`, and are executable:
+
+```
+bundle exec rake docs:examples
+bundle exec rspec spec/documentation_examples_spec.rb
+```
+
+The dedicated documentation CI job runs both commands on Ruby 4.0. Railtie and ActiveSupport integration examples run separately on Ruby 3.3 with the real Rails 7 integration bundle: `BUNDLE_GEMFILE=spec/integration/rails_7/Gemfile bundle exec ruby -Ilib script/test_documentation_examples.rb --rails`. Both runs check coverage for all library files; only execution is partitioned by dependency requirements. Each `@example` must be self-contained: Hashie is loaded automatically, but local variables and class definitions are not shared between examples. Put expected Ruby values in inline, single-line `# =>` comments (or `#=>`); the runner evaluates the expression and compares it to the expected value with RSpec equality assertions. Multiline setup is supported, but standalone result comments and examples without assertions fail rather than passing unchecked. For example:
+
+```ruby
+# @example Convert keys without changing a flat hash
+#   hash = { name: 'Ruby' }
+#   Hashie.stringify_keys(hash) # => { 'name' => 'Ruby' }
+#   hash # => { name: 'Ruby' }
+```
+
+The runner uses maintained YARD parsing and the existing RSpec dependency, rather than importing #421's old yard-doctest/yardstick/inch/Guard stack. Each public class, module, and method needs its own `@example`; a class-level example does not cover its methods. Private methods and APIs already marked `@private` or `@api private` (including their descendants) do not need examples. Do not mark public APIs private merely to avoid documenting them. All `@example` tags are executed, even on internal APIs.
+
+The focused specs verify successful execution, incorrect expected values causing a nonzero exit, missing public API examples failing coverage, and internal APIs not requiring coverage. Empty selections also fail. To test selected files, run `bundle exec ruby -Ilib script/test_documentation_examples.rb path/to/file.rb`; the default selection discovers `lib/**/*.rb`, so new files are included automatically.
+
+This follows [@michaelherold's documentation in #421](https://github.com/hashie/hashie/pull/421), including its key-conversion examples, and extends executable coverage across the public API. Publishing and versioned GitHub Pages remain separate work; published documentation remains on [RubyDoc.info](https://www.rubydoc.info/gems/hashie). The original PR remains a reference and should not be closed automatically.
+
 #### Update Changelog
 
 Add a line to [CHANGELOG](CHANGELOG.md) under *Unreleased*. Make it look like every other line, including your name and link to your Github account.

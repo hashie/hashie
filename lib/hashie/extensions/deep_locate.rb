@@ -2,22 +2,17 @@
 
 module Hashie
   module Extensions
+    # @example Locate the hash containing a key
+    #   Hashie::Extensions::DeepLocate.deep_locate(:name, { user: { name: 'Ada' } }) # => [{ name: 'Ada' }]
     module DeepLocate
       # The module level implementation of #deep_locate, in case you do not want
       # to include/extend the base datastructure. For further examples please
       # see #deep_locate.
       #
       # @example
-      #   books = [
-      #     {
-      #       title: "Ruby for beginners",
-      #       pages: 120
-      #     },
-      #     ...
-      #   ]
-      #
-      #   DeepLocate.deep_locate -> (key, value, object) { key == :title }, books
-      #   # => [{:title=>"Ruby for beginners", :pages=>120}, ...]
+      #   books = [{ title: 'Ruby for beginners', pages: 120 }, { pages: 80 }]
+      #   comparator = ->(key, _value, _object) { key == :title }
+      #   Hashie::Extensions::DeepLocate.deep_locate(comparator, books) # => [{ title: 'Ruby for beginners', pages: 120 }]
       def self.deep_locate(comparator, object)
         comparator = _construct_key_comparator(comparator, object) unless comparator.respond_to?(:call)
 
@@ -51,16 +46,10 @@ module Hashie
       #
       #   books.extend(Hashie::Extensions::DeepLocate)
       #
-      #   # for ruby 1.9 leave *no* space between the lambda rocket and the braces
-      #   # http://ruby-journal.com/becareful-with-space-in-lambda-hash-rocket-syntax-between-ruby-1-dot-9-and-2-dot-0/
-      #
-      #   books.deep_locate -> (key, value, object) { key == :title && value.include?("Ruby") }
-      #   # => [{:title=>"Ruby for beginners", :pages=>120},
-      #   #     {:title=>"Ruby for the rest of us", :pages=>576}]
-      #
-      #   books.deep_locate -> (key, value, object) { key == :pages && value <= 120 }
-      #   # => [{:title=>"Ruby for beginners", :pages=>120},
-      #   #     {:title=>"CSS for intermediates", :pages=>80}]
+      #   ruby_titles = ->(key, value, _object) { key == :title && value.include?("Ruby") }
+      #   books.deep_locate(ruby_titles) # => [{ title: 'Ruby for beginners', pages: 120 }, { title: 'Ruby for the rest of us', pages: 576 }]
+      #   short_books = ->(key, value, _object) { key == :pages && value <= 120 }
+      #   books.deep_locate(short_books) # => [{ title: 'Ruby for beginners', pages: 120 }, { title: 'CSS for intermediates', pages: 80 }]
       def deep_locate(comparator)
         Hashie::Extensions::DeepLocate.deep_locate(comparator, self)
       end
