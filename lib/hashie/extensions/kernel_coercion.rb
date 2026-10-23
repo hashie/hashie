@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module KernelCoercion
@@ -8,11 +10,11 @@ module Hashie
       # NOTE: There is no strict Kernel method equivalent for +Symbol+, so
       # +Symbol+ coercion is left to the default, lenient +#to_sym+ behavior.
       STRICT_CORE_TYPES = {
-        Integer  => :Integer,
-        Float    => :Float,
-        Complex  => :Complex,
+        Integer => :Integer,
+        Float => :Float,
+        Complex => :Complex,
         Rational => :Rational,
-        String   => :String
+        String => :String
       }.freeze
 
       # Overrides Hashie::Extensions::Coercion::ClassMethods#build_core_type_coercion

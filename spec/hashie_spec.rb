@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Hashie do
@@ -5,7 +7,7 @@ RSpec.describe Hashie do
     include_context 'with a logger'
 
     it 'is available via an accessor' do
-      Hashie.logger.info('Fee fi fo fum')
+      described_class.logger.info('Fee fi fo fum')
 
       expect(logger_output).to match('Fee fi fo fum')
     end

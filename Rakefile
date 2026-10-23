@@ -23,10 +23,11 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
       'ExceptionMessages/QuoteStyle,ExceptionMessages/RedundantExceptionName'
     ]
   end
-  task rubocop: :rubocop_exception_messages
+  Rake::Task[:rubocop].enhance([:rubocop_exception_messages])
 end
 
 require_relative 'spec/support/integration_specs'
+desc 'Install integration dependencies and run integration specs'
 task :integration_specs do
   next if ENV['CI']
 
@@ -43,8 +44,6 @@ task :integration_specs do
   end
 end
 
-if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
-  task default: %i[rubocop spec integration_specs]
-else
-  task default: %i[spec integration_specs]
-end
+default_tasks = %i[spec integration_specs]
+default_tasks.unshift(:rubocop) if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+task default: default_tasks

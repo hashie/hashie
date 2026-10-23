@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module DeepMerge
@@ -12,6 +14,7 @@ module Hashie
       # Modifies the receiver in place.
       def deep_merge!(other_hash, &block)
         return self unless other_hash.is_a?(::Hash)
+
         _recursive_merge(self, other_hash, &block)
         self
       end

@@ -131,6 +131,7 @@ describe Hashie::Extensions::DeepMergeInitializer do
       Class.new(Hash) do
         include Hashie::Extensions::DeepMergeInitializer
         include Hashie::Extensions::Coercion
+
         coerce_key :count, Integer
       end
     end

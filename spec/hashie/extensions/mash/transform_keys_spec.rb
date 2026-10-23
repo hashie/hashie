@@ -6,6 +6,7 @@ describe Hashie::Extensions::Mash::TransformKeys do
   let(:klass) do
     Class.new(Hashie::Mash) do
       include Hashie::Extensions::Mash::TransformKeys
+
       transform_keys_with(&:downcase)
     end
   end
@@ -62,7 +63,7 @@ describe Hashie::Extensions::Mash::TransformKeys do
     expect { klass.transform_keys_with('invalid') }.to raise_error(ArgumentError)
     expect { klass.transform_keys_with(->(key) { key }) { |key| key } }
       .to raise_error(ArgumentError)
-    klass.transform_keys_with(->(_) { nil })
+    klass.transform_keys_with(->(_) {})
     expect { klass.new(name: 1) }.to raise_error(TypeError, 'key transformer must return a String')
   end
 end

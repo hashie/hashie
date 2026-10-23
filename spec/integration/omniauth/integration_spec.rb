@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['RACK_ENV'] = 'test'
 
 require 'rspec/core'
@@ -18,7 +20,7 @@ RSpec.describe 'omniauth' do
 
   let(:stdout) { StringIO.new }
 
-  around(:each) do |example|
+  around do |example|
     original_stdout = $stdout
     $stdout = stdout
     require_relative 'app'
@@ -30,7 +32,7 @@ RSpec.describe 'omniauth' do
     expect(stdout.string).to eq('')
   end
 
-  it 'works' do
+  it 'renders the application page with OmniAuth installed' do
     get '/'
     expect(last_response).to be_ok
     expect(last_response.body).to eq 'Hello World'

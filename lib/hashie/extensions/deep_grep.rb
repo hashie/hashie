@@ -32,9 +32,7 @@ module Hashie
       private_class_method :search
 
       def self.search_hash(pattern, object, results, ancestors)
-        if object.any? { |key, value| !matches?(pattern, key) && matches?(pattern, value) }
-          results << object
-        end
+        results << object if object.any? { |key, value| !matches?(pattern, key) && matches?(pattern, value) }
         object.each do |key, value|
           if matches?(pattern, key)
             results << { key => value }

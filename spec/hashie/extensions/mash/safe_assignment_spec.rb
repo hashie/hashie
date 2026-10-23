@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Mash::SafeAssignment do
@@ -19,7 +21,7 @@ describe Hashie::Extensions::Mash::SafeAssignment do
         expect do
           subject.blabla = 'Test'
           subject.blabla = 'Test'
-        end.to_not raise_error
+        end.not_to raise_error
       end
     end
 

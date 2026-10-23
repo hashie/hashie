@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Dash::Coercion do
@@ -24,6 +26,7 @@ describe Hashie::Extensions::Dash::Coercion do
       callable = coercer
       Class.new(Hashie::Dash) do
         include Hashie::Extensions::Dash::Coercion
+
         property :enabled, coerce: callable
       end
     end

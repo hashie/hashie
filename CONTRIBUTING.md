@@ -51,6 +51,8 @@ Implement your feature or bug fix.
 
 Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop), run `bundle exec rake rubocop` on Ruby 3.2 or newer and fix any style issues highlighted. Exception messages should start with a lowercase letter and have no trailing punctuation, matching Ruby's built-in exceptions.
 
+RuboCop scans Ruby sources, specs, benchmarks, gem manifests, and Ruby scripts across the project, with new cops enabled by default. Ruby files must use `# frozen_string_literal: true`. Existing offenses that cannot be safely corrected are tracked in `.rubocop_todo.yml`.
+
 Make sure that `bundle exec rake` completes without errors.
 
 #### Write Documentation

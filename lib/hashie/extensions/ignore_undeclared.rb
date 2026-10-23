@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     # IgnoreUndeclared is a simple mixin that silently ignores
@@ -33,7 +35,7 @@ module Hashie
         return unless attributes
 
         klass = self.class
-        translations = klass.respond_to?(:translations) && klass.translations || []
+        translations = (klass.respond_to?(:translations) && klass.translations) || []
 
         super(attributes.select { |attr, _| klass.property?(attr) || translations.include?(attr) })
       end

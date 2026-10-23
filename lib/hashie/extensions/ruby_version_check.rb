@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hashie/extensions/ruby_version'
 
 module Hashie

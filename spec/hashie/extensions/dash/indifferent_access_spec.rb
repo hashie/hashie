@@ -1,20 +1,25 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Dash::IndifferentAccess do
   class TrashWithIndifferentAccess < Hashie::Trash
     include Hashie::Extensions::Dash::IndifferentAccess
-    property :per_page, transform_with: ->(v) { v.to_i }
+
+    property :per_page, transform_with: lambda(&:to_i)
     property :total, from: :total_pages
   end
 
   class DashWithIndifferentAccess < Hashie::Dash
     include Hashie::Extensions::Dash::IndifferentAccess
+
     property :name
   end
 
   context 'when included in Trash' do
-    let(:params) { { per_page: '1', total_pages: 2 } }
     subject { TrashWithIndifferentAccess.new(params) }
+
+    let(:params) { { per_page: '1', total_pages: 2 } }
 
     it 'gets the expected behaviour' do
       expect(subject.per_page).to eq params[:per_page].to_i
@@ -28,7 +33,7 @@ describe Hashie::Extensions::Dash::IndifferentAccess do
 
     it 'extends with the patch once' do
       expect(patch).to receive(:extended).with(dash_class).once
-      dash_class.send(:include, Hashie::Extensions::Dash::IndifferentAccess)
+      dash_class.send(:include, described_class)
     end
   end
 

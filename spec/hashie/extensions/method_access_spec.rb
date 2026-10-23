@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::MethodReader do
@@ -21,33 +23,33 @@ describe Hashie::Extensions::MethodReader do
 
   it 'reads nil and false values out properly' do
     h = subject.new(nil: nil, false: false) # rubocop:disable Lint/BooleanSymbol
-    expect(h.nil).to eq nil
-    expect(h.false).to eq false
+    expect(h.nil).to be_nil
+    expect(h.false).to be false
   end
 
   it 'raises a NoMethodError for undefined keys' do
     expect { subject.new.awesome }.to raise_error(NoMethodError)
   end
 
-  it 'returns false for undefined keys if key with question has been called ' do
-    expect(subject.new.awesome?).to eq false
+  it 'returns false for undefined keys if key with question has been called' do
+    expect(subject.new.awesome?).to be false
   end
 
   it 'returns true for defined keys if key with question has been called' do
-    expect(subject.new(awesome: 'sauce').awesome?).to eq true
+    expect(subject.new(awesome: 'sauce').awesome?).to be true
   end
 
   describe '#respond_to?' do
     it 'is true for string keys' do
-      expect(subject.new('awesome' => 'sauce')).to be_respond_to(:awesome)
+      expect(subject.new('awesome' => 'sauce')).to respond_to(:awesome)
     end
 
     it 'is true for symbol keys' do
-      expect(subject.new(awesome: 'sauce')).to be_respond_to(:awesome)
+      expect(subject.new(awesome: 'sauce')).to respond_to(:awesome)
     end
 
     it 'is false for non-keys' do
-      expect(subject.new).not_to be_respond_to(:awesome)
+      expect(subject.new).not_to respond_to(:awesome)
     end
   end
 end
@@ -75,8 +77,8 @@ describe Hashie::Extensions::MethodWriter do
   end
 
   it '#respond_to? correctly' do
-    expect(subject).to be_respond_to(:abc=)
-    expect(subject).not_to be_respond_to(:abc)
+    expect(subject).to respond_to(:abc=)
+    expect(subject).not_to respond_to(:abc)
   end
 end
 
@@ -92,19 +94,19 @@ describe Hashie::Extensions::MethodQuery do
   subject { QueryHash }
 
   it 'is true for non-nil string key values' do
-    expect(subject.new('abc' => 123).abc?).to eq true
+    expect(subject.new('abc' => 123).abc?).to be true
   end
 
   it 'is true for non-nil symbol key values' do
-    expect(subject.new(abc: 123).abc?).to eq true
+    expect(subject.new(abc: 123).abc?).to be true
   end
 
   it 'is false for false key values' do
-    expect(subject.new(abc: false).abc?).to eq false
+    expect(subject.new(abc: false).abc?).to be false
   end
 
   it 'is false for nil key values' do
-    expect(subject.new(abc: nil).abc?).to eq false
+    expect(subject.new(abc: nil).abc?).to be false
   end
 
   it 'raises a NoMethodError for non-set keys' do
@@ -116,22 +118,22 @@ describe Hashie::Extensions::MethodQuery do
   end
 
   it '#respond_to? for existing string keys' do
-    expect(subject.new('abc' => 'def')).to be_respond_to('abc?')
+    expect(subject.new('abc' => 'def')).to respond_to('abc?')
   end
 
   it '#respond_to? for existing symbol keys' do
-    expect(subject.new(abc: 'def')).to be_respond_to(:abc?)
+    expect(subject.new(abc: 'def')).to respond_to(:abc?)
   end
 
   it 'does not #respond_to? for non-existent keys' do
-    expect(subject.new).not_to be_respond_to('abc?')
+    expect(subject.new).not_to respond_to('abc?')
   end
 end
 
 describe Hashie::Extensions::MethodAccess do
   it 'includes all of the other method mixins' do
     klass = Class.new(Hash)
-    klass.send :include, Hashie::Extensions::MethodAccess
+    klass.send :include, described_class
 
     included_modules = klass.ancestors & [
       Hashie::Extensions::MethodReader,
@@ -200,12 +202,14 @@ describe Hashie::Extensions::MethodAccessWithOverride do
     ]
 
     klass = Class.new(Hash)
-    klass.send :include, Hashie::Extensions::MethodAccessWithOverride
+    klass.send :include, described_class
 
     expect((klass.ancestors & mod_list).size).to eq 4
   end
 
   context 'when included in a Mash subclass' do
+    subject(:mash) { mash_class.new }
+
     include_context 'with a logger'
 
     let(:mash_class) do
@@ -213,8 +217,6 @@ describe Hashie::Extensions::MethodAccessWithOverride do
         include Hashie::Extensions::MethodAccessWithOverride
       end
     end
-
-    subject(:mash) { mash_class.new }
 
     it 'duplicates an empty Mash' do
       expect(mash.dup).to be_an_instance_of(mash_class)

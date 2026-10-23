@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Dash
@@ -69,9 +71,7 @@ module Hashie
               value = send(property)
 
               allowed_values = values_for_properties(property)
-              if value && !allowed_values.include?(value)
-                fail_property_value_error!(property, value, allowed_values)
-              end
+              fail_property_value_error!(property, value, allowed_values) if value && !allowed_values.include?(value)
             end
           end
 

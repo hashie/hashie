@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Mash
@@ -19,7 +21,9 @@ module Hashie
         # @return [void]
         # @raise [ArgumentError] when the base class isn't a Mash
         def self.included(base)
-          raise ArgumentError, "`#{base}` must descend from Hashie::Mash" unless base <= Hashie::Mash
+          return if base <= Hashie::Mash
+
+          raise ArgumentError, "`#{base}` must descend from Hashie::Mash"
         end
 
         private

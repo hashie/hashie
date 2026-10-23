@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   class CoercionError < StandardError
     def initialize(key, value, into, message)
@@ -17,14 +19,12 @@ module Hashie
       }.freeze
 
       ABSTRACT_CORE_TYPES =
-        { Numeric => [Integer, Float, Complex, Rational] }
+        { Numeric => [Integer, Float, Complex, Rational] }.freeze
 
       def self.included(base)
         base.send :include, InstanceMethods
         base.extend ClassMethods
-        unless base.method_defined?(:set_value_without_coercion)
-          base.send :alias_method, :set_value_without_coercion, :[]=
-        end
+        base.send :alias_method, :set_value_without_coercion, :[]= unless base.method_defined?(:set_value_without_coercion)
         base.send :alias_method, :[]=, :set_value_with_coercion
       end
 
@@ -174,7 +174,7 @@ module Hashie
 
         def build_coercion(type)
           if type.is_a? Enumerable
-            if type.class == ::Hash
+            if type.instance_of?(::Hash)
               type, key_type, value_type = type.class, *type.first
               build_hash_coercion(type, key_type, value_type)
             else

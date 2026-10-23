@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hashie/dash'
 require 'hashie/extensions/dash/property_translation'
 

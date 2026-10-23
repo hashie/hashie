@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 Hashie::Hash.class_eval do
@@ -24,6 +26,7 @@ end
 
 class DashWithCoercion < Hashie::Dash
   include Hashie::Extensions::Coercion
+
   property :person
   property :city
 
@@ -58,7 +61,7 @@ end
 describe DashTestDefaultProc do
   it 'to_json behaves correctly with default proc' do
     object = described_class.new
-    expect(object.to_json).to be == '{"fields":[]}'
+    expect(object.to_json).to eq '{"fields":[]}'
   end
 end
 
@@ -79,14 +82,16 @@ describe DashTest do
     [NoMethodError, "the property `#{property}` is not defined for `#{subject.class.name}`"]
   end
 
-  subject { DashTest.new(first_name: 'Bob', email: 'bob@example.com') }
+  subject { described_class.new(first_name: 'Bob', email: 'bob@example.com') }
+
   let(:required_message) { RequiredMessageTest.new(first_name: 'Bob') }
 
-  it('subclasses Hashie::Hash') { should respond_to(:to_mash) }
+  it('subclasses Hashie::Hash') { is_expected.to respond_to(:to_mash) }
 
   describe '#to_s' do
     subject { super().to_s }
-    it { should eq '#<DashTest count=0 email="bob@example.com" first_name="Bob">' }
+
+    it { is_expected.to eq '#<DashTest count=0 email="bob@example.com" first_name="Bob">' }
   end
 
   it 'lists all set properties in inspect' do
@@ -97,12 +102,13 @@ describe DashTest do
 
   describe '#count' do
     subject { super().count }
-    it { should be_zero }
+
+    it { is_expected.to be_zero }
   end
 
-  it { should respond_to(:first_name) }
-  it { should respond_to(:first_name=) }
-  it { should_not respond_to(:nonexistent) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:first_name=) }
+  it { is_expected.not_to respond_to(:nonexistent) }
 
   it 'errors out for a non-existent property' do
     expect { subject['nonexistent'] }.to raise_error(*no_property_error('nonexistent'))
@@ -187,15 +193,17 @@ describe DashTest do
 
     it 'does not evaluate proc after subsequent reads' do
       deferred = DeferredTest.new
-      expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
+      created_at = deferred[:created_at]
+      expect(deferred[:created_at]).to equal(created_at)
     end
   end
 
   context 'reading from a deferred property based on context' do
     it 'provides the current hash as context for evaluation' do
       deferred = DeferredWithSelfTest.new
-      expect(deferred[:created_at].object_id).to eq deferred[:created_at].object_id
-      expect(deferred[:updated_at].object_id).to eq deferred[:created_at].object_id
+      created_at = deferred[:created_at]
+      expect(deferred[:created_at]).to equal(created_at)
+      expect(deferred[:updated_at]).to equal(created_at)
     end
   end
 
@@ -246,7 +254,7 @@ describe DashTest do
     end
 
     it 'fails when required values are missing' do
-      expect { DashTest.new }.to raise_error(*property_required_error('first_name'))
+      expect { described_class.new }.to raise_error(*property_required_error('first_name'))
     end
 
     it 'does not overwrite default values' do
@@ -323,17 +331,17 @@ describe DashTest do
     end
 
     it 'checks if a property exists' do
-      expect(described_class.property?(:first_name)).to be_truthy
-      expect(described_class.property?('first_name')).to be_falsy
+      expect(described_class).to be_property(:first_name)
+      expect(described_class).not_to be_property('first_name')
     end
 
     it 'checks if a property is required' do
-      expect(described_class.required?(:first_name)).to be_truthy
-      expect(described_class.required?('first_name')).to be_falsy
+      expect(described_class).to be_required(:first_name)
+      expect(described_class).not_to be_required('first_name')
     end
 
     it 'doesnt include property from subclass' do
-      expect(described_class.property?(:last_name)).to be_falsy
+      expect(described_class).not_to be_property(:last_name)
     end
 
     it 'lists declared defaults' do
@@ -341,7 +349,7 @@ describe DashTest do
     end
 
     it 'allows properties that end in bang' do
-      expect(PropertyBangTest.property?(:important!)).to be_truthy
+      expect(PropertyBangTest).to be_property(:important!)
     end
   end
 
@@ -375,14 +383,14 @@ describe DashTest do
     let(:params) { { first_name: 'Alice', email: 'alice@example.com' } }
 
     context 'when there is coercion' do
+      subject { DashWithCoercion.new(params_before) }
+
       let(:params_before) do
         { city: 'nyc', person: { first_name: 'Bob', email: 'bob@example.com' } }
       end
       let(:params_after) do
         { city: 'sfo', person: { first_name: 'Alice', email: 'alice@example.com' } }
       end
-
-      subject { DashWithCoercion.new(params_before) }
 
       it 'update the attributes' do
         expect(subject.person.first_name).to eq params_before[:person][:first_name]
@@ -496,9 +504,9 @@ describe DashTest do
   end
 end
 
-describe Hashie::Dash, 'inheritance' do
+describe Hashie::Dash do
   before do
-    @top = Class.new(Hashie::Dash)
+    @top = Class.new(described_class)
     @middle = Class.new(@top)
     @bottom = Class.new(@middle)
   end
@@ -538,7 +546,7 @@ describe Hashie::Dash, 'inheritance' do
   it 'allows nil defaults' do
     @bottom.property :echo, default: nil
     expect(@bottom.new).to have_key(:echo)
-    expect(@bottom.new).to_not have_key('echo')
+    expect(@bottom.new).not_to have_key('echo')
   end
 
   context 'exporting nil values' do
@@ -579,14 +587,14 @@ describe Hashie::Dash, 'inheritance' do
   end
 
   describe '#deep_transform_keys' do
+    subject(:dash) { test.new(foo_bar: 'bar', foo_baz: 'baz') }
+
     let(:test) do
       Class.new(Hashie::Dash) do
         property :foo_bar
         property :foo_baz, required: true
       end
     end
-
-    subject(:dash) { test.new(foo_bar: 'bar', foo_baz: 'baz') }
 
     it 'returns a plain Hash with transformed keys' do
       transformed = dash.deep_transform_keys(&:to_s)
@@ -611,20 +619,21 @@ describe Hashie::Dash, 'inheritance' do
 end
 
 describe SubclassedTest do
-  subject { SubclassedTest.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
+  subject { described_class.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
 
   describe '#count' do
     subject { super().count }
-    it { should be_zero }
+
+    it { is_expected.to be_zero }
   end
 
-  it { should respond_to(:first_name) }
-  it { should respond_to(:first_name=) }
-  it { should respond_to(:last_name) }
-  it { should respond_to(:last_name=) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:first_name=) }
+  it { is_expected.to respond_to(:last_name) }
+  it { is_expected.to respond_to(:last_name=) }
 
   it 'has one additional property' do
-    expect(described_class.property?(:last_name)).to be_truthy
+    expect(described_class).to be_property(:last_name)
   end
 
   it "didn't override superclass inheritance logic" do
@@ -639,16 +648,16 @@ end
 
 describe ConditionallyRequiredTest do
   it 'does not allow a conditionally required property to be set to nil if required' do
-    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }
+    expect { described_class.new(username: 'bob.smith', password: nil) }
       .to raise_error(ArgumentError, 'the property `password` must be set, too')
   end
 
   it 'allows a conditionally required property to be set to nil if not required' do
-    expect { ConditionallyRequiredTest.new(username: nil, password: nil) }.not_to raise_error
+    expect { described_class.new(username: nil, password: nil) }.not_to raise_error
   end
 
   it 'allows a conditionally required property to be set if required' do
-    expect { ConditionallyRequiredTest.new(username: 'bob.smith', password: '$ecure!') }
+    expect { described_class.new(username: 'bob.smith', password: '$ecure!') }
       .not_to raise_error
   end
 end
@@ -664,12 +673,12 @@ end
 
 describe SymbolConditionallyRequiredTest do
   it 'does not allow a conditionally required property to be set to nil if required via a symbol condition' do
-    expect { SymbolConditionallyRequiredTest.new(username: 'bob.smith', password: nil) }
+    expect { described_class.new(username: 'bob.smith', password: nil) }
       .to raise_error(ArgumentError, 'the property `password` must be set, too.')
   end
 
   it 'allows a conditionally required property to be set to nil if not required via a symbol condition' do
-    expect { SymbolConditionallyRequiredTest.new(username: nil, password: nil) }.not_to raise_error
+    expect { described_class.new(username: nil, password: nil) }.not_to raise_error
   end
 end
 
@@ -679,14 +688,14 @@ class MixedPropertiesTest < Hashie::Dash
 end
 
 describe MixedPropertiesTest do
-  subject { MixedPropertiesTest.new('string' => 'string', symbol: 'symbol') }
+  subject { described_class.new('string' => 'string', symbol: 'symbol') }
 
-  it { should respond_to('string') }
-  it { should respond_to(:symbol) }
+  it { is_expected.to respond_to('string') }
+  it { is_expected.to respond_to(:symbol) }
 
   it 'property?' do
-    expect(described_class.property?('string')).to be_truthy
-    expect(described_class.property?(:symbol)).to be_truthy
+    expect(described_class).to be_property('string')
+    expect(described_class).to be_property(:symbol)
   end
 
   it 'fetch' do
@@ -749,7 +758,7 @@ context 'with method access' do
   describe '#test?' do
     subject { dash.test? }
 
-    it { is_expected.to eq true }
+    it { is_expected.to be true }
   end
 end
 
@@ -760,7 +769,7 @@ RSpec.describe Hashie::Dash do
     end
   end
 
-  include_examples 'Dash default handling', :description
+  it_behaves_like 'Dash default handling', :description
 end
 
 module SerializationFixtures

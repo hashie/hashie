@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::DeepFind do
   subject { Class.new(Hash) { include Hashie::Extensions::DeepFind } }
+
   let(:hash) do
     {
       library: {
@@ -71,8 +74,9 @@ describe Hashie::Extensions::DeepFind do
   end
 
   context 'on a Hash including Hashie::Extensions::IndifferentAccess' do
+    subject(:instance) { klass[hash.dup].extend(described_class) }
+
     let(:klass) { Class.new(Hash) { include Hashie::Extensions::IndifferentAccess } }
-    subject(:instance) { klass[hash.dup].extend(Hashie::Extensions::DeepFind) }
 
     describe '#deep_find' do
       it 'indifferently detects a value from a nested hash' do

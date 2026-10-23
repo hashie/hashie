@@ -6,9 +6,7 @@ module Hashie
       # Applies a class-configured normalization to string and symbol Mash keys.
       module TransformKeys
         def self.included(base)
-          unless base <= Hashie::Mash
-            raise ArgumentError, "`#{base}` must descend from Hashie::Mash"
-          end
+          raise ArgumentError, "`#{base}` must descend from Hashie::Mash" unless base <= Hashie::Mash
 
           base.extend(ClassMethods)
         end
@@ -21,9 +19,7 @@ module Hashie
           end
 
           def transform_keys_with(callable = nil, &block)
-            if (callable && block) || !(callable || block).respond_to?(:call)
-              raise ArgumentError, 'provide one callable or block'
-            end
+            raise ArgumentError, 'provide one callable or block' if (callable && block) || !(callable || block).respond_to?(:call)
 
             @key_transformer = callable || block
           end

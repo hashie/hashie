@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     # MethodReader allows you to access keys of the hash
@@ -29,6 +31,7 @@ module Hashie
     module MethodReader
       def respond_to_missing?(name, include_private = false)
         return true if key?(name.to_s) || key?(name.to_sym)
+
         super
       end
 
@@ -69,13 +72,12 @@ module Hashie
     module MethodWriter
       def respond_to_missing?(name, include_private = false)
         return true if name.to_s =~ /=$/
+
         super
       end
 
       def method_missing(name, *args)
-        if args.size == 1 && name.to_s =~ /(.*)=$/
-          return self[convert_key(Regexp.last_match[1])] = args.first
-        end
+        return self[convert_key(Regexp.last_match[1])] = args.first if args.size == 1 && name.to_s =~ /(.*)=$/
 
         super
       end
@@ -215,6 +217,7 @@ module Hashie
 
       def respond_to_missing?(name, include_private = false)
         return true if name.to_s.end_with?('=')
+
         super
       end
 
@@ -256,9 +259,7 @@ module Hashie
       include RedefineMethod
 
       def initialize(hash = {}, default = nil, &block)
-        if default && block
-          raise ArgumentError, 'cannot specify both a default value and a default block'
-        end
+        raise ArgumentError, 'cannot specify both a default value and a default block' if default && block
 
         self.default = default unless default.nil?
         self.default_proc = block if block

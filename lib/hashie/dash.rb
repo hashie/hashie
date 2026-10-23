@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hashie/hash'
 require 'set'
 
@@ -57,9 +59,7 @@ module Hashie
     end
 
     class << self
-      attr_reader :properties, :defaults
-      attr_reader :getters
-      attr_reader :required_properties
+      attr_reader :properties, :defaults, :getters, :required_properties
     end
     instance_variable_set('@properties', Set.new)
     instance_variable_set('@getters', Set.new)
@@ -89,13 +89,15 @@ module Hashie
 
     private_class_method def self.define_getter_for(property_name)
       return if getters.include?(property_name)
+
       define_method(property_name) { |&block| self.[](property_name, &block) }
       getters << property_name
     end
 
     private_class_method def self.define_setter_for(property_name)
       setter = :"#{property_name}="
-      return if instance_methods.include?(setter)
+      return if method_defined?(setter)
+
       define_method(setter) { |value| self.[]=(property_name, value) }
     end
 
@@ -116,7 +118,7 @@ module Hashie
     # property's default value if it hasn't been set).
     def [](property)
       assert_property_exists! property
-      value = super(property)
+      value = super
       # If the value is a lambda, proc, or whatever answers to call, eval the thing!
       if value.is_a? Proc
         self[property] = value.call # Set the result of the call as a value
@@ -131,7 +133,7 @@ module Hashie
     def []=(property, value)
       assert_property_required! property, value
       assert_property_exists! property
-      super(property, value)
+      super
     end
 
     def merge(other_hash)
@@ -157,7 +159,7 @@ module Hashie
     end
 
     def to_h
-      defaults = ::Hash[self.class.properties.map { |prop| [prop, self.class.defaults[prop]] }]
+      defaults = self.class.properties.to_h { |prop| [prop, self.class.defaults[prop]] }
 
       defaults.merge(self)
     end
@@ -181,6 +183,7 @@ module Hashie
 
       self.class.defaults.each_pair do |prop, value|
         next unless fetch(prop, nil).nil?
+
         self[prop] = begin
           val = value.dup
           if val.is_a?(Proc)
@@ -201,7 +204,7 @@ module Hashie
     def initialize_attributes(attributes)
       return unless attributes
 
-      cleaned_attributes = attributes.reject { |_attr, value| value.nil? }
+      cleaned_attributes = attributes.compact
       update_attributes!(cleaned_attributes)
     end
 

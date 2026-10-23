@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   # A collection of helper methods that can be used throughout the gem.
   module Utils

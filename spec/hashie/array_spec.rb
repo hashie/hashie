@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Array do
@@ -23,7 +25,7 @@ describe Array do
       let(:array) { Hashie::Array.new([]) }
 
       it 'works with a first numeric and next string index' do
-        expect(array.dig(0, 'hello')).to eq(nil)
+        expect(array.dig(0, 'hello')).to be_nil
       end
 
       it 'throws an error with first string and next numeric index' do

@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::IgnoreUndeclared do
   context 'included in Trash' do
     class ForgivingTrash < Hashie::Trash
       include Hashie::Extensions::IgnoreUndeclared
+
       property :city
       property :state, from: :province
       property :str_state, from: 'str_provence'
@@ -12,7 +15,7 @@ describe Hashie::Extensions::IgnoreUndeclared do
     subject { ForgivingTrash }
 
     it 'silently ignores undeclared properties on initialization' do
-      expect { subject.new(city: 'Toronto', province: 'ON', country: 'Canada') }.to_not raise_error
+      expect { subject.new(city: 'Toronto', province: 'ON', country: 'Canada') }.not_to raise_error
     end
 
     it 'works with translated properties (with symbol keys)' do
@@ -37,7 +40,7 @@ describe Hashie::Extensions::IgnoreUndeclared do
         end
       end
 
-      include_examples 'Dash default handling', :description, :desc
+      it_behaves_like 'Dash default handling', :description, :desc
     end
   end
 
@@ -45,6 +48,7 @@ describe Hashie::Extensions::IgnoreUndeclared do
     class ForgivingTrashWithMerge < Hashie::Trash
       include Hashie::Extensions::DeepMerge
       include Hashie::Extensions::IgnoreUndeclared
+
       property :some_key
     end
 

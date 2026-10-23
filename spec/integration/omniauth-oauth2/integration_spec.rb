@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['RAILS_ENV'] = 'test'
 
 require 'rspec/core'
@@ -5,7 +7,7 @@ require 'rspec/core'
 RSpec.describe 'omniauth-oauth2 inside of rails', type: :request do
   let(:stdout) { StringIO.new }
 
-  around(:each) do |example|
+  around do |example|
     original_stdout = $stdout
     $stdout = stdout
     require_relative 'app'
@@ -19,7 +21,7 @@ RSpec.describe 'omniauth-oauth2 inside of rails', type: :request do
     expect(Hashie.logger).to eq(Rails.logger)
   end
 
-  it 'works' do
+  it 'renders the application page with the OAuth middleware installed' do
     get '/'
     assert_select 'h1', 'Hello, world!'
   end

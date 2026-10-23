@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Mash
@@ -19,13 +21,13 @@ module Hashie
             define_method(:method_missing) do |method_name, *args, &block|
               key, suffix = method_name_and_suffix(method_name)
               case suffix
-              when '='.freeze
+              when '='
                 mod.define_writer(key, method_name)
-              when '?'.freeze
+              when '?'
                 mod.define_predicate(key, method_name)
-              when '!'.freeze
+              when '!'
                 mod.define_initializing_reader(key, method_name)
-              when '_'.freeze
+              when '_'
                 mod.define_underbang_reader(key, method_name)
               else
                 mod.define_reader(key, method_name)

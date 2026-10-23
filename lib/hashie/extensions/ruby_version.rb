@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright (c) Chad Fowler, Rich Kilmer, Jim Weirich and others.
 # Portions copyright (c) Engine Yard and Andre Arko
 #
@@ -29,7 +31,7 @@ module Hashie
 
         lhsize = lhsegments.size
         rhsize = rhsegments.size
-        limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
+        limit  = [lhsize, rhsize].max - 1
 
         i = 0
 

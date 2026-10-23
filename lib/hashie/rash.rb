@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   #
   # Rash is a Hash whose keys can be Regexps, or Ranges, which will
@@ -101,6 +103,7 @@ module Hashie
         @regexes.each do |regex|
           match = regex.match(query)
           next unless match
+
           @regex_counts[regex] += 1
           value = @hash[regex]
           if value.respond_to? :call
@@ -124,8 +127,8 @@ module Hashie
       end
     end
 
-    def method_missing(*args, &block)
-      @hash.send(*args, &block) || super
+    def method_missing(...)
+      @hash.send(...) || super
     end
 
     def respond_to_missing?(method_name, _include_private = false)
@@ -136,6 +139,7 @@ module Hashie
 
     def optimize_if_necessary!
       return unless (@lookups += 1) >= @optimize_every
+
       @regexes = @regexes.sort_by { |regex| -@regex_counts[regex] }
       @lookups = 0
     end

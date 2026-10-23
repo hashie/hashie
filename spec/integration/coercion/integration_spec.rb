@@ -56,7 +56,7 @@ RSpec.describe 'external callable coercers' do
     end
 
     it 'passes nil collection members to the selected type' do
-      hash_class.coerce_key :enabled, Array[Dry::Types['strict.bool']]
+      hash_class.coerce_key :enabled, [Dry::Types['strict.bool']]
       expect { hash_class.new(enabled: [nil]) }.to raise_error(Dry::Types::ConstraintError)
     end
 
@@ -69,7 +69,7 @@ RSpec.describe 'external callable coercers' do
     end
 
     it 'coerces nested collections without mutating frozen inputs' do
-      hash_class.coerce_key :settings, Hash[Dry::Types['coercible.string'] => Array[boolean]]
+      hash_class.coerce_key(:settings, { Dry::Types['coercible.string'] => [boolean] })
       input = { enabled: %w[true false].freeze }.freeze
       hash = hash_class.new(settings: input)
       expect(hash[:settings]).to eq('enabled' => [true, false])

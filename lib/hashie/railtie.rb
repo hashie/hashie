@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require 'rails/railtie'
 
@@ -11,7 +13,7 @@ begin
       initializer 'hashie.patch_hash_except', after: 'load_active_support' do
         if Rails::VERSION::MAJOR >= 6
           require 'hashie/extensions/active_support/core_ext/hash'
-          Hashie::Mash.send(:include, Hashie::Extensions::ActiveSupport::CoreExt::Hash)
+          Hashie::Mash.include Hashie::Extensions::ActiveSupport::CoreExt::Hash
         end
       end
     end

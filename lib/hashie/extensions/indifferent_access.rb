@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     # IndifferentAccess gives you the ability to not care
@@ -98,11 +100,13 @@ module Hashie
 
       def indifferent_default(key = nil)
         return self[convert_key(key)] if key?(key)
+
         regular_default(key)
       end
 
       def indifferent_update(other_hash)
         return regular_update(other_hash) if hash_with_indifference?(other_hash)
+
         other_hash.each_pair do |k, v|
           self[k] = v
         end
@@ -112,8 +116,8 @@ module Hashie
         regular_writer convert_key(key), indifferent_value(value)
       end
 
-      def indifferent_fetch(key, *args, &block)
-        regular_fetch convert_key(key), *args, &block
+      def indifferent_fetch(key, ...)
+        regular_fetch(convert_key(key), ...)
       end
 
       def indifferent_delete(key)
@@ -141,6 +145,7 @@ module Hashie
       def merge(*args)
         result = super
         return IndifferentAccess.inject!(result) if hash_lacking_indifference?(result)
+
         result.convert!
       end
 

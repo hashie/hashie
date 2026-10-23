@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'Dash default handling' do |property, name = property|
   it 'uses the default when initializing' do
     expect(test.new(name => nil).public_send(property)).to eq ''

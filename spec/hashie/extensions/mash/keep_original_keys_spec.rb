@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Hashie::Extensions::Mash::KeepOriginalKeys do
@@ -27,12 +29,12 @@ RSpec.describe Hashie::Extensions::Mash::KeepOriginalKeys do
     mash = keeping_mash.new(original)
 
     expect(mash.a).to eq('apple')
-    expect(mash.a?).to eq(true)
+    expect(mash.a?).to be(true)
     expect(mash.b).to eq('bottle')
-    expect(mash.b?).to eq(true)
+    expect(mash.b?).to be(true)
     expect(mash.underbang_).to be_a(keeping_mash)
     expect(mash.bang!).to be_a(keeping_mash)
-    expect(mash.predicate?).to eq(false)
+    expect(mash.predicate?).to be(false)
   end
 
   it 'keeps the keys that are directly passed without converting them' do

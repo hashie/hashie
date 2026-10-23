@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Mash do
-  subject { Hashie::Mash.new }
+  subject { described_class.new }
 
   include_context 'with a logger'
 
   it 'inherits from Hash' do
-    expect(subject.is_a?(Hash)).to be_truthy
+    expect(subject).to be_a(Hash)
   end
 
   it 'sets hash values through method= calls' do
@@ -34,9 +36,9 @@ describe Hashie::Mash do
   end
 
   it 'tests for already set values when passed a ? method' do
-    expect(subject.test?).to be_falsy
+    expect(subject).not_to be_test
     subject.test = 'abc'
-    expect(subject.test?).to be_truthy
+    expect(subject).to be_test
   end
 
   it 'returns false on a ? method if a value has been set to nil or false' do
@@ -48,7 +50,7 @@ describe Hashie::Mash do
 
   it 'makes all [] and []= into strings for consistency' do
     subject['abc'] = 123
-    expect(subject.key?('abc')).to be_truthy
+    expect(subject).to be_key('abc')
     expect(subject['abc']).to eq 123
   end
 
@@ -67,7 +69,7 @@ describe Hashie::Mash do
   end
 
   it 'gracefully handles being accessed with arguments' do
-    expect(subject.abc('foobar')).to eq nil
+    expect(subject.abc('foobar')).to be_nil
     subject.abc = 123
     expect(subject.abc('foobar')).to eq 123
   end
@@ -83,7 +85,7 @@ describe Hashie::Mash do
   end
 
   it 'returns a Hashie::Mash when passed a bang method to a non-existenct key' do
-    expect(subject.abc!.is_a?(Hashie::Mash)).to be_truthy
+    expect(subject.abc!).to be_a(described_class)
   end
 
   it 'returns the existing value when passed a bang method for an existing key' do
@@ -92,7 +94,7 @@ describe Hashie::Mash do
   end
 
   it 'returns a Hashie::Mash when passed an under bang method to a non-existenct key' do
-    expect(subject.abc_.is_a?(Hashie::Mash)).to be_truthy
+    expect(subject.abc_).to be_a(described_class)
   end
 
   it 'returns the existing value when passed an under bang method for an existing key' do
@@ -101,24 +103,24 @@ describe Hashie::Mash do
   end
 
   it '#initializing_reader returns a Hashie::Mash when passed a non-existent key' do
-    expect(subject.initializing_reader(:abc).is_a?(Hashie::Mash)).to be_truthy
+    expect(subject.initializing_reader(:abc)).to be_a(described_class)
   end
 
   it 'allows for multi-level assignment through bang methods' do
     subject.author!.name = 'Michael Bleigh'
-    expect(subject.author).to eq Hashie::Mash.new(name: 'Michael Bleigh')
+    expect(subject.author).to eq described_class.new(name: 'Michael Bleigh')
     subject.author!.website!.url = 'http://www.mbleigh.com/'
-    expect(subject.author.website).to eq Hashie::Mash.new(url: 'http://www.mbleigh.com/')
+    expect(subject.author.website).to eq described_class.new(url: 'http://www.mbleigh.com/')
   end
 
   it 'allows for multi-level under bang testing' do
     expect(subject.author_.website_.url).to be_nil
-    expect(subject.author_.website_.url?).to eq false
+    expect(subject.author_.website_.url?).to be false
     expect(subject.author).to be_nil
   end
 
   it 'does not call super if id is not a key' do
-    expect(subject.id).to eq nil
+    expect(subject.id).to be_nil
   end
 
   it 'returns the value if id is a key' do
@@ -127,7 +129,7 @@ describe Hashie::Mash do
   end
 
   it 'does not call super if type is not a key' do
-    expect(subject.type).to eq nil
+    expect(subject.type).to be_nil
   end
 
   it 'returns the value if type is a key' do
@@ -137,13 +139,13 @@ describe Hashie::Mash do
 
   include_context 'with a logger' do
     it 'logs a warning when overriding built-in methods' do
-      Hashie::Mash.new('object_id' => { 'two' => 2 })
+      described_class.new('object_id' => { 'two' => 2 })
 
       expect(logger_output).to match('Hashie::Mash#object_id')
     end
 
     it 'can set keys more than once and does not warn when doing so' do
-      mash = Hashie::Mash.new
+      mash = described_class.new
       mash[:test_key] = 'Test value'
 
       expect { mash[:test_key] = 'A new value' }.not_to raise_error
@@ -160,9 +162,9 @@ describe Hashie::Mash do
     end
 
     it 'does not write to the logger when setting most affixed keys' do
-      underbang = Hashie::Mash.new('foo_' => 'foo')
-      bang = Hashie::Mash.new('foo!' => 'foo')
-      query = Hashie::Mash.new('foo?' => 'foo')
+      underbang = described_class.new('foo_' => 'foo')
+      bang = described_class.new('foo!' => 'foo')
+      query = described_class.new('foo?' => 'foo')
 
       expect(logger_output).to be_empty
       expect(underbang.foo_).to eq 'foo'
@@ -171,7 +173,7 @@ describe Hashie::Mash do
     end
 
     it 'warns when setting a key that looks like a setter' do
-      setter = Hashie::Mash.new('foo=' => 'foo')
+      setter = described_class.new('foo=' => 'foo')
 
       expect(logger_output).to match 'Hashie::Mash#foo='
       expect('setter.foo=').not_to parse_as_valid_ruby
@@ -184,7 +186,7 @@ describe Hashie::Mash do
     it 'cannot disable logging on the base Mash' do
       expected_error = Hashie::Extensions::KeyConflictWarning::CannotDisableMashWarnings
 
-      expect { Hashie::Mash.disable_warnings }.to raise_error(expected_error)
+      expect { described_class.disable_warnings }.to raise_error(expected_error)
     end
 
     it 'carries over the disable for warnings on grandchild classes' do
@@ -297,7 +299,7 @@ describe Hashie::Mash do
         end
 
         rhs = ConvertedMash.new(email: 'foo@bar.com')
-        expect(subject).to receive(:convert_value).exactly(1).times
+        expect(subject).to receive(:convert_value).once
         subject.deep_update(rhs)
       end
 
@@ -386,18 +388,18 @@ describe Hashie::Mash do
       end
 
       it 'sets all specified keys to their corresponding values' do
-        expect(subject.middle_name?).to be_truthy
-        expect(subject.details?).to be_truthy
+        expect(subject).to be_middle_name
+        expect(subject).to be_details
         expect(subject.middle_name).to eq 'Cain'
-        expect(subject.details.city?).to be_truthy
+        expect(subject.details).to be_city
         expect(subject.details.city).to eq 'Imagination'
       end
 
       it 'leaves only specified keys' do
         expect(subject.keys.sort).to eq %w[details middle_name]
-        expect(subject.first_name?).to be_falsy
+        expect(subject).not_to be_first_name
         expect(subject).not_to respond_to(:first_name)
-        expect(subject.last_name?).to be_falsy
+        expect(subject).not_to be_last_name
         expect(subject).not_to respond_to(:last_name)
       end
     end
@@ -406,13 +408,13 @@ describe Hashie::Mash do
       it 'deletes with String key' do
         subject.delete('details')
         expect(subject.details).to be_nil
-        expect(subject).not_to be_respond_to :details
+        expect(subject).not_to respond_to :details
       end
 
       it 'deletes with Symbol key' do
         subject.delete(:details)
         expect(subject.details).to be_nil
-        expect(subject).not_to be_respond_to :details
+        expect(subject).not_to respond_to :details
       end
     end
   end
@@ -436,80 +438,80 @@ describe Hashie::Mash do
     class SubMash < Hashie::Mash
     end
 
-    record = Hashie::Mash.new
+    record = described_class.new
     son = SubMash.new
     record['submash'] = son
-    expect(record['submash']).to be_kind_of(SubMash)
+    expect(record['submash']).to be_a(SubMash)
   end
 
   it 'respects the class when passed a bang method for a non-existent key' do
-    record = Hashie::Mash.new
-    expect(record.non_existent!).to be_kind_of(Hashie::Mash)
+    record = described_class.new
+    expect(record.non_existent!).to be_a(described_class)
 
     class SubMash < Hashie::Mash
     end
 
     son = SubMash.new
-    expect(son.non_existent!).to be_kind_of(SubMash)
+    expect(son.non_existent!).to be_a(SubMash)
   end
 
   it 'respects the class when passed an under bang method for a non-existent key' do
-    record = Hashie::Mash.new
-    expect(record.non_existent_).to be_kind_of(Hashie::Mash)
+    record = described_class.new
+    expect(record.non_existent_).to be_a(described_class)
 
     class SubMash < Hashie::Mash
     end
 
     son = SubMash.new
-    expect(son.non_existent_).to be_kind_of(SubMash)
+    expect(son.non_existent_).to be_a(SubMash)
   end
 
   it 'respects the class when converting the value' do
-    record = Hashie::Mash.new
-    record.details = Hashie::Mash.new(email: 'randy@asf.com')
-    expect(record.details).to be_kind_of(Hashie::Mash)
+    record = described_class.new
+    record.details = described_class.new(email: 'randy@asf.com')
+    expect(record.details).to be_a(described_class)
   end
 
   it 'respects another subclass when converting the value' do
-    record = Hashie::Mash.new
+    record = described_class.new
 
     class SubMash < Hashie::Mash
     end
 
     son = SubMash.new(email: 'foo@bar.com')
     record.details = son
-    expect(record.details).to be_kind_of(SubMash)
+    expect(record.details).to be_a(SubMash)
   end
 
   describe '#respond_to?' do
     subject do
-      Hashie::Mash.new(abc: 'def')
+      described_class.new(abc: 'def')
     end
 
     it 'responds to a normal method' do
-      expect(subject).to be_respond_to(:key?)
+      expect(subject).to respond_to(:key?)
     end
 
     it 'responds to a set key' do
-      expect(subject).to be_respond_to(:abc)
-      expect(subject.method(:abc)).to_not be_nil
+      expect(subject).to respond_to(:abc)
+      expect(subject.method(:abc)).not_to be_nil
     end
 
     it 'responds to a set key with a suffix' do
       %w[= ? ! _].each do |suffix|
-        expect(subject).to be_respond_to(:"abc#{suffix}")
+        expect(subject).to respond_to(:"abc#{suffix}")
       end
     end
 
     it 'is able to access the suffixed key as a method' do
       %w[= ? ! _].each do |suffix|
-        expect(subject.method(:"abc#{suffix}")).to_not be_nil
+        expect(subject.method(:"abc#{suffix}")).not_to be_nil
       end
     end
 
     it 'responds to an unknown key with a suffix' do
       %w[= ? ! _].each do |suffix|
-        expect(subject).to be_respond_to(:"xyz#{suffix}")
+        expect(subject).to respond_to(:"xyz#{suffix}")
       end
     end
 
@@ -518,42 +520,42 @@ describe Hashie::Mash do
       pending_for(engine: 'ruby', versions: %w[2.2.0 2.2.1 2.2.2])
 
       %w[= ? ! _].each do |suffix|
-        expect(subject.method(:"xyz#{suffix}")).to_not be_nil
+        expect(subject.method(:"xyz#{suffix}")).not_to be_nil
       end
     end
 
     it 'does not respond to an unknown key without a suffix' do
-      expect(subject).not_to be_respond_to(:xyz)
+      expect(subject).not_to respond_to(:xyz)
       expect { subject.method(:xyz) }.to raise_error(NameError)
     end
   end
 
   describe 'accessing a key that is itself suffixed' do
     it 'reads a key literally ending in ? via the method accessor' do
-      mash = Hashie::Mash.new('foo?' => 'literal')
+      mash = described_class.new('foo?' => 'literal')
       expect(mash.foo?).to eq('literal')
     end
 
     it 'ignores a write and returns the literal value when the key ends in =' do
-      mash = Hashie::Mash.new('foo=' => 'literal')
+      mash = described_class.new('foo=' => 'literal')
       mash.foo = 'ignored'
       expect(mash['foo=']).to eq('literal')
     end
 
     it 'reads a key literally ending in ! via the method accessor' do
-      mash = Hashie::Mash.new('foo!' => 'literal')
+      mash = described_class.new('foo!' => 'literal')
       expect(mash.foo!).to eq('literal')
     end
 
     it 'reads a key literally ending in _ via the method accessor' do
-      mash = Hashie::Mash.new('foo_' => 'literal')
+      mash = described_class.new('foo_' => 'literal')
       expect(mash.foo_).to eq('literal')
     end
   end
 
   describe '#prefix_method?' do
     subject do
-      Hashie::Mash.new(abc: 'def')
+      described_class.new(abc: 'def')
     end
 
     it 'is true for a set key with an allowed suffix' do
@@ -567,26 +569,26 @@ describe Hashie::Mash do
 
   describe '#extractable_options?' do
     it 'is true, playing nice with ActiveSupport Array#extract_options!' do
-      expect(Hashie::Mash.new.extractable_options?).to be true
+      expect(described_class.new.extractable_options?).to be true
     end
   end
 
-  context '#initialize' do
+  describe '#initialize' do
     it 'converts an existing hash to a Hashie::Mash' do
-      converted = Hashie::Mash.new(abc: 123, name: 'Bob')
+      converted = described_class.new(abc: 123, name: 'Bob')
       expect(converted.abc).to eq 123
       expect(converted.name).to eq 'Bob'
     end
 
     it 'converts hashes recursively into Hashie::Mashes' do
-      converted = Hashie::Mash.new(a: { b: 1, c: { d: 23 } })
-      expect(converted.a.is_a?(Hashie::Mash)).to be_truthy
+      converted = described_class.new(a: { b: 1, c: { d: 23 } })
+      expect(converted.a).to be_a(described_class)
       expect(converted.a.b).to eq 1
       expect(converted.a.c.d).to eq 23
     end
 
     it 'converts hashes in arrays into Hashie::Mashes' do
-      converted = Hashie::Mash.new(a: [{ b: 12 }, 23])
+      converted = described_class.new(a: [{ b: 12 }, 23])
       expect(converted.a.first.b).to eq 12
       expect(converted.a.last).to eq 23
     end
@@ -595,7 +597,7 @@ describe Hashie::Mash do
       hash = { b: 12 }.freeze
       nested = [hash, 23].freeze
       source = [nested, [].freeze].freeze
-      converted = Hashie::Mash.new(a: source).a
+      converted = described_class.new(a: source).a
 
       expect(converted).to be_an_instance_of(Hashie::Array)
       expect(converted.first).to be_an_instance_of(Hashie::Array)
@@ -607,19 +609,19 @@ describe Hashie::Mash do
     end
 
     it 'converts array subclasses to independent Hashie arrays on assignment' do
-      source = Class.new(::Array).new([{ b: 12 }.freeze]).freeze
-      converted = Hashie::Mash.new
+      source = Class.new(Array).new([{ b: 12 }.freeze]).freeze
+      converted = described_class.new
       converted.a = source
 
       expect(converted.a).to be_an_instance_of(Hashie::Array)
-      expect(converted.a.first).to be_a(Hashie::Mash)
+      expect(converted.a.first).to be_a(described_class)
       converted.a << 23
       expect(source.length).to eq(1)
     end
 
     it 'converts an existing Hashie::Mash into a Hashie::Mash' do
-      initial = Hashie::Mash.new(name: 'randy', address: { state: 'TX' })
-      copy = Hashie::Mash.new(initial)
+      initial = described_class.new(name: 'randy', address: { state: 'TX' })
+      copy = described_class.new(initial)
       expect(initial.name).to eq copy.name
       expect(initial.__id__).not_to eq copy.__id__
       expect(copy.address.state).to eq 'TX'
@@ -629,22 +631,22 @@ describe Hashie::Mash do
     end
 
     it 'accepts a default block' do
-      initial = Hashie::Mash.new { |h, i| h[i] = [] }
+      initial = described_class.new { |h, i| h[i] = [] }
       expect(initial.default_proc).not_to be_nil
       expect(initial.default).to be_nil
       expect(initial.test).to eq []
-      expect(initial.test?).to be_truthy
+      expect(initial).to be_test
     end
 
     it 'allows propagation of a default block' do
-      h = Hashie::Mash.new { |mash, key| mash[key] = mash.class.new(&mash.default_proc) }
+      h = described_class.new { |mash, key| mash[key] = mash.class.new(&mash.default_proc) }
       expect { h[:x][:y][:z] = :xyz }.not_to raise_error
       expect(h.x.y.z).to eq(:xyz)
       expect(h[:x][:y][:z]).to eq(:xyz)
     end
 
     it 'allows assignment of an empty array in a default block' do
-      initial = Hashie::Mash.new { |h, k| h[k] = [] }
+      initial = described_class.new { |h, k| h[k] = [] }
       initial.hello << 100
       expect(initial.hello).to eq [100]
       initial['hi'] << 100
@@ -652,7 +654,7 @@ describe Hashie::Mash do
     end
 
     it 'allows assignment of a non-empty array in a default block' do
-      initial = Hashie::Mash.new { |h, k| h[k] = [100] }
+      initial = described_class.new { |h, k| h[k] = [100] }
       initial.hello << 200
       expect(initial.hello).to eq [100, 200]
       initial['hi'] << 200
@@ -660,59 +662,66 @@ describe Hashie::Mash do
     end
 
     it 'allows assignment of an empty hash in a default block' do
-      initial = Hashie::Mash.new { |h, k| h[k] = {} }
+      initial = described_class.new { |h, k| h[k] = {} }
       initial.hello[:a] = 100
-      expect(initial.hello).to eq Hashie::Mash.new(a: 100)
+      expect(initial.hello).to eq described_class.new(a: 100)
       initial[:hi][:a] = 100
-      expect(initial[:hi]).to eq Hashie::Mash.new(a: 100)
+      expect(initial[:hi]).to eq described_class.new(a: 100)
     end
 
     it 'allows assignment of a non-empty hash in a default block' do
-      initial = Hashie::Mash.new { |h, k| h[k] = { a: 100 } }
+      initial = described_class.new { |h, k| h[k] = { a: 100 } }
       initial.hello[:b] = 200
-      expect(initial.hello).to eq Hashie::Mash.new(a: 100, b: 200)
+      expect(initial.hello).to eq described_class.new(a: 100, b: 200)
       initial[:hi][:b] = 200
-      expect(initial[:hi]).to eq Hashie::Mash.new(a: 100, b: 200)
+      expect(initial[:hi]).to eq described_class.new(a: 100, b: 200)
     end
 
     it 'converts Hashie::Mashes within Arrays back to Hashes' do
-      initial_hash = { 'a' => [{ 'b' => 12, 'c' => ['d' => 50, 'e' => 51] }, 23] }
-      converted = Hashie::Mash.new(initial_hash)
-      expect(converted.to_hash['a'].first.is_a?(Hashie::Mash)).to be_falsy
-      expect(converted.to_hash['a'].first.is_a?(Hash)).to be_truthy
-      expect(converted.to_hash['a'].first['c'].first.is_a?(Hashie::Mash)).to be_falsy
+      initial_hash = { 'a' => [{ 'b' => 12, 'c' => [{ 'd' => 50, 'e' => 51 }] }, 23] }
+      converted = described_class.new(initial_hash)
+      expect(converted.to_hash['a'].first).not_to be_a(described_class)
+      expect(converted.to_hash['a'].first).to be_a(Hash)
+      expect(converted.to_hash['a'].first['c'].first).not_to be_a(described_class)
     end
 
     it 'only stringifies keys which can be converted to symbols' do
       initial_hash = { 1 => 'a', ['b'] => 2, 'c' => 3, d: 4 }
-      converted = Hashie::Mash.new(initial_hash)
+      converted = described_class.new(initial_hash)
       expect(converted).to eq(1 => 'a', ['b'] => 2, 'c' => 3, 'd' => 4)
     end
 
     it 'preserves keys which cannot be converted to symbols' do
       initial_hash = { 1 => 'a', '1' => 'b', :'1' => 'c' }
-      converted = Hashie::Mash.new(initial_hash)
+      converted = described_class.new(initial_hash)
       expect(converted).to eq(1 => 'a', '1' => 'c')
     end
   end
 
   describe '#dup' do
-    it 'allocates no more than building the copy with new', if: RUBY_ENGINE == 'ruby' do
-      mash = Hashie::Mash.new('abc' => 1)
+    # bind_call itself allocates on MRI before 3.2.
+    it 'allocates no more than building the copy with new', if: RUBY_ENGINE == 'ruby' && RUBY_VERSION >= '3.2' do
+      mash = described_class.new('abc' => 1)
+      mash_class = described_class
       allocations = lambda do |&block|
         before = GC.stat(:total_allocated_objects)
         block.call
         GC.stat(:total_allocated_objects) - before
       end
-      allocations.call { mash.dup } # warm up
-      copy_with_new = allocations.call { Hashie::Mash.new(mash, nil) }
-      expect(allocations.call { mash.dup }).to be <= copy_with_new
+      copy = -> { mash.dup }
+      build = -> { mash_class.new(mash, nil) }
+      5.times do
+        allocations.call(&copy)
+        allocations.call(&build)
+      end
+      copy_with_new = allocations.call(&build)
+      expect(allocations.call(&copy)).to be <= copy_with_new
     end
   end
 
   describe 'symbol keys' do
     it 'address the same entries as their string names' do
-      mash = Hashie::Mash.new
+      mash = described_class.new
       mash[:abc] = 1
       expect(mash.keys).to eq(['abc'])
       expect(mash['abc']).to eq(1)
@@ -724,7 +733,7 @@ describe Hashie::Mash do
     end
 
     it 'are read without allocating a string', if: RUBY_ENGINE == 'ruby' do
-      mash = Hashie::Mash.new('abc' => 1)
+      mash = described_class.new('abc' => 1)
       allocations = lambda do |&block|
         before = GC.stat(:total_allocated_objects)
         block.call
@@ -737,20 +746,20 @@ describe Hashie::Mash do
 
   describe '#fetch' do
     let(:hash) { { one: 1, other: false } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { described_class.new(hash) }
 
     context 'when key exists' do
       it 'returns the value' do
-        expect(mash.fetch(:one)).to eql(1)
+        expect(mash.fetch(:one)).to be(1)
       end
 
       it 'returns the value even if the value is falsy' do
-        expect(mash.fetch(:other)).to eql(false)
+        expect(mash.fetch(:other)).to be(false)
       end
 
       context 'when key has other than original but acceptable type' do
         it 'returns the value' do
-          expect(mash.fetch('one')).to eql(1)
+          expect(mash.fetch('one')).to be(1)
         end
       end
     end
@@ -762,19 +771,17 @@ describe Hashie::Mash do
 
       context 'with default value given' do
         it 'returns default value' do
-          expect(mash.fetch(:two, 8)).to eql(8)
+          expect(mash.fetch(:two, 8)).to be(8)
         end
 
         it 'returns default value even if it is falsy' do
-          expect(mash.fetch(:two, false)).to eql(false)
+          expect(mash.fetch(:two, false)).to be(false)
         end
       end
 
       context 'with block given' do
         it 'returns default value' do
-          expect(mash.fetch(:two) do
-            'block default value'
-          end).to eql('block default value')
+          expect(mash.fetch(:two, 'block default value')).to eql('block default value')
         end
       end
     end
@@ -782,10 +789,10 @@ describe Hashie::Mash do
 
   describe '#to_hash' do
     let(:hash) { { 'outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3] } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { described_class.new(hash) }
 
     it 'returns a standard Hash' do
-      expect(mash.to_hash).to be_a(::Hash)
+      expect(mash.to_hash).to be_a(Hash)
     end
 
     it 'includes all keys' do
@@ -810,7 +817,7 @@ describe Hashie::Mash do
 
   describe '#stringify_keys' do
     it 'turns all keys into strings recursively' do
-      hash = Hashie::Mash[:a => 'hey', 123 => { 345 => 'hey' }]
+      hash = described_class[:a => 'hey', 123 => { 345 => 'hey' }]
       hash.stringify_keys!
       expect(hash).to eq Hashie::Hash['a' => 'hey', '123' => { '345' => 'hey' }]
     end
@@ -818,7 +825,7 @@ describe Hashie::Mash do
 
   describe '#values_at' do
     let(:hash) { { 'key_one' => 1, :key_two => 2 } }
-    let(:mash) { Hashie::Mash.new(hash) }
+    let(:mash) { described_class.new(hash) }
 
     context 'when the original type is given' do
       it 'returns the values' do
@@ -840,6 +847,8 @@ describe Hashie::Mash do
   end
 
   describe '.load(filename, options = {})' do
+    subject { described_class.load(path, parser: parser) }
+
     let(:config) do
       {
         'production' => {
@@ -849,8 +858,6 @@ describe Hashie::Mash do
     end
     let(:path) { 'database.yml' }
     let(:parser) { double(:parser) }
-
-    subject { described_class.load(path, parser: parser) }
 
     before do |ex|
       unless ex.metadata == :test_cache
@@ -864,7 +871,7 @@ describe Hashie::Mash do
         expect(parser).to receive(:perform).with(path, {}).and_return(config)
       end
 
-      it { is_expected.to be_a(Hashie::Mash) }
+      it { is_expected.to be_a(described_class) }
 
       it 'return a Mash from a file' do
         expect(subject.production).not_to be_nil
@@ -902,9 +909,9 @@ describe Hashie::Mash do
     end
 
     describe 'results are cached' do
-      let(:parser) { double(:parser) }
-
       subject { described_class.load(path, parser: parser) }
+
+      let(:parser) { double(:parser) }
 
       before do
         expect(File).to receive(:file?).with(path).and_return(true)
@@ -919,66 +926,72 @@ describe Hashie::Mash do
           expect(described_class.load("#{path}+1", parser: parser)).to be_a(described_class)
         end
 
-        expect(subject.object_id).to eq subject.object_id
+        cached = described_class.load(path, parser: parser)
+        expect(described_class.load(path, parser: parser)).to equal(cached)
       end
     end
 
     context 'when the file has aliases in it' do
       it 'can use the aliases and does not raise an error' do
-        mash = Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml')
+        mash = described_class.load('spec/fixtures/yaml_with_aliases.yml')
         expect(mash.company_a.accounts.admin.password).to eq('secret')
       end
+
       it 'can override the value of aliases' do
         # Psych >= 5 raises Psych::AliasesNotEnabled ("Alias parsing was not
         # enabled"), a subclass of Psych::BadAlias, which older Psych
         # versions raise directly (mentioning the unresolved alias name).
         expect do
-          Hashie::Mash.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
+          described_class.load('spec/fixtures/yaml_with_aliases.yml', aliases: false)
         end.to raise_error(Psych::BadAlias, /Alias parsing was not enabled|base_accounts/)
       end
     end
 
     it 'continues to evaluate ERB with the default parser' do
-      mash = Hashie::Mash.load('spec/fixtures/yaml_with_erb.yml')
+      mash = described_class.load('spec/fixtures/yaml_with_erb.yml')
       expect(mash.value).to eq('evaluated')
     end
 
     context 'when the file has symbols' do
       it 'can override the value of permitted_classes' do
-        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml', permitted_classes: [Symbol])
+        mash = described_class.load('spec/fixtures/yaml_with_symbols.yml', permitted_classes: [Symbol])
         expect(mash.user_icon.width).to eq(200)
       end
+
       it 'uses defaults for permitted_classes' do
         expect do
-          Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml')
+          described_class.load('spec/fixtures/yaml_with_symbols.yml')
         end.to raise_error Psych::DisallowedClass, /Symbol/
       end
+
       it 'can override the value of permitted_symbols' do
-        mash = Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
-                                 permitted_classes: [Symbol],
-                                 permitted_symbols: %i[
-                                   user_icon
-                                   width
-                                   height
-                                 ])
+        mash = described_class.load('spec/fixtures/yaml_with_symbols.yml',
+                                    permitted_classes: [Symbol],
+                                    permitted_symbols: %i[
+                                      user_icon
+                                      width
+                                      height
+                                    ])
         expect(mash.user_icon.width).to eq(200)
       end
+
       it 'raises an error on insufficient permitted_symbols' do
         expect do
-          Hashie::Mash.load('spec/fixtures/yaml_with_symbols.yml',
-                            permitted_classes: [Symbol],
-                            permitted_symbols: %i[
-                              user_icon
-                              width
-                            ])
+          described_class.load('spec/fixtures/yaml_with_symbols.yml',
+                               permitted_classes: [Symbol],
+                               permitted_symbols: %i[
+                                 user_icon
+                                 width
+                               ])
         end.to raise_error Psych::DisallowedClass, /Symbol/
       end
     end
   end
 
   describe '#to_module(mash_method_name)' do
-    let(:mash) { described_class.new }
     subject { Class.new.extend mash.to_module }
+
+    let(:mash) { described_class.new }
 
     it 'defines a settings method on the klass class that extends the module' do
       expect(subject).to respond_to(:settings)
@@ -986,9 +999,9 @@ describe Hashie::Mash do
     end
 
     context 'when a settings_method_name is set' do
-      let(:mash_method_name) { 'config' }
-
       subject { Class.new.extend mash.to_module(mash_method_name) }
+
+      let(:mash_method_name) { 'config' }
 
       it 'defines a settings method on the klass class that extends the module' do
         expect(subject).to respond_to(mash_method_name.to_sym)
@@ -1010,11 +1023,12 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject { subclass.new(a: 1) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(subject.reverse_merge(a: 5)).to be_kind_of(subclass)
+        expect(subject.reverse_merge(a: 5)).to be_a(subclass)
       end
     end
   end
@@ -1023,7 +1037,7 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 'apple', b: 4) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.invert).to be_kind_of(described_class)
+      expect(mash.invert).to be_a(described_class)
     end
 
     it 'returns a mash with the keys and values inverted' do
@@ -1031,11 +1045,12 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1, b: nil) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash.invert).to be_kind_of(subclass)
+        expect(sub_mash.invert).to be_a(subclass)
       end
     end
   end
@@ -1044,19 +1059,20 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 1, b: nil) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.reject { |_k, v| v.nil? }).to be_kind_of(described_class)
+      expect(mash.compact).to be_a(described_class)
     end
 
     it 'rejects keys for which the block returns true' do
-      expect(mash.reject { |_k, v| v.nil? }).to eq('a' => 1)
+      expect(mash.compact).to eq('a' => 1)
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1, b: nil) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash.reject { |_k, v| v.nil? }).to be_kind_of(subclass)
+        expect(sub_mash.compact).to be_a(subclass)
       end
     end
   end
@@ -1065,7 +1081,7 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 'apple', b: 4) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.select { |_k, v| v.is_a? String }).to be_kind_of(described_class)
+      expect(mash.select { |_k, v| v.is_a? String }).to be_a(described_class)
     end
 
     it 'selects keys for which the block returns true' do
@@ -1073,24 +1089,25 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1, b: nil) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash.select { |_k, v| v.is_a? String }).to be_kind_of(subclass)
+        expect(sub_mash.select { |_k, v| v.is_a? String }).to be_a(subclass)
       end
     end
   end
 
   describe '.quiet' do
     it 'returns a subclass of the calling class' do
-      expect(Hashie::Mash.quiet.new).to be_a(Hashie::Mash)
+      expect(described_class.quiet.new).to be_a(described_class)
     end
 
     it 'memoizes and returns classes' do
-      call_one = Hashie::Mash.quiet
-      call_two = Hashie::Mash.quiet
-      expect(Hashie::Mash.instance_variable_get('@memoized_classes').count).to eq(1)
+      call_one = described_class.quiet
+      call_two = described_class.quiet
+      expect(described_class.instance_variable_get('@memoized_classes').count).to eq(1)
       expect(call_one).to eq(call_two)
     end
   end
@@ -1116,7 +1133,7 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 1) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.transform_values(&:to_s)).to be_kind_of(described_class)
+      expect(mash.transform_values(&:to_s)).to be_a(described_class)
     end
 
     it 'transforms the value' do
@@ -1124,11 +1141,12 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1).transform_values { |a| a + 2 } }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash).to be_kind_of(subclass)
+        expect(sub_mash).to be_a(subclass)
       end
     end
 
@@ -1136,7 +1154,7 @@ describe Hashie::Mash do
       subject(:mash) { described_class.new(a: 1, b: nil) }
 
       it 'returns a Hashie::Mash' do
-        expect(mash.compact).to be_kind_of(described_class)
+        expect(mash.compact).to be_a(described_class)
       end
 
       it 'removes keys with nil values' do
@@ -1144,11 +1162,12 @@ describe Hashie::Mash do
       end
 
       context 'when using with subclass' do
-        let(:subclass) { Class.new(Hashie::Mash) }
         subject(:sub_mash) { subclass.new(a: 1, b: nil) }
 
+        let(:subclass) { Class.new(described_class) }
+
         it 'creates an instance of subclass' do
-          expect(sub_mash.compact).to be_kind_of(subclass)
+          expect(sub_mash.compact).to be_a(subclass)
         end
       end
     end
@@ -1158,7 +1177,7 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 1, b: 2) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.slice(:a)).to be_kind_of(described_class)
+      expect(mash.slice(:a)).to be_a(described_class)
     end
 
     it 'returns a Mash with only the keys passed' do
@@ -1166,11 +1185,12 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1, b: 2) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash.slice(:a)).to be_kind_of(subclass)
+        expect(sub_mash.slice(:a)).to be_a(subclass)
       end
     end
   end
@@ -1179,7 +1199,7 @@ describe Hashie::Mash do
     subject(:mash) { described_class.new(a: 1, b: 2) }
 
     it 'returns a Hashie::Mash' do
-      expect(mash.transform_keys { |k| k + k }).to be_kind_of(described_class)
+      expect(mash.transform_keys { |k| k + k }).to be_a(described_class)
     end
 
     it 'returns a Mash with transformed keys' do
@@ -1187,17 +1207,19 @@ describe Hashie::Mash do
     end
 
     context 'when using with subclass' do
-      let(:subclass) { Class.new(Hashie::Mash) }
       subject(:sub_mash) { subclass.new(a: 1, b: 2) }
 
+      let(:subclass) { Class.new(described_class) }
+
       it 'creates an instance of subclass' do
-        expect(sub_mash.transform_keys { |k| k + k }).to be_kind_of(subclass)
+        expect(sub_mash.transform_keys { |k| k + k }).to be_a(subclass)
       end
     end
   end
 
   context 'merging multiple hashes' do
-    subject(:mash) { Hashie::Mash.new(model: 'Honda') }
+    subject(:mash) { described_class.new(model: 'Honda') }
+
     it 'merges multiple hashes and mashes passed to #merge' do
       first_hash = { model: 'Ford' }
       second_hash = { model: 'DeLorean' }
@@ -1205,10 +1227,11 @@ describe Hashie::Mash do
     end
   end
 
-  context '#except' do
+  describe '#except' do
     subject(:mash) { described_class.new(a: 'A', b: 'B') }
+
     it 'return a Hashie::Mash' do
-      expect(mash.except(:b)).to be_kind_of(described_class)
+      expect(mash.except(:b)).to be_a(described_class)
     end
 
     it 'excludes keys' do

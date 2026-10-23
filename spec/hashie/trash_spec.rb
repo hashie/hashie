@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Trash do
@@ -88,7 +90,7 @@ describe Hashie::Trash do
     end
   end
 
-  describe ' initializing with a Hash' do
+  describe 'initializing with a Hash' do
     it 'does not initialize non-existent properties' do
       expect { TrashTest.new(bork: 'abc') }.to raise_error(NoMethodError)
     end
@@ -110,7 +112,7 @@ describe Hashie::Trash do
 
   describe 'translating properties using a proc' do
     class TrashLambdaTest < Hashie::Trash
-      property :first_name, from: :firstName, with: ->(value) { value.reverse }
+      property :first_name, from: :firstName, with: lambda(&:reverse)
     end
 
     let(:lambda_trash) { TrashLambdaTest.new }
@@ -136,8 +138,8 @@ describe Hashie::Trash do
 
   describe 'translating multiple properties using a proc' do
     class SomeDataModel < Hashie::Trash
-      property :value_a, from: :config, with: ->(config) { config.a }
-      property :value_b, from: :config, with: ->(config) { config.b }
+      property :value_a, from: :config, with: lambda(&:a)
+      property :value_b, from: :config, with: lambda(&:b)
     end
 
     ConfigDataModel = Struct.new(:a, :b)
@@ -159,7 +161,7 @@ describe Hashie::Trash do
 
   describe 'translating multiple properties from the same source hash key' do
     class AnotherDataModel < Hashie::Trash
-      property :first_name,                          transform_with: ->(n) { n.upcase }
+      property :first_name,                          transform_with: lambda(&:upcase)
       property :first_name_short, from: :first_name, transform_with: ->(n) { n[0, 3] }
     end
 
@@ -176,7 +178,7 @@ describe Hashie::Trash do
 
   describe 'uses with or transform_with interchangeably' do
     class TrashLambdaTestTransformWith < Hashie::Trash
-      property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
+      property :first_name, from: :firstName, transform_with: lambda(&:reverse)
     end
 
     let(:lambda_trash) { TrashLambdaTestTransformWith.new }
@@ -194,7 +196,7 @@ describe Hashie::Trash do
 
   describe 'translating properties without from option using a proc' do
     class TrashLambdaTestWithProperties < Hashie::Trash
-      property :first_name, transform_with: ->(value) { value.reverse }
+      property :first_name, transform_with: lambda(&:reverse)
     end
 
     let(:lambda_trash) { TrashLambdaTestWithProperties.new }
@@ -212,7 +214,7 @@ describe Hashie::Trash do
 
     context 'when :from option is given' do
       class TrashLambdaTest3 < Hashie::Trash
-        property :first_name, from: :firstName, transform_with: ->(value) { value.reverse }
+        property :first_name, from: :firstName, transform_with: lambda(&:reverse)
       end
 
       it 'does not override the :from option in the constructor' do
@@ -229,11 +231,11 @@ describe Hashie::Trash do
 
   describe 'inheritable transforms' do
     class TransformA < Hashie::Trash
-      property :some_value, transform_with: ->(v) { v.to_i }
+      property :some_value, transform_with: lambda(&:to_i)
     end
 
     class TransformB < TransformA
-      property :some_other_value, transform_with: ->(v) { v.to_i }
+      property :some_other_value, transform_with: lambda(&:to_i)
     end
 
     class TransformC < TransformB
@@ -251,7 +253,7 @@ describe Hashie::Trash do
 
   describe 'inheritable translations' do
     class TranslationA < Hashie::Trash
-      property :some_value, from: 'someValue', with: ->(v) { v.to_i }
+      property :some_value, from: 'someValue', with: lambda(&:to_i)
     end
 
     class TranslationB < TranslationA
@@ -351,7 +353,7 @@ describe Hashie::Trash do
       expect { subject[:value] }.to raise_error(
         NoMethodError, 'the property `value` is not defined for `anonymous class`'
       )
-      expect(subject.to_h[:value]).to eq(nil)
+      expect(subject.to_h[:value]).to be_nil
       expect(subject.copy_of_value).to eq(0)
     end
 

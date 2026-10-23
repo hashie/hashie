@@ -25,9 +25,7 @@ module Hashie
       def method_missing(name, *args, &block) # rubocop:disable Style/MissingRespondToMissing
         return super unless block && !name.to_s.end_with?('=', '?', '!', '_')
 
-        if args.size > 1
-          raise ArgumentError, "wrong number of arguments (given `#{args.size}`, expected 0..1)"
-        end
+        raise ArgumentError, "wrong number of arguments (given `#{args.size}`, expected 0..1)" if args.size > 1
 
         child = block_access_child(self, block_access_key(name))
         child = block_access_child(child, args.first) unless args.empty?

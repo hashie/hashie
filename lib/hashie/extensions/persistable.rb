@@ -42,16 +42,12 @@ module Hashie
       private
 
       def persistable_data(value, ancestors = [])
-        if ancestors.any? { |ancestor| ancestor.equal?(value) }
-          raise ArgumentError, 'cannot persist cyclic data'
-        end
+        raise ArgumentError, 'cannot persist cyclic data' if ancestors.any? { |ancestor| ancestor.equal?(value) }
 
         case value
         when ::Hash
           value.each_with_object({}) do |(key, child), data|
-            unless key.is_a?(String) || key.is_a?(Symbol)
-              raise TypeError, 'persisted hash keys must be strings or symbols'
-            end
+            raise TypeError, 'persisted hash keys must be strings or symbols' unless key.is_a?(String) || key.is_a?(Symbol)
 
             data[persistable_data(key)] = persistable_data(child, ancestors + [value])
           end

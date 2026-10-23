@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'logger'
 
 module Hashie
@@ -5,7 +7,7 @@ module Hashie
   #
   # @return [Logger]
   def self.logger
-    @logger ||= Logger.new(STDOUT)
+    @logger ||= Logger.new($stdout)
   end
 
   # Sets the logger that Hashie uses for reporting errors.

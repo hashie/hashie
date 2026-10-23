@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module DeepLocate
@@ -17,9 +19,7 @@ module Hashie
       #   DeepLocate.deep_locate -> (key, value, object) { key == :title }, books
       #   # => [{:title=>"Ruby for beginners", :pages=>120}, ...]
       def self.deep_locate(comparator, object)
-        unless comparator.respond_to?(:call)
-          comparator = _construct_key_comparator(comparator, object)
-        end
+        comparator = _construct_key_comparator(comparator, object) unless comparator.respond_to?(:call)
 
         _deep_locate(comparator, object)
       end
@@ -66,7 +66,7 @@ module Hashie
       end
 
       def self._construct_key_comparator(search_key, object)
-        if object.respond_to?(:indifferent_access?) && object.indifferent_access? ||
+        if (object.respond_to?(:indifferent_access?) && object.indifferent_access?) ||
            activesupport_indifferent?(object)
           search_key = search_key.to_s
         end
@@ -79,9 +79,7 @@ module Hashie
 
       def self._deep_locate(comparator, object, result = [])
         if object.is_a?(::Enumerable)
-          if object.any? { |value| _match_comparator?(value, comparator, object) }
-            result.push object
-          end
+          result.push object if object.any? { |value| _match_comparator?(value, comparator, object) }
 
           (object.respond_to?(:values) ? object.values : object.entries).each do |value|
             _deep_locate(comparator, value, result)

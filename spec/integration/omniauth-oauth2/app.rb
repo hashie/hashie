@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'logger'
 require 'action_controller/railtie'
 require 'action_view/railtie'
@@ -22,20 +24,20 @@ module RailsApp
   end
 end
 
-LAYOUT = <<-HTML.freeze
-<!DOCTYPE html>
-<html>
-<head>
-  <title>TestApp</title>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-<%= yield %>
-</body>
-</html>
+LAYOUT = <<~HTML
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>TestApp</title>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+  <%= yield %>
+  </body>
+  </html>
 HTML
 
-INDEX = '<h1>Hello, world!</h1>'.freeze
+INDEX = '<h1>Hello, world!</h1>'
 
 class ApplicationController < ActionController::Base
   include Rails.application.routes.url_helpers
@@ -44,7 +46,7 @@ class ApplicationController < ActionController::Base
 
   self.view_paths = [ActionView::FixtureResolver.new(
     'layouts/application.html.erb' => LAYOUT,
-    'application/index.html.erb'   => INDEX
+    'application/index.html.erb' => INDEX
   )]
 
   def index; end

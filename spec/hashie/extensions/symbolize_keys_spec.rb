@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'support/module_context'
 
@@ -62,8 +64,9 @@ describe Hashie::Extensions::SymbolizeKeys do
   let(:object) { subject }
 
   describe '#symbolize_keys!' do
-    include_examples 'symbolize_keys!'
     let(:object) { subject }
+
+    it_behaves_like 'symbolize_keys!'
 
     it 'returns itself' do
       expect(subject.symbolize_keys!).to eq subject
@@ -71,26 +74,29 @@ describe Hashie::Extensions::SymbolizeKeys do
   end
 
   describe '#symbolize_keys' do
-    include_examples 'symbolize_keys'
+    it_behaves_like 'symbolize_keys'
   end
 
   context 'class methods' do
     subject { described_class }
+
     let(:object) { {} }
 
     describe '.symbolize_keys' do
-      include_examples 'symbolize_keys'
+      it_behaves_like 'symbolize_keys'
     end
+
     describe '.symbolize_keys!' do
-      include_examples 'symbolize_keys!'
+      it_behaves_like 'symbolize_keys!'
     end
   end
 
   context 'singleton methods' do
     subject { Hash }
+
     let(:object) do
       subject.new.merge('a' => 1, 'b' => { 'c' => 2 }, 1 => 'numeric key')
-             .extend(Hashie::Extensions::SymbolizeKeys)
+             .extend(described_class)
     end
     let(:expected_hash) { { a: 1, b: { c: 2 }, 1 => 'numeric key' } }
 
@@ -98,14 +104,17 @@ describe Hashie::Extensions::SymbolizeKeys do
       it 'does not raise error' do
         expect { object.symbolize_keys }.not_to raise_error
       end
+
       it 'produces expected symbolized hash' do
         expect(object.symbolize_keys).to eq(expected_hash)
       end
     end
+
     describe '.symbolize_keys!' do
       it 'does not raise error' do
         expect { object.symbolize_keys! }.not_to raise_error
       end
+
       it 'produces expected symbolized hash' do
         expect(object.symbolize_keys!).to eq(expected_hash)
       end
@@ -114,19 +123,16 @@ describe Hashie::Extensions::SymbolizeKeys do
 end
 
 describe Hashie do
-  let!(:dummy_class) do
-    klass = Class.new(::Hash)
-    klass.send :include, Hashie::Extensions::StringifyKeys
-    klass
-  end
-
   subject { described_class }
+
+  let(:dummy_class) { Class.new(Hash) { include Hashie::Extensions::StringifyKeys } }
   let(:object) { {} }
 
   describe '.symbolize_keys' do
-    include_examples 'symbolize_keys'
+    it_behaves_like 'symbolize_keys'
   end
+
   describe '.symbolize_keys!' do
-    include_examples 'symbolize_keys!'
+    it_behaves_like 'symbolize_keys!'
   end
 end

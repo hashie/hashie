@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Dash::PredefinedValues do
@@ -7,6 +9,12 @@ describe Hashie::Extensions::Dash::PredefinedValues do
 
       property :gender, values: %i[male female prefer_not_to_say]
       property :age, values: (0..150)
+    end
+  end
+
+  let(:subclass) do
+    Class.new(extended_dash) do
+      property :language, values: %i[ruby javascript]
     end
   end
 
@@ -44,12 +52,6 @@ describe Hashie::Extensions::Dash::PredefinedValues do
         property :name, values: -> { :foo }
       end
     end.to raise_error(ArgumentError, %(`values` accepts an `Array` or a `Range`))
-  end
-
-  let(:subclass) do
-    Class.new(extended_dash) do
-      property :language, values: %i[ruby javascript]
-    end
   end
 
   it 'passes property predefined list to subclasses' do

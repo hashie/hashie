@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hashie/hash'
 
 module Hashie
@@ -55,11 +57,11 @@ module Hashie
       initialize(coder['hash'], coder['parent'])
     end
 
-    def id(*args) #:nodoc:
+    def id(*args) # :nodoc:
       method_missing(:id, *args)
     end
 
-    def merge_store(key, *args) #:nodoc:
+    def merge_store(key, *args) # :nodoc:
       case args.length
       when 1
         val = args.first
@@ -72,7 +74,7 @@ module Hashie
       self
     end
 
-    def method_missing(name, *args) #:nodoc:
+    def method_missing(name, *args) # :nodoc:
       if args.empty? && name.to_s.end_with?('!')
         key = name[0...-1].to_sym
 

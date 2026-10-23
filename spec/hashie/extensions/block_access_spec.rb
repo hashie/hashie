@@ -92,21 +92,21 @@ describe Hashie::Extensions::BlockAccess do
     let(:klass) { hash_class }
     let(:key) { 'author' }
 
-    include_examples 'block access'
+    it_behaves_like 'block access'
   end
 
   context 'with a Mash subclass' do
     let(:klass) { mash_class }
     let(:key) { 'author' }
 
-    include_examples 'block access'
+    it_behaves_like 'block access'
   end
 
   context 'with a Dash subclass' do
     let(:klass) { dash_class }
     let(:key) { :author }
 
-    include_examples 'block access'
+    it_behaves_like 'block access'
 
     it 'rejects undeclared properties' do
       expect { klass.new.unknown {} }.to raise_error(NoMethodError)
@@ -162,7 +162,7 @@ describe Hashie::Extensions::BlockAccess do
       hash.test { |test| test[:one] = false }
 
       expect { hash.test(:one) {} }.to raise_error(TypeError)
-      expect(hash.test[:one]).to eq false
+      expect(hash.test[:one]).to be false
     end
   end
 
@@ -215,7 +215,7 @@ describe Hashie::Extensions::BlockAccess do
 
   it 'preserves Mash suffix behavior' do
     hash = mash_class.new
-    expect(hash.unknown?).to eq false
+    expect(hash.unknown?).to be false
     expect(hash.author!).to be_an_instance_of(mash_class)
     expect(hash.temporary_).to be_an_instance_of(mash_class)
     expect(hash).not_to have_key('temporary')
