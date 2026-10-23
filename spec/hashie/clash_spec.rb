@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module SerializationFixtures
@@ -22,7 +24,7 @@ describe Hashie::Clash do
 
   it 'is able to use bang notation to create a new Clash on a key' do
     subject.foo!
-    expect(subject[:foo]).to be_kind_of(Hashie::Clash)
+    expect(subject[:foo]).to be_a(described_class)
   end
 
   it 'is able to chain onto the new Clash when using bang notation' do
@@ -67,12 +69,14 @@ describe Hashie::Clash do
     subject[:foo] = Hashie::Hash[bar: 'abc']
     subject.foo!.baz(123)
     expect(subject).to eq(foo: { bar: 'abc', baz: 123 })
-    expect(subject[:foo]).to be_kind_of(Hashie::Clash)
+    expect(subject[:foo]).to be_a(described_class)
   end
 
   it 'raises a ChainError when chaining into a non-hash key' do
     subject.foo('bar')
-    expect { subject.foo! }.to raise_error(Hashie::Clash::ChainError, 'tried to chain into a non-hash key')
+    expect do
+      subject.foo!
+    end.to raise_error(Hashie::Clash::ChainError, 'tried to chain into a non-hash key')
   end
 
   describe '#respond_to?' do
@@ -179,9 +183,7 @@ describe Hashie::Clash do
       let(:recovered) { Marshal.load(Marshal.dump(source)) }
 
       before do
-        if RUBY_ENGINE == 'ruby'
-          pending('MRI calls the advertised marshal_dump hook, which raises NoMethodError')
-        end
+        pending('MRI calls the advertised marshal_dump hook, which raises NoMethodError') if RUBY_ENGINE == 'ruby'
       end
 
       it 'preserves classes and values at every level' do

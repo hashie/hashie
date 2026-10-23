@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # see http://danger.systems
 
 danger.import_dangerfile(gem: 'danger-pr-comment')

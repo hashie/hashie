@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 source 'http://rubygems.org'
 
-gem 'hashie', path: '../../..'
 gem 'activesupport', '~> 5.x', require: false
+gem 'hashie', path: '../../..'
 
 gem 'rake'
 gem 'rspec', '~> 3.5.0'

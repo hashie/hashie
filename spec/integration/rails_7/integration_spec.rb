@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['RAILS_ENV'] = 'test'
 
 require 'logger' # https://github.com/rails/rails/issues/54260
@@ -6,7 +8,7 @@ require 'rspec/core'
 RSpec.describe 'rails', type: :request do
   let(:stdout) { StringIO.new }
 
-  around(:each) do |example|
+  around do |example|
     original_stdout = $stdout
     $stdout = stdout
     require_relative 'app'
@@ -23,7 +25,7 @@ RSpec.describe 'rails', type: :request do
     expect(Hashie.logger).to eq(Rails.logger)
   end
 
-  context '#except' do
+  describe '#except' do
     subject { Hashie::Mash.new(x: 1, y: 2) }
 
     it 'returns an instance of the class it was called on' do
@@ -41,7 +43,9 @@ RSpec.describe 'rails', type: :request do
     end
   end
 
-  context '#deep_transform_keys' do
+  describe '#deep_transform_keys' do
+    subject(:hash) { klass.new(foo_bar: 'bar', foo_baz: 'baz') }
+
     let(:klass) do
       Class.new(Hashie::Dash) do
         property :foo_bar
@@ -49,15 +53,13 @@ RSpec.describe 'rails', type: :request do
       end
     end
 
-    subject(:hash) { klass.new(foo_bar: 'bar', foo_baz: 'baz') }
-
     it 'successfully deep transforms keys' do
       transformed = hash.deep_transform_keys(&:to_s)
       expect(transformed.keys).to all(be_a(String))
     end
   end
 
-  it 'works' do
+  it 'renders the application page' do
     get '/'
     assert_select 'h1', 'Hello, world!'
   end

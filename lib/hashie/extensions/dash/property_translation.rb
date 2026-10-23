@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Dash
@@ -156,12 +158,12 @@ module Hashie
               send("#{property}=", value)
 
               if self.class.transformation_exists? property
-                super property, self.class.transformed_property(property, value)
+                super(property, self.class.transformed_property(property, value))
               elsif self.class.properties.include?(property)
-                super(property, value)
+                super
               end
             elsif self.class.transformation_exists? property
-              super property, self.class.transformed_property(property, value)
+              super(property, self.class.transformed_property(property, value))
             elsif property_exists? property
               super
             end
@@ -170,13 +172,14 @@ module Hashie
           # Deletes any keys that have a translation
           def initialize_attributes(attributes)
             return unless attributes
+
             attributes_copy = attributes.dup.delete_if do |k, v|
               if self.class.translations_hash.include?(k)
                 self[k] = v
                 true
               end
             end
-            super attributes_copy
+            super(attributes_copy)
           end
 
           # Raises an NoMethodError if the property doesn't exist

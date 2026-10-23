@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Mash
@@ -26,13 +28,10 @@ module Hashie
         # @param [Object, String, Symbol] key the key to access.
         # @return [Object] the value assigned to the key.
         def convert_key(key)
-          if regular_key?(key)
-            key
-          elsif (converted_key = __convert(key)) && regular_key?(converted_key)
-            converted_key
-          else
-            key
-          end
+          return key if regular_key?(key)
+
+          converted_key = __convert(key)
+          converted_key && regular_key?(converted_key) ? converted_key : key
         end
 
         # Converts symbol/string keys to their alternative formats, but leaves

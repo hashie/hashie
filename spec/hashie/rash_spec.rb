@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Rash do
   subject do
-    Hashie::Rash.new(
+    described_class.new(
       /hello/ => 'hello',
       /world/ => 'world',
       'other' => 'whee',
@@ -32,7 +34,7 @@ describe Hashie::Rash do
   end
 
   it 'finds other objects' do
-    expect(subject[true]).to eq false
+    expect(subject[true]).to be false
     expect(subject[1]).to eq 'awesome'
   end
 
@@ -65,20 +67,20 @@ describe Hashie::Rash do
 
   it 'yields in find unless a key matches' do
     expect { |y| subject.fetch(1_000_000, &y) }.to yield_control
-    expect { |y| subject.fetch(10.1, &y) }.to_not yield_control
+    expect { |y| subject.fetch(10.1, &y) }.not_to yield_control
   end
 
   it 'gives a default value' do
     expect(subject.fetch(10.1, 'noop')).to eq 'rangey'
     expect(subject.fetch(1_000_000, 'noop')).to eq 'noop'
-    expect(subject.fetch(1_000_000) { 'noop' }).to eq 'noop'
+    expect(subject.fetch(1_000_000, 'noop')).to eq 'noop'
     expect(subject.fetch(1_000_000) { |k| k }).to eq 1_000_000
-    expect(subject.fetch(1_000_000, 'noop') { 'op' }).to eq 'op'
+    expect(subject.fetch(1_000_000, 'op')).to eq 'op'
   end
 
   it 'responds to hash methods' do
     expect(subject.respond_to?(:to_a)).to be true
-    expect(subject.methods).to_not include(:to_a)
+    expect(subject.methods).not_to include(:to_a)
   end
 
   it 'delegates missing methods to the underlying hash' do
@@ -87,7 +89,9 @@ describe Hashie::Rash do
 
   it 'raises an ArgumentError when fetch is called with the wrong number of arguments' do
     expect { subject.fetch }.to raise_error(ArgumentError, 'expected 1-2 arguments, got `0`')
-    expect { subject.fetch(1, 2, 3) }.to raise_error(ArgumentError, 'expected 1-2 arguments, got `3`')
+    expect do
+      subject.fetch(1, 2, 3)
+    end.to raise_error(ArgumentError, 'expected 1-2 arguments, got `3`')
   end
 
   it 'does not lose keys' do

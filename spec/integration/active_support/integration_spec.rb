@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support'
 require 'active_support/core_ext'
 require 'active_support/core_ext/hash/indifferent_access'
@@ -12,7 +14,8 @@ end
 
 RSpec.describe Hashie::Mash do
   describe '#extractable_options?' do
-    subject { Hashie::Mash.new(name: 'foo') }
+    subject { described_class.new(name: 'foo') }
+
     let(:args) { [101, 'bar', subject] }
 
     it 'can be extracted from an array' do
@@ -23,6 +26,8 @@ RSpec.describe Hashie::Mash do
 end
 
 RSpec.describe Hashie::Extensions::DeepFind do
+  subject(:instance) { hash.with_indifferent_access.extend(described_class) }
+
   let(:hash) do
     {
       library: {
@@ -38,8 +43,6 @@ RSpec.describe Hashie::Extensions::DeepFind do
       }
     }
   end
-
-  subject(:instance) { hash.with_indifferent_access.extend(Hashie::Extensions::DeepFind) }
 
   describe '#deep_find' do
     it 'indifferently detects a value from a nested hash' do
@@ -129,11 +132,12 @@ RSpec.describe Hashie::Extensions::DeepLocate do
     subject(:instance) { hash.with_indifferent_access.extend(described_class) }
 
     it 'can locate symbolic keys' do
-      expect(described_class.deep_locate(:lsr10, instance)).to eq ['lsr10' => { 'gte' => 2014 }]
+      expect(described_class.deep_locate(:lsr10, instance)).to eq [{ 'lsr10' => { 'gte' => 2014 } }]
     end
 
     it 'can locate string keys' do
-      expect(described_class.deep_locate('lsr10', instance)).to eq ['lsr10' => { 'gte' => 2014 }]
+      expect(described_class.deep_locate('lsr10',
+                                         instance)).to eq [{ 'lsr10' => { 'gte' => 2014 } }]
     end
   end
 end
@@ -270,7 +274,7 @@ RSpec.describe Hashie::Extensions::IndifferentAccess do
 
       it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
-        expect({}).not_to be_respond_to(:indifferent_access?)
+        expect({}).not_to respond_to(:indifferent_access?)
       end
     end
 
@@ -287,12 +291,12 @@ RSpec.describe Hashie::Extensions::IndifferentAccess do
       it 'removes old keys' do
         [:foo, 'foo'].each do |k|
           expect(h[k]).to be_nil
-          expect(h.key?(k)).to be_falsy
+          expect(h).not_to be_key(k)
         end
       end
 
       it 'creates new keys with indifferent access' do
-        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h.key?(k)).to be_truthy }
+        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h).to be_key(k) }
         expect(h[:bar]).to eq 'baz'
         expect(h['bar']).to eq 'baz'
         expect(h[:hi]).to eq 'bye'
@@ -324,17 +328,20 @@ RSpec.describe Hashie::Extensions::IndifferentAccess do
 
   describe 'with merge initializer' do
     subject { IndifferentHashWithMergeInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 
   describe 'with array initializer' do
     subject { IndifferentHashWithArrayInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 
   describe 'with try convert initializer' do
     subject { IndifferentHashWithTryConvertInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 
   describe 'with coercion' do
@@ -365,7 +372,7 @@ RSpec.describe Hashie::Extensions::IndifferentAccess do
   describe DashTestDefaultProc do
     it 'as_json behaves correctly with default proc' do
       object = described_class.new
-      expect(object.as_json).to be == { 'fields' => [] }
+      expect(object.as_json).to eq('fields' => [])
     end
   end
 end

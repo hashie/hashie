@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hashie/hash'
 require 'hashie/array'
 require 'hashie/utils'
@@ -133,7 +135,7 @@ module Hashie
     # Sets an attribute in the Mash. Symbol keys will be converted to
     # strings before being set, and Hashes will be converted into Mashes
     # for nesting purposes.
-    def custom_writer(key, value, convert = true) #:nodoc:
+    def custom_writer(key, value, convert = true) # :nodoc:
       log_built_in_message(key) if key.respond_to?(:to_sym) && log_collision?(key.to_sym)
       regular_writer(convert_key(key), convert ? convert_value(value) : value)
     end
@@ -182,13 +184,13 @@ module Hashie
     # Returns a new instance of the class it was called on, containing elements
     # for which the given block returns false.
     def reject(&blk)
-      self.class.new(super(&blk))
+      self.class.new(super)
     end
 
     # Returns a new instance of the class it was called on, containing elements
     # for which the given block returns true.
     def select(&blk)
-      self.class.new(super(&blk))
+      self.class.new(super)
     end
 
     alias regular_dup dup
@@ -276,6 +278,7 @@ module Hashie
 
     def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
+
       suffix = method_suffix(method_name)
       if suffix
         true
@@ -289,17 +292,18 @@ module Hashie
       method_name.end_with?(*ALLOWED_SUFFIXES) && key?(method_name.chop)
     end
 
-    def method_missing(method_name, *args, &blk) # rubocop:disable Style/MethodMissing
+    def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
+
       name, suffix = method_name_and_suffix(method_name)
       case suffix
-      when '='.freeze
+      when '='
         assign_property(name, args.first)
-      when '?'.freeze
+      when '?'
         !!self[name]
-      when '!'.freeze
+      when '!'
         initializing_reader(name)
-      when '_'.freeze
+      when '_'
         underbang_reader(name)
       else
         self[method_name]
@@ -321,7 +325,7 @@ module Hashie
     end
 
     def transform_values(&blk)
-      self.class.new(super(&blk))
+      self.class.new(super)
     end
 
     # Returns a new instance of the class it was called on, with nil values
@@ -336,7 +340,7 @@ module Hashie
     end
 
     def transform_keys(&blk)
-      self.class.new(super(&blk))
+      self.class.new(super)
     end
 
     def except(*keys)
@@ -351,7 +355,7 @@ module Hashie
       if method_name.end_with?(*ALLOWED_SUFFIXES)
         [method_name[0..-2], method_name[-1]]
       else
-        [method_name[0..-1], nil]
+        [method_name, nil]
       end
     end
 
@@ -362,13 +366,13 @@ module Hashie
 
     # Symbol#name returns the symbol's interned frozen string, where
     # Symbol#to_s allocates a new one on every read and write.
-    def convert_key(key) #:nodoc:
+    def convert_key(key) # :nodoc:
       return key.name if key.is_a?(Symbol)
 
       key.respond_to?(:to_sym) ? key.to_s : key
     end
 
-    def convert_value(val, duping = false) #:nodoc:
+    def convert_value(val, duping = false) # :nodoc:
       case val
       when self.class
         val.dup
@@ -400,12 +404,12 @@ module Hashie
     end
 
     def log_collision?(method_key)
-      return unless method_key.is_a?(String) || method_key.is_a?(Symbol)
-      return unless respond_to?(method_key)
+      return false unless method_key.is_a?(String) || method_key.is_a?(Symbol)
+      return false unless respond_to?(method_key)
 
       _, suffix = method_name_and_suffix(method_key)
 
-      (!suffix || suffix == '='.freeze) &&
+      (!suffix || suffix == '=') &&
         !self.class.disable_warnings?(method_key) &&
         !(regular_key?(method_key) || regular_key?(method_key.to_s))
     end

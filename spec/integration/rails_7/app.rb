@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'logger'
 require 'action_controller/railtie'
 require 'action_view/railtie'
@@ -17,17 +19,17 @@ module RailsApp
   end
 end
 
-PAGE = <<-HTML.freeze
-<!DOCTYPE html>
-<html>
-<head>
-  <title>TestApp</title>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-  <h1>Hello, world!</h1>
-</body>
-</html>
+PAGE = <<~HTML
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>TestApp</title>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+  </body>
+  </html>
 HTML
 
 class ApplicationController < ActionController::Base

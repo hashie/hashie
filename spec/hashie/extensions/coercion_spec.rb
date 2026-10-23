@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Coercion do
@@ -24,16 +26,20 @@ describe Hashie::Extensions::Coercion do
     end
   end
 
-  before(:each) do
+  subject { ExampleCoercableHash }
+
+  before do
     class ExampleCoercableHash < Hash
       include Hashie::Extensions::Coercion
       include Hashie::Extensions::MergeInitializer
     end
   end
 
-  subject { ExampleCoercableHash }
-
   let(:instance) { subject.new }
+
+  after do
+    Object.send(:remove_const, :ExampleCoercableHash)
+  end
 
   describe '#coerce_key' do
     context 'Dash initialization and defaults' do
@@ -92,8 +98,8 @@ describe Hashie::Extensions::Coercion do
       class RootCoercableHash < BaseCoercableHash
         coerce_key :nested, NestedCoercableHash
         coerce_key :other, OtherNestedCoercableHash
-        coerce_key :nested_list, Array[NestedCoercableHash]
-        coerce_key :nested_hash, Hash[String => NestedCoercableHash]
+        coerce_key :nested_list, [NestedCoercableHash]
+        coerce_key(:nested_hash, { String => NestedCoercableHash })
       end
 
       def test_nested_object(obj)
@@ -103,6 +109,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       subject { RootCoercableHash }
+
       let(:instance) { subject.new }
 
       it 'does not add coercions to superclass' do
@@ -153,6 +160,7 @@ describe Hashie::Extensions::Coercion do
         end
 
         subject { RepetitiveCoercableHash }
+
         let(:instance) { subject.new }
 
         it 'does not raise a stack overflow error' do
@@ -164,7 +172,7 @@ describe Hashie::Extensions::Coercion do
       end
     end
 
-    it { expect(subject).to be_respond_to(:coerce_key) }
+    it { expect(subject).to respond_to(:coerce_key) }
 
     context 'with callable coercers' do
       let(:coercer) do
@@ -226,7 +234,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'coerces nested arrays' do
-        subject.coerce_key :foo, Array[Array[coercer]]
+        subject.coerce_key :foo, [[coercer]]
         input = [%w[true false]].map(&:freeze).freeze
         instance[:foo] = input
         expect(instance[:foo]).to eq([[true, false]])
@@ -240,7 +248,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'coerces hash keys and values' do
-        subject.coerce_key :foo, Hash[coercer => coercer]
+        subject.coerce_key(:foo, { coercer => coercer })
         instance[:foo] = { 'true' => 'false' }.freeze
         expect(instance[:foo]).to eq(true => false)
       end
@@ -258,7 +266,9 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_key :foo, coercer
         instance[:foo] = 'true'
         allow(coercer).to receive(:call).and_raise(ArgumentError, 'invalid boolean')
-        expect { instance[:foo] = 'invalid' }.to raise_error(Hashie::CoercionError, /invalid boolean/)
+        expect do
+          instance[:foo] = 'invalid'
+        end.to raise_error(Hashie::CoercionError, /invalid boolean/)
         expect(instance[:foo]).to be(true)
       end
 
@@ -287,7 +297,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'preserves collection coercion precedence over call' do
-        type = Array[coercer]
+        type = [coercer]
         allow(type).to receive(:call).and_raise('unexpected call')
         subject.coerce_key :foo, type
         instance[:foo] = %w[true false]
@@ -306,7 +316,7 @@ describe Hashie::Extensions::Coercion do
       subject.coerce_key :foo, Coercable
 
       instance[:foo] = Coercable.new('bar')
-      expect(instance[:foo]).to_not be_coerced
+      expect(instance[:foo]).not_to be_coerced
     end
 
     it 'supports an array of keys' do
@@ -319,7 +329,7 @@ describe Hashie::Extensions::Coercion do
     end
 
     it 'supports coercion for Array' do
-      subject.coerce_key :foo, Array[Coercable]
+      subject.coerce_key :foo, [Coercable]
 
       instance[:foo] = %w[bar bar2]
       expect(instance[:foo]).to all(be_coerced)
@@ -344,7 +354,7 @@ describe Hashie::Extensions::Coercion do
     end
 
     it 'supports coercion for Hash' do
-      subject.coerce_key :foo, Hash[Coercable => Coercable]
+      subject.coerce_key(:foo, { Coercable => Coercable })
 
       instance[:foo] = { 'bar_key' => 'bar_value', 'bar2_key' => 'bar2_value' }
       expect(instance[:foo].keys).to all(be_coerced)
@@ -353,7 +363,7 @@ describe Hashie::Extensions::Coercion do
     end
 
     it 'supports coercion for Hash with primitive as value' do
-      subject.coerce_key :foo, Hash[Coercable => Initializable]
+      subject.coerce_key(:foo, { Coercable => Initializable })
 
       instance[:foo] = { 'bar_key' => '1', 'bar2_key' => '2' }
       expect(instance[:foo].values.map(&:value)).to all(eq 'String')
@@ -395,12 +405,12 @@ describe Hashie::Extensions::Coercion do
         end
       end
 
-      include_examples 'coerces from numeric types', Integer, :to_i
-      include_examples 'coerces from numeric types', Float, :to_f
-      include_examples 'coerces from numeric types', String, :to_s
+      it_behaves_like 'coerces from numeric types', Integer, :to_i
+      it_behaves_like 'coerces from numeric types', Float, :to_f
+      it_behaves_like 'coerces from numeric types', String, :to_s
 
-      include_examples 'coerces from alphabetical types', String, :to_s
-      include_examples 'coerces from alphabetical types', Symbol, :to_sym
+      it_behaves_like 'coerces from alphabetical types', String, :to_s
+      it_behaves_like 'coerces from alphabetical types', Symbol, :to_sym
 
       it 'can coerce String to Rational when possible' do
         test_coercion '2/3', Rational, :to_r
@@ -411,7 +421,7 @@ describe Hashie::Extensions::Coercion do
       end
 
       it 'coerces collections with core types' do
-        subject.coerce_key :foo, Hash[String => String]
+        subject.coerce_key(:foo, { String => String })
 
         instance[:foo] = {
           abc: 123,
@@ -427,7 +437,7 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_key(:foo, lambda do |v|
           case v
           when String
-            !!(v =~ /^(true|t|yes|y|1)$/i)
+            !(v =~ /^(true|t|yes|y|1)$/i).nil?
           when Numeric
             !v.to_i.zero?
           else
@@ -466,7 +476,7 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_key :foo, String
 
         instance[:foo] = nil
-        expect(instance[:foo]).to_not eq('')
+        expect(instance[:foo]).not_to eq('')
         expect(instance[:foo]).to be_nil
       end
     end
@@ -510,6 +520,7 @@ describe Hashie::Extensions::Coercion do
 
       class TweetMash < Hashie::Mash
         include Hashie::Extensions::Coercion
+
         coerce_key :user, UserMash
       end
 
@@ -540,8 +551,10 @@ describe Hashie::Extensions::Coercion do
     context 'when used with a Mash and coerce_value' do
       class ValueUserMash < Hashie::Mash
       end
+
       class ValueCoercedTweetMash < Hashie::Mash
         include Hashie::Extensions::Coercion
+
         coerce_value Hash, ValueUserMash
       end
 
@@ -653,7 +666,7 @@ describe Hashie::Extensions::Coercion do
           include Hashie::Extensions::Coercion
           include Hashie::Extensions::MergeInitializer
 
-          coerce_key :categories, Array[CategoryHash]
+          coerce_key :categories, [CategoryHash]
         end
 
         let(:category) do
@@ -685,7 +698,7 @@ describe Hashie::Extensions::Coercion do
               include Hashie::Extensions::Coercion
               include Hashie::Extensions::MergeInitializer
 
-              coerce_key :products, Array[AnotherProductHash]
+              coerce_key :products, [AnotherProductHash]
             end
           end
 
@@ -722,9 +735,9 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_value klass, Coercable
 
         instance[:foo] = 'bar'
-        expect(instance[:foo]).not_to be_kind_of(Coercable)
+        expect(instance[:foo]).not_to be_a(Coercable)
         instance[:foo] = klass.new
-        expect(instance[:foo]).to be_kind_of(Coercable)
+        expect(instance[:foo]).to be_a(Coercable)
       end
     end
 
@@ -734,7 +747,7 @@ describe Hashie::Extensions::Coercion do
         subject.coerce_value klass, Coercable, strict: false
 
         instance[:foo] = klass.new
-        expect(instance[:foo]).to be_kind_of(Coercable)
+        expect(instance[:foo]).to be_a(Coercable)
       end
     end
 
@@ -788,7 +801,7 @@ describe Hashie::Extensions::Coercion do
             expect(instance[k]).to be_a(String)
             expect(instance[k]).to eq(v.to_s)
           else
-            expect(instance[k]).to_not be_a(String)
+            expect(instance[k]).not_to be_a(String)
             expect(instance[k]).to eq(v)
           end
         end
@@ -812,7 +825,7 @@ describe Hashie::Extensions::Coercion do
 
       it 'can coerce via a proc' do
         subject.coerce_value(String, lambda do |v|
-          !!(v =~ /^(true|t|yes|y|1)$/i)
+          !(v =~ /^(true|t|yes|y|1)$/i).nil?
         end)
 
         true_values = %w[true t yes y 1]
@@ -828,9 +841,5 @@ describe Hashie::Extensions::Coercion do
         end
       end
     end
-  end
-
-  after(:each) do
-    Object.send(:remove_const, :ExampleCoercableHash)
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module Dash
@@ -20,9 +22,9 @@ module Hashie
         private_class_method :requires_class_methods?
 
         def to_h
-          defaults = ::Hash[self.class.properties.map do |prop|
+          defaults = self.class.properties.to_h do |prop|
             [Hashie::Extensions::IndifferentAccess.convert_key(prop), self.class.defaults[prop]]
-          end]
+          end
 
           defaults.merge(self)
         end

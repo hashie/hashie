@@ -1,4 +1,6 @@
-require File.expand_path('../lib/hashie/version', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('lib/hashie/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'hashie'
@@ -17,16 +19,15 @@ Gem::Specification.new do |gem|
 
   if gem.respond_to?(:metadata)
     gem.metadata = {
-      'bug_tracker_uri'   => 'https://github.com/hashie/hashie/issues',
-      'changelog_uri'     => 'https://github.com/hashie/hashie/blob/master/CHANGELOG.md',
+      'bug_tracker_uri' => 'https://github.com/hashie/hashie/issues',
+      'changelog_uri' => 'https://github.com/hashie/hashie/blob/master/CHANGELOG.md',
       'documentation_uri' => 'https://www.rubydoc.info/gems/hashie',
-      'source_code_uri'   => 'https://github.com/hashie/hashie'
+      'source_code_uri' => 'https://github.com/hashie/hashie',
+      'rubygems_mfa_required' => 'true'
     }
   end
 
   gem.required_ruby_version = '>= 3.0'
 
   gem.add_dependency 'logger' # for Ruby >= 3.4
-
-  gem.add_development_dependency 'bundler'
 end

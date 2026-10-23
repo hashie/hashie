@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A shared context that allows you to check the output of Hashie's logger.
 #
 # @example
@@ -15,7 +17,7 @@ RSpec.shared_context 'with a logger' do
   # The output string from the logger
   let(:logger_output) { log.rewind && log.string }
 
-  around(:each) do |example|
+  around do |example|
     original_logger = Hashie.logger
     Hashie.logger = Logger.new(log)
     example.run

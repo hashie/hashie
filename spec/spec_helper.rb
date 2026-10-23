@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV['CI']
   require 'simplecov'
   require 'simplecov-lcov'
@@ -5,9 +7,9 @@ if ENV['CI']
   SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
   SimpleCov::Formatter::LcovFormatter.config.single_report_path = 'coverage/lcov.info'
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-                                                                    SimpleCov::Formatter::HTMLFormatter,
-                                                                    SimpleCov::Formatter::LcovFormatter
-                                                                  ])
+                                                                   SimpleCov::Formatter::HTMLFormatter,
+                                                                   SimpleCov::Formatter::LcovFormatter
+                                                                 ])
   SimpleCov.start do
     add_filter '/spec/support/'
   end
@@ -23,7 +25,7 @@ require 'rspec/pending_for'
 require './spec/support/logger'
 require './spec/support/matchers'
 
-Dir[File.expand_path(File.join(__dir__, 'support', '**', '*'))].sort.each { |file| require file }
+Dir[File.expand_path(File.join(__dir__, 'support', '**', '*'))].each { |file| require file }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expect|

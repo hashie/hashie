@@ -1,16 +1,24 @@
+inherit_from: .rubocop_todo.yml
+
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 3.0
   Include:
+    - '**/*.rb'
+    - '**/*.gemspec'
+    - '**/Gemfile'
+    - Dangerfile
+    - bin/console
     - Guardfile
     - Rakefile
   Exclude:
     - .bundle/**/*
     - vendor/**/*
 
-inherit_from: .rubocop_todo.yml
-
 plugins:
   - rubocop-exception_messages
+  - rubocop-rake
+  - rubocop-rspec
 
 ExceptionMessages/Casing:
   Enabled: true
@@ -26,41 +34,30 @@ ExceptionMessages/QuoteStyle:
 ExceptionMessages/RedundantExceptionName:
   Enabled: true
 
-# Disabled until we can use the squiggly heredoc (after deprecating Ruby <2.3)
-Layout/HeredocIndentation:
+Layout/LineLength:
   Enabled: false
 
-Layout/LineLength:
-  Exclude:
-    - 'Guardfile'
-  Max: 100
-
 Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
   Enabled: false
 
 Metrics/ModuleLength:
   Enabled: false
 
 Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*.rb'
-
-Lint/UnifiedInteger:
-  Exclude:
-    - 'lib/hashie/extensions/coercion.rb'
-    - 'spec/hashie/extensions/coercion_spec.rb'
-
-Naming/FileName:
-  Exclude:
-    - 'Dangerfile'
-    - '**/Gemfile'
-    - '**/Rakefile'
-
-# Disabled because of the very generic nature of Hashie. In the cases where we
-# use double negation, there isn't a means that as succinct of doing the type of
-# boolean casting that we do.
-Style/DoubleNegation:
   Enabled: false
 
-Style/HashSyntax:
-  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always_true

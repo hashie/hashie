@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     module KeyConflictWarning
@@ -16,6 +18,7 @@ module Hashie
       # @return [void]
       def disable_warnings(*method_keys)
         raise CannotDisableMashWarnings if self == Hashie::Mash
+
         if method_keys.any?
           disabled_warnings.concat(method_keys).tap(&:flatten!).uniq!
         else
@@ -31,6 +34,7 @@ module Hashie
       # @return [Boolean]
       def disable_warnings?(method_key = nil)
         return disabled_warnings.include?(method_key) if disabled_warnings.any? && method_key
+
         @disable_warnings ||= false
       end
 
@@ -39,7 +43,7 @@ module Hashie
       # @api semipublic
       # @return [Boolean]
       def disabled_warnings
-        @_disabled_warnings ||= []
+        @disabled_warnings ||= []
       end
 
       # Inheritance hook that sets class configuration when inherited.

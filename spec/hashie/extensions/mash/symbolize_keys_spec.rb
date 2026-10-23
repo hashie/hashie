@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
@@ -36,6 +38,8 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
   end
 
   context 'implicit to_hash on double splat' do
+    subject { destructure.call(**instance) }
+
     let(:destructure) { ->(**opts) { opts } }
     let(:my_mash) do
       Class.new(Hashie::Mash) do
@@ -43,8 +47,6 @@ RSpec.describe Hashie::Extensions::Mash::SymbolizeKeys do
       end
     end
     let(:instance) { my_mash.new('outer' => { 'inner' => 42 }, 'testing' => [1, 2, 3]) }
-
-    subject { destructure.call(**instance) }
 
     it 'is converted on method calls' do
       expect(subject).to eq(outer: { inner: 42 }, testing: [1, 2, 3])

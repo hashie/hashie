@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
@@ -38,6 +40,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
   class IndifferentHashWithDash < Hashie::Dash
     include Hashie::Extensions::Dash::IndifferentAccess
+
     property :foo
   end
 
@@ -45,12 +48,13 @@ describe Hashie::Extensions::IndifferentAccess do
     include Hashie::Extensions::IgnoreUndeclared
     include Hashie::Extensions::Dash::PropertyTranslation
     include Hashie::Extensions::IndifferentAccess
+
     property :foo, from: :bar
   end
 
   describe '#merge' do
     it 'indifferently merges in a hash' do
-      indifferent_hash = Class.new(::Hash) do
+      indifferent_hash = Class.new(Hash) do
         include Hashie::Extensions::IndifferentAccess
       end.new
 
@@ -76,7 +80,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
   describe '#merge!' do
     it 'indifferently merges in a hash' do
-      indifferent_hash = Class.new(::Hash) do
+      indifferent_hash = Class.new(Hash) do
         include Hashie::Extensions::IndifferentAccess
       end.new
 
@@ -87,7 +91,7 @@ describe Hashie::Extensions::IndifferentAccess do
     end
 
     it 'converts the result to be indifferent' do
-      indifferent_hash = Class.new(::Hash) do
+      indifferent_hash = Class.new(Hash) do
         include Hashie::Extensions::IndifferentAccess
       end.new
 
@@ -102,7 +106,7 @@ describe Hashie::Extensions::IndifferentAccess do
     it 'injects indifferent access into a duplicate of the hash, leaving the original untouched' do
       hash = { cat: 'meow' }
 
-      indifferent = Hashie::Extensions::IndifferentAccess.inject(hash)
+      indifferent = described_class.inject(hash)
 
       expect(indifferent[:cat]).to eq('meow')
       expect(indifferent['cat']).to eq('meow')
@@ -111,7 +115,7 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe '#to_hash' do
-    let(:indifferent_hash) { Class.new(::Hash) { include Hashie::Extensions::IndifferentAccess } }
+    let(:indifferent_hash) { Class.new(Hash) { include Hashie::Extensions::IndifferentAccess } }
 
     it 'returns a normal hash without indifference' do
       indifferent = indifferent_hash.new
@@ -141,8 +145,9 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe 'when included in dash' do
-    let(:params) { { foo: 'bar' } }
     subject { IndifferentHashWithDash.new(params) }
+
+    let(:params) { { foo: 'bar' } }
 
     it 'initialize with a symbol' do
       expect(subject.foo).to eq params[:foo]
@@ -156,7 +161,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
   describe 'when overriding indifferent methods' do
     let(:indifferent_hash) do
-      Class.new(::Hash) do
+      Class.new(Hash) do
         include Hashie::Extensions::IndifferentAccess
 
         ALIASES = { cat: :grumpy }.freeze
@@ -194,9 +199,9 @@ describe Hashie::Extensions::IndifferentAccess do
   end
 
   describe 'when translating properties and ignoring undeclared' do
-    let(:value) { 'baz' }
-
     subject { IndifferentHashWithIgnoreUndeclaredAndPropertyTranslation.new(params) }
+
+    let(:value) { 'baz' }
 
     context 'and the hash keys are strings' do
       let(:params) { { 'bar' => value } }
@@ -339,7 +344,7 @@ describe Hashie::Extensions::IndifferentAccess do
 
       it 'does not change the ancestors of the injected object class' do
         h.update(baz: { qux: 'abc' })
-        expect({}).not_to be_respond_to(:indifferent_access?)
+        expect({}).not_to respond_to(:indifferent_access?)
       end
     end
 
@@ -353,12 +358,12 @@ describe Hashie::Extensions::IndifferentAccess do
       it 'removes old keys' do
         [:foo, 'foo'].each do |k|
           expect(h[k]).to be_nil
-          expect(h.key?(k)).to be_falsy
+          expect(h).not_to be_key(k)
         end
       end
 
       it 'creates new keys with indifferent access' do
-        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h.key?(k)).to be_truthy }
+        [:bar, 'bar', :hi, 'hi'].each { |k| expect(h).to be_key(k) }
         expect(h[:bar]).to eq 'baz'
         expect(h['bar']).to eq 'baz'
         expect(h[:hi]).to eq 'bye'
@@ -407,16 +412,19 @@ describe Hashie::Extensions::IndifferentAccess do
 
   describe 'with merge initializer' do
     subject { IndifferentHashWithMergeInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 
   describe 'with array initializer' do
     subject { IndifferentHashWithArrayInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 
   describe 'with try convert initializer' do
     subject { IndifferentHashWithTryConvertInitializer }
-    it_should_behave_like 'hash with indifferent access'
+
+    it_behaves_like 'hash with indifferent access'
   end
 end

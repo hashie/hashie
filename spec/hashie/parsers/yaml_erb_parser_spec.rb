@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Parsers::YamlErbParser do
   describe '.perform' do
     context 'a file' do
+      subject { described_class.new(path).perform }
+
       let(:config) do
-        <<-CONFIG
----
-foo: verbatim
-bar: <%= "erb" %>
-baz: "<%= __FILE__ %>"
+        <<~CONFIG
+          ---
+          foo: verbatim
+          bar: <%= "erb" %>
+          baz: "<%= __FILE__ %>"
         CONFIG
       end
       let(:path) { 'template.yml' }
-
-      subject { described_class.new(path).perform }
 
       before do
         expect(File).to receive(:read).with(path).and_return(config)
@@ -29,14 +31,14 @@ baz: "<%= __FILE__ %>"
     end
 
     context 'Pathname' do
+      subject { described_class.new(Pathname(tempfile.path)) }
+
       let(:tempfile) do
         file = Tempfile.new(['foo', '.yml'])
         file.write("---\nfoo: hello\n")
         file.rewind
         file
       end
-
-      subject { described_class.new(Pathname(tempfile.path)) }
 
       it '"#perform" can be done in case of path is a Pathname object.' do
         expect(subject.perform).to eq 'foo' => 'hello'

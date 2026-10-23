@@ -15,12 +15,14 @@ module PersistenceFixtures
 
   class Dash < Hashie::Dash
     include Hashie::Extensions::Persistable
+
     property :name, required: true
     property :child
   end
 
   class Trash < Hashie::Trash
     include Hashie::Extensions::Persistable
+
     property :name, required: true, from: :full_name
     property :child
   end
@@ -36,6 +38,7 @@ describe Hashie::Extensions::Persistable do
 
   let(:path) { File.join(@directory, 'data.yaml') }
   let(:other_path) { File.join(@directory, 'other.yaml') }
+  let(:source) { PersistenceFixtures::Hash.new(name: 'parent') }
 
   [PersistenceFixtures::Hash, PersistenceFixtures::Mash,
    PersistenceFixtures::Dash, PersistenceFixtures::Trash].each do |klass|
@@ -57,12 +60,10 @@ describe Hashie::Extensions::Persistable do
       it 'writes plain YAML without Ruby class tags' do
         source.save(path)
         expect(File.read(path)).not_to include('!ruby/')
-        expect(Psych.safe_load(File.read(path), permitted_classes: [Symbol])).to be_a(::Hash)
+        expect(Psych.safe_load(File.read(path), permitted_classes: [Symbol])).to be_a(Hash)
       end
     end
   end
-
-  let(:source) { PersistenceFixtures::Hash.new(name: 'parent') }
 
   it 'requires a path before the first save' do
     expect { source.save }.to raise_error(ArgumentError, 'a persistence path is required')

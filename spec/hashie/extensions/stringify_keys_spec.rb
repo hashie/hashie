@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'support/module_context'
 
@@ -62,7 +64,7 @@ describe Hashie::Extensions::StringifyKeys do
   let(:object) { subject }
 
   describe '#stringify_keys!' do
-    include_examples 'stringify_keys!'
+    it_behaves_like 'stringify_keys!'
 
     it 'returns itself' do
       expect(subject.stringify_keys!).to eq subject
@@ -71,33 +73,39 @@ describe Hashie::Extensions::StringifyKeys do
 
   context 'class methods' do
     subject { described_class }
+
     let(:object) { {} }
 
     describe '.stringify_keys' do
-      include_examples 'stringify_keys'
+      it_behaves_like 'stringify_keys'
     end
+
     describe '.stringify_keys!' do
-      include_examples 'stringify_keys!'
+      it_behaves_like 'stringify_keys!'
     end
   end
 
   context 'singleton methods' do
     subject { Hash }
-    let(:object) { subject.new.merge(a: 1, b: { c: 2 }).extend(Hashie::Extensions::StringifyKeys) }
+
+    let(:object) { subject.new.merge(a: 1, b: { c: 2 }).extend(described_class) }
     let(:expected_hash) { { 'a' => 1, 'b' => { 'c' => 2 } } }
 
     describe '.stringify_keys' do
       it 'does not raise error' do
         expect { object.stringify_keys }.not_to raise_error
       end
+
       it 'produces expected stringified hash' do
         expect(object.stringify_keys).to eq(expected_hash)
       end
     end
+
     describe '.stringify_keys!' do
       it 'does not raise error' do
         expect { object.stringify_keys! }.not_to raise_error
       end
+
       it 'produces expected stringified hash' do
         expect(object.stringify_keys!).to eq(expected_hash)
       end
@@ -106,19 +114,16 @@ describe Hashie::Extensions::StringifyKeys do
 end
 
 describe Hashie do
-  let!(:dummy_class) do
-    klass = Class.new(::Hash)
-    klass.send :include, Hashie::Extensions::StringifyKeys
-    klass
-  end
-
   subject { described_class }
+
+  let(:dummy_class) { Class.new(Hash) { include Hashie::Extensions::StringifyKeys } }
   let(:object) { {} }
 
   describe '.stringify_keys' do
-    include_examples 'stringify_keys'
+    it_behaves_like 'stringify_keys'
   end
+
   describe '.stringify_keys!' do
-    include_examples 'stringify_keys!'
+    it_behaves_like 'stringify_keys!'
   end
 end

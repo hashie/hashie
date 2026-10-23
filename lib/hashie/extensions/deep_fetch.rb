@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     # Searches a deeply nested datastructure for a key path, and returns the associated value.
@@ -16,14 +18,13 @@ module Hashie
 
       def deep_fetch(*args, &block)
         args.reduce(self) do |obj, arg|
-          begin
-            arg = Integer(arg) if obj.is_a? Array
-            obj.fetch(arg)
-          rescue ArgumentError, IndexError, NoMethodError => e
-            break yield(arg) if block
-            raise UndefinedPathError,
-                  "could not fetch path (`#{args.join(' > ')}`) at `#{arg}`", e.backtrace
-          end
+          arg = Integer(arg) if obj.is_a? Array
+          obj.fetch(arg)
+        rescue ArgumentError, IndexError, NoMethodError => e
+          break yield(arg) if block
+
+          raise UndefinedPathError,
+                "could not fetch path (`#{args.join(' > ')}`) at `#{arg}`", e.backtrace
         end
       end
     end

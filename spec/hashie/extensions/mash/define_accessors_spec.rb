@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hashie::Extensions::Mash::DefineAccessors do
@@ -5,44 +7,44 @@ describe Hashie::Extensions::Mash::DefineAccessors do
 
   shared_examples 'class with dynamically defined accessors' do
     it 'defines reader on demand' do
-      expect(subject.method_defined?(:foo)).to be_falsey
+      expect(subject).not_to be_method_defined(:foo)
       instance.foo
-      expect(subject.method_defined?(:foo)).to be_truthy
+      expect(subject).to be_method_defined(:foo)
     end
 
     it 'defines writer on demand' do
-      expect(subject.method_defined?(:foo=)).to be_falsey
+      expect(subject).not_to be_method_defined(:foo=)
       instance.foo = :bar
-      expect(subject.method_defined?(:foo=)).to be_truthy
+      expect(subject).to be_method_defined(:foo=)
     end
 
     it 'defines predicate on demand' do
-      expect(subject.method_defined?(:foo?)).to be_falsey
+      expect(subject).not_to be_method_defined(:foo?)
       instance.foo?
-      expect(subject.method_defined?(:foo?)).to be_truthy
+      expect(subject).to be_method_defined(:foo?)
     end
 
     it 'defines initializing reader on demand' do
-      expect(subject.method_defined?(:foo!)).to be_falsey
+      expect(subject).not_to be_method_defined(:foo!)
       instance.foo!
-      expect(subject.method_defined?(:foo!)).to be_truthy
+      expect(subject).to be_method_defined(:foo!)
     end
 
     it 'defines underbang reader on demand' do
-      expect(subject.method_defined?(:foo_)).to be_falsey
+      expect(subject).not_to be_method_defined(:foo_)
       instance.foo_
-      expect(subject.method_defined?(:foo_)).to be_truthy
+      expect(subject).to be_method_defined(:foo_)
     end
 
     context 'when initializing from another hash' do
       let(:args) { [{ foo: :bar }] }
 
       it 'does not define any accessors' do
-        expect(subject.method_defined?(:foo)).to be_falsey
-        expect(subject.method_defined?(:foo=)).to be_falsey
-        expect(subject.method_defined?(:foo?)).to be_falsey
-        expect(subject.method_defined?(:foo!)).to be_falsey
-        expect(subject.method_defined?(:foo_)).to be_falsey
+        expect(subject).not_to be_method_defined(:foo)
+        expect(subject).not_to be_method_defined(:foo=)
+        expect(subject).not_to be_method_defined(:foo?)
+        expect(subject).not_to be_method_defined(:foo!)
+        expect(subject).not_to be_method_defined(:foo_)
         expect(instance.foo).to eq :bar
       end
     end
@@ -50,6 +52,7 @@ describe Hashie::Extensions::Mash::DefineAccessors do
 
   context 'when included in Mash subclass' do
     subject { Class.new(Hashie::Mash) { include Hashie::Extensions::Mash::DefineAccessors } }
+
     let(:instance) { subject.new(*args) }
 
     describe 'this subclass' do
@@ -93,10 +96,10 @@ describe Hashie::Extensions::Mash::DefineAccessors do
         before do
           subject.class_eval do
             def foo
-              if self[:foo] != 1
-                :bar
-              else
+              if self[:foo] == 1
                 super
+              else
+                :bar
               end
             end
           end
@@ -114,8 +117,9 @@ describe Hashie::Extensions::Mash::DefineAccessors do
   end
 
   context 'when Mash instance is extended' do
-    let(:instance) { Hashie::Mash.new(*args).with_accessors! }
     subject { instance.singleton_class }
+
+    let(:instance) { Hashie::Mash.new(*args).with_accessors! }
 
     describe 'its singleton class' do
       it_behaves_like 'class with dynamically defined accessors'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'http://rubygems.org'
 
 gem 'elasticsearch-api', '~> 7.0.0'

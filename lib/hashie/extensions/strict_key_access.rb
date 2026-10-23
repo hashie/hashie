@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hashie
   module Extensions
     # SRP: This extension will fail an error whenever a key is accessed
@@ -22,8 +24,8 @@ module Hashie
     module StrictKeyAccess
       class DefaultError < StandardError
         def initialize
-          super('Setting or using a default with Hashie::Extensions::StrictKeyAccess'\
-                ' does not make sense'
+          super('Setting or using a default with Hashie::Extensions::StrictKeyAccess ' \
+                'does not make sense'
           )
         end
       end
@@ -67,9 +69,7 @@ module Hashie
 
       def key(value)
         super.tap do |result|
-          if result.nil? && (!key?(result) || self[result] != value)
-            raise KeyError, "no key found for value `#{value.inspect}`"
-          end
+          raise KeyError, "no key found for value `#{value.inspect}`" if result.nil? && (!key?(result) || self[result] != value)
         end
       end
     end

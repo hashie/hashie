@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Hash do
   it 'is convertible to a Hashie::Mash' do
     mash = Hashie::Hash[some: 'hash'].to_mash
-    expect(mash.is_a?(Hashie::Mash)).to be_truthy
+    expect(mash).to be_a(Hashie::Mash)
     expect(mash.some).to eq 'hash'
   end
 
