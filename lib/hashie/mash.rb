@@ -17,12 +17,12 @@ module Hashie
   # based on the following rules:
   #
   # * No punctuation: Returns the value of the hash for that key, or nil if none exists.
-  # * Assignment (<tt>=</tt>): Sets the attribute of the given method name.
-  # * Truthiness (<tt>?</tt>): Returns true or false depending on the truthiness of
+  # * Assignment (`=`): Sets the attribute of the given method name.
+  # * Truthiness (`?`): Returns true or false depending on the truthiness of
   #   the attribute, or false if the key is not set.
-  # * Bang (<tt>!</tt>): Forces the existence of this key, used for deep Mashes. Think of it
+  # * Bang (`!`): Forces the existence of this key, used for deep Mashes. Think of it
   #   as "touch" for mashes.
-  # * Under Bang (<tt>_</tt>): Like Bang, but returns a new Mash rather than creating a key.
+  # * Under Bang (`_`): Like Bang, but returns a new Mash rather than creating a key.
   #   Used to test existence in deep Mashes.
   #
   # == Basic Example
