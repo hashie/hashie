@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [Unreleased]
+## [5.2.0] - 2026-10-23
 
-[Unreleased]: https://github.com/hashie/hashie/compare/v5.1.0...master
+[5.2.0]: https://github.com/hashie/hashie/compare/v5.1.0...v5.2.0
 
 ### Added
 
@@ -32,7 +32,6 @@ Any violations of this scheme are considered to be bugs.
 * [#605](https://github.com/hashie/hashie/pull/605): Added `Hashie::Extensions::Mash::RequiredKeys`, allowing a Mash to require specific keys to be set while still allowing arbitrary keys - [@dblock](https://github.com/dblock).
 * [#608](https://github.com/hashie/hashie/pull/608): Added `Hashie::Extensions::BlockAccess` for block-style construction of nested hashes, completing [#109](https://github.com/hashie/hashie/pull/109) as a reusable extension - [@ryansouza](https://github.com/ryansouza), [@dblock](https://github.com/dblock).
 * [#610](https://github.com/hashie/hashie/pull/610): Added opt-in `Hashie::Extensions::Persistable` for safe YAML loading and atomic file saves, following [#262](https://github.com/hashie/hashie/pull/262) - [@maxlinc](https://github.com/maxlinc), [@michaelherold](https://github.com/michaelherold), [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### Changed
 
@@ -42,17 +41,11 @@ Any violations of this scheme are considered to be bugs.
 * [#607](https://github.com/hashie/hashie/pull/607): Upgraded RuboCop to 1.91.0 and consolidated exception-message checks into one CI lint job - [@dblock](https://github.com/dblock).
 * [#590](https://github.com/hashie/hashie/pull/590): Migrated Danger to use `danger-pr-comment` workflow - [@dblock](https://github.com/dblock).
 * [#613](https://github.com/hashie/hashie/pull/613): `Mash` converts symbol keys with `Symbol#name` on Ruby 3.0+, so reads and writes with a symbol key no longer allocate a string - [@sampokuokkanen](https://github.com/sampokuokkanen).
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
 
 ### Removed
 
 * Reverted [#619](https://github.com/hashie/hashie/pull/619)'s `deep_merge_new_hash` hook in favor of the breaking-change proposal in [#632](https://github.com/hashie/hashie/pull/632), which preserves incoming hash subclasses directly - [@dblock](https://github.com/dblock).
 * [#622](https://github.com/hashie/hashie/pull/622): Dropped Ruby 2.7 support, raised the minimum to Ruby 3.0, and removed obsolete Ruby version gates and symbol-conversion fallbacks, following [#613](https://github.com/hashie/hashie/pull/613#issuecomment-6354118292) - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### Fixed
 
@@ -68,11 +61,6 @@ Any violations of this scheme are considered to be bugs.
 * [#603](https://github.com/hashie/hashie/pull/603): Fixed `Trash`/`PropertyTranslation` incorrectly allowing `:from` to match the property name when the types differ (e.g. a symbol property translated `from:` a string of the same name), causing a "method redefined" warning instead of the intended `ArgumentError` - [@dblock](https://github.com/dblock).
 * [#604](https://github.com/hashie/hashie/pull/604): Fixed `Dash#deep_transform_keys` (and `Trash`) raising `ArgumentError` for required properties under Rails 7+, since `ActiveSupport::Hash#deep_transform_keys` builds its result via `self.class.new` - [@dblock](https://github.com/dblock).
 * [#614](https://github.com/hashie/hashie/pull/614): Fixed `Hashie::Mash#dup` allocating six extra objects on every call since #606, by looking up `Hash#default` and `Hash#default_proc` once and calling them with `bind_call` - [@sampokuokkanen](https://github.com/sampokuokkanen).
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ## [5.1.0] - 2025-12-24
 

@@ -1,88 +1,82 @@
 # Releasing Hashie
 
-There're no particular rules about when to release Hashie. Release bug fixes frequently, features not so frequently and breaking API changes rarely.
+Release bug fixes frequently, features less frequently, and breaking API changes in major releases.
 
-## Release
+## Prepare the release
 
-Run tests, check that all tests succeed locally.
+Start with a clean, up-to-date `master`. Review the changes in [CHANGELOG.md](CHANGELOG.md) and migration notes in [UPGRADING.md](UPGRADING.md).
+
+Check `Hashie::VERSION` in [lib/hashie/version.rb](lib/hashie/version.rb):
+
+* Increment the patch version for compatible bug fixes, for example `5.2.0` to `5.2.1`.
+* Increment the minor version for backward-compatible features, for example `5.2.0` to `5.3.0`.
+* Increment the major version for breaking public API changes, for example `5.2.0` to `6.0.0`.
+
+Update the Stable Release section in `README.md`:
+
+```markdown
+You're reading the documentation for the stable release of Hashie, 5.2.0.
+```
+
+Replace the Unreleased changelog heading and comparison link with the release version, date, and previous release tag:
+
+```markdown
+## [5.2.0] - 2026-10-23
+
+[5.2.0]: https://github.com/hashie/hashie/compare/v5.1.0...v5.2.0
+```
+
+Remove contribution placeholders and empty categories from the release section. Preserve historical release entries.
+
+## Validate
+
+Use MRI Ruby 3.2 or newer for linting:
 
 ```sh
 bundle install
-bundle exec rake spec
+bundle exec rake rubocop spec docs:examples docs:readme
+bundle exec rake build
 ```
 
-Check that the last build succeeded in [GHA](https://github.com/hashie/hashie/commits/master) for all supported platforms.
+Inspect the built gem's contents and smoke-test it in an isolated directory with only its runtime dependencies. Confirm the version and key APIs load from the built package, not the checkout.
 
-### Check Next Version
+Commit the release preparation and push `master` normally. Wait for all supported Ruby, JRuby, integration, documentation, and lint jobs in [GitHub Actions](https://github.com/hashie/hashie/actions/workflows/test.yml) to pass on that exact commit.
 
-Check the version number that should have been incremented during the previous release and/or development. If needed, modify [lib/hashie/version.rb](lib/hashie/version.rb). [Changelog](CHANGELOG.md) entries should be helpfully categorized to assist in picking the next version number.
+## Publish
 
-* Increment the third number (minor version) if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`). These should be in the "Fixed", "Security", or "Miscellaneous" categories in the change log.
-* Increment the second number (patch version) if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.6.0`). These should be in the "Added" or "Deprecated" categories in the change log.
-* Increment the first number (major version) if the release has any changed or removed behavior on public APIs (eg. change `0.5.1` to `1.0.0`). These should be in the "Changed" or "Removed" categories in the change log.
+Confirm that neither the release tag nor gem version already exists. Authenticate with RubyGems using an account authorized to publish Hashie; publishing may require MFA.
 
-### Modify the Readme
-
-Modify the "Stable Release" section in [README.md](README.md). Change the text to reflect that this is going to be the documentation for a stable release. Remove references to the previous release of Hashie. Keep the file open, you'll have to undo this change after the release.
-
-```markdown
-## Stable Release
-
-You're reading the documentation for the stable release of Hashie, 3.3.0.
-```
-
-### Modify the Changelog
-
-Change "Unreleased" in [CHANGELOG.md](CHANGELOG.md) to the new version.
-
-```markdown
-## [3.3.0] - 2014-08-25
-
-[3.3.0]: https://github.com/hashie/hashie/compare/v<LAST_VERSION>..v<THIS_VERSION>
-```
-
-Replace `<LAST_VERSION>` and `<THIS_VERSION>` with the last and new-to-be-released versions to set up the compare view on Github.
-
-Remove any sections that only have "Your contribution here." underneath them.
-
-Commit your changes.
+The `bundle exec rake release` task builds the gem, tags the release, pushes Git commits and tags, and publishes to RubyGems:
 
 ```sh
-git add README.md CHANGELOG.md lib/hashie/version.rb
-git commit -m "Preparing for release, 3.3.0."
-git push origin master
+bundle exec rake release
 ```
 
-### Push to RubyGems.org
-
-Release.
+Alternatively, publish explicitly to keep each step separately verifiable:
 
 ```sh
-$ rake release
-
-hashie 3.3.0 built to pkg/hashie-3.3.0.gem.
-Tagged v3.3.0.
-Pushed git commits and tags.
-Pushed hashie 3.3.0 to rubygems.org.
+gem push pkg/hashie-5.2.0.gem
+git tag -a v5.2.0 -m "Release 5.2.0"
+git push origin v5.2.0
+gh release create v5.2.0 --verify-tag --title v5.2.0 --notes-file /path/to/release-notes.md
 ```
 
-## Prepare for the Next Version
+Use the released changelog section for the GitHub release notes. Verify the RubyGems version and required Ruby version, the remote tag's commit, and the GitHub release. If publishing partially succeeds, inspect the existing artifacts before retrying; never move a published release tag or republish a version.
 
-Modify the "Stable Release" section in [README.md](README.md). Change the text to reflect that this is going to be the next release.
+## Prepare the next development version
+
+Set the next planned version in `lib/hashie/version.rb`. After `5.2.0`, the next planned release is `6.0.0` for breaking changes. Restore the development wording in `README.md`:
 
 ```markdown
-## Stable Release
-
-You're reading the documentation for the next release of Hashie, which should be 3.3.1.
-The current stable release is [3.3.0](https://github.com/hashie/hashie/blob/v3.3.0/README.md).
+You're reading the documentation for the next release of Hashie, which should be 6.0.0. The current stable release is [5.2.0](https://github.com/hashie/hashie/blob/v5.2.0/README.md).
 ```
 
-Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template:
+Add a new Unreleased section above the released changelog:
 
 ```markdown
 ## [Unreleased]
 
-[Unreleased]: https://github.com/hashie/hashie/compare/v<THIS_VERSION>...master
+[Unreleased]: https://github.com/hashie/hashie/compare/v5.2.0...master
 
 ### Added
 
@@ -107,20 +101,6 @@ Add new "Unreleased" section to [CHANGELOG.md](CHANGELOG.md) using this template
 ### Security
 
 * Your contribution here.
-
-### Miscellaneous
-
-* Your contribution here.
 ```
 
-Replace `<THIS_VERSION>` with the newly released versions to set up the compare view on Github.
-
-Increment the minor version, modify [lib/hashie/version.rb](lib/hashie/version.rb).
-
-Commit your changes.
-
-```sh
-git add CHANGELOG.md README.md lib/hashie/version.rb
-git commit -m "Preparing for next development iteration, 3.3.1."
-git push origin master
-```
+Commit and push the next-development changes to `master` without modifying the release tag.
