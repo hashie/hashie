@@ -57,18 +57,18 @@ module Hashie
       #  ]
       #  my_hash.deep_find_all(:address) # => ['123 Street', '234 Street']
       #
-      # @example Collect all values, or nil if absent
+      # @example Collect all values, or an empty array if absent
       #   hash = { users: [{ name: 'Ada' }, { name: 'Grace' }] }.extend(Hashie::Extensions::DeepFind)
       #   hash.deep_find_all(:name) # => ['Ada', 'Grace']
-      #   hash.deep_find_all(:email) # => nil
+      #   hash.deep_find_all(:email) # => []
       def deep_find_all(key)
-        matches = _deep_find_all(key)
-        matches.empty? ? nil : matches
+        _deep_find_all(key)
       end
 
       # @example Select every nested value
       #   hash = { users: [{ name: 'Ada' }, { name: 'Grace' }] }.extend(Hashie::Extensions::DeepFind)
       #   hash.deep_select(:name) # => ['Ada', 'Grace']
+      #   hash.deep_select(:email) # => []
       alias deep_select deep_find_all
 
       private
