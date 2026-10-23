@@ -16,6 +16,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Changed
 
+* [#631](https://github.com/hashie/hashie/pull/631): **Breaking:** Changed `Mash.load` to use `YamlParser` by default; ERB evaluation now requires explicit `YamlErbParser` selection, following [#575](https://github.com/hashie/hashie/issues/575) and [#625](https://github.com/hashie/hashie/pull/625) - [@bo-tato](https://github.com/bo-tato), [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Deprecated

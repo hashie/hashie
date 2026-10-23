@@ -947,9 +947,24 @@ describe Hashie::Mash do
       end
     end
 
-    it 'continues to evaluate ERB with the default parser' do
+    it 'leaves ERB as literal text with the default parser' do
       mash = described_class.load('spec/fixtures/yaml_with_erb.yml')
+      expect(mash.value).to eq("<%= 'evaluated' %>")
+    end
+
+    it 'evaluates ERB only when the ERB parser is selected explicitly' do
+      mash = described_class.load(
+        'spec/fixtures/yaml_with_erb.yml',
+        parser: Hashie::Extensions::Parsers::YamlErbParser
+      )
       expect(mash.value).to eq('evaluated')
+    end
+
+    it 'does not execute embedded Ruby by default' do
+      expect(File).to receive(:file?).with(path).and_return(true)
+      expect(File).to receive(:read).with(path).and_return("value: \"<% raise 'must not run' %>\"\n")
+
+      expect(described_class.load(path).value).to eq("<% raise 'must not run' %>")
     end
 
     context 'when the file has symbols' do

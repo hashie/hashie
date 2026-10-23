@@ -535,7 +535,7 @@ Configuration.load('config.yaml').name # => 'updated'
 
 Files contain plain YAML data, not Ruby class tags or persistence metadata. Loading uses `Psych.safe_load`, permits symbols for declared Dash/Trash properties, rejects aliases and non-hash roots, and never evaluates ERB. String and symbol keys retain their types; Dash/Trash files must use keys accepted by their constructors. Nested Hashie classes are not encoded: constructors such as Mash may reconstruct their own nested types, while Dash retains nested plain hashes. Supported values are hashes, arrays, strings, symbols, numbers, booleans, and `nil`; cycles and unsupported objects are rejected.
 
-Including this extension explicitly replaces an inherited class-level `load` on that subclass. Ordinary `Hashie::Mash.load` retains its existing caching and YAML/ERB behavior. No autosave or other serialization formats are provided.
+Including this extension explicitly replaces an inherited class-level `load` on that subclass. Ordinary `Hashie::Mash.load` uses cached YAML loading, with ERB evaluation available only through an explicit parser selection. No autosave or other serialization formats are provided.
 
 ### MethodAccessWithOverride
 
@@ -971,7 +971,7 @@ Use `Mash.load` to read a YAML configuration file:
 development:
   api_key: 'api_key'
 production:
-  api_key: <%= ENV.fetch('HASHIE_README_API_KEY') %> # set to 'abcd' below
+  api_key: 'abcd'
 ```
 
 <!-- hashie:example mash-load -->
@@ -984,9 +984,8 @@ File.write('settings/twitter.yml', <<~YAML)
   development:
     api_key: 'api_key'
   production:
-    api_key: <%= ENV.fetch('HASHIE_README_API_KEY') %>
+    api_key: 'abcd'
 YAML
-ENV['HASHIE_README_API_KEY'] = 'abcd'
 
 mash = Hashie::Mash.load('settings/twitter.yml')
 mash.development.api_key # => 'api_key'
@@ -1010,13 +1009,23 @@ mash.development.api_key # => 'api_key'
 
 The loaded root is frozen, but nested Mashes remain mutable. Repeated loads with the same path object return the cached Mash.
 
-By default, `Mash.load` evaluates ERB before parsing YAML. Only use it with trusted files; `YAML.safe_load` does not make ERB evaluation safe. To parse untrusted or plain YAML without evaluating ERB, explicitly select `YamlParser`:
+By default, `Mash.load` uses [YamlParser](lib/hashie/extensions/parsers/yaml_parser.rb), which parses YAML without evaluating ERB. Embedded ERB remains literal text when valid YAML, or produces a YAML parsing error when it is not valid YAML:
 
 ```ruby
 File.write('data.yml', "api_key: <%= not_evaluated %>\n")
-mash = Hashie::Mash.load('data.yml', parser: Hashie::Extensions::Parsers::YamlParser)
+mash = Hashie::Mash.load('data.yml')
 mash.api_key # => '<%= not_evaluated %>'
 ```
+
+If trusted configuration files need ERB interpolation, explicitly select `YamlErbParser`:
+
+```ruby
+File.write('trusted-settings.yml', "api_key: <%= 'abcd' %>\n")
+mash = Hashie::Mash.load('trusted-settings.yml', parser: Hashie::Extensions::Parsers::YamlErbParser)
+mash.api_key # => 'abcd'
+```
+
+`YamlErbParser` executes Ruby code; `YAML.safe_load` does not make ERB evaluation safe. Only use it with trusted files. Loaded results remain cached by path, not parser or options; use separate Mash subclasses when the same path needs different loading policies.
 
 You can access a Mash from another class:
 
@@ -1028,10 +1037,9 @@ end
 mash = Hashie::Mash.load('settings/twitter.yml')['production']
 Twitter.extend mash.to_module # NOTE: if you want another name than settings, call: to_module('my_settings')
 Twitter.settings.api_key # => 'abcd'
-ENV.delete('HASHIE_README_API_KEY')
 ```
 
-You can use another parser (by default: [YamlErbParser](lib/hashie/extensions/parsers/yaml_erb_parser.rb), which evaluates ERB):
+You can use another parser instead of the default `YamlParser`:
 
 ```text
 # data/user.csv
