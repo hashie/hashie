@@ -46,6 +46,8 @@ Commit the release preparation and push `master` normally. Wait for all supporte
 
 Confirm that neither the release tag nor gem version already exists. Authenticate with RubyGems using an account authorized to publish Hashie; publishing may require MFA.
 
+When publishing through a terminal assistant, ask the maintainer for a current one-time password and pass it to `gem push` with `--otp`. Do not request reusable credentials or save the code. If the code expires, request a new one before retrying.
+
 The `bundle exec rake release` task builds the gem, tags the release, pushes Git commits and tags, and publishes to RubyGems:
 
 ```sh
