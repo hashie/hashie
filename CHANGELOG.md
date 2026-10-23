@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#623](https://github.com/hashie/hashie/pull/623): Documented Dash validation with ActiveModel and added integration coverage, following [#300](https://github.com/hashie/hashie/issues/300), reported by [@SkyCrawl](https://github.com/SkyCrawl), with the ActiveModel approach suggested by [@martinstreicher](https://github.com/martinstreicher) and endorsed by [@dblock](https://github.com/dblock).
 * [#621](https://github.com/hashie/hashie/pull/621): Added `Mash::UnderscoreKeys` on top of `TransformKeys` for camel-case and hyphenated key normalization, following [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
 * [#620](https://github.com/hashie/hashie/pull/620): Added configurable `Mash::TransformKeys` key normalization as a foundation for [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
 * [#619](https://github.com/hashie/hashie/pull/619): Added a protected `deep_merge_new_hash` factory hook for opt-in preservation of incoming nested hash subclasses, following [#586](https://github.com/hashie/hashie/pull/586) and [#585](https://github.com/hashie/hashie/issues/585) - [@addam128](https://github.com/addam128), [@dblock](https://github.com/dblock).
