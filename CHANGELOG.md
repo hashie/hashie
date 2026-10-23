@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#635](https://github.com/hashie/hashie/pull/635): Parse README Ruby examples with Kramdown and execute them in CI with isolated optional dependencies - [@dblock](https://github.com/dblock).
 * [#623](https://github.com/hashie/hashie/pull/623): Documented Dash validation with ActiveModel and added integration coverage, following [#300](https://github.com/hashie/hashie/issues/300), reported by [@SkyCrawl](https://github.com/SkyCrawl), with the ActiveModel approach suggested by [@martinstreicher](https://github.com/martinstreicher) and endorsed by [@dblock](https://github.com/dblock).
 * [#625](https://github.com/hashie/hashie/pull/625): Added an opt-in `YamlParser` that parses YAML without evaluating ERB, while preserving `Mash.load`'s existing ERB-enabled default for compatibility, following [#575](https://github.com/hashie/hashie/issues/575) - [@bo-tato](https://github.com/bo-tato), [@dblock](https://github.com/dblock).
 * [#626](https://github.com/hashie/hashie/pull/626): Added executable YARD examples for every public class, module, and method, with public API example coverage enforced in Rake and CI, following the documentation work in [#421](https://github.com/hashie/hashie/pull/421) - [@michaelherold](https://github.com/michaelherold), [@dblock](https://github.com/dblock).

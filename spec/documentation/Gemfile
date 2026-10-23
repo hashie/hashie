@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'dry-types', '~> 1.8'
+gem 'hashie', path: '../..'
+gem 'kramdown', '~> 2.5'
+gem 'kramdown-parser-gfm', '~> 1.1'
+gem 'rails', '~> 7.0.0'

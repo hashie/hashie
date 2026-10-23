@@ -25,6 +25,12 @@ jobs:
       run: |
         bundle install --jobs 4 --retry 3
         bundle exec ruby -Ilib script/test_documentation_examples.rb --rails
+    - name: Run README examples
+      env:
+        BUNDLE_GEMFILE: spec/documentation/Gemfile
+      run: |
+        bundle install --jobs 4 --retry 3
+        bundle exec ruby -Ilib script/test_readme_examples.rb
 
   integration-test:
     runs-on: ubuntu-latest
