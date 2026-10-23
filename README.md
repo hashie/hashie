@@ -43,6 +43,7 @@
   - [KeepOriginalKeys](#keeporiginalkeys)
   - [PermissiveRespondTo](#permissiverespondto)
   - [SafeAssignment](#safeassignment)
+  - [TransformKeys](#transformkeys)
   - [SymbolizeKeys](#symbolizekeys)
   - [DefineAccessors](#defineaccessors)
   - [StrictKeyAccess](#strictkeyaccess-1)
@@ -990,6 +991,23 @@ safe_mash = SafeMash.new
 safe_mash.zip   = 'Test' # => ArgumentError
 safe_mash[:zip] = 'test' # => still ArgumentError
 ```
+
+### TransformKeys
+
+Include `Hashie::Extensions::Mash::TransformKeys` and configure `transform_keys_with` with a callable or block to normalize string and symbol keys. The transformer receives a string and must return a string; other key types are unchanged.
+
+```ruby
+class LowercaseMash < Hashie::Mash
+  include Hashie::Extensions::Mash::TransformKeys
+  transform_keys_with(&:downcase)
+end
+
+mash = LowercaseMash.new('User' => { 'NAME' => 'Ada' })
+mash.user.name # => 'Ada'
+mash.USER.NAME # => 'Ada'
+```
+
+Normalization applies to reads and writes, including nested Mashes and hashes inside arrays. Subclasses inherit the callable but can replace it without changing their parent or siblings. Without a callable, ordinary Mash key conversion is retained. Configure the transformer before creating instances, keep it free of side effects, and make it idempotent: transforming an already-normalized key must return the same key. When input keys normalize to the same key, the last assignment wins. Transformer exceptions propagate; non-string results raise `TypeError`.
 
 ### SymbolizeKeys
 
