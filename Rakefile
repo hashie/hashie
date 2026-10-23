@@ -17,6 +17,13 @@ namespace :docs do
   task :examples do
     ruby '-Ilib', 'script/test_documentation_examples.rb'
   end
+
+  desc 'Validate every README Ruby example with the isolated documentation bundle'
+  task :readme do
+    Bundler.with_unbundled_env do
+      sh({ 'BUNDLE_GEMFILE' => 'spec/documentation/Gemfile' }, 'bundle', 'exec', 'ruby', '-Ilib', 'script/test_readme_examples.rb')
+    end
+  end
 end
 
 require 'rubocop/rake_task'

@@ -81,6 +81,15 @@ The focused specs verify successful execution, incorrect expected values causing
 
 This follows [@michaelherold's documentation in #421](https://github.com/hashie/hashie/pull/421), including its key-conversion examples, and extends executable coverage across the public API. Publishing and versioned GitHub Pages remain separate work; published documentation remains on [RubyDoc.info](https://www.rubydoc.info/gems/hashie). The original PR remains a reference and should not be closed automatically.
 
+Fenced Ruby examples in the README are parsed with Kramdown's GFM parser and executed in the documentation CI job. Install the isolated documentation bundle, which supplies real Rails, ActiveModel, and dry-types dependencies, then run:
+
+```bash
+BUNDLE_GEMFILE=spec/documentation/Gemfile bundle install
+bundle exec rake docs:readme
+```
+
+The runner executes Ruby without rewriting output comments into assertions. Examples demonstrating exceptions rescue the expected exception explicitly. Each example runs in its own namespace and temporary directory; related snippets share a namespace when preceded by matching `<!-- hashie:example descriptive-name -->` comments. Hashie is loaded automatically; snippets require their other dependencies. Shell, YAML, and other non-Ruby fences are not executed. Only run trusted documentation: this is not a sandbox.
+
 #### Update Changelog
 
 Add a line to [CHANGELOG](CHANGELOG.md) under *Unreleased*. Make it look like every other line, including your name and link to your Github account.
