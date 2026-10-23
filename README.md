@@ -676,6 +676,8 @@ h2 = MyHash[{ b: 250, c: { c1: 200 } }]
 h1.deep_merge(h2) { |key, this_val, other_val| this_val + other_val } # => { a: 100, b: 450, c: { c1: 300 } }
 ```
 
+New nested hashes preserve incoming hash subclasses using `source.dup.clear`. This retains their instance state and hash defaults without requiring a zero-argument constructor. Existing destination hashes retain their own types. Both `deep_merge` and `deep_merge!` apply this policy at every incoming nested-hash level; neither clears the source. Hashes inside arrays follow the existing array replacement behavior. Custom subclasses must support duplication, clearing, and assignment into the copied hash.
+
 ### DeepFetch
 
 This extension can be mixed in to provide for safe and concise retrieval of deeply nested hash values. In the event that the requested key does not exist a block can be provided and its value will be returned.
