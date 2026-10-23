@@ -30,6 +30,11 @@ The policy applies at every incoming nested-hash level for both `deep_merge` and
 This is a breaking change: arbitrary receiver objects are now shared, incoming strings are now copied even without ActiveSupport, and receiver arrays are copied recursively rather than shallowly. Arrays still replace conflicting values rather than merging element by element. Incoming hashes inside arrays preserve their subclasses, and existing receiver container subclasses retain their types.
 
 If your application needs independent copies of domain objects, explicitly copy them according to their own APIs before merging. Do not assume `deep_merge` clones an entire object graph. `deep_merge!` keeps existing receiver values in place, and conflict-block results are still stored unchanged. Cyclic inputs are not supported.
+#### Mash preserves custom Hash values
+
+Nested Hash subclasses other than Mash are now stored by identity instead of being converted into Mashes or copied. This applies to initialization, assignment, arrays, copying, replacement, and merges. Plain Hash values are still recursively converted, and existing Mash-specific copying behavior is unchanged.
+
+Code relying on `mash.custom.some_key` for a custom Hash value must use that object's own API, such as `mash.custom[:some_key]`, or explicitly convert it with `Hashie::Mash.new(custom_hash)` before insertion. A custom Hash replaces an existing nested Mash during merge rather than recursively merging into it. Because custom values are shared, `dup` and `merge` no longer isolate mutations to them; explicitly copy such values when needed.
 
 ### Upgrading to 5.2.0
 

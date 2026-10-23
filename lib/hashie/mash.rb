@@ -128,8 +128,8 @@ module Hashie
 
     # If you pass in an existing hash, it will
     # convert it to a Mash including recursively
-    # descending into arrays and hashes, converting
-    # them as well.
+    # descending into arrays and plain hashes, converting
+    # them as well. Nested custom Hash subclasses retain their identity.
     #
     # @example Recursively convert hashes nested in arrays
     #   mash = Hashie::Mash.new(users: [{ name: 'Ada' }])
@@ -410,7 +410,7 @@ module Hashie
     def _deep_update(other_hash, &blk)
       other_hash.each_pair do |k, v|
         key = convert_key(k)
-        if v.is_a?(::Hash) && key?(key) && regular_reader(key).is_a?(Mash)
+        if (v.instance_of?(::Hash) || v.is_a?(Mash)) && key?(key) && regular_reader(key).is_a?(Mash)
           custom_reader(key).deep_update(v, &blk)
         else
           value = convert_value(v, true)
@@ -609,9 +609,11 @@ module Hashie
       case val
       when self.class
         val.dup
-      when Hash
+      when Mash
         duping ? val.dup : val
       when ::Hash
+        return val unless val.instance_of?(::Hash)
+
         val = val.dup if duping
         self.class.new(val)
       when ::Array

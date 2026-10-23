@@ -483,6 +483,109 @@ describe Hashie::Mash do
     expect(record.details).to be_a(SubMash)
   end
 
+  describe 'custom Hash values' do
+    let(:hash_class) do
+      Class.new(Hash) do
+        def label
+          :custom
+        end
+      end
+    end
+    let(:value) { hash_class[nested: { count: 1 }] }
+
+    it 'retains identity, subclass methods, defaults and unconverted contents on assignment' do
+      value.default = :missing
+      mash = described_class.new
+      mash[:first_value] = value
+      mash.second = value
+      expect(mash.first_value).to equal(value)
+      expect(mash.second).to equal(value)
+      expect(mash.first_value.label).to eq(:custom)
+      expect(mash.first_value[:absent]).to eq(:missing)
+      expect(mash.first_value[:nested]).to be_an_instance_of(Hash)
+      value[:nested][:count] = 2
+      expect(mash.first_value[:nested][:count]).to eq(2)
+    end
+
+    it 'retains custom hashes nested in ordinary hashes and arrays' do
+      mash = described_class.new(container: { records: [value, { custom: value }] })
+      expect(mash.container).to be_a(described_class)
+      expect(mash.container.records).to be_an_instance_of(Hashie::Array)
+      expect(mash.container.records.first).to equal(value)
+      expect(mash.container.records.last.custom).to equal(value)
+    end
+
+    it 'retains identity across initialization, replacement, shallow merging and copying' do
+      mash = described_class.new(custom: value)
+      expect(mash.custom).to equal(value)
+      expect(mash.dup.custom).to equal(value)
+      expect(mash.shallow_merge(custom: value).custom).to equal(value)
+      expect(mash.replace(custom: value).custom).to equal(value)
+      expect(mash.merge(custom: value).custom).to equal(value)
+    end
+
+    it 'replaces an existing nested Mash rather than merging a custom Hash into it' do
+      mash = described_class.new(custom: { stale: true })
+      merged = mash.merge(custom: value)
+      expect(merged.custom).to equal(value)
+      expect(merged.custom).not_to have_key(:stale)
+      expect(mash.custom.stale).to be(true)
+      mash.update(custom: value)
+      expect(mash.custom).to equal(value)
+    end
+
+    it 'passes custom hashes unchanged through merge conflict blocks' do
+      mash = described_class.new(custom: { old: true })
+      yielded = nil
+      mash.update(custom: value) do |_key, _old, incoming|
+        yielded = incoming
+        incoming
+      end
+      expect(yielded).to equal(value)
+      expect(mash.custom).to equal(value)
+    end
+
+    it 'retains custom hashes returned by a merge conflict block' do
+      mash = described_class.new(custom: 1)
+      mash.update(custom: 2) { |_key, _old, _incoming| value }
+      expect(mash.custom).to equal(value)
+    end
+
+    it 'allows explicit conversion of a custom root hash while preserving nested custom values' do
+      value[:custom] = hash_class[name: 'Ada']
+      converted = described_class.new(value)
+      expect(converted).to be_an_instance_of(described_class)
+      expect(converted.nested).to be_an_instance_of(described_class)
+      expect(converted.nested[:count]).to eq(1)
+      expect(converted.custom).to equal(value[:custom])
+    end
+
+    it 'does not duplicate frozen custom hashes during initialization or copying' do
+      value.freeze
+      mash = described_class.new(custom: value)
+      expect(mash.dup.custom).to equal(value)
+      expect(mash.custom).to be_frozen
+    end
+
+    it 'retains Hashie Hash subclasses other than Mash without rebuilding or copying them' do
+      dash_class = Class.new(Hashie::Dash) { property :name, required: true }
+      dash = dash_class.new(name: 'Ada')
+      mash = described_class.new(record: dash)
+      expect(mash.record).to equal(dash)
+      expect(mash.dup.record).to equal(dash)
+    end
+
+    it 'continues to convert plain hashes into the receiving Mash subclass' do
+      klass = Class.new(described_class)
+      mash = klass.new(custom: value, plain: { count: 1 })
+      expect(mash.custom).to equal(value)
+      expect(mash.plain).to be_an_instance_of(klass)
+      mash.update(plain: { extra: 2 })
+      expect(mash.plain[:count]).to eq(1)
+      expect(mash.plain.extra).to eq(2)
+    end
+  end
+
   describe '#respond_to?' do
     subject do
       described_class.new(abc: 'def')

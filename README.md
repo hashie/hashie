@@ -826,7 +826,22 @@ end
 
 ## Mash
 
-Mash adds method-style access to Hash keys and recursively wraps nested hashes:
+Mash adds method-style access to Hash keys and recursively wraps nested plain hashes.
+
+Custom Hash subclasses other than Mash are stored unchanged, including when nested in arrays or ordinary hashes. Their methods, defaults, key types, and identity are preserved, and their contents are not recursively converted. Mash values retain their existing Mash-specific copying behavior. To explicitly normalize a custom Hash into nested Mashes, pass it as the root argument to `Hashie::Mash.new(custom_hash)`.
+
+```ruby
+class CustomHash < Hash
+end
+
+custom = CustomHash[name: 'Ada']
+mash = Hashie::Mash.new(custom: custom, plain: { name: 'Grace' })
+mash.custom.equal?(custom) # => true
+mash.custom[:name] # => 'Ada'
+mash.plain.name # => 'Grace'
+```
+
+Merging a custom Hash value replaces an existing nested Mash rather than recursively merging it. Custom Hash values remain shared when copying a Mash with `dup` or `merge`; mutations to those values are visible through every reference.
 
 ```ruby
 mash = Hashie::Mash.new
