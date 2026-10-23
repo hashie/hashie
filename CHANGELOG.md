@@ -44,6 +44,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Removed
 
+* [#622](https://github.com/hashie/hashie/pull/622): Dropped Ruby 2.7 support, raised the minimum to Ruby 3.0, and removed obsolete Ruby version gates and symbol-conversion fallbacks, following [#613](https://github.com/hashie/hashie/pull/613#issuecomment-6354118292) - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Fixed

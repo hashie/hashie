@@ -66,6 +66,8 @@
 
 ## Installation
 
+Hashie requires Ruby 3.0 or newer.
+
 Hashie is available as a RubyGem:
 
 ```bash

@@ -697,9 +697,7 @@ describe Hashie::Mash do
   end
 
   describe '#dup' do
-    # Ruby 2.7's bind_call still allocates temporary method objects.
-    it 'allocates no more than building the copy with new',
-       if: RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.0') do
+    it 'allocates no more than building the copy with new', if: RUBY_ENGINE == 'ruby' do
       mash = Hashie::Mash.new('abc' => 1)
       allocations = lambda do |&block|
         before = GC.stat(:total_allocated_objects)
@@ -725,7 +723,7 @@ describe Hashie::Mash do
       expect(mash).to be_empty
     end
 
-    it 'are read without allocating a string', if: RUBY_ENGINE == 'ruby' && Symbol.method_defined?(:name) do
+    it 'are read without allocating a string', if: RUBY_ENGINE == 'ruby' do
       mash = Hashie::Mash.new('abc' => 1)
       allocations = lambda do |&block|
         before = GC.stat(:total_allocated_objects)
@@ -1151,71 +1149,65 @@ describe Hashie::Mash do
     end
   end
 
-  with_minimum_ruby('2.5.0') do
-    describe '#slice' do
-      subject(:mash) { described_class.new(a: 1, b: 2) }
+  describe '#slice' do
+    subject(:mash) { described_class.new(a: 1, b: 2) }
 
-      it 'returns a Hashie::Mash' do
-        expect(mash.slice(:a)).to be_kind_of(described_class)
-      end
-
-      it 'returns a Mash with only the keys passed' do
-        expect(mash.slice(:a).to_hash).to eq('a' => 1)
-      end
-
-      context 'when using with subclass' do
-        let(:subclass) { Class.new(Hashie::Mash) }
-        subject(:sub_mash) { subclass.new(a: 1, b: 2) }
-
-        it 'creates an instance of subclass' do
-          expect(sub_mash.slice(:a)).to be_kind_of(subclass)
-        end
-      end
+    it 'returns a Hashie::Mash' do
+      expect(mash.slice(:a)).to be_kind_of(described_class)
     end
 
-    describe '#transform_keys' do
-      subject(:mash) { described_class.new(a: 1, b: 2) }
+    it 'returns a Mash with only the keys passed' do
+      expect(mash.slice(:a).to_hash).to eq('a' => 1)
+    end
 
-      it 'returns a Hashie::Mash' do
-        expect(mash.transform_keys { |k| k + k }).to be_kind_of(described_class)
-      end
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: 2) }
 
-      it 'returns a Mash with transformed keys' do
-        expect(mash.transform_keys { |k| k + k }).to eq('aa' => 1, 'bb' => 2)
-      end
-
-      context 'when using with subclass' do
-        let(:subclass) { Class.new(Hashie::Mash) }
-        subject(:sub_mash) { subclass.new(a: 1, b: 2) }
-
-        it 'creates an instance of subclass' do
-          expect(sub_mash.transform_keys { |k| k + k }).to be_kind_of(subclass)
-        end
+      it 'creates an instance of subclass' do
+        expect(sub_mash.slice(:a)).to be_kind_of(subclass)
       end
     end
   end
 
-  with_minimum_ruby('2.6.0') do
-    context 'ruby 2.6 merging' do
-      subject(:mash) { Hashie::Mash.new(model: 'Honda') }
-      it 'merges multiple hashes and mashes passeed to #merge' do
-        first_hash = { model: 'Ford' }
-        second_hash = { model: 'DeLorean' }
-        expect(mash.merge(first_hash, second_hash)).to eq('model' => 'DeLorean')
+  describe '#transform_keys' do
+    subject(:mash) { described_class.new(a: 1, b: 2) }
+
+    it 'returns a Hashie::Mash' do
+      expect(mash.transform_keys { |k| k + k }).to be_kind_of(described_class)
+    end
+
+    it 'returns a Mash with transformed keys' do
+      expect(mash.transform_keys { |k| k + k }).to eq('aa' => 1, 'bb' => 2)
+    end
+
+    context 'when using with subclass' do
+      let(:subclass) { Class.new(Hashie::Mash) }
+      subject(:sub_mash) { subclass.new(a: 1, b: 2) }
+
+      it 'creates an instance of subclass' do
+        expect(sub_mash.transform_keys { |k| k + k }).to be_kind_of(subclass)
       end
     end
   end
 
-  with_minimum_ruby('3.0.0') do
-    context '#except' do
-      subject(:mash) { described_class.new(a: 'A', b: 'B') }
-      it 'return a Hashie::Mash' do
-        expect(mash.except(:b)).to be_kind_of(described_class)
-      end
+  context 'merging multiple hashes' do
+    subject(:mash) { Hashie::Mash.new(model: 'Honda') }
+    it 'merges multiple hashes and mashes passed to #merge' do
+      first_hash = { model: 'Ford' }
+      second_hash = { model: 'DeLorean' }
+      expect(mash.merge(first_hash, second_hash)).to eq('model' => 'DeLorean')
+    end
+  end
 
-      it 'excludes keys' do
-        expect(mash.except(:b)).to eq('a' => 'A')
-      end
+  context '#except' do
+    subject(:mash) { described_class.new(a: 'A', b: 'B') }
+    it 'return a Hashie::Mash' do
+      expect(mash.except(:b)).to be_kind_of(described_class)
+    end
+
+    it 'excludes keys' do
+      expect(mash.except(:b)).to eq('a' => 'A')
     end
   end
 

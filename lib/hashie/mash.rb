@@ -62,7 +62,6 @@ module Hashie
   #   mash.author # => <Mash>
   #
   class Mash < Hash
-    include Hashie::Extensions::RubyVersionCheck
     extend Hashie::Extensions::KeyConflictWarning
 
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
@@ -329,22 +328,18 @@ module Hashie
       self.class.new(super)
     end
 
-    with_minimum_ruby('2.5.0') do
-      def slice(*keys)
-        string_keys = keys.map { |key| convert_key(key) }
-        self.class.new(super(*string_keys))
-      end
-
-      def transform_keys(&blk)
-        self.class.new(super(&blk))
-      end
+    def slice(*keys)
+      string_keys = keys.map { |key| convert_key(key) }
+      self.class.new(super(*string_keys))
     end
 
-    with_minimum_ruby('3.0.0') do
-      def except(*keys)
-        string_keys = keys.map { |key| convert_key(key) }
-        self.class.new(super(*string_keys))
-      end
+    def transform_keys(&blk)
+      self.class.new(super(&blk))
+    end
+
+    def except(*keys)
+      string_keys = keys.map { |key| convert_key(key) }
+      self.class.new(super(*string_keys))
     end
 
     protected
@@ -363,18 +358,12 @@ module Hashie
       method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
 
-    if Symbol.method_defined?(:name)
-      # Symbol#name returns the symbol's interned frozen string, where
-      # Symbol#to_s allocates a new one on every read and write.
-      def convert_key(key) #:nodoc:
-        return key.name if key.is_a?(Symbol)
+    # Symbol#name returns the symbol's interned frozen string, where
+    # Symbol#to_s allocates a new one on every read and write.
+    def convert_key(key) #:nodoc:
+      return key.name if key.is_a?(Symbol)
 
-        key.respond_to?(:to_sym) ? key.to_s : key
-      end
-    else
-      def convert_key(key) #:nodoc:
-        key.respond_to?(:to_sym) ? key.to_s : key
-      end
+      key.respond_to?(:to_sym) ? key.to_s : key
     end
 
     def convert_value(val, duping = false) #:nodoc:
