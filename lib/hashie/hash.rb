@@ -41,10 +41,10 @@ module Hashie
         if self[k].is_a?(Array)
           out[assignment_key] ||= []
           self[k].each do |array_object|
-            out[assignment_key] << maybe_convert_to_hash(array_object, options)
+            out[assignment_key] << _maybe_convert_to_hash(array_object, options)
           end
         else
-          out[assignment_key] = maybe_convert_to_hash(self[k], options)
+          out[assignment_key] = _maybe_convert_to_hash(self[k], options)
         end
       end
       out
@@ -61,13 +61,13 @@ module Hashie
 
     private
 
-    def maybe_convert_to_hash(object, options)
+    def _maybe_convert_to_hash(object, options)
       return object unless object.is_a?(Hash) || object.respond_to?(:to_hash)
 
-      flexibly_convert_to_hash(object, options)
+      _flexibly_convert_to_hash(object, options)
     end
 
-    def flexibly_convert_to_hash(object, options = {})
+    def _flexibly_convert_to_hash(object, options = {})
       if object.method(:to_hash).arity.zero?
         object.to_hash
       else

@@ -30,11 +30,22 @@ The policy applies at every incoming nested-hash level for both `deep_merge` and
 This is a breaking change: arbitrary receiver objects are now shared, incoming strings are now copied even without ActiveSupport, and receiver arrays are copied recursively rather than shallowly. Arrays still replace conflicting values rather than merging element by element. Incoming hashes inside arrays preserve their subclasses, and existing receiver container subclasses retain their types.
 
 If your application needs independent copies of domain objects, explicitly copy them according to their own APIs before merging. Do not assume `deep_merge` clones an entire object graph. `deep_merge!` keeps existing receiver values in place, and conflict-block results are still stored unchanged. Cyclic inputs are not supported.
+
 #### Mash preserves custom Hash values
 
 Nested Hash subclasses other than Mash are now stored by identity instead of being converted into Mashes or copied. This applies to initialization, assignment, arrays, copying, replacement, and merges. Plain Hash values are still recursively converted, and existing Mash-specific copying behavior is unchanged.
 
 Code relying on `mash.custom.some_key` for a custom Hash value must use that object's own API, such as `mash.custom[:some_key]`, or explicitly convert it with `Hashie::Mash.new(custom_hash)` before insertion. A custom Hash replaces an existing nested Mash during merge rather than recursively merging into it. Because custom values are shared, `dup` and `merge` no longer isolate mutations to them; explicitly copy such values when needed.
+
+#### Dash and Trash accessor collisions
+
+Property declarations no longer replace existing methods, regardless of visibility. Read and write conflicting properties with brackets: use `dash[:class]` instead of `dash.class`, and `dash[:count]` instead of `dash.count`. The latter methods retain their normal Ruby/Hash behavior. The same rule applies to translated source writers; use `trash[:source] = value` if `source=` already exists. Existing custom accessors are preserved; required and predefined-value validation now reads stored property values through brackets rather than invoking those accessors.
+
+#### Internal helper names
+
+Private and protected implementation helpers consistently use one leading underscore, including `_translations` (formerly `__translations`) and `_convert` (formerly `__convert`). Subclasses overriding renamed helpers must update those overrides and calls. Ruby callbacks, documented extension hooks such as `initialize_attributes`, `convert_key`, and `convert_value`, and public methods keep their existing names. The documented `__method` aliases created by `MethodAccessWithOverride` also remain unchanged; those expose overridden methods rather than internal helpers.
+
+Recursive key-conversion helpers, `Hashie::Utils`' integer-class helper, and Clash's merge-storage helper are now private and use underscore-prefixed names. Mash suffix parsing, method-redefinition helpers, and indifferent-hash detection are also private rather than protected. Use the public conversion, builder, and accessor APIs instead of calling these helpers directly.
 
 ### Upgrading to 5.2.0
 

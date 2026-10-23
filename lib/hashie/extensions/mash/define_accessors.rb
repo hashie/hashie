@@ -47,7 +47,9 @@ module Hashie
           def initialize
             mod = self
             define_method(:method_missing) do |method_name, *args, &block|
-              key, suffix = method_name_and_suffix(method_name)
+              return super(method_name, *args, &block) if singleton_class.private_method_defined?(method_name) || singleton_class.protected_method_defined?(method_name)
+
+              key, suffix = _method_name_and_suffix(method_name)
               case suffix
               when '='
                 mod.define_writer(key, method_name)

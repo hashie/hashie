@@ -37,7 +37,7 @@ module Hashie
     #   Hashie::Utils.safe_dup(:name) # => :name
     def self.safe_dup(value)
       case value
-      when Complex, FalseClass, NilClass, Rational, Method, Symbol, TrueClass, *integer_classes
+      when Complex, FalseClass, NilClass, Rational, Method, Symbol, TrueClass, *_integer_classes
         value
       else
         value.dup
@@ -48,8 +48,9 @@ module Hashie
     #
     # @api private
     # @return [Array<Class>]
-    def self.integer_classes
+    def self._integer_classes
       @integer_classes ||= [Integer]
     end
+    private_class_method :_integer_classes
   end
 end

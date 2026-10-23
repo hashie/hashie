@@ -54,7 +54,7 @@ RSpec.describe Hashie::Extensions::Mash::KeepOriginalKeys do
 
   it 'reuses symbol names for alternate key lookup' do
     mash = keeping_mash.new('example' => 1)
-    expect(mash.send(:__convert, :example)).to equal(:example.name)
+    expect(mash.send(:_convert, :example)).to equal(:example.name)
     expect(mash[:example]).to eq(1)
     expect(mash.keys).to eq(['example'])
   end

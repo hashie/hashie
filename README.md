@@ -1431,6 +1431,23 @@ dash.update_attributes!(description: nil)
 dash.description  #=> 'none'
 ```
 
+Dash and Trash do not replace existing public, protected, or private methods with property accessors. Conflicting names remain available through brackets, including required-property validation and translations:
+
+```ruby
+class TypedParameter < Hashie::Trash
+  property :class, from: :type, required: true
+  property :count, default: 0
+end
+
+parameter = TypedParameter.new(type: 'query')
+parameter[:class] # => 'query'
+parameter.class # => TypedParameter
+parameter[:count] # => 0
+parameter.count # => 2 (Hash entry count, not the property value)
+```
+
+This also preserves custom readers and writers defined before the property declaration. A translated input key that conflicts with an existing writer uses bracket assignment instead, such as `parameter[:default] = value`; the existing writer retains its original behavior.
+
 The names `required` and `required?` can themselves be used as properties, for example when modeling a Swagger parameter. Their values are independent of Dash's `required: true` declaration option; `false` is a valid non-nil value even for a required property.
 
 ```ruby

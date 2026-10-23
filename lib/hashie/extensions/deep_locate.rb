@@ -56,7 +56,7 @@ module Hashie
 
       def self._construct_key_comparator(search_key, object)
         if (object.respond_to?(:indifferent_access?) && object.indifferent_access?) ||
-           activesupport_indifferent?(object)
+           _activesupport_indifferent?(object)
           search_key = search_key.to_s
         end
 
@@ -90,11 +90,11 @@ module Hashie
       end
       private_class_method :_match_comparator?
 
-      def self.activesupport_indifferent?(object)
+      def self._activesupport_indifferent?(object)
         defined?(::ActiveSupport::HashWithIndifferentAccess) &&
           object.is_a?(::ActiveSupport::HashWithIndifferentAccess)
       end
-      private_class_method :activesupport_indifferent?
+      private_class_method :_activesupport_indifferent?
     end
   end
 end

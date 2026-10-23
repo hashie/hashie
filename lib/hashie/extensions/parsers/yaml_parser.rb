@@ -48,7 +48,7 @@ module Hashie
         #     file.close!
         #   end
         def perform
-          yaml_safe_load(@content)
+          _yaml_safe_load(@content)
         end
 
         # @example Load YAML in one step
@@ -67,7 +67,7 @@ module Hashie
 
         private
 
-        def yaml_safe_load(content)
+        def _yaml_safe_load(content)
           YAML.safe_load(
             content,
             permitted_classes: @options.fetch(:permitted_classes) { [] },

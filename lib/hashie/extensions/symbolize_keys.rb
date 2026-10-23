@@ -69,16 +69,17 @@ module Hashie
         # Symbolize all keys recursively within nested
         # hashes and arrays.
         # @api private
-        def symbolize_keys_recursively!(object)
+        def _symbolize_keys_recursively!(object)
           case object
           when ::Array
             object.each do |i|
-              symbolize_keys_recursively!(i)
+              _symbolize_keys_recursively!(i)
             end
           when ::Hash
             symbolize_keys!(object)
           end
         end
+        private :_symbolize_keys_recursively!
 
         # Converts keys in a hash recursively to symbols, in place.
         #
@@ -93,7 +94,7 @@ module Hashie
         def symbolize_keys!(hash)
           hash.extend(Hashie::Extensions::SymbolizeKeys) unless hash.respond_to?(:symbolize_keys!)
           hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
-            symbolize_keys_recursively!(hash[k])
+            _symbolize_keys_recursively!(hash[k])
             hash[convert_key(k)] = hash.delete(k)
           end
           hash

@@ -57,6 +57,8 @@ RuboCop scans Ruby sources, specs, benchmarks, gem manifests, and Ruby scripts a
 
 On MRI Ruby 3.2 or newer, RuboCop also checks spelling in Ruby comments and strings and documentation with `rubocop-spellcheck`. The plugin's native dependencies are not installed on JRuby. Fix typos in the source and add intentional project terms to `.spellcheck.txt`, one word per line. Run only the spelling check with `bundle exec rubocop --only Spellcheck/Spelling`. If regenerating vocabulary with `--auto-gen-config`, review the word list so genuine typos are not accepted and preserve the existing `.rubocop_todo.yml` baseline.
 
+Name private and protected implementation helpers with one leading underscore. Keep Ruby callbacks and documented extension hooks under their required names. Double-underscore aliases such as `__size` in `MethodAccessWithOverride` are a public feature for accessing overridden methods, not an internal-helper convention. Generated accessors must not replace existing methods, including private and protected helpers.
+
 Make sure that `bundle exec rake` completes without errors.
 
 #### Write Documentation

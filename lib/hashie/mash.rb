@@ -202,7 +202,7 @@ module Hashie
     #   mash.keys # => ['user']
     #   mash.user.name # => 'Ada'
     def custom_writer(key, value, convert = true) # :nodoc:
-      log_built_in_message(key) if key.respond_to?(:to_sym) && log_collision?(key.to_sym)
+      _log_built_in_message(key) if key.respond_to?(:to_sym) && _log_collision?(key.to_sym)
       regular_writer(convert_key(key), convert ? convert_value(value) : value)
     end
 
@@ -473,7 +473,7 @@ module Hashie
     def respond_to_missing?(method_name, *args)
       return true if key?(method_name)
 
-      suffix = method_suffix(method_name)
+      suffix = _method_suffix(method_name)
       if suffix
         true
       else
@@ -500,7 +500,7 @@ module Hashie
     def method_missing(method_name, *args, &blk)
       return self.[](method_name, &blk) if key?(method_name)
 
-      name, suffix = method_name_and_suffix(method_name)
+      name, suffix = _method_name_and_suffix(method_name)
       case suffix
       when '='
         assign_property(name, args.first)
@@ -581,9 +581,9 @@ module Hashie
       self.class.new(super(*string_keys))
     end
 
-    protected
+    private
 
-    def method_name_and_suffix(method_name)
+    def _method_name_and_suffix(method_name)
       method_name = method_name.to_s
       if method_name.end_with?(*ALLOWED_SUFFIXES)
         [method_name[0..-2], method_name[-1]]
@@ -592,10 +592,12 @@ module Hashie
       end
     end
 
-    def method_suffix(method_name)
+    def _method_suffix(method_name)
       method_name = method_name.to_s
       method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
+
+    protected
 
     # Symbol#name returns the symbol's interned frozen string, where
     # Symbol#to_s allocates a new one on every read and write.
@@ -625,7 +627,7 @@ module Hashie
 
     private
 
-    def log_built_in_message(method_key)
+    def _log_built_in_message(method_key)
       return if self.class.disable_warnings?(method_key)
 
       method_information = Hashie::Utils.method_information(method(method_key))
@@ -638,11 +640,11 @@ module Hashie
       )
     end
 
-    def log_collision?(method_key)
+    def _log_collision?(method_key)
       return false unless method_key.is_a?(String) || method_key.is_a?(Symbol)
       return false unless respond_to?(method_key)
 
-      _, suffix = method_name_and_suffix(method_key)
+      _, suffix = _method_name_and_suffix(method_key)
 
       (!suffix || suffix == '=') &&
         !self.class.disable_warnings?(method_key) &&

@@ -10,7 +10,7 @@ module Hashie
       #     include Hashie::Extensions::Dash::Coercion
       #     property :count, coerce: Integer
       #   end
-      #   klass.new(count: '3').count # => 3
+      #   klass.new(count: '3')[:count] # => 3
       module Coercion
         # Extends a Dash with the ability to define coercion for properties.
         #
@@ -19,7 +19,7 @@ module Hashie
         #     include Hashie::Extensions::Dash::Coercion
         #     property :count, coerce: Integer
         #   end
-        #   klass.new(count: '3').count # => 3
+        #   klass.new(count: '3')[:count] # => 3
         def self.included(base)
           base.send :include, Hashie::Extensions::Coercion
           base.extend ClassMethods
@@ -32,7 +32,7 @@ module Hashie
         #     include Hashie::Extensions::Dash::Coercion
         #     property :count, coerce: Integer
         #   end
-        #   klass.new(count: '3').count # => 3
+        #   klass.new(count: '3')[:count] # => 3
         module ClassMethods
           # Defines a property on the Dash. Options are the standard
           # `Hashie::Dash#property` options plus:
@@ -44,7 +44,7 @@ module Hashie
           #     include Hashie::Extensions::Dash::Coercion
           #     property :count, coerce: Integer
           #   end
-          #   klass.new(count: '3').count # => 3
+          #   klass.new(count: '3')[:count] # => 3
           def property(property_name, options = {})
             super
             coerce_key property_name, options[:coerce] if options[:coerce]

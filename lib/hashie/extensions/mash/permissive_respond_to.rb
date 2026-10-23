@@ -52,7 +52,7 @@ module Hashie
         #
         # @api private
         # @private
-        def log_collision?(method_key)
+        def _log_collision?(method_key)
           self.class.method_cache.include?(method_key) &&
             !self.class.disable_warnings?(method_key) &&
             !(regular_key?(method_key) || regular_key?(method_key.to_s))

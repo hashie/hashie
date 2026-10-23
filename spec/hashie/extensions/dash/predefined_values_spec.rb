@@ -66,4 +66,14 @@ describe Hashie::Extensions::Dash::PredefinedValues do
     expect { subclass.new(language: :ruby) }
       .not_to raise_error
   end
+
+  it 'validates bracket-only properties instead of invoking colliding Hash methods' do
+    klass = Class.new(Hashie::Dash) do
+      include Hashie::Extensions::Dash::PredefinedValues
+
+      property :class, values: %i[primary secondary]
+    end
+    expect(klass.new(class: :primary)[:class]).to eq(:primary)
+    expect { klass.new(class: :unknown) }.to raise_error(ArgumentError, /not allowed for `class`/)
+  end
 end

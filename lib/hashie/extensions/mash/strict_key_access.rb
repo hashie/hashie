@@ -44,7 +44,7 @@ module Hashie
         def method_missing(method_name, *args, &blk)
           return super if key?(method_name)
 
-          name, suffix = method_name_and_suffix(method_name)
+          name, suffix = _method_name_and_suffix(method_name)
           raise KeyError, "key not found: `#{name}`" if !key?(name) && !suffix
 
           super
@@ -54,7 +54,7 @@ module Hashie
         def respond_to_missing?(method_name, *args)
           return true if key?(method_name)
 
-          _, suffix = method_name_and_suffix(method_name)
+          _, suffix = _method_name_and_suffix(method_name)
           return false unless suffix
 
           super

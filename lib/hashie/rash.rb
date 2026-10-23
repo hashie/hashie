@@ -145,7 +145,7 @@ module Hashie
 
       case query
       when String
-        optimize_if_necessary!
+        _optimize_if_necessary!
 
         # see if any of the regexps match the string
         @regexes.each do |regex|
@@ -193,7 +193,7 @@ module Hashie
 
     private
 
-    def optimize_if_necessary!
+    def _optimize_if_necessary!
       return unless (@lookups += 1) >= @optimize_every
 
       @regexes = @regexes.sort_by { |regex| -@regex_counts[regex] }

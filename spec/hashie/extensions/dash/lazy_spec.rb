@@ -224,7 +224,7 @@ describe Hashie::Extensions::Dash::Lazy do
       end
       expect(calls).to be_empty
       expect(instance.name).to eq('ADA')
-      expect(instance.count).to eq(37)
+      expect(instance[:count]).to eq(37)
       expect(transforms).to eq([:name])
       expect(calls).to eq(%i[name count])
     end
