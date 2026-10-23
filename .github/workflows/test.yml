@@ -21,7 +21,7 @@ jobs:
         ruby-version: '3.3'
     - name: Validate Rails documentation examples with real dependencies
       env:
-        BUNDLE_GEMFILE: spec/integration/rails_7/Gemfile
+        BUNDLE_GEMFILE: gemfiles/rails_7.gemfile
       run: |
         bundle install --jobs 4 --retry 3
         bundle exec ruby -Ilib script/test_documentation_examples.rb --rails
@@ -38,11 +38,9 @@ jobs:
         ruby-version: '3.0'
     - name: Run integration tests
       run: |
-        for dir in spec/integration/*; do
-          echo "testing $dir integration"
-          BUNDLE_GEMFILE=$dir/Gemfile bundle install --jobs 4 --retry 3
-          BUNDLE_GEMFILE=$dir/Gemfile bundle exec rspec $dir
-        done
+        bundle exec appraisal generate
+        git diff --exit-code -- gemfiles
+        bundle exec rake integration_specs
 
   lint:
     runs-on: ubuntu-latest

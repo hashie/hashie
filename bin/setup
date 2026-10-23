@@ -4,9 +4,3 @@ set -euo pipefail
 IFS=$'\n\t'
 
 bundle install
-
-for dir in spec/integration/*; do
-  pushd "$dir"
-  bundle install
-  popd
-done

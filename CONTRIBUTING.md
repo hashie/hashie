@@ -25,11 +25,17 @@ git checkout -b my-feature-branch
 
 #### Install dependencies
 
-You can use the setup script to install dependencies for the gem and its integration tests.
+Use the setup script to install the gem's development dependencies.
 
 ```
 bin/setup
 ```
+
+Integration dependencies are managed with [Appraisal](https://github.com/thoughtbot/appraisal). Run `bundle exec rake integration_specs` to install all appraisal bundles and run each fixture directory under its matching environment (also included in local `bundle exec rake`). CI runs the same task with Bundler 2.5.23 on Ruby 3.0.
+
+To run one environment, use `bundle exec appraisal install` followed by, for example, `bundle exec appraisal rails_7 rspec spec/integration/rails_7`. Edit dependency definitions in `Appraisals`, then run `bundle exec appraisal generate` and commit the generated `gemfiles/*.gemfile` files. Generated lockfiles stay local and ignored. CI checks that generated manifests are up to date. The generated manifests are excluded from RuboCop because Appraisal owns their formatting; `Appraisals` itself is linted.
+
+Fixture applications remain under `spec/integration`; only their dependency manifests move to Appraisal. Environments start from a fresh `Appraisal::Gemfile`, declaring only the local gemspec, Rake, RSpec, and each integration's own dependencies. They do not inherit the root Gemfile, so adding development or reporting tools cannot leak into integrations. RSpec uses the maintained 3.x line consistently instead of pinning legacy 3.5. To add an integration, add a same-named appraisal and fixture directory.
 
 #### Test
 
@@ -66,7 +72,7 @@ bundle exec rake docs:examples
 bundle exec rspec spec/documentation_examples_spec.rb
 ```
 
-The dedicated documentation CI job runs both commands on Ruby 4.0. Railtie and ActiveSupport integration examples run separately on Ruby 3.3 with the real Rails 7 integration bundle: `BUNDLE_GEMFILE=spec/integration/rails_7/Gemfile bundle exec ruby -Ilib script/test_documentation_examples.rb --rails`. Both runs check coverage for all library files; only execution is partitioned by dependency requirements. Each `@example` must be self-contained: Hashie is loaded automatically, but local variables and class definitions are not shared between examples. Put expected Ruby values in inline, single-line `# =>` comments (or `#=>`); the runner evaluates the expression and compares it to the expected value with RSpec equality assertions. Multiline setup is supported, but standalone result comments and examples without assertions fail rather than passing unchecked. For example:
+The dedicated documentation CI job runs both commands on Ruby 4.0. Railtie and ActiveSupport integration examples run separately on Ruby 3.3 with the real Rails 7 appraisal: `bundle exec appraisal rails_7 ruby -Ilib script/test_documentation_examples.rb --rails`. Both runs check coverage for all library files; only execution is partitioned by dependency requirements. Each `@example` must be self-contained: Hashie is loaded automatically, but local variables and class definitions are not shared between examples. Put expected Ruby values in inline, single-line `# =>` comments (or `#=>`); the runner evaluates the expression and compares it to the expected value with RSpec equality assertions. Multiline setup is supported, but standalone result comments and examples without assertions fail rather than passing unchecked. For example:
 
 ```ruby
 # @example Convert keys without changing a flat hash

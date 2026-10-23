@@ -8,4 +8,5 @@ pkg
 .bundle
 .rvmrc
 Gemfile.lock
+gemfiles/*.gemfile.lock
 log/

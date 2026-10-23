@@ -1,9 +1,0 @@
-# frozen_string_literal: true
-
-source 'http://rubygems.org'
-
-gem 'hashie', path: '../../..'
-gem 'rails', '~> 7.0.0'
-gem 'rspec', '~> 3.5.0'
-gem 'rspec-rails'
-gem 'yard', '~> 0.9.45', require: false

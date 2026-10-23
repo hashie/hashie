@@ -5,6 +5,7 @@ source 'http://rubygems.org'
 gemspec
 
 group :development do
+  gem 'appraisal', '~> 2.5'
   gem 'benchmark-ips'
   gem 'benchmark-memory'
   gem 'bundler'

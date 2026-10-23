@@ -1,9 +1,0 @@
-# frozen_string_literal: true
-
-source 'http://rubygems.org'
-
-gem 'elasticsearch-api', '~> 7.0.0'
-gem 'elasticsearch-model', '~> 7.0.0'
-gem 'hashie', path: '../../..'
-gem 'rake'
-gem 'rspec', '~> 3.5.0'

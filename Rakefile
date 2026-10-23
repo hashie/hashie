@@ -33,24 +33,15 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
   Rake::Task[:rubocop].enhance([:rubocop_exception_messages])
 end
 
-require_relative 'spec/support/integration_specs'
-desc 'Install integration dependencies and run integration specs'
+desc 'Install Appraisal bundles and run each integration in its own environment'
 task :integration_specs do
-  next if ENV['CI']
-
-  status_codes = []
-  handler = lambda do |status_code|
-    status_codes << status_code unless status_code.zero?
-  end
-
-  run_all_integration_specs(handler: handler, logger: ->(msg) { puts msg })
-
-  if status_codes.any?
-    warn "#{status_codes.size} integration test(s) failed"
-    exit status_codes.last
+  sh 'bundle', 'exec', 'appraisal', 'install'
+  Dir['spec/integration/*'].each do |directory|
+    sh 'bundle', 'exec', 'appraisal', File.basename(directory), 'rspec', directory
   end
 end
 
-default_tasks = %i[spec integration_specs]
+default_tasks = %i[spec]
+default_tasks << :integration_specs unless ENV['CI']
 default_tasks.unshift(:rubocop) if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
 task default: default_tasks

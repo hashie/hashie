@@ -39,6 +39,7 @@ Any violations of this scheme are considered to be bugs.
 * [#607](https://github.com/hashie/hashie/pull/607): Upgraded RuboCop to 1.91.0 and consolidated exception-message checks into one CI lint job - [@dblock](https://github.com/dblock).
 * [#590](https://github.com/hashie/hashie/pull/590): Migrated Danger to use `danger-pr-comment` workflow - [@dblock](https://github.com/dblock).
 * [#613](https://github.com/hashie/hashie/pull/613): `Mash` converts symbol keys with `Symbol#name` on Ruby 3.0+, so reads and writes with a symbol key no longer allocate a string - [@sampokuokkanen](https://github.com/sampokuokkanen).
+* [#628](https://github.com/hashie/hashie/pull/628): Replaced custom integration bundle setup with Appraisal, keeping fixture applications isolated and using the same install/test task locally and in CI - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Deprecated
