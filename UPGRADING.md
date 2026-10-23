@@ -15,6 +15,14 @@ Hashie::Mash.load('trusted-settings.yml', parser: Hashie::Extensions::Parsers::Y
 
 Do not use `YamlErbParser` with untrusted input: it executes Ruby before parsing YAML. Both parsers still use `YAML.safe_load`, and `permitted_classes`, `permitted_symbols`, and `aliases` retain their existing meanings. Custom parsers, frozen results, and path-based caching are unchanged. Because cached results are keyed only by path, use separate Mash subclasses if the same file needs different parser policies.
 
+#### DeepMerge preserves incoming hash subclasses
+
+`Hashie::Extensions::DeepMerge` now preserves the class, instance state, and defaults of incoming nested hashes by default. New destinations use `source.dup.clear` instead of `{}`, so required constructor arguments and required-property Dashes do not require an empty constructor. Existing destination hashes keep their own types; source hashes are never cleared.
+
+This is a breaking change for code relying on incoming subclasses becoming plain hashes. Preserved subclasses may enforce custom assignment rules or expose different lookup behavior. Applications requiring plain nested hashes must explicitly normalize their input hash values before merging.
+
+The policy applies at every incoming nested-hash level for both `deep_merge` and `deep_merge!`. Array and non-Hash value-copying behavior is unchanged. Custom hashes must support duplication, clearing, and assignment into the copied hash.
+
 ### Upgrading to 5.2.0
 
 #### Safer YAML loading

@@ -91,6 +91,81 @@ describe Hashie::Extensions::DeepMerge do
       expect(receiver.deep_merge(incoming, &block)).to eq expected_hash
     end
 
+    context 'preserving incoming hash types' do
+      let(:preserving_class) { DeepMergeHash }
+      let(:source_class) do
+        Class.new(Hash) do
+          attr_reader :label
+
+          def initialize(label)
+            @label = label
+            super() { |_, key| "missing #{key}" }
+          end
+
+          def [](key)
+            super(key.is_a?(String) ? key.downcase : key)
+          end
+
+          def []=(key, value)
+            super(key.is_a?(String) ? key.downcase : key, value)
+          end
+        end
+      end
+      let(:addition) do
+        leaf = source_class.new('leaf')
+        leaf[:value] = 2
+        branch = source_class.new('branch')
+        branch[:child] = leaf
+        { branch: branch }
+      end
+
+      %i[deep_merge deep_merge!].each do |operation|
+        it "preserves incoming classes and state recursively by default with #{operation}" do
+          receiver = preserving_class.new
+          result = receiver.public_send(operation, addition)
+          branch = result[:branch]
+          expect(branch).to be_instance_of(source_class)
+          expect(branch.label).to eq('branch')
+          expect(branch[:unknown]).to eq('missing unknown')
+          branch['Name'] = 'normalized'
+          expect(branch['NAME']).to eq('normalized')
+          expect(branch.keys).to include('name')
+          expect(branch[:child]).to be_instance_of(source_class)
+          expect(branch[:child].label).to eq('leaf')
+          expect(branch).not_to equal(addition[:branch])
+          expect(branch[:child]).not_to equal(addition[:branch][:child])
+          branch[:child][:value] = 3
+          expect(addition[:branch][:child][:value]).to eq(2)
+          expect(receiver).to be_empty if operation == :deep_merge
+          expect(result).to equal(receiver) if operation == :deep_merge!
+        end
+      end
+
+      it 'retains existing destination types and passes the conflict block through recursion' do
+        receiver = preserving_class.new
+        receiver[:branch] = { child: { value: 10 } }
+        result = receiver.deep_merge(addition) { |_, old, incoming| old + incoming }
+        expect(result[:branch]).to be_instance_of(Hash)
+        expect(result[:branch][:child]).to be_instance_of(Hash)
+        expect(result[:branch][:child][:value]).to eq(12)
+        expect(receiver[:branch][:child][:value]).to eq(10)
+      end
+
+      it 'preserves required-property Dashes without calling an empty constructor' do
+        dash = Class.new(Hashie::Dash) { property :name, required: true }
+        source = dash.new(name: 'Ada')
+        result = preserving_class.new.deep_merge(person: source)
+        expect(result[:person]).to be_instance_of(dash)
+        expect(result[:person].name).to eq('Ada')
+        expect(source.name).to eq('Ada')
+      end
+
+      it 'keeps keyword-style input hashes as merge data rather than introducing options' do
+        result = preserving_class.new.deep_merge(keep_hash_subclasses: { value: 1 })
+        expect(result).to eq(keep_hash_subclasses: { value: 1 })
+      end
+    end
+
     it 'deep merges another hash in place via bang method' do
       receiver.deep_merge!(incoming, &block)
       expect(receiver).to eq expected_hash
