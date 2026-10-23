@@ -51,6 +51,7 @@
   - [StrictKeyAccess](#strictkeyaccess-1)
   - [RequiredKeys](#requiredkeys)
 - [Dash](#dash)
+  - [Validations with ActiveModel](#validations-with-activemodel)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
   - [Mash and Rails 4 Strong Parameters](#mash-and-rails-4-strong-parameters)
@@ -1246,6 +1247,43 @@ dash.description = 'Only slightly less known is ...'
 dash.update_attributes!(description: nil)
 dash.description  #=> 'none'
 ```
+
+### Validations with ActiveModel
+
+Include [ActiveModel::Validations](https://api.rubyonrails.org/classes/ActiveModel/Validations.html) in a Dash subclass to validate property values with standard validators or custom `validate` methods. Add `gem 'activemodel'` to your application's Gemfile unless Rails already provides it; ActiveModel is optional and is not a Hashie runtime dependency.
+
+```ruby
+require 'logger'
+require 'active_model'
+require 'hashie'
+
+class Article < Hashie::Dash
+  include ActiveModel::Validations
+
+  property :title, required: true
+
+  validates :title, presence: true, length: { maximum: 15 }
+end
+
+article = Article.new(title: 'Hello')
+article.valid? # => true
+
+article.title = 'A title that is too long' # assignment succeeds
+article.valid? # => false
+article.errors[:title] # => ["is too long (maximum is 15 characters)"]
+
+article.title = ''
+article.valid? # => false
+article.errors[:title] # => ["can't be blank"]
+
+article.title = 'Short title'
+article.valid? # => true
+article.errors.empty? # => true
+```
+
+Call `valid?` explicitly after constructing or changing the Dash. Including `ActiveModel::Validations` does not automatically validate on initialization or assignment, reject invalid values, or roll back changes; `valid?` returns a boolean and populates `errors`.
+
+Dash's `required: true` is a separate non-nil constraint: omitting `title` during initialization or assigning `nil` raises `ArgumentError` immediately, without calling `valid?`. It permits an empty string, whereas ActiveModel's `presence` validator reports blank values when `valid?` runs. Leave off `required: true` if missing or nil values should be collected as validation errors instead of raising.
 
 ### Potential Gotchas
 
