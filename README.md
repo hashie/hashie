@@ -19,6 +19,7 @@
   - [Coercing Core Types](#coercing-core-types)
   - [Coercion Proc](#coercion-proc)
     - [A note on circular coercion](#a-note-on-circular-coercion)
+  - [Nil Values and Defaults](#nil-values-and-defaults)
   - [KernelCoercion](#kernelcoercion)
   - [Callable Coercion](#callable-coercion)
   - [Coercion with dry-types](#coercion-with-dry-types)
@@ -240,6 +241,31 @@ class CategoryHash < Hash
   end
 end
 ```
+
+### Nil Values and Defaults
+
+Top-level `nil` values bypass coercion: `coerce_key :description, String` does not turn `nil` into `''`. A coercion rule converts supplied non-nil values; it does not define a default. Use a Dash property default when missing or nil input should become an empty string:
+
+```ruby
+class DescriptionParams < Hashie::Dash
+  include Hashie::Extensions::Coercion
+
+  property :description, default: ''
+  coerce_key :description, String
+end
+
+params = DescriptionParams.new(description: nil)
+params.description # => ''
+DescriptionParams.new.description # => ''
+DescriptionParams.new(description: 123).description # => '123'
+
+params.description = nil
+params.description # => nil
+params.update_attributes!(description: nil)
+params.description # => ''
+```
+
+Dash initialization and `update_attributes!` apply property defaults to nil values. Direct assignments through a property writer or `[]=` retain nil and do not reapply defaults. These rules also apply to subclasses. Dash already initializes attributes; it does not need `MergeInitializer`.
 
 ### KernelCoercion
 

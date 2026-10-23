@@ -36,6 +36,44 @@ describe Hashie::Extensions::Coercion do
   let(:instance) { subject.new }
 
   describe '#coerce_key' do
+    context 'Dash initialization and defaults' do
+      let(:dash_class) do
+        Class.new(Hashie::Dash) do
+          include Hashie::Extensions::Coercion
+
+          property :description, default: ''
+          property :optional
+          coerce_key :description, String
+          coerce_key :optional, String
+        end
+      end
+
+      it 'applies defaults without coercing nil in the parent and child' do
+        [dash_class, Class.new(dash_class)].each do |klass|
+          expect(klass.new.description).to eq('')
+          object = klass.new(description: nil, optional: nil)
+          expect(object.description).to eq('')
+          expect(object.optional).to be_nil
+          expect(klass.new(description: 123).description).to eq('123')
+        end
+      end
+
+      it 'retains assigned nil but reapplies defaults during update_attributes!' do
+        [dash_class, Class.new(dash_class)].each do |klass|
+          object = klass.new(description: 123)
+          object.description = nil
+          expect(object.description).to be_nil
+          object.update_attributes!(description: nil)
+          expect(object.description).to eq('')
+          object[:description] = nil
+          expect(object.description).to be_nil
+          object.update_attributes!(description: 456, optional: nil)
+          expect(object.description).to eq('456')
+          expect(object.optional).to be_nil
+        end
+      end
+    end
+
     context 'nesting' do
       class BaseCoercableHash < Hash
         include Hashie::Extensions::Coercion
