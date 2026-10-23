@@ -1,6 +1,20 @@
 Upgrading Hashie
 ================
 
+### Upgrading to 6.0.0
+
+#### YAML loading no longer evaluates ERB by default
+
+`Hashie::Mash.load` now defaults to `Hashie::Extensions::Parsers::YamlParser`, introduced in #625, rather than `YamlErbParser`. This is a breaking change for configuration files containing ERB: template expressions are no longer evaluated and may remain literal strings or cause YAML parsing errors.
+
+For trusted files that require ERB interpolation, explicitly select the previous parser:
+
+```ruby
+Hashie::Mash.load('trusted-settings.yml', parser: Hashie::Extensions::Parsers::YamlErbParser)
+```
+
+Do not use `YamlErbParser` with untrusted input: it executes Ruby before parsing YAML. Both parsers still use `YAML.safe_load`, and `permitted_classes`, `permitted_symbols`, and `aliases` retain their existing meanings. Custom parsers, frozen results, and path-based caching are unchanged. Because cached results are keyed only by path, use separate Mash subclasses if the same file needs different parser policies.
+
 ### Upgrading to 5.2.0
 
 #### Safer YAML loading

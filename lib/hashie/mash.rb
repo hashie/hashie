@@ -72,8 +72,8 @@ module Hashie
 
     ALLOWED_SUFFIXES = %w[? ! = _].freeze
 
-    # Loads a YAML file. The default parser evaluates ERB templates, so only
-    # use this default with trusted files. Pass YamlParser to avoid ERB.
+    # Loads YAML without evaluating ERB. Pass YamlErbParser explicitly to
+    # evaluate templates from trusted files.
     #
     # @example Load and cache a frozen configuration from a YAML file
     #   require 'tempfile'
@@ -96,7 +96,7 @@ module Hashie
       raise ArgumentError, "file not found: `#{path}`" unless File.file?(path)
 
       options = options.dup
-      parser = options.delete(:parser) { Hashie::Extensions::Parsers::YamlErbParser }
+      parser = options.delete(:parser) { Hashie::Extensions::Parsers::YamlParser }
       @_mashes[path] = new(parser.perform(path, options)).freeze
     end
 
