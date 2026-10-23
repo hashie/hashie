@@ -16,7 +16,6 @@ Any violations of this scheme are considered to be bugs.
 * [#625](https://github.com/hashie/hashie/pull/625): Added an opt-in `YamlParser` that parses YAML without evaluating ERB, while preserving `Mash.load`'s existing ERB-enabled default for compatibility, following [#575](https://github.com/hashie/hashie/issues/575) - [@bo-tato](https://github.com/bo-tato), [@dblock](https://github.com/dblock).
 * [#621](https://github.com/hashie/hashie/pull/621): Added `Mash::UnderscoreKeys` on top of `TransformKeys` for camel-case and hyphenated key normalization, following [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
 * [#620](https://github.com/hashie/hashie/pull/620): Added configurable `Mash::TransformKeys` key normalization as a foundation for [#566](https://github.com/hashie/hashie/pull/566) - [@arianf](https://github.com/arianf), [@dblock](https://github.com/dblock).
-* [#619](https://github.com/hashie/hashie/pull/619): Added a protected `deep_merge_new_hash` factory hook for opt-in preservation of incoming nested hash subclasses, following [#586](https://github.com/hashie/hashie/pull/586) and [#585](https://github.com/hashie/hashie/issues/585) - [@addam128](https://github.com/addam128), [@dblock](https://github.com/dblock).
 * [#618](https://github.com/hashie/hashie/pull/618): Added `Hashie::Extensions::DeepGrep` for regular-expression searches of nested hashes and arrays, following [#528](https://github.com/hashie/hashie/pull/528) - [@vmarutha](https://github.com/vmarutha), [@dblock](https://github.com/dblock).
 * [#617](https://github.com/hashie/hashie/pull/617): Documented nil coercion bypass versus Dash defaults and added initialization, assignment, update, and inheritance regression coverage, following [#472](https://github.com/hashie/hashie/pull/472) - [@bobbytables](https://github.com/bobbytables), [@dblock](https://github.com/dblock).
 * [#611](https://github.com/hashie/hashie/pull/611): Added callable coercers, including bound methods and dry-types objects, following [#379](https://github.com/hashie/hashie/pull/379) and [#239](https://github.com/hashie/hashie/issues/239) - [@mkcode](https://github.com/mkcode), [@dblock](https://github.com/dblock).
@@ -47,6 +46,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Removed
 
+* Reverted [#619](https://github.com/hashie/hashie/pull/619)'s `deep_merge_new_hash` hook in favor of the breaking-change proposal in [#632](https://github.com/hashie/hashie/pull/632), which preserves incoming hash subclasses directly - [@dblock](https://github.com/dblock).
 * [#622](https://github.com/hashie/hashie/pull/622): Dropped Ruby 2.7 support, raised the minimum to Ruby 3.0, and removed obsolete Ruby version gates and symbol-conversion fallbacks, following [#613](https://github.com/hashie/hashie/pull/613#issuecomment-6354118292) - [@dblock](https://github.com/dblock).
 * Your contribution here.
 

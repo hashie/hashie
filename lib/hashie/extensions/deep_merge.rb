@@ -19,13 +19,6 @@ module Hashie
         self
       end
 
-      # Override to choose an empty destination for an incoming nested hash.
-      # Existing destination hashes are merged in place instead.
-      def deep_merge_new_hash(_source)
-        {}
-      end
-      protected :deep_merge_new_hash
-
       private
 
       def _deep_dup(hash)
@@ -49,7 +42,7 @@ module Hashie
             if hash.key?(k) && hash[k].is_a?(::Hash) && v.is_a?(::Hash)
               _recursive_merge(hash[k], v, &block)
             elsif v.is_a?(::Hash)
-              _recursive_merge(deep_merge_new_hash(v), v, &block)
+              _recursive_merge({}, v, &block)
             elsif hash.key?(k) && block_given?
               yield(k, hash[k], v)
             else

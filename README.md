@@ -629,23 +629,6 @@ h1.deep_merge(h2) { |key, this_val, other_val| this_val + other_val }
 ```
 
 
-New nested hashes use plain `Hash` destinations by default. To preserve incoming hash subclasses, override the protected `deep_merge_new_hash(source)` hook:
-
-```ruby
-class PreservingHash < Hash
-  include Hashie::Extensions::DeepMerge
-
-  protected
-
-  def deep_merge_new_hash(source)
-    # Use source.class.new if no constructor arguments or instance-specific state are needed.
-    source.dup.clear
-  end
-end
-```
-
-The hook must return an empty, writable hash. Duplicating and clearing the source preserves its class, instance state, and hash defaults without requiring a zero-argument constructor. It runs for each incoming nested hash that cannot merge into an existing destination hash, including at deeper levels. Existing destination hashes retain their own types. Both `deep_merge` and `deep_merge!` use the hook; neither clears the source. Hashes inside arrays follow the existing array replacement behavior and are not processed by this hook. Custom subclasses with special duplication, clearing, or assignment behavior may need their own factory implementation.
-
 ### DeepFetch
 
 This extension can be mixed in to provide for safe and concise retrieval of deeply nested hash values. In the event that the requested key does not exist a block can be provided and its value will be returned.
