@@ -6,6 +6,17 @@ describe Hashie::Extensions::Mash::DefineAccessors do
   let(:args) { [] }
 
   shared_examples 'class with dynamically defined accessors' do
+    it 'does not replace private or protected helpers when their names are read as data' do
+      instance[:_deep_update] = 'private data'
+      instance[:convert_value] = 'protected data'
+      expect(instance._deep_update).to eq('private data')
+      expect(instance.convert_value).to eq('protected data')
+      expect(subject).to be_private_method_defined(:_deep_update)
+      expect(subject).to be_protected_method_defined(:convert_value)
+      instance.update(nested: { name: 'Ada' })
+      expect(instance.nested.name).to eq('Ada')
+    end
+
     it 'defines reader on demand' do
       expect(subject).not_to be_method_defined(:foo)
       instance.foo

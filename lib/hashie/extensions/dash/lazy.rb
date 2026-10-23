@@ -43,11 +43,11 @@ module Hashie
         def [](property, &block)
           return super unless @lazy_loader
 
-          assert_property_exists!(property)
-          canonical_property = lazy_property(property)
-          load_property(canonical_property) unless key?(property)
+          _assert_property_exists!(property)
+          canonical_property = _lazy_property(property)
+          _load_property(canonical_property) unless key?(property)
           value = super
-          assert_property_required!(canonical_property, value)
+          _assert_property_required!(canonical_property, value)
           value
         end
 
@@ -111,7 +111,7 @@ module Hashie
           @lazy_attributes = attributes || {}
         end
 
-        def assert_required_attributes_set!
+        def _assert_required_attributes_set!
           super unless @lazy_loader
         end
 
@@ -120,13 +120,13 @@ module Hashie
           @lazy_loading = []
         end
 
-        def lazy_property(property)
+        def _lazy_property(property)
           return property if self.class.properties.include?(property)
 
           self.class.properties.find { |key| key.to_s == property.to_s } || property
         end
 
-        def lazy_attribute_key(property)
+        def _lazy_attribute_key(property)
           return property if @lazy_attributes.key?(property)
           return unless respond_to?(:convert_key)
 
@@ -134,7 +134,7 @@ module Hashie
           converted if @lazy_attributes.key?(converted)
         end
 
-        def load_property(property)
+        def _load_property(property)
           raise ArgumentError, "circular lazy loading for property `#{property}`" if @lazy_loading.include?(property)
 
           @lazy_loading << property
@@ -144,12 +144,12 @@ module Hashie
                      else
                        property
                      end
-            attribute = lazy_attribute_key(property)
+            attribute = _lazy_attribute_key(property)
             if attribute
               source = property
               value = @lazy_attributes[attribute]
             else
-              attribute = lazy_attribute_key(source)
+              attribute = _lazy_attribute_key(source)
               value = attribute ? @lazy_attributes[attribute] : @lazy_loader.call(source)
             end
             if value.nil?

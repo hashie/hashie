@@ -68,16 +68,17 @@ module Hashie
         # Stringify all keys recursively within nested
         # hashes and arrays.
         # @api private
-        def stringify_keys_recursively!(object)
+        def _stringify_keys_recursively!(object)
           case object
           when ::Array
             object.each do |i|
-              stringify_keys_recursively!(i)
+              _stringify_keys_recursively!(i)
             end
           when ::Hash
             stringify_keys!(object)
           end
         end
+        private :_stringify_keys_recursively!
 
         # Converts all keys in a hash recursively to strings, in place.
         #
@@ -92,7 +93,7 @@ module Hashie
         def stringify_keys!(hash)
           hash.extend(Hashie::Extensions::StringifyKeys) unless hash.respond_to?(:stringify_keys!)
           hash.keys.each do |k| # rubocop:disable Performance/HashEachMethods
-            stringify_keys_recursively!(hash[k])
+            _stringify_keys_recursively!(hash[k])
             hash[k.to_s] = hash.delete(k)
           end
           hash

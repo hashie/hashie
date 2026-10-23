@@ -35,7 +35,7 @@ module Hashie
         def convert_key(key)
           return key if regular_key?(key)
 
-          converted_key = __convert(key)
+          converted_key = _convert(key)
           converted_key && regular_key?(converted_key) ? converted_key : key
         end
 
@@ -44,7 +44,7 @@ module Hashie
         #
         # @param [Object, String, Symbol] key the key to convert.
         # @return [Object, String, Symbol] the converted key.
-        def __convert(key)
+        def _convert(key)
           case key
           when Symbol then key.name
           when String then key.to_sym

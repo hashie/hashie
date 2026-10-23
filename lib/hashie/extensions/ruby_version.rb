@@ -32,7 +32,7 @@ module Hashie
       #   version = Hashie::Extensions::RubyVersion.new('3.2.0.rc1')
       #   version.segments # => [3, 2, 0, 'rc', 1]
       def initialize(version)
-        @segments = split_to_segments(version)
+        @segments = _split_to_segments(version)
       end
 
       # @example Ignore trailing zeros and order prereleases before releases
@@ -67,7 +67,7 @@ module Hashie
 
       private
 
-      def split_to_segments(version)
+      def _split_to_segments(version)
         version.scan(/[0-9]+|[a-z]+/i).map do |segment|
           /^\d+$/ =~ segment ? segment.to_i : segment
         end.freeze

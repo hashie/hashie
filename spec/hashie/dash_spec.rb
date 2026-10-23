@@ -100,8 +100,8 @@ describe DashTest do
     expect(subject.inspect).to eq '#<DashTest count=0 email="bob@example.com" first_name="Bob">'
   end
 
-  describe '#count' do
-    subject { super().count }
+  describe '[:count]' do
+    subject { super()[:count] }
 
     it { is_expected.to be_zero }
   end
@@ -210,6 +210,104 @@ describe DashTest do
   context 'converting from a Mash' do
     class ConvertingFromMash < Hashie::Dash
       property :property, required: true
+    end
+
+    context 'with property names that collide with methods' do
+      it 'allows ordinary property names formerly occupied by validation and serialization helpers' do
+        klass = Class.new(Hashie::Dash) do
+          property :assert_property_exists!
+          property :update_attributes
+          property :flexibly_convert_to_hash
+          property :name, required: true
+        end
+        dash = klass.new(
+          name: 'Ada', assert_property_exists!: 'validation data',
+          update_attributes: 'update data', flexibly_convert_to_hash: 'serialization data'
+        )
+        expect(dash.assert_property_exists!).to eq('validation data')
+        expect(dash.update_attributes).to eq('update data')
+        expect(dash.flexibly_convert_to_hash).to eq('serialization data')
+        expect(dash.to_hash[:name]).to eq('Ada')
+        expect { dash.name = nil }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'keeps Hash methods and validation helpers intact while allowing bracket access' do
+        klass = Class.new(Hashie::Dash) do
+          property :class, required: true
+          property :keys
+          property :to_h
+          property :initialize
+          property :_required?
+          property :_assert_property_exists!
+          property :_regular_reader
+        end
+        attributes = {
+          class: 'parameter', keys: 'data', to_h: 'data', initialize: 'data',
+          _required?: 'data', _assert_property_exists!: 'data', _regular_reader: 'data'
+        }
+        dash = klass.new(attributes)
+        expect(dash.class).to equal(klass)
+        expect(dash.keys).to match_array(attributes.keys)
+        expect(dash.to_h).to eq(attributes)
+        attributes.each { |key, value| expect(dash[key]).to eq(value) }
+        expect { klass.new }.to raise_error(ArgumentError, /the property `class`/)
+        expect { dash[:class] = nil }.to raise_error(ArgumentError, /the property `class`/)
+        expect(klass.private_method_defined?(:_assert_property_exists!)).to be(true)
+      end
+
+      it 'does not replace custom readers or private writers' do
+        klass = Class.new(Hashie::Dash) do
+          def name
+            self[:name].upcase
+          end
+
+          private
+
+          def name=(_value)
+            raise 'custom private writer'
+          end
+
+          property :name, required: true
+        end
+        dash = klass.new(name: 'Ada')
+        expect(dash.name).to eq('ADA')
+        expect(dash[:name]).to eq('Ada')
+        expect { dash.name = 'Grace' }.to raise_error(NoMethodError, /private method/)
+      end
+
+      it 'uses bracket-only properties in conditional requirements' do
+        klass = Class.new(Hashie::Dash) do
+          property :class
+          property :name, required: :class
+        end
+        expect(klass.new(class: false)[:name]).to be_nil
+        expect { klass.new(class: true) }.to raise_error(ArgumentError, /the property `name`/)
+      end
+
+      it 'protects Trash translation helpers and translates into bracket-only properties' do
+        klass = Class.new(Hashie::Trash) do
+          property :class, from: :type, required: true
+          property :_translations
+        end
+        dash = klass.new(type: 'parameter', _translations: 'data')
+        expect(dash[:class]).to eq('parameter')
+        expect(dash[:_translations]).to eq('data')
+        expect(dash.class).to equal(klass)
+        expect(klass.private_method_defined?(:_translations)).to be(true)
+      end
+
+      it 'does not replace Hash writers with translated source writers' do
+        klass = Class.new(Hashie::Trash) do
+          property :name, from: :default
+        end
+        dash = klass.new(default: 'Ada')
+        expect(dash.name).to eq('Ada')
+        dash.default = :missing
+        expect(dash.default).to eq(:missing)
+        expect(dash.name).to eq('Ada')
+        dash[:default] = 'Grace'
+        expect(dash.name).to eq('Grace')
+      end
     end
 
     context 'with a property named required?' do
@@ -344,7 +442,7 @@ describe DashTest do
     it 'accepts block to define a global default' do
       obj = described_class.new { |_, key| key.to_s.upcase }
       expect(obj.first_name).to eq 'FIRST_NAME'
-      expect(obj.count).to be_zero
+      expect(obj[:count]).to be_zero
     end
 
     it 'fails when required values are missing' do
@@ -461,14 +559,14 @@ describe DashTest do
     it 'leaves only specified keys and keys with default values' do
       expect(subject.keys.sort_by(&:to_s)).to eq %i[count first_name]
       expect(subject.email).to be_nil
-      expect(subject.count).to eq 0
+      expect(subject[:count]).to eq 0
     end
 
     context 'when replacing keys with default values' do
       before { subject.replace(count: 3) }
 
       it 'sets all specified keys to their corresponding values' do
-        expect(subject.count).to eq 3
+        expect(subject[:count]).to eq 3
       end
     end
   end
@@ -497,7 +595,7 @@ describe DashTest do
       subject.update_attributes!(params)
       expect(subject.first_name).to eq params[:first_name]
       expect(subject.email).to eq params[:email]
-      expect(subject.count).to eq subject.class.defaults[:count]
+      expect(subject[:count]).to eq subject.class.defaults[:count]
     end
 
     context 'when required property is update to nil' do
@@ -514,7 +612,7 @@ describe DashTest do
       it 'set the property back to the default value' do
         subject.update_attributes!(params)
         expect(subject.email).to eq params[:email]
-        expect(subject.count).to eq subject.class.defaults[:count]
+        expect(subject[:count]).to eq subject.class.defaults[:count]
       end
     end
 
@@ -725,8 +823,8 @@ end
 describe SubclassedTest do
   subject { described_class.new(first_name: 'Bob', last_name: 'McNob', email: 'bob@example.com') }
 
-  describe '#count' do
-    subject { super().count }
+  describe '[:count]' do
+    subject { super()[:count] }
 
     it { is_expected.to be_zero }
   end
@@ -854,7 +952,7 @@ context 'with method access' do
   subject(:dash) { DashWithMethodAccess.new(test: 'value') }
 
   describe '#test' do
-    subject { dash.test }
+    subject { dash[:test] }
 
     it { is_expected.to eq('value') }
   end

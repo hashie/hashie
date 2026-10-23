@@ -28,7 +28,7 @@ module Hashie
       def [](key)
         return super unless block_given?
 
-        value = block_access_child(self, key)
+        value = _block_access_child(self, key)
         yield value
         value
       end
@@ -44,22 +44,22 @@ module Hashie
 
         raise ArgumentError, "wrong number of arguments (given `#{args.size}`, expected 0..1)" if args.size > 1
 
-        child = block_access_child(self, block_access_key(name))
-        child = block_access_child(child, args.first) unless args.empty?
+        child = _block_access_child(self, _block_access_key(name))
+        child = _block_access_child(child, args.first) unless args.empty?
         block.call(child)
         child
       end
 
       private
 
-      def block_access_key(name)
+      def _block_access_key(name)
         return name if key?(name)
         return name.to_s if key?(name.to_s)
 
         respond_to?(:convert_key, true) ? convert_key(name.to_s) : name.to_s
       end
 
-      def block_access_child(parent, key)
+      def _block_access_child(parent, key)
         parent[key] = parent.class.new unless parent.key?(key)
         child = parent[key]
         return child if child.is_a?(::Hash)

@@ -127,10 +127,10 @@ module Hashie
             transformer = options[:transform_with]
 
             if from
-              fail_self_transformation_error!(property_name) if property_name.to_s == from.to_s
-              define_translation(from, property_name, converter || transformer)
-              define_writer_for_source_property(from)
-            elsif valid_transformer?(transformer)
+              _fail_self_transformation_error!(property_name) if property_name.to_s == from.to_s
+              _define_translation(from, property_name, converter || transformer)
+              _define_writer_for_source_property(from)
+            elsif _valid_transformer?(transformer)
               transforms[property_name] = transformer
             end
           end
@@ -204,24 +204,25 @@ module Hashie
 
           private
 
-          def define_translation(from, property_name, translator)
+          def _define_translation(from, property_name, translator)
             translations_hash[from][property_name] = translator
           end
 
-          def define_writer_for_source_property(property)
+          def _define_writer_for_source_property(property)
+            setter = :"#{property}="
+            return if method_defined?(setter) || private_method_defined?(setter)
+
             define_method "#{property}=" do |val|
-              __translations[property].each do |name, with|
-                self[name] = with.respond_to?(:call) ? with.call(val) : val
-              end
+              _write_translated_property(property, val)
             end
           end
 
-          def fail_self_transformation_error!(property_name)
+          def _fail_self_transformation_error!(property_name)
             raise ArgumentError,
                   "property name `#{property_name}` and :from option must not be the same"
           end
 
-          def valid_transformer?(transformer)
+          def _valid_transformer?(transformer)
             transformer.respond_to? :call
           end
         end
@@ -249,7 +250,7 @@ module Hashie
           #   dash.name # => 'Ada'
           def []=(property, value)
             if self.class.translation_exists? property
-              send("#{property}=", value)
+              _write_translated_property(property, value)
 
               if self.class.transformation_exists? property
                 super(property, self.class.transformed_property(property, value))
@@ -298,13 +299,20 @@ module Hashie
           #   dash.property_exists?(:name) # => true
           #   expect { dash.property_exists?(:missing) }.to raise_error(NoMethodError)
           def property_exists?(property)
-            fail_no_property_error!(property) unless self.class.property?(property)
+            _fail_no_property_error!(property) unless self.class.property?(property)
             true
           end
 
           private
 
-          def __translations
+          def _write_translated_property(property, value)
+            source = _translations.key?(property) ? property : _translations.keys.find { |key| key.to_s == property.to_s }
+            _translations[source].each do |name, with|
+              self[name] = with.respond_to?(:call) ? with.call(value) : value
+            end
+          end
+
+          def _translations
             self.class.translations_hash
           end
         end

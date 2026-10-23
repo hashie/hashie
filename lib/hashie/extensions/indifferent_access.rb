@@ -115,7 +115,7 @@ module Hashie
       #   value = hash.indifferent_value([{ name: 'Ada' }])
       #   value.first['name'] # => 'Ada'
       def indifferent_value(value)
-        if hash_lacking_indifference?(value)
+        if _hash_lacking_indifference?(value)
           IndifferentAccess.inject!(value)
         elsif value.is_a?(::Array)
           value.replace(value.map { |e| indifferent_value(e) })
@@ -140,7 +140,7 @@ module Hashie
       #   hash.indifferent_update(user: { name: 'Ada' })
       #   hash['user']['name'] # => 'Ada'
       def indifferent_update(other_hash)
-        return regular_update(other_hash) if hash_with_indifference?(other_hash)
+        return regular_update(other_hash) if _hash_with_indifference?(other_hash)
 
         other_hash.each_pair do |k, v|
           self[k] = v
@@ -211,7 +211,7 @@ module Hashie
       #   hash.key?(:age) # => false
       def merge(*args)
         result = super
-        return IndifferentAccess.inject!(result) if hash_lacking_indifference?(result)
+        return IndifferentAccess.inject!(result) if _hash_lacking_indifference?(result)
 
         result.convert!
       end
@@ -260,15 +260,15 @@ module Hashie
         super(*string_keys)
       end
 
-      protected
+      private
 
-      def hash_lacking_indifference?(other)
+      def _hash_lacking_indifference?(other)
         other.is_a?(::Hash) &&
           !(other.respond_to?(:indifferent_access?) &&
             other.indifferent_access?)
       end
 
-      def hash_with_indifference?(other)
+      def _hash_with_indifference?(other)
         other.is_a?(::Hash) &&
           other.respond_to?(:indifferent_access?) &&
           other.indifferent_access?

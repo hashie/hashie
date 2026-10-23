@@ -97,7 +97,7 @@ module Hashie
 
     # @example Merge repeated hash options through chained builder calls
     #   Hashie::Clash.new.conditions(active: true).conditions(role: 'admin') # => { conditions: { active: true, role: 'admin' } }
-    def merge_store(key, *args) # :nodoc:
+    def _merge_store(key, *args) # :nodoc:
       case args.length
       when 1
         val = args.first
@@ -109,6 +109,7 @@ module Hashie
       self[key.to_sym] = val
       self
     end
+    private :_merge_store
 
     # @example Build nested options with dynamic method names
     #   Hashie::Clash.new.conditions!.active(true)._end!.limit(10) # => { conditions: { active: true }, limit: 10 }
@@ -127,7 +128,7 @@ module Hashie
           raise ChainError, 'tried to chain into a non-hash key'
         end
       elsif args.any?
-        merge_store(name, *args)
+        _merge_store(name, *args)
       else
         super
       end

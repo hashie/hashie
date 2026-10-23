@@ -72,23 +72,23 @@ module Hashie
 
             return unless (predefined_values = options[:values])
 
-            assert_predefined_values!(predefined_values)
-            set_predefined_values(property_name, predefined_values)
+            _assert_predefined_values!(predefined_values)
+            _set_predefined_values(property_name, predefined_values)
           end
 
           private
 
-          def assert_predefined_values!(predefined_values)
-            return if supported_type?(predefined_values)
+          def _assert_predefined_values!(predefined_values)
+            return if _supported_type?(predefined_values)
 
             raise ArgumentError, %(`values` accepts an `Array` or a `Range`)
           end
 
-          def supported_type?(predefined_values)
+          def _supported_type?(predefined_values)
             [::Array, ::Range].any? { |klass| predefined_values.is_a?(klass) }
           end
 
-          def set_predefined_values(property_name, predefined_values)
+          def _set_predefined_values(property_name, predefined_values)
             @values_for_properties[property_name] = predefined_values
           end
         end
@@ -112,21 +112,21 @@ module Hashie
           def initialize(*)
             super
 
-            assert_property_values!
+            _assert_property_values!
           end
 
           private
 
-          def assert_property_values!
+          def _assert_property_values!
             self.class.values_for_properties.each_key do |property|
-              value = send(property)
+              value = self[property]
 
-              allowed_values = values_for_properties(property)
-              fail_property_value_error!(property, value, allowed_values) if value && !allowed_values.include?(value)
+              allowed_values = self.class.values_for_properties[property]
+              _fail_property_value_error!(property, value, allowed_values) if value && !allowed_values.include?(value)
             end
           end
 
-          def fail_property_value_error!(property, value, allowed_values)
+          def _fail_property_value_error!(property, value, allowed_values)
             expected_values = if allowed_values.is_a?(::Range)
                                 "a value in `#{allowed_values}`"
                               else
@@ -136,10 +136,6 @@ module Hashie
             raise ArgumentError,
                   "value `#{value.inspect}` is not allowed for `#{property}`; " \
                   "expected #{expected_values}"
-          end
-
-          def values_for_properties(property)
-            self.class.values_for_properties[property]
           end
         end
       end

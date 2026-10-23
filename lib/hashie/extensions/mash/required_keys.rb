@@ -93,12 +93,12 @@ module Hashie
           #   klass.new(name: 'Ada', age: 37).age # => 37
           def initialize(*args, &block)
             super
-            assert_required_keys_set!
+            _assert_required_keys_set!
           end
 
           private
 
-          def assert_required_keys_set!
+          def _assert_required_keys_set!
             missing_keys = self.class.required_keys.select { |key| self[key].nil? }
             return if missing_keys.empty?
 

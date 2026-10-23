@@ -8,6 +8,8 @@
 - Fix spelling errors in prose and add intentional project terms to `.spellcheck.txt`; do not accept typos as vocabulary.
 - Review autocorrections for behavior changes. In particular, do not replace `Hashie::Array#dig` with `[]` or change an arity-sensitive lambda to a symbol proc.
 - Exception messages begin with lowercase words, have no trailing punctuation, and quote interpolated values with backticks.
+- Use one leading underscore for private/protected implementation helpers. Preserve Ruby callbacks and documented extension hooks; documented `__method` aliases for intentionally overridden methods are not internal helpers.
+- Do not generate property accessors that replace existing public, protected, or private methods. Keep conflicting Dash/Trash fields accessible through brackets, and validate stored values through brackets rather than invoking potentially colliding accessors.
 
 ## Validation
 

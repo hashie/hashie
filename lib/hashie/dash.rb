@@ -57,8 +57,8 @@ module Hashie
         defaults.delete property_name
       end
 
-      define_getter_for(property_name)
-      define_setter_for(property_name)
+      _define_getter_for(property_name)
+      _define_setter_for(property_name)
 
       @subclasses.each { |klass| klass.property(property_name, options) } if defined? @subclasses
 
@@ -133,16 +133,16 @@ module Hashie
       required_properties.key? name
     end
 
-    private_class_method def self.define_getter_for(property_name)
-      return if getters.include?(property_name)
+    private_class_method def self._define_getter_for(property_name)
+      return if method_defined?(property_name) || private_method_defined?(property_name)
 
       define_method(property_name) { |&block| self.[](property_name, &block) }
       getters << property_name
     end
 
-    private_class_method def self.define_setter_for(property_name)
+    private_class_method def self._define_setter_for(property_name)
       setter = :"#{property_name}="
-      return if method_defined?(setter)
+      return if method_defined?(setter) || private_method_defined?(setter)
 
       define_method(setter) { |value| self.[]=(property_name, value) }
     end
@@ -160,7 +160,7 @@ module Hashie
       super(&block)
 
       initialize_attributes(attributes)
-      assert_required_attributes_set!
+      _assert_required_attributes_set!
     end
 
     alias _regular_reader []
@@ -174,7 +174,7 @@ module Hashie
     #   klass = Class.new(Hashie::Dash) { property :name, default: 'Ada' }
     #   klass.new[:name] # => 'Ada'
     def [](property)
-      assert_property_exists! property
+      _assert_property_exists! property
       value = super
       # If the value is a lambda, proc, or whatever answers to call, eval the thing!
       if value.is_a? Proc
@@ -194,8 +194,8 @@ module Hashie
     #   dash[:name] = 'Ada'
     #   dash.name # => 'Ada'
     def []=(property, value)
-      assert_property_required! property, value
-      assert_property_exists! property
+      _assert_property_required! property, value
+      _assert_property_exists! property
       super
     end
 
@@ -203,7 +203,7 @@ module Hashie
     #   klass = Class.new(Hashie::Dash) { property :count }
     #   dash = klass.new(count: 2)
     #   dash.merge(count: 3) { |_key, old, new| old + new }.to_h # => { count: 5 }
-    #   dash.count # => 2
+    #   dash[:count] # => 2
     def merge(other_hash)
       new_dash = dup
       other_hash.each do |k, v|
@@ -276,7 +276,7 @@ module Hashie
     #   dash.update_attributes!(name: nil)
     #   dash.name # => 'Ada'
     def update_attributes!(attributes)
-      update_attributes(attributes)
+      _update_attributes(attributes)
 
       self.class.defaults.each_pair do |prop, value|
         next unless fetch(prop, nil).nil?
@@ -293,7 +293,7 @@ module Hashie
         end
       end
 
-      assert_required_attributes_set!
+      _assert_required_attributes_set!
     end
 
     private
@@ -305,7 +305,7 @@ module Hashie
       update_attributes!(cleaned_attributes)
     end
 
-    def update_attributes(attributes)
+    def _update_attributes(attributes)
       return unless attributes
 
       attributes.each_pair do |att, value|
@@ -313,31 +313,31 @@ module Hashie
       end
     end
 
-    def assert_property_exists!(property)
-      fail_no_property_error!(property) unless self.class.property?(property)
+    def _assert_property_exists!(property)
+      _fail_no_property_error!(property) unless self.class.property?(property)
     end
 
-    def assert_required_attributes_set!
+    def _assert_required_attributes_set!
       self.class.required_properties.each_key do |required_property|
-        assert_property_set!(required_property)
+        _assert_property_set!(required_property)
       end
     end
 
-    def assert_property_set!(property)
-      fail_property_required_error!(property) if send(property).nil? && _required?(property)
+    def _assert_property_set!(property)
+      _fail_property_required_error!(property) if self[property].nil? && _required?(property)
     end
 
-    def assert_property_required!(property, value)
-      fail_property_required_error!(property) if value.nil? && _required?(property)
+    def _assert_property_required!(property, value)
+      _fail_property_required_error!(property) if value.nil? && _required?(property)
     end
 
-    def fail_property_required_error!(property)
+    def _fail_property_required_error!(property)
       message = self.class.required_properties[property][:message]
       raise ArgumentError,
             "the property `#{property}` " + message
     end
 
-    def fail_no_property_error!(property)
+    def _fail_no_property_error!(property)
       raise NoMethodError,
             "the property `#{property}` is not defined for `#{self.class.name || 'anonymous class'}`"
     end
@@ -348,7 +348,7 @@ module Hashie
       condition = self.class.required_properties[property][:condition]
       case condition
       when Proc   then !!instance_exec(&condition)
-      when Symbol then !!send(condition)
+      when Symbol then !!(self.class.property?(condition) ? self[condition] : send(condition))
       else             !!condition
       end
     end

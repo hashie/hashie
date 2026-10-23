@@ -29,16 +29,16 @@ module Hashie
         #   klass.property?('name') # => true
         #   klass.singleton_class.included_modules.include?(Hashie::Extensions::Dash::IndifferentAccess::ClassMethods) # => true
         def self.maybe_extend(base)
-          return unless requires_class_methods?(base)
+          return unless _requires_class_methods?(base)
 
           base.extend(ClassMethods)
         end
 
-        def self.requires_class_methods?(klass)
+        def self._requires_class_methods?(klass)
           klass <= Hashie::Dash &&
             !klass.singleton_class.included_modules.include?(ClassMethods)
         end
-        private_class_method :requires_class_methods?
+        private_class_method :_requires_class_methods?
 
         # @example Include defaults under string keys in the returned hash
         #   klass = Class.new(Hashie::Dash) do
@@ -82,7 +82,7 @@ module Hashie
           #   klass.property?('name') # => true
           #   klass.property?(:missing) # => false
           def property?(name)
-            targets = if translation_for?(name)
+            targets = if _translation_for?(name)
                         Array(translations.find { |key, _| key.to_s == name.to_s }.last)
                       else
                         [name]
@@ -132,7 +132,7 @@ module Hashie
 
           private
 
-          def translation_for?(name)
+          def _translation_for?(name)
             included_modules.include?(Hashie::Extensions::Dash::PropertyTranslation) &&
               translation_exists?(name)
           end

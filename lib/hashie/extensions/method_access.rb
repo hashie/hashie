@@ -132,7 +132,7 @@ module Hashie
       #   hash.respond_to?(:name?) # => true
       #   hash.respond_to?(:missing?) # => false
       def respond_to_missing?(name, include_private = false)
-        if query_method?(name) && indifferent_key?(key_from_query_method(name))
+        if _query_method?(name) && _indifferent_key?(_key_from_query_method(name))
           true
         else
           super
@@ -146,9 +146,9 @@ module Hashie
       def method_missing(name, *args)
         return super unless args.empty?
 
-        if query_method?(name)
-          key = key_from_query_method(name)
-          if indifferent_key?(key)
+        if _query_method?(name)
+          key = _key_from_query_method(name)
+          if _indifferent_key?(key)
             !!(self[key] || self[key.to_sym])
           else
             super
@@ -160,16 +160,16 @@ module Hashie
 
       private
 
-      def indifferent_key?(name)
+      def _indifferent_key?(name)
         name = name.to_s
         key?(name) || key?(name.to_sym)
       end
 
-      def key_from_query_method(query_method)
+      def _key_from_query_method(query_method)
         query_method.to_s[0..-2]
       end
 
-      def query_method?(name)
+      def _query_method?(name)
         name.to_s.end_with?('?')
       end
     end
@@ -204,13 +204,13 @@ module Hashie
     #   hash.size # => 'large'
     #   hash.__size # => 1
     module RedefineMethod
-      protected
+      private
 
-      def method?(name)
+      def _method?(name)
         methods.map(&:to_s).include?(name)
       end
 
-      def redefine_method(method_name)
+      def _redefine_method(method_name)
         eigenclass = class << self; self; end
         eigenclass.__send__(:alias_method, "__#{method_name}", method_name)
         eigenclass.__send__(:define_method, method_name, -> { self[method_name] })
@@ -262,7 +262,7 @@ module Hashie
       def method_missing(name, *args)
         if args.size == 1 && name.to_s =~ /(.*)=$/
           key = Regexp.last_match[1]
-          redefine_method(key) if method?(key) && !already_overridden?(key)
+          _redefine_method(key) if _method?(key) && !_already_overridden?(key)
           return self[convert_key(key)] = args.first
         end
 
@@ -279,10 +279,10 @@ module Hashie
         super
       end
 
-      protected
+      private
 
-      def already_overridden?(name)
-        method?("__#{name}")
+      def _already_overridden?(name)
+        _method?("__#{name}")
       end
     end
 
@@ -344,7 +344,7 @@ module Hashie
 
         hash.each do |key, value|
           skey = key.to_s
-          redefine_method(skey) if method?(skey)
+          _redefine_method(skey) if _method?(skey)
           self[skey] = value
         end
       end
