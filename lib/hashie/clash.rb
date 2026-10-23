@@ -140,6 +140,7 @@ module Hashie
     #   options.respond_to?(:order) # => true
     def respond_to_missing?(method_name, _include_private = false)
       method_name = method_name.to_s
+      return super if %w[marshal_dump marshal_load _dump _load].include?(method_name)
 
       if method_name.end_with?('!')
         key = method_name[0...-1].to_sym
