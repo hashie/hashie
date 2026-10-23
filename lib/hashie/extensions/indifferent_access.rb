@@ -23,11 +23,9 @@ module Hashie
     #   h['baz'] # => 'blip'
     #
     module IndifferentAccess
-      include Hashie::Extensions::RubyVersionCheck
-
       # @api private
       def self.convert_key(key)
-        return key.name if key.is_a?(Symbol) && key.respond_to?(:name)
+        return key.name if key.is_a?(Symbol)
 
         key.to_s
       end
@@ -162,18 +160,14 @@ module Hashie
         end
       end
 
-      with_minimum_ruby('2.5.0') do
-        def slice(*keys)
-          string_keys = keys.map { |key| convert_key(key) }
-          super(*string_keys)
-        end
+      def slice(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        super(*string_keys)
       end
 
-      with_minimum_ruby('3.0.0') do
-        def except(*keys)
-          string_keys = keys.map { |key| convert_key(key) }
-          super(*string_keys)
-        end
+      def except(*keys)
+        string_keys = keys.map { |key| convert_key(key) }
+        super(*string_keys)
       end
 
       protected

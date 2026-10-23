@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe Hashie::Extensions::IndifferentAccess do
-  it 'reuses frozen symbol names when available without changing other key conversions',
-     if: Symbol.method_defined?(:name) do
+  it 'reuses frozen symbol names without changing other key conversions' do
     expect(described_class.convert_key(:example)).to equal(:example.name)
     expect(described_class.convert_key(123)).to eq('123')
     key = Object.new
@@ -385,27 +384,23 @@ describe Hashie::Extensions::IndifferentAccess do
       end
     end
 
-    with_minimum_ruby('2.5.0') do
-      describe '#slice' do
-        let(:h) { subject.build(foo: 'bar', baz: 'qux') }
+    describe '#slice' do
+      let(:h) { subject.build(foo: 'bar', baz: 'qux') }
 
-        it 'indifferently slices the hash' do
-          sliced_h = { 'foo' => 'bar' }
-          expect(h.slice('foo')).to eq sliced_h
-          expect(h.slice(:foo)).to eq sliced_h
-        end
+      it 'indifferently slices the hash' do
+        sliced_h = { 'foo' => 'bar' }
+        expect(h.slice('foo')).to eq sliced_h
+        expect(h.slice(:foo)).to eq sliced_h
       end
     end
 
-    with_minimum_ruby('3.0.0') do
-      describe '#except' do
-        let(:h) { subject.build(foo: 'bar', baz: 'qux') }
+    describe '#except' do
+      let(:h) { subject.build(foo: 'bar', baz: 'qux') }
 
-        it 'indifferently excepts keys from the hash' do
-          sliced_h = { 'baz' => 'qux' }
-          expect(h.except('foo')).to eq sliced_h
-          expect(h.except(:foo)).to eq sliced_h
-        end
+      it 'indifferently excepts keys from the hash' do
+        sliced_h = { 'baz' => 'qux' }
+        expect(h.except('foo')).to eq sliced_h
+        expect(h.except(:foo)).to eq sliced_h
       end
     end
   end

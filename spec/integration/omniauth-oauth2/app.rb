@@ -1,3 +1,4 @@
+require 'logger'
 require 'action_controller/railtie'
 require 'action_view/railtie'
 require 'action_view/testing/resolvers'
@@ -6,6 +7,8 @@ require_relative 'some_site'
 
 module RailsApp
   class Application < ::Rails::Application
+    config.root = __dir__
+    config.cache_classes = true
     config.eager_load      = false
     config.secret_key_base = 'hashieintegrationtest'
 

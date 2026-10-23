@@ -3,6 +3,10 @@ Upgrading Hashie
 
 ### Upgrading to 5.2.0
 
+#### Ruby version
+
+Hashie now requires Ruby 3.0 or newer. Ruby 2.7 is no longer supported; upgrade Ruby before updating Hashie.
+
 #### Exception messages
 
 Exception messages now begin with lowercase words, omit trailing periods, quote interpolated values
