@@ -51,6 +51,7 @@
   - [StrictKeyAccess](#strictkeyaccess-1)
   - [RequiredKeys](#requiredkeys)
 - [Dash](#dash)
+  - [Lazy Property Loading](#lazy-property-loading)
   - [Validations with ActiveModel](#validations-with-activemodel)
   - [Potential Gotchas](#potential-gotchas)
   - [PropertyTranslation](#propertytranslation)
@@ -1433,6 +1434,38 @@ dash.description = 'Only slightly less known is ...'
 dash.update_attributes!(description: nil)
 dash.description  #=> 'none'
 ```
+
+### Lazy Property Loading
+
+Include `Hashie::Extensions::Dash::Lazy` after other Dash extensions to load properties on demand. The initializer block receives an input key and runs only when that property is first read. Results are cached, including `nil` and `false`; other properties remain unloaded.
+
+```ruby
+class LazyPerson < Hashie::Trash
+  include Hashie::Extensions::Dash::Coercion
+  include Hashie::Extensions::Dash::Lazy
+
+  property :name, from: :fullName, required: true
+  property :age, coerce: Integer
+end
+
+source = { fullName: 'Ada', age: '37' }
+person = LazyPerson.new do |key|
+  # Fetch this property from an expensive source, such as a remote API.
+  source[key]
+end
+
+person.name # => 'Ada' (loads :fullName)
+person.name # => 'Ada' (cached)
+person.age # => 37 (loads :age)
+```
+
+The loader can query XML or another source instead of a hash. With Trash, it receives the original input key (`:fullName` above); transformations and coercion run only for the property being read. Nested objects need their own loaders to remain lazy.
+
+Return `nil` for missing input to use the property's default. Defaults and required-property checks run on access, not construction; conditional requirements may load other properties. Errors propagate without caching the failed load, and circular dependencies raise `ArgumentError`.
+
+On these classes, the initializer block is a property loader, not a Hash default block. Without a block, initialization remains eager. Initial attributes take precedence over the loader, with canonical keys preferred over translated keys. Assignment overrides a pending load and validates normally.
+
+Getters, `[]`, `fetch`, and `dig` load individual properties. `to_h`, `to_hash`, and `freeze` load all declared properties. Other Hash operations, including enumeration and inspection, see only loaded entries. Synchronize concurrent access externally.
 
 ### Validations with ActiveModel
 
