@@ -737,6 +737,10 @@ user.deep_detect(:name) #=> { first: 'Bob', last: 'Boberts' }
 
 user.deep_find_all(:name) #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
 user.deep_select(:name)   #=> [{ first: 'Bob', last: 'Boberts' }, 'Rubyists', 'Open source enthusiasts']
+
+user.deep_find(:missing)     #=> nil
+user.deep_find_all(:missing) #=> []
+user.deep_select(:missing)   #=> []
 ```
 
 ### DeepGrep

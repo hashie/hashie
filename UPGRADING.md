@@ -47,6 +47,10 @@ Private and protected implementation helpers consistently use one leading unders
 
 Recursive key-conversion helpers, `Hashie::Utils`' integer-class helper, and Clash's merge-storage helper are now private and use underscore-prefixed names. Mash suffix parsing, method-redefinition helpers, and indifferent-hash detection are also private rather than protected. Use the public conversion, builder, and accessor APIs instead of calling these helpers directly.
 
+#### DeepFind results
+
+`deep_find_all` and its alias `deep_select` now return `[]` instead of `nil` when no matches exist, matching `Enumerable#find_all`. Replace no-match checks such as `result.nil?` or `if result` with `result.empty?` or `result.any?`. Fallbacks such as `deep_find_all(:key) || []` are no longer necessary. `deep_find` and `deep_detect` still return `nil` when no match exists; matching values, including `nil`, remain in the results array.
+
 ### Upgrading to 5.2.0
 
 #### Safer YAML loading
