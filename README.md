@@ -1744,7 +1744,7 @@ c.where(abc: 'def').where(hgi: 123)
 c # => { where: { abc: 'def', hgi: 123 } }
 ```
 
-Clash supports YAML round-trips, preserving stored data, named subclasses, and parent links used by `_end!`. Only deserialize trusted YAML with Ruby object loading enabled (`Psych.unsafe_load` on modern Psych); ordinary safe loading does not permit arbitrary Ruby classes.
+Clash supports YAML and Marshal round-trips, preserving stored data, named subclasses, and parent links used by `_end!`. Only deserialize trusted data. YAML requires Ruby object loading enabled (`Psych.unsafe_load` on modern Psych); ordinary safe loading does not permit arbitrary Ruby classes.
 
 ## Rash
 

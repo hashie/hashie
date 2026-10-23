@@ -94,8 +94,24 @@ describe Hashie::Clash do
       expect(subject.respond_to?(:foo!)).to be false
     end
 
-    it 'is true for any non-bang method' do
+    it 'is true for ordinary non-bang methods' do
       expect(subject.respond_to?(:anything)).to be true
+    end
+
+    it 'does not advertise unimplemented Marshal hooks' do
+      %i[marshal_dump marshal_load _dump _load].each do |hook|
+        expect(subject.respond_to?(hook)).to be false
+      end
+    end
+
+    it 'recognizes a Marshal hook defined by a subclass' do
+      subclass = Class.new(described_class) do
+        def marshal_dump
+          to_h
+        end
+      end
+
+      expect(subclass.new.respond_to?(:marshal_dump)).to be true
     end
   end
 
@@ -182,10 +198,6 @@ describe Hashie::Clash do
     context 'through marshal' do
       let(:recovered) { Marshal.load(Marshal.dump(source)) }
 
-      before do
-        pending('MRI calls the advertised marshal_dump hook, which raises NoMethodError') if RUBY_ENGINE == 'ruby'
-      end
-
       it 'preserves classes and values at every level' do
         expect(recovered).to be_an_instance_of(described_class)
         expect(recovered).to eq source
@@ -209,6 +221,21 @@ describe Hashie::Clash do
       it 'preserves chained writes' do
         expect(recovered.child!.name('changed')).to equal(recovered[:child])
         expect(recovered[:child][:name]).to eq 'changed'
+      end
+
+      it 'preserves parent links created through bang chaining' do
+        source.where!.name('nested')
+
+        expect(recovered[:where]._end!).to equal(recovered)
+        expect(recovered[:where][:name]).to eq 'nested'
+      end
+
+      it 'preserves named subclasses' do
+        instance = SerializationFixtures::Clash.new(name: 'subclass')
+        copy = Marshal.load(Marshal.dump(instance))
+
+        expect(copy).to be_an_instance_of(SerializationFixtures::Clash)
+        expect(copy).to eq instance
       end
     end
   end
