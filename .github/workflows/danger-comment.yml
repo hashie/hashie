@@ -7,5 +7,5 @@ on:
 
 jobs:
   comment:
-    uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@v0.1.0
+    uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@v0.1.1
     secrets: inherit
