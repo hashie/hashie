@@ -39,6 +39,8 @@ Ensure that you can build the project and run tests.
 bundle exec rake
 ```
 
+Git-backed release-preparation tests should create a fresh temporary repository with a fixture commit and local bare remote, keeping their commits, tags, and index state out of the checkout. Nested Rake processes must clear inherited `GITHUB_ACTIONS` and `RUNNER_TEMP` so they use the local execution provider and fixture's own `RELEASE_DATA_DIR`, not the enclosing Actions runner's state. See the [release-preparation spec](spec/release_preparation_spec.rb).
+
 CI reports code coverage to Coveralls. Coverage excludes `spec/` and `script/`; their tests and executable examples still run.
 
 #### Write Tests
