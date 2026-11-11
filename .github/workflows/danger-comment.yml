@@ -5,7 +5,12 @@ on:
     workflows: [Danger]
     types: [completed]
 
+permissions:
+  actions: read
+  issues: write
+  pull-requests: write
+
 jobs:
   comment:
-    uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@v0.1.0
+    uses: danger/danger-pr-comment/.github/workflows/danger-comment.yml@v0.2.0
     secrets: inherit

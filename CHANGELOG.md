@@ -16,6 +16,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Changed
 
+* [#649](https://github.com/hashie/hashie/pull/649): Updated Danger workflows to `danger/danger-pr-comment` v0.2.0 following its move to the Danger organization - [@dblock](https://github.com/dblock).
 * [#641](https://github.com/hashie/hashie/pull/641): **Breaking:** Changed `DeepFind#deep_find_all` and `deep_select` to return an empty array instead of `nil` when no matches exist, reviving [#548](https://github.com/hashie/hashie/pull/548) - [@punkisdead](https://github.com/punkisdead), [@dblock](https://github.com/dblock).
 * [#639](https://github.com/hashie/hashie/pull/639): **Breaking:** Standardized internal helpers on one leading underscore and prevented Dash/Trash properties and generated Mash accessors from replacing existing methods. Conflicting Dash/Trash properties now require bracket access - [@dblock](https://github.com/dblock).
 * [#637](https://github.com/hashie/hashie/pull/637): **Breaking:** Changed Mash to preserve nested custom Hash subclasses by identity instead of converting or duplicating them; custom values replace existing nested Mashes during merge. Plain Hash conversion and Mash copying remain unchanged, following [#390](https://github.com/hashie/hashie/issues/390), reported by [@schnittchen](https://github.com/schnittchen) - [@dblock](https://github.com/dblock).
