@@ -173,6 +173,7 @@ gte
 hashie
 hashie's
 hashieintegrationtest
+hashiereleasepreparation
 hashwithindifferentaccess
 html
 httpserver
@@ -326,6 +327,7 @@ rubinius
 rubocop
 rubydoc
 rubygem
+rubygemrelease
 rubygems
 rubyist
 rubyists

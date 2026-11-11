@@ -2,7 +2,7 @@
 
 Release bug fixes frequently, features less frequently, and breaking API changes in major releases.
 
-Releases use [`ruby-gem-release`](https://github.com/dblock/ruby-gem-release) 0.5.1 through a manually dispatched [Release workflow](.github/workflows/release.yml). Keep the gem dependency and reusable workflow pinned to the same released version. The workflow publishes through RubyGems Trusted Publishing; no stored RubyGems API key or one-time password is needed. It only runs from `master` in `hashie/hashie`.
+Releases use [`ruby-gem-release`](https://github.com/dblock/ruby-gem-release) 0.6.0 through a manually dispatched [Release workflow](.github/workflows/release.yml). Keep the gem dependency and reusable workflow pinned to the same released version. The workflow publishes through RubyGems Trusted Publishing; no stored RubyGems API key or one-time password is needed. It only runs from `master` in `hashie/hashie`.
 
 ## One-Time Setup
 
@@ -12,7 +12,7 @@ Before the first automated release, a maintainer must:
 2. At [Hashie's trusted publishers](https://rubygems.org/gems/hashie/trusted_publishers), configure repository owner `hashie`, repository `hashie`, workflow filename `release.yml`, environment `release`, and the separate workflow repository owner `dblock` and repository `ruby-gem-release`.
 3. Ensure GitHub Actions has permission to push release commits and `v*` tags. The workflow uses `GITHUB_TOKEN` with `contents: write` and `id-token: write`, and pushes release metadata and the next development version directly to `master`. Remove blocking pull-request requirements if necessary while retaining force-push and deletion protections. This also permits other writers to push directly.
 
-These settings are not applied by installing the workflow. Verify them before dispatching. See the upstream [setup and permissions guidance](https://github.com/dblock/ruby-gem-release/blob/v0.5.1/RELEASING.md#one-time-setup).
+These settings are not applied by installing the workflow. Verify them before dispatching. See the upstream [setup and permissions guidance](https://github.com/dblock/ruby-gem-release/blob/v0.6.0/RELEASING.md#one-time-setup).
 
 The GitHub environment is configured, and @dblock manually configured the RubyGems trusted publisher on its website. No publishing run has verified that setup yet.
 
@@ -28,7 +28,9 @@ Check `Hashie::VERSION` in [lib/hashie/version.rb](lib/hashie/version.rb):
 
 Keep the Unreleased changelog section and contribution placeholders intact. The workflow dates the release section, updates comparison links, and removes placeholders and empty categories from that section. It also updates the Stable Release paragraph in README. Placeholder-only notes cannot be released.
 
-Hashie uses the standard workflow and built-in `KeepAChangelog` handler for its standard changelog format. Lifecycle hooks before validation and release preparation and after next-development preparation handle the contribution template and README wording inside the appropriate staging boundaries. They do not replace the changelog parser or publication pipeline.
+Hashie uses the standard workflow and built-in `KeepAChangelog` handler with an explicit contribution placeholder and six-section template. README hooks use `Markdown::Section` to validate the Stable Release heading before release validation and update its body after release and next-development preparation, inside trusted staging boundaries. Only Hashie's wording and category choices remain project-specific.
+
+Release specs use the library's [RSpec helpers and local publication adapters](https://github.com/dblock/ruby-gem-release/blob/v0.6.0/docs/testing.md), copying selected real project files with `copy_files` instead of maintaining duplicate fixtures. They exercise the same workflow builder as the production Rakefile through capture, preparation, checkpoint, local publication, and the next development commit, without contacting RubyGems or GitHub. The helper isolates child processes from outer Actions variables, credentials, and release state.
 
 Use MRI Ruby 3.3 or newer for release automation; Hashie's runtime requirement remains Ruby 3.0. The release dependency and tasks are omitted on older Ruby versions and JRuby.
 
@@ -64,4 +66,4 @@ Verify the published RubyGems version and required Ruby version, the remote tag'
 
 Inspect the failed run, RubyGems, remote commits and tags, and the GitHub Release before retrying. Publication may have succeeded even if a later Git push or development-version update failed. Never move a published release tag or republish a version with different bytes.
 
-Use the run's retained recovery artifacts and upstream [recovery instructions](https://github.com/dblock/ruby-gem-release/blob/v0.5.1/docs/actions/release.md#recovery-artifacts) to reconcile the exact prepared commit and gem. Do not blindly dispatch again with a newer version; finish reconciling the published release first.
+Use the run's retained recovery artifacts and upstream [recovery instructions](https://github.com/dblock/ruby-gem-release/blob/v0.6.0/docs/actions/release.md#recovery-artifacts) to reconcile the exact prepared commit and gem. Do not blindly dispatch again with a newer version; finish reconciling the published release first.
