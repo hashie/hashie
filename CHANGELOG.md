@@ -6,9 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [6.0.0] - 2026-11-11
+## [Unreleased]
 
 [Unreleased]: https://github.com/hashie/hashie/compare/v6.0.0...master
+
+### Added
+
+* Your contribution here.
+
+### Changed
+
+* Your contribution here.
+
+### Deprecated
+
+* Your contribution here.
+
+### Removed
+
+* Your contribution here.
+
+### Fixed
+
+* Your contribution here.
+
+### Security
+
+* Your contribution here.
+
+## [6.0.0] - 2026-11-11
+
 [6.0.0]: https://github.com/hashie/hashie/compare/v5.2.0...v6.0.0
 
 ### Added
