@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Optional release version overriding the checked-in version.
+        type: string
+        required: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    if: github.repository == 'hashie/hashie' && github.ref == 'refs/heads/master'
+    uses: dblock/ruby-gem-release/.github/workflows/release.yml@v0.5.1
+    with:
+      ruby-version: '3.3'
+      version: ${{ inputs.version }}
+      test: |
+        bundle exec rake rubocop spec docs:examples
+        BUNDLE_GEMFILE=spec/documentation/Gemfile bundle install --jobs 4 --retry 3
+        bundle exec rake docs:readme

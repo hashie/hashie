@@ -12,6 +12,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Added
 
+* [#648](https://github.com/hashie/hashie/pull/648): Added manually dispatched releases with `ruby-gem-release` and RubyGems Trusted Publishing - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Changed
