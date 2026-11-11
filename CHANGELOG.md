@@ -6,14 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Any violations of this scheme are considered to be bugs.
 
-## [Unreleased]
+## [6.0.0] - 2026-11-11
 
-[Unreleased]: https://github.com/hashie/hashie/compare/v5.2.0...master
+[Unreleased]: https://github.com/hashie/hashie/compare/v6.0.0...master
+[6.0.0]: https://github.com/hashie/hashie/compare/v5.2.0...v6.0.0
 
 ### Added
 
 * [#648](https://github.com/hashie/hashie/pull/648): Added manually dispatched releases with `ruby-gem-release` and RubyGems Trusted Publishing - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### Changed
 
@@ -24,23 +24,6 @@ Any violations of this scheme are considered to be bugs.
 * [#633](https://github.com/hashie/hashie/pull/633): **Breaking:** Changed `DeepMerge` to recursively copy hashes, arrays, and strings while retaining other objects by identity on both sides, following [#572](https://github.com/hashie/hashie/issues/572) - [@apotonick](https://github.com/apotonick), [@michaelherold](https://github.com/michaelherold), [@dblock](https://github.com/dblock).
 * [#632](https://github.com/hashie/hashie/pull/632): **Breaking:** Changed `DeepMerge` to preserve incoming nested hash subclasses, defaults, and instance state directly with `dup.clear`, following [#619](https://github.com/hashie/hashie/pull/619), [#586](https://github.com/hashie/hashie/pull/586), and [#585](https://github.com/hashie/hashie/issues/585) - [@addam128](https://github.com/addam128), [@dblock](https://github.com/dblock).
 * [#631](https://github.com/hashie/hashie/pull/631): **Breaking:** Changed `Mash.load` to use `YamlParser` by default; ERB evaluation now requires explicit `YamlErbParser` selection, following [#575](https://github.com/hashie/hashie/issues/575) and [#625](https://github.com/hashie/hashie/pull/625) - [@bo-tato](https://github.com/bo-tato), [@dblock](https://github.com/dblock).
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
-
-### Fixed
-
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
 
 ## [5.2.0] - 2026-10-23
 
