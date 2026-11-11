@@ -53,6 +53,8 @@ if RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('
         run_command('git', 'remote', 'add', 'origin', remote)
         environment = {
           'BUNDLE_GEMFILE' => File.join(root, 'Gemfile'),
+          'GITHUB_ACTIONS' => nil,
+          'RUNNER_TEMP' => nil,
           'DEFAULT_BRANCH' => 'master',
           'GEMSPEC_VERSION' => '6.0.0',
           'INPUT_VERSION' => '7.0.0',
