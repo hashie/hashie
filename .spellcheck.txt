@@ -183,6 +183,7 @@ includable
 incompletedocumentationexample
 indifferentaccess
 ing
+init
 initializations
 initializer
 initializers
@@ -216,6 +217,7 @@ laertispappas
 lastname
 lcov
 lexically
+lifecycle
 linter
 lnestor
 maeve

@@ -2,35 +2,35 @@
 
 Release bug fixes frequently, features less frequently, and breaking API changes in major releases.
 
-## Prepare the release
+Releases use [`ruby-gem-release`](https://github.com/dblock/ruby-gem-release) 0.5.1 through a manually dispatched [Release workflow](.github/workflows/release.yml). Keep the gem dependency and reusable workflow pinned to the same released version. The workflow publishes through RubyGems Trusted Publishing; no stored RubyGems API key or one-time password is needed. It only runs from `master` in `hashie/hashie`.
 
-Start with a clean, up-to-date `master`. Review the changes in [CHANGELOG.md](CHANGELOG.md) and migration notes in [UPGRADING.md](UPGRADING.md).
+## One-Time Setup
+
+Before the first automated release, a maintainer must:
+
+1. Create the GitHub environment `release` in `hashie/hashie` and restrict deployment branches to `master`. Hashie uses no required reviewers: collaborators with write access can dispatch releases without an approval gate. Required maintainer reviewers can be configured later if approval is desired.
+2. At [Hashie's trusted publishers](https://rubygems.org/gems/hashie/trusted_publishers), configure repository owner `hashie`, repository `hashie`, workflow filename `release.yml`, environment `release`, and the separate workflow repository owner `dblock` and repository `ruby-gem-release`.
+3. Ensure GitHub Actions has permission to push release commits and `v*` tags. The workflow uses `GITHUB_TOKEN` with `contents: write` and `id-token: write`, and pushes release metadata and the next development version directly to `master`. Remove blocking pull-request requirements if necessary while retaining force-push and deletion protections. This also permits other writers to push directly.
+
+These settings are not applied by installing the workflow. Verify them before dispatching. See the upstream [setup and permissions guidance](https://github.com/dblock/ruby-gem-release/blob/v0.5.1/RELEASING.md#one-time-setup).
+
+The GitHub environment is configured, and @dblock manually configured the RubyGems trusted publisher on its website. No publishing run has verified that setup yet.
+
+## Prepare and Validate
+
+Start with a clean, up-to-date `master`. Review [CHANGELOG.md](CHANGELOG.md), [UPGRADING.md](UPGRADING.md), and the supported Ruby, JRuby, integration, documentation, and lint results in [CI](https://github.com/hashie/hashie/actions/workflows/test.yml).
 
 Check `Hashie::VERSION` in [lib/hashie/version.rb](lib/hashie/version.rb):
 
-* Increment the patch version for compatible bug fixes, for example `5.2.0` to `5.2.1`.
-* Increment the minor version for backward-compatible features, for example `5.2.0` to `5.3.0`.
+* Increment the patch version for compatible bug fixes, for example `6.0.0` to `6.0.1`.
+* Increment the minor version for backward-compatible features, for example `6.0.0` to `6.1.0`.
 * Increment the major version for breaking public API changes, for example `5.2.0` to `6.0.0`.
 
-Update the Stable Release section in `README.md`:
+Keep the Unreleased changelog section and contribution placeholders intact. The workflow dates the release section, updates comparison links, and removes placeholders and empty categories from that section. It also updates the Stable Release paragraph in README. Placeholder-only notes cannot be released.
 
-```markdown
-You're reading the documentation for the stable release of Hashie, 5.2.0.
-```
+Hashie uses the standard workflow and built-in `KeepAChangelog` handler for its standard changelog format. Lifecycle hooks before validation and release preparation and after next-development preparation handle the contribution template and README wording inside the appropriate staging boundaries. They do not replace the changelog parser or publication pipeline.
 
-Replace the Unreleased changelog heading and comparison link with the release version, date, and previous release tag:
-
-```markdown
-## [5.2.0] - 2026-10-23
-
-[5.2.0]: https://github.com/hashie/hashie/compare/v5.1.0...v5.2.0
-```
-
-Remove contribution placeholders and empty categories from the release section. Preserve historical release entries.
-
-## Validate
-
-Use MRI Ruby 3.2 or newer for linting:
+Use MRI Ruby 3.3 or newer for release automation; Hashie's runtime requirement remains Ruby 3.0. The release dependency and tasks are omitted on older Ruby versions and JRuby.
 
 ```sh
 bundle install
@@ -38,71 +38,30 @@ bundle exec rake rubocop spec docs:examples docs:readme
 bundle exec rake build
 ```
 
-Inspect the built gem's contents and smoke-test it in an isolated directory with only its runtime dependencies. Confirm the version and key APIs load from the built package, not the checkout.
-
-Commit the release preparation and push `master` normally. Wait for all supported Ruby, JRuby, integration, documentation, and lint jobs in [GitHub Actions](https://github.com/hashie/hashie/actions/workflows/test.yml) to pass on that exact commit.
+Inspect the built gem's contents and smoke-test it in an isolated directory with only its runtime dependencies. Confirm the version and key APIs load from the built package, not the checkout. Commit and push any intended version or release-note changes before dispatching.
 
 ## Publish
 
-Confirm that neither the release tag nor gem version already exists. Authenticate with RubyGems using an account authorized to publish Hashie; publishing may require MFA.
-
-When publishing through a terminal assistant, ask the maintainer for a current one-time password and pass it to `gem push` with `--otp`. Do not request reusable credentials or save the code. If the code expires, request a new one before retrying.
-
-The `bundle exec rake release` task builds the gem, tags the release, pushes Git commits and tags, and publishes to RubyGems:
+From an up-to-date checkout, dispatch the checked-in version:
 
 ```sh
-bundle exec rake release
+gh workflow run release.yml --repo hashie/hashie --ref master
 ```
 
-Alternatively, publish explicitly to keep each step separately verifiable:
+To select a different release version, pass an explicit override:
 
 ```sh
-gem push pkg/hashie-5.2.0.gem
-git tag -a v5.2.0 -m "Release 5.2.0"
-git push origin v5.2.0
-gh release create v5.2.0 --verify-tag --title v5.2.0 --notes-file /path/to/release-notes.md
+gh workflow run release.yml --repo hashie/hashie --ref master -f version=6.0.0
 ```
 
-Use the released changelog section for the GitHub release notes. Verify the RubyGems version and required Ruby version, the remote tag's commit, and the GitHub release. If publishing partially succeeds, inspect the existing artifacts before retrying; never move a published release tag or republish a version.
+Dispatch starts a real publishing run, not a dry run, and does not wait for approval. Review the selected commit and version before dispatching.
 
-## Prepare the next development version
+The workflow prepares release metadata, runs lint, specs, and documentation checks on Ruby 3.3, builds and preserves the exact gem and recovery artifacts, publishes to RubyGems, pushes the release commit and tag, and creates the GitHub Release. It then increments the patch version, restores all six contribution categories under Unreleased, updates the next-release wording in README, and pushes the next-development commit to `master`. Select a different planned minor or major development version in a later PR when needed.
 
-Set the next planned version in `lib/hashie/version.rb`. After `5.2.0`, the next planned release is `6.0.0` for breaking changes. Restore the development wording in `README.md`:
+Verify the published RubyGems version and required Ruby version, the remote tag's commit, the GitHub Release and its attached gem, and the next-development commit. The workflow does not replace the full supported-runtime CI matrix.
 
-```markdown
-You're reading the documentation for the next release of Hashie, which should be 6.0.0. The current stable release is [5.2.0](https://github.com/hashie/hashie/blob/v5.2.0/README.md).
-```
+## Recover a Partial Release
 
-Add a new Unreleased section above the released changelog:
+Inspect the failed run, RubyGems, remote commits and tags, and the GitHub Release before retrying. Publication may have succeeded even if a later Git push or development-version update failed. Never move a published release tag or republish a version with different bytes.
 
-```markdown
-## [Unreleased]
-
-[Unreleased]: https://github.com/hashie/hashie/compare/v5.2.0...master
-
-### Added
-
-* Your contribution here.
-
-### Changed
-
-* Your contribution here.
-
-### Deprecated
-
-* Your contribution here.
-
-### Removed
-
-* Your contribution here.
-
-### Fixed
-
-* Your contribution here.
-
-### Security
-
-* Your contribution here.
-```
-
-Commit and push the next-development changes to `master` without modifying the release tag.
+Use the run's retained recovery artifacts and upstream [recovery instructions](https://github.com/dblock/ruby-gem-release/blob/v0.5.1/docs/actions/release.md#recovery-artifacts) to reconcile the exact prepared commit and gem. Do not blindly dispatch again with a newer version; finish reconciling the published release first.

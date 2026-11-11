@@ -6,6 +6,21 @@ Bundler.setup
 
 Bundler::GemHelper.install_tasks
 
+if RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.3')
+  require_relative 'script/release_preparation'
+  require 'ruby-gem-release/workflow/ruby_gem'
+
+  workflow = RubyGemRelease::Workflow::RubyGem.new(
+    version: RubyGemRelease::Version::RubyConstant.new(path: 'lib/hashie/version.rb', constant: 'VERSION'),
+    changelog: RubyGemRelease::Changelog::KeepAChangelog.new
+  )
+  preparation = HashieReleasePreparation.new
+  workflow.before(:validate) { |ctx| preparation.validate!(ctx.release, changelog: ctx.workflow.changelog) }
+  workflow.before(:prepare_release) { |ctx| preparation.prepare!(ctx.release, changelog: ctx.workflow.changelog) }
+  workflow.after(:prepare_next) { |ctx| preparation.prepare_next!(ctx.release) }
+  workflow.install_tasks
+end
+
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
