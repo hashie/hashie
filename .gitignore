@@ -6,6 +6,7 @@ pkg
 *.gem
 *.log
 .bundle
+vendor/bundle/
 .rvmrc
 Gemfile.lock
 log/
