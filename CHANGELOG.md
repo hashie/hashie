@@ -28,6 +28,7 @@ Any violations of this scheme are considered to be bugs.
 
 ### Fixed
 
+* [#657](https://github.com/hashie/hashie/pull/657): Fixed release preparation specs failing whenever `CHANGELOG.md` has pending entries - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### Security

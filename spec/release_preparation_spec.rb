@@ -15,9 +15,21 @@ if RUBY_ENGINE == 'ruby' && Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('
                              script/release_preparation.rb hashie.gemspec lib/hashie/version.rb
                              README.md CHANGELOG.md .yardopts CONTRIBUTING.md LICENSE UPGRADING.md
                            ])
+        reset_pending_changelog(project)
         project.configure_workflow(require: 'script/release_preparation', builder: 'HashieReleasePreparation.workflow')
         yield project
       end
+    end
+
+    # The copied CHANGELOG carries whatever is pending on this branch; start every example from placeholder-only notes.
+    def reset_pending_changelog(project)
+      path = File.join(project.checkout, 'CHANGELOG.md')
+      changelog = File.read(path)
+      unreleased = /^(\[Unreleased\]: [^\n]*\n\n).*?(?=^## \[)/m
+      raise 'expected an [Unreleased] section followed by a release heading in CHANGELOG.md' unless changelog.match?(unreleased)
+
+      pending = described_class::CATEGORIES.map { |name| "### #{name}\n\n* Your contribution here.\n\n" }.join
+      project.write('CHANGELOG.md', changelog.sub(unreleased) { "#{Regexp.last_match(1)}#{pending}" })
     end
 
     it 'publishes README and changelog edits in the correct release and development commits' do
