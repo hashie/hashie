@@ -470,7 +470,7 @@ module Hashie
     #   mash.respond_to?(:name) # => true
     #   mash.respond_to?(:missing) # => false
     #   mash.respond_to?(:missing!) # => true
-    def respond_to_missing?(method_name, *args)
+    def respond_to_missing?(method_name, include_private = false)
       return true if key?(method_name)
 
       suffix = _method_suffix(method_name)
@@ -593,7 +593,7 @@ module Hashie
     end
 
     def _method_suffix(method_name)
-      method_name = method_name.to_s
+      method_name = method_name.is_a?(Symbol) ? method_name.name : method_name.to_s
       method_name[-1] if method_name.end_with?(*ALLOWED_SUFFIXES)
     end
 
@@ -644,7 +644,7 @@ module Hashie
       return false unless method_key.is_a?(String) || method_key.is_a?(Symbol)
       return false unless respond_to?(method_key)
 
-      _, suffix = _method_name_and_suffix(method_key)
+      suffix = _method_suffix(method_key)
 
       (!suffix || suffix == '=') &&
         !self.class.disable_warnings?(method_key) &&
