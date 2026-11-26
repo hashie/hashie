@@ -845,6 +845,17 @@ describe Hashie::Mash do
       allocations.call { mash[:abc] } # warm up
       expect(allocations.call { 100.times { mash[:abc] } }).to eq(0)
     end
+
+    it 'are written as new keys without allocating', if: RUBY_ENGINE == 'ruby' do
+      allocations = lambda do |mash|
+        before = GC.stat(:total_allocated_objects)
+        mash[:new_key] = 1
+        GC.stat(:total_allocated_objects) - before
+      end
+      allocations.call(described_class.new) # warm up
+      mashes = Array.new(10) { described_class.new }
+      expect(mashes.sum { |mash| allocations.call(mash) }).to be < mashes.size
+    end
   end
 
   describe '#fetch' do
