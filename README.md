@@ -4,6 +4,7 @@
 [![Gem Version](https://img.shields.io/gem/v/hashie.svg)](https://rubygems.org/gems/hashie)
 [![Build Status](https://github.com/hashie/hashie/actions/workflows/test.yml/badge.svg)](https://github.com/hashie/hashie/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/hashie/hashie/badge.svg)](https://coveralls.io/github/hashie/hashie)
+[![Duel](https://raw.githubusercontent.com/sferik/duel-ruby/main/assets/badge.svg)](https://github.com/hashie/hashie/actions/workflows/perf.yml)
 
 [![eierlegende Wollmilchsau](./mascot.svg)](#mascot) Hashie is a growing collection of tools that extend Hashes and make them more useful.
 

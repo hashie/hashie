@@ -1,0 +1,19 @@
+name: Perf comment
+
+on:
+  workflow_run:
+    workflows: ["Perf"]
+    types: [completed]
+  pull_request_target:
+    types: [labeled, unlabeled]
+
+permissions: {}
+
+jobs:
+  comment:
+    uses: sferik/duel-ruby/.github/workflows/duel-comment.yml@3c0c99d95dc2d5620f59e4bb298179422086adf7 # v0.3.1
+    permissions:
+      actions: write # to get the report from the Perf run, and run its Duel job again
+      pull-requests: write # to comment on the pull request with the report
+    with:
+      accept-label: "duel: accept"

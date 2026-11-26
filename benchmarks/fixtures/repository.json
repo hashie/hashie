@@ -1,0 +1,38 @@
+{
+  "id": 1296269,
+  "node_id": "MDEwOlJlcG9zaXRvcnkxMjk2MjY5",
+  "name": "Hello-World",
+  "full_name": "octocat/Hello-World",
+  "private": false,
+  "description": "This your first repo!",
+  "fork": false,
+  "url": "https://api.github.com/repos/octocat/Hello-World",
+  "homepage": "https://github.com",
+  "language": null,
+  "forks_count": 9,
+  "stargazers_count": 80,
+  "watchers_count": 80,
+  "default_branch": "master",
+  "open_issues_count": 0,
+  "is_template": false,
+  "topics": ["octocat", "api"],
+  "has_issues": true,
+  "has_wiki": true,
+  "archived": false,
+  "disabled": false,
+  "pushed_at": "2011-01-26T19:06:43Z",
+  "owner": {
+    "login": "octocat",
+    "id": 1,
+    "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+    "gravatar_id": "",
+    "type": "User",
+    "site_admin": false,
+    "url": "https://api.github.com/users/octocat",
+    "html_url": "https://github.com/octocat"
+  },
+  "licenses": [
+    { "key": "mit", "name": "MIT License", "spdx_id": "MIT", "node_id": "MDc6TGljZW5zZTEz" },
+    { "key": "apache-2.0", "name": "Apache License 2.0", "spdx_id": "Apache-2.0", "node_id": "MDc6TGljZW5zZTI=" }
+  ]
+}

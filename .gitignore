@@ -10,3 +10,5 @@ vendor/bundle/
 .rvmrc
 Gemfile.lock
 log/
+gemfiles/*.lock
+tmp/

@@ -1,0 +1,29 @@
+name: Perf
+
+on:
+  pull_request:
+    paths:
+      - lib/**
+      - benchmarks/**
+      - .duel.rb
+      - hashie.gemspec
+      - gemfiles/duel.gemfile
+      - .github/workflows/perf.yml
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  duel:
+    uses: sferik/duel-ruby/.github/workflows/duel.yml@3c0c99d95dc2d5620f59e4bb298179422086adf7 # v0.3.1
+    permissions:
+      contents: read
+      pull-requests: read # for the pull request's labels (see c.accept_label)
+    with:
+      ruby-version: "4.0"
+      jit: yjit
+      gemfile: gemfiles/duel.gemfile

@@ -12,11 +12,10 @@
 Lint/ConstantDefinitionInBlock:
   Enabled: false
 
-# Offense count: 8
+# Offense count: 7
 # Configuration parameters: AllowComments, AllowEmptyLambdas.
 Lint/EmptyBlock:
   Exclude:
-    - 'benchmarks/permissive_respond_to.rb'
     - 'spec/hashie/extensions/block_access_spec.rb'
 
 # Offense count: 1
