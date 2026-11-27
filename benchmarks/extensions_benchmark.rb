@@ -10,6 +10,17 @@ class PermissiveMash < Hashie::Mash
   include Hashie::Extensions::Mash::PermissiveRespondTo
 end
 
+class IndifferentHash < Hash
+  include Hashie::Extensions::MergeInitializer
+  include Hashie::Extensions::IndifferentAccess
+end
+
+class DeepHash < Hash
+  include Hashie::Extensions::MergeInitializer
+  include Hashie::Extensions::DeepFetch
+  include Hashie::Extensions::DeepFind
+end
+
 KEYS = %i[id name full_name description homepage].freeze
 
 duel 'Mash: read keys given as Symbols as methods' do
@@ -60,4 +71,33 @@ end
 duel 'PermissiveRespondTo: overwrite a key as a method' do
   once { @mash = PermissiveMash.new(a: 1) }
   @mash.a = 1
+end
+
+duel 'IndifferentAccess: new from a nested JSON response' do |n|
+  attributes = untimed { Array.new(n) { JSON.parse(REPOSITORY_JSON) } }
+  attributes.each { |hash| IndifferentHash.new(hash) }
+end
+
+duel 'IndifferentAccess: read String and Symbol keys' do
+  once { @hash = IndifferentHash.new(JSON.parse(REPOSITORY_JSON)) }
+  @hash['name']
+  @hash[:full_name]
+  @hash[:owner]['login']
+  @hash.fetch(:homepage)
+  @hash.key?(:archived)
+end
+
+duel 'IndifferentAccess: write String and Symbol keys' do
+  once { @hash = IndifferentHash.new(JSON.parse(REPOSITORY_JSON)) }
+  @hash[:description] = 'A first repository'
+  @hash['homepage'] = 'https://example.com'
+  @hash.store(:stargazers_count, 81)
+end
+
+duel 'DeepFind and DeepFetch: nested keys' do
+  once { @hash = DeepHash.new(REPOSITORY) }
+  @hash.deep_find('login')
+  @hash.deep_find_all('spdx_id')
+  @hash.deep_fetch('owner', 'login')
+  @hash.deep_fetch('licenses', 1, 'spdx_id')
 end

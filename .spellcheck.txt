@@ -86,6 +86,7 @@ comparator
 config
 configs
 corge
+cpu
 craiglittle
 cromulus
 csv
