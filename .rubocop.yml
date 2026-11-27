@@ -15,6 +15,7 @@ AllCops:
     - Guardfile
     - Rakefile
     - .duel.rb
+    - gemfiles/*.gemfile
   Exclude:
     - .bundle/**/*
     - vendor/**/*
