@@ -13,6 +13,7 @@ Any violations of this scheme are considered to be bugs.
 ### Added
 
 * [#659](https://github.com/hashie/hashie/pull/659): Added performance regression guards for pull requests, with [Duel](https://github.com/sferik/duel-ruby) - [@thomasklemm](https://github.com/thomasklemm).
+* [#660](https://github.com/hashie/hashie/pull/660): Added a Duel job under ZJIT next to the YJIT one - [@thomasklemm](https://github.com/thomasklemm).
 * Your contribution here.
 
 ### Changed
