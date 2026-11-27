@@ -86,6 +86,7 @@ comparator
 config
 configs
 corge
+cpu
 craiglittle
 cromulus
 csv
@@ -289,6 +290,7 @@ parsers
 pascalcase
 pathname
 pboling
+perf
 permissivemash
 permissiverespondto
 persistable
@@ -345,6 +347,7 @@ sleverbor
 someothervalue
 somevalue
 srp
+stackprof
 stateful
 stdlib
 stdout
@@ -408,6 +411,7 @@ yaml's
 yamlerbparser
 yamlparser
 yardopts
+yjit
 yml
 zipcode
 zloy

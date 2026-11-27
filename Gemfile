@@ -5,8 +5,6 @@ source 'http://rubygems.org'
 gemspec
 
 group :development do
-  gem 'benchmark-ips'
-  gem 'benchmark-memory'
   gem 'bundler'
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1', require: false
