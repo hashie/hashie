@@ -414,4 +414,5 @@ yardopts
 yjit
 yml
 zipcode
+zjit
 zloy

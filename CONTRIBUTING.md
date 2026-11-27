@@ -43,7 +43,7 @@ CI reports code coverage to Coveralls. Coverage excludes `spec/` and `script/`; 
 
 #### Benchmark
 
-The benchmarks in [benchmarks](benchmarks) guard each pull request that changes `lib`: the Perf workflow runs them with [Duel](https://github.com/sferik/duel-ruby) on the pull request and on the branch it targets, side by side, and fails a pull request that makes them slower or allocate more. A scenario on a hot path, which a change to Hashie could slow down, goes there, in a `benchmarks/*_benchmark.rb` file; an extension gets its own scenarios next to the plain `Mash` ones. To run them, on Ruby 3.4 or later:
+The benchmarks in [benchmarks](benchmarks) guard each pull request that changes `lib`: the Perf workflow runs them with [Duel](https://github.com/sferik/duel-ruby), once under YJIT and once under ZJIT, on the pull request and on the branch it targets, side by side, and fails a pull request that makes them slower or allocate more. A scenario on a hot path, which a change to Hashie could slow down, goes there, in a `benchmarks/*_benchmark.rb` file; an extension gets its own scenarios next to the plain `Mash` ones. To run them, on Ruby 3.4 or later:
 
 ```
 BUNDLE_GEMFILE=gemfiles/duel.gemfile bundle install
