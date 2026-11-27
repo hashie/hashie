@@ -42,7 +42,7 @@ duel 'KeepOriginalKeys: read Symbol keys as methods' do
 end
 
 duel 'KeepOriginalKeys: read String keys as methods' do
-  once { @mash = KeepingMash.new(REPOSITORY.slice(*KEYS.map(&:to_s))) }
+  once { @mash = KeepingMash.new(repository.slice(*KEYS.map(&:to_s))) }
   @mash.id
   @mash.name
   @mash.full_name
@@ -74,12 +74,12 @@ duel 'PermissiveRespondTo: overwrite a key as a method' do
 end
 
 duel 'IndifferentAccess: new from a nested JSON response' do |n|
-  attributes = untimed { Array.new(n) { JSON.parse(REPOSITORY_JSON) } }
+  attributes = untimed { Array.new(n) { repository } }
   attributes.each { |hash| IndifferentHash.new(hash) }
 end
 
 duel 'IndifferentAccess: read String and Symbol keys' do
-  once { @hash = IndifferentHash.new(JSON.parse(REPOSITORY_JSON)) }
+  once { @hash = IndifferentHash.new(repository) }
   @hash['name']
   @hash[:full_name]
   @hash[:owner]['login']
@@ -88,14 +88,14 @@ duel 'IndifferentAccess: read String and Symbol keys' do
 end
 
 duel 'IndifferentAccess: write String and Symbol keys' do
-  once { @hash = IndifferentHash.new(JSON.parse(REPOSITORY_JSON)) }
+  once { @hash = IndifferentHash.new(repository) }
   @hash[:description] = 'A first repository'
   @hash['homepage'] = 'https://example.com'
   @hash.store(:stargazers_count, 81)
 end
 
 duel 'DeepFind and DeepFetch: nested keys' do
-  once { @hash = DeepHash.new(REPOSITORY) }
+  once { @hash = DeepHash.new(repository) }
   @hash.deep_find('login')
   @hash.deep_find_all('spdx_id')
   @hash.deep_fetch('owner', 'login')

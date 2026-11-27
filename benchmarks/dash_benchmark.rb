@@ -86,7 +86,7 @@ duel 'Dash.new: coerced properties' do
 end
 
 duel 'Dash.new: String keys with IndifferentAccess' do
-  once { @attributes = REPOSITORY.slice('id', 'name', 'full_name', 'description').freeze }
+  once { @attributes = repository.slice('id', 'name', 'full_name', 'description').freeze }
   IndifferentRepositoryDash.new(@attributes)
 end
 
