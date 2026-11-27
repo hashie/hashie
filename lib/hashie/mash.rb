@@ -584,11 +584,11 @@ module Hashie
     private
 
     def _method_name_and_suffix(method_name)
-      method_name = method_name.to_s
-      if method_name.end_with?(*ALLOWED_SUFFIXES)
-        [method_name[0..-2], method_name[-1]]
+      name = method_name.is_a?(Symbol) ? method_name.name : method_name.to_s
+      if name.end_with?(*ALLOWED_SUFFIXES)
+        [name[0..-2], name[-1]]
       else
-        [method_name, nil]
+        [method_name.is_a?(Symbol) ? method_name.to_s : name, nil]
       end
     end
 
