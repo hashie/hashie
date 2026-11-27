@@ -2,6 +2,7 @@
 
 Duel.configure do |c|
   c.benchmarks = 'benchmarks/**/*_benchmark.rb'
+  c.watch += ['Gemfile']
   # Two at once on GitHub's 4-CPU runners failed identical code.
   c.jobs = 1
   # Identical-code comparisons exceeded Duel's default CPU margin.
