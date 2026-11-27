@@ -20,6 +20,7 @@ Any violations of this scheme are considered to be bugs.
 
 * [#656](https://github.com/hashie/hashie/pull/656): Write new Mash keys without allocating in respond_to_missing? - [@thomasklemm](https://github.com/thomasklemm).
 * [#661](https://github.com/hashie/hashie/pull/661): Read the names of suffixed Mash methods without copying the Symbol - [@thomasklemm](https://github.com/thomasklemm).
+* [#662](https://github.com/hashie/hashie/pull/662): Read each value once in `Hashie::Hash#to_hash` - [@thomasklemm](https://github.com/thomasklemm).
 * Your contribution here.
 
 ### Deprecated
