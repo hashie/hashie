@@ -1,4 +1,4 @@
-name: Perf comment
+name: Perf Comment
 
 on:
   workflow_run:
