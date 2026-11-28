@@ -38,13 +38,14 @@ module Hashie
           else
             k
           end
-        if self[k].is_a?(Array)
+        value = self[k]
+        if value.is_a?(Array)
           out[assignment_key] ||= []
-          self[k].each do |array_object|
+          value.each do |array_object|
             out[assignment_key] << _maybe_convert_to_hash(array_object, options)
           end
         else
-          out[assignment_key] = _maybe_convert_to_hash(self[k], options)
+          out[assignment_key] = _maybe_convert_to_hash(value, options)
         end
       end
       out
